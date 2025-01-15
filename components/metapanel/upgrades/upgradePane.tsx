@@ -15,6 +15,9 @@ import {
   selectHealerDamage,
   selectMageDamage,
   selectAdventurerDamage,
+  setActiveHero,
+  selectHealerLevelUpCost,
+  selectMageLevelUpCost,
 } from "../../../redux/playerSlice"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
@@ -33,7 +36,7 @@ interface UpgradePaneProps {
 export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onLevelUp }: UpgradePaneProps) {
   const dispatch = useAppDispatch()
   const [upgradeName] = config.elementId.split("-")
-  const thisUpgradeName = upgradeName as HeroName
+  const thisHeroName = upgradeName as HeroName
 
   const upgradeProps: UpgradeProps = {
     adventurer: {
@@ -49,16 +52,16 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
     healer: {
       ...useAppSelector(selectHealerState),
       damage: useAppSelector(selectHealerDamage),
-      levelUpCost: useAppSelector(selectAdventurerLevelUpCost),
+      levelUpCost: useAppSelector(selectHealerLevelUpCost),
     },
     mage: {
       ...useAppSelector(selectMageState),
       damage: useAppSelector(selectMageDamage),
-      levelUpCost: useAppSelector(selectAdventurerLevelUpCost),
+      levelUpCost: useAppSelector(selectMageLevelUpCost),
     },
   }
-  const thisUpgradeProps = upgradeProps[thisUpgradeName]
-  const damage = upgradeProps[thisUpgradeName].damage
+  const thisUpgradeProps = upgradeProps[thisHeroName]
+  const damage = upgradeProps[thisHeroName].damage
 
   const canAffordLevelUp = useAppSelector(selectGCanAfford(thisUpgradeProps.levelUpCost))
   const canAffordOTPUpgrade = useAppSelector(
@@ -73,7 +76,7 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
 
   const isNotAdventurer = upgradeName !== "adventurer"
 
-  const thisSelector = isNotAdventurer ? initSelectorMap[thisUpgradeName] : null
+  const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const hasInitialised = isNotAdventurer ? thisSelector && useAppSelector(thisSelector) : true
 
   useEffect(() => {
@@ -81,13 +84,14 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
       // If already initialised, skip animation sequence
       if (hasInitialised) setAnimationComplete(true)
       // Once animation is completed, dispatch to store
-      if (animationComplete && !hasInitialised) dispatch(initialiseElement(thisUpgradeName))
+      if (animationComplete && !hasInitialised) dispatch(initialiseElement(thisHeroName))
     }
 
     if (currentZoneNumber >= config.visibleAtZone && !shouldMount) {
       setShouldMount(true)
       const fadeinTimeout = setTimeout(() => {
         setIsVisible(true)
+        dispatch(setActiveHero(thisHeroName))
         const preventFurtherAnimations = setTimeout(() => {
           setAnimationComplete(true)
         }, 500)

@@ -11,7 +11,6 @@ export const achievementSelectorMap: Record<string, (state: RootState) => number
   "zone-farm": (state) => selectStatsState(state).farmZonesCompleted,
   "zone-progression": (state) => selectStatsState(state).highestZoneEver,
   "prestige-count": (state) => selectStatsState(state).prestigeCount,
-
   "click-value": (state) => selectClickDamage(state),
   "dot-value": (state) => selectDotDamage(state),
   "prestige-plasmaspent": (state) => selectPrestigeState(state).plasmaSpent,

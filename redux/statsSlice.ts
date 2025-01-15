@@ -44,8 +44,10 @@ export const statsSlice = createSlice({
   initialState,
   reducers: {
     unlockAchievement(state, action: PayloadAction<string>) {
-      state.achievementsUnlocked.push(action.payload)
-      console.log("Achievement unlocked", action.payload)
+      if (!state.achievementsUnlocked.includes(action.payload)) {
+        state.achievementsUnlocked.push(action.payload)
+        console.log("Achievement unlocked", action.payload)
+      }
     },
     monsterClicked(state, action: PayloadAction<number>) {
       state.clickCount++

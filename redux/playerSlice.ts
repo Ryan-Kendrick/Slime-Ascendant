@@ -84,11 +84,22 @@ export const playerSlice = createSlice({
       state.adventurerOTPUpgradeCount++
     },
     incrementWarriorLevel: (state) => {
-      if (!state.activeHeroes.includes("warrior")) state.activeHeroes.push("warrior")
       state.warriorLevel++
     },
     incrementWarriorOTPUpgradeCount: (state) => {
       state.warriorOTPUpgradeCount++
+    },
+    incrementHealerLevel: (state) => {
+      state.healerLevel++
+    },
+    incrementHealerOTPUpgradeCount: (state) => {
+      state.healerOTPUpgradeCount++
+    },
+    incrementMageLevel: (state) => {
+      state.mageLevel++
+    },
+    incrementMageOTPUpgradeCount: (state) => {
+      state.mageOTPUpgradeCount++
     },
     increaseGold(state, action: PayloadAction<number>) {
       state.gold += action.payload
@@ -131,6 +142,11 @@ export const playerSlice = createSlice({
     initialiseElement(state, action: PayloadAction<UpgradeId | HeroName>) {
       setInitElementMap[action.payload](state)
     },
+    setActiveHero(state, action: PayloadAction<HeroName>) {
+      if (!state.activeHeroes.includes(action.payload)) {
+        state.activeHeroes.push(action.payload)
+      }
+    },
     setTabInView: (state, action: PayloadAction<Tab>) => {
       state.tabInView = action.payload
     },
@@ -170,6 +186,10 @@ export const {
   incrementAdventurerOTPUpgradeCount,
   incrementWarriorLevel,
   incrementWarriorOTPUpgradeCount,
+  incrementHealerLevel,
+  incrementHealerOTPUpgradeCount,
+  incrementMageLevel,
+  incrementMageOTPUpgradeCount,
   increaseGold,
   decreaseGold,
   increasePlasma,
@@ -180,6 +200,7 @@ export const {
   prestigeRespec,
   increaseAchievementModifier,
   initialiseElement,
+  setActiveHero,
   setTabInView,
   toggleDebugState,
 } = playerSlice.actions
@@ -331,6 +352,18 @@ export const updateDotDamage = (whatChanged: string) => (dispatch: AppDispatch, 
       break
     case "warrior-otp":
       dispatch(incrementWarriorOTPUpgradeCount())
+      break
+    case "healer-levelup":
+      dispatch(incrementHealerLevel())
+      break
+    case "healer-otp":
+      dispatch(incrementHealerOTPUpgradeCount())
+      break
+    case "mage-levelup":
+      dispatch(incrementMageLevel())
+      break
+    case "mage-otp":
+      dispatch(incrementMageOTPUpgradeCount())
       break
     case "pDamage":
       break

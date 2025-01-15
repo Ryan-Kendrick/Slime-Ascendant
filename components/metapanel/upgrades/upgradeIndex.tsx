@@ -62,7 +62,7 @@ export default function UpgradeIndex() {
     if (canAfford) {
       dispatch(action)
       dispatch(decreaseGold(cost))
-    } else {
+    } else if (!cost) {
       throw new Error(`Unexpected levelup target ${levelUpId}`)
     }
   }
