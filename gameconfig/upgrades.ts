@@ -87,7 +87,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       ],
     },
     levelUpCost: (currentLevel) => {
-      const base = 20000
+      const base = 8000
       const growthRate = 1.1
 
       return Math.floor(base * (1 + Math.log10(currentLevel + 1)) * Math.pow(growthRate, currentLevel))
@@ -106,7 +106,8 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     {
       id: "damage",
       title: "Damage",
-      description: "Increased by",
+      modDescription: "Increase",
+      modSuffix: "%",
       basePrice: 2,
       additiveInc: 1,
       modifier: 0.05,

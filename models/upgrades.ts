@@ -18,7 +18,8 @@ export type PrestigeUpgradeName = "damage" | "health"
 export interface PrestigeUpgradeConfig {
   id: PrestigeUpgradeName
   title: string
-  description: string
+  modDescription: string
+  modSuffix: string
   basePrice: number
   additiveInc: number
   modifier: number

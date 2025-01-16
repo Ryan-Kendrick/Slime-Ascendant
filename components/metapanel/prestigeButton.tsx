@@ -50,22 +50,23 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable}
       className={clsx(
-        "w-56 cursor-hand text-lg bg-cyan-800/50 text-cyan-300 py-4 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
+        "w-56 cursor-hand text-lg bg-cyan-800/50 text-cyan-300 py-2 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
         "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:bg-cyan-800/50 disabled:shadow-none disabled:text-gray-300/80 disabled:border-black",
       )}>
       <div className="relative flex flex-col items-center">
-        <h3 className="text-2xl font-extrabold"> {config.title}</h3>
-        {upgradeCount > 0 && (
-          <p>
-            {config.description}: {Math.round(config.modifier * 100) * upgradeCount}%
-          </p>
-        )}
+        <h3 className="mb-1 text-2xl font-extrabold"> {config.title}</h3>
         <p>
           Level: {upgradeCount} {toPurchase > 0 && `(+${toPurchase})`}
         </p>
+        {(toPurchase > 0 || upgradeCount > 0) && (
+          <p className="">
+            {config.modDescription}: {Math.round(config.modifier * 100) * upgradeCount}
+            {config.modSuffix} {`(+${Math.round(config.modifier * 100) * toPurchase}${config.modSuffix})`}
+          </p>
+        )}
         <p className="flex">
           Price:{" "}
-          <span className={clsx("flex", isAffordable ? "text-blue-200" : "text-red-500")}>
+          <span className={clsx("flex font-bold", isAffordable ? "text-blue-200" : "text-red-500")}>
             {<span className="self-center -mr-[0.18rem]">{MinPlasmaIcon()}</span>}
             {purchasePrice}
           </span>
