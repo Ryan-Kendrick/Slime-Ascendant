@@ -40,7 +40,6 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
     setToPurchase(toPurchase + 1)
     setTotalCost(newTotalCost)
   }
-  console.log(upgradeCount)
   return (
     <button
       key={config.id}

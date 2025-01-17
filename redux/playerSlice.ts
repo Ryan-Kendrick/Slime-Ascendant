@@ -299,18 +299,21 @@ export const selectClickDamage = (state: RootState): number =>
     1 + state.player.achievementModifier,
   )
 export const selectDotDamage = (state: RootState): number => {
+  // exclude adventurer from dot calc and memoise
   if (state.player.activeHeroes.length < 1) return 0
   type HeroStats = { level: number; upgradeCount: number }
 
-  const activeHeroesStats = [] as HeroStats[]
+  const heroes = state.player.activeHeroes.slice(1)
+  const heroStats = [] as HeroStats[]
 
-  for (const hero of state.player.activeHeroes) {
+  for (const hero of heroes) {
     const thisHeroStats = heroDamageMap[hero](state)
-    activeHeroesStats.push(thisHeroStats)
+    heroStats.push(thisHeroStats)
   }
+
   return playerCalc.heroDamage(
-    state.player.activeHeroes,
-    activeHeroesStats,
+    heroes,
+    heroStats,
     1 + state.player.pDamageUpgradeCount * prestigeDamage,
     1 + state.player.achievementModifier,
   )

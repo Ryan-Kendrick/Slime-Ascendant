@@ -73,18 +73,16 @@ export default function UpgradeIndex() {
     cost: number,
     isAffordable: boolean,
   ) {
+    if (!isAffordable || hidden) return
+
     const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".")
     const upgradeActions = {
       "adventurer-otp": updateClickDamage("adventurer-otp"),
       "warrior-otp": updateDotDamage("warrior-otp"),
     }
 
-    if (isAffordable && !hidden) {
-      dispatch(upgradeActions[upgradeId as keyof typeof upgradeActions])
-      dispatch(decreaseGold(cost))
-    } else {
-      throw new Error(`Unexpected upgrade target ${upgradeId}`)
-    }
+    dispatch(upgradeActions[upgradeId as keyof typeof upgradeActions])
+    dispatch(decreaseGold(cost))
   }
 
   return (
