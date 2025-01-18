@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import { FarmToggleIcon } from "../../assets/svg/metaIcons"
+import { FarmToggleIcon } from "../svgIcons/svg/metaIcons"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { selectIsFarming, toggleFarming } from "../../redux/zoneSlice"
 

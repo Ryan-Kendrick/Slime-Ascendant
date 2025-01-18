@@ -4,7 +4,7 @@ import PrestigeButton from "./prestigeButton"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import Currency from "./currency"
-import { PlasmaIcon } from "../../assets/svg/resourceIcons"
+import { PlasmaIcon } from "../svgIcons/svg/resourceIcons"
 import {
   resetPlasmaReserved,
   selectPlasma,
@@ -15,9 +15,9 @@ import {
 import { PrestigeState, PrestigeUpgradeName } from "../../models/upgrades"
 import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
-import { CancelIcon } from "../../assets/svg/metaIcons"
+import { CancelIcon } from "../svgIcons/svg/metaIcons"
 import { selectZoneTenComplete } from "../../redux/statsSlice"
-import handURL from "../../assets/icons/hand.png"
+import handURL from "/icons/hand.png"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()

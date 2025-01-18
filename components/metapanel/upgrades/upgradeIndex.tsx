@@ -10,12 +10,12 @@ import {
   updateDotDamage,
   updateClickDamage,
 } from "../../../redux/playerSlice"
-import { ClickMultiIcon1, ClickMultiIcon2, ClickMultiIcon3 } from "../../../assets/svg/clickIcons"
+import { ClickMultiIcon1, ClickMultiIcon2, ClickMultiIcon3 } from "../../svgIcons/svg/clickIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { LevelUpID } from "../../../models/upgrades"
 import UpgradePane from "./upgradePane"
 import Currency from "../currency"
-import { GoldIcon } from "../../../assets/svg/resourceIcons"
+import { GoldIcon } from "../../svgIcons/svg/resourceIcons"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()

@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import coinURL from "/assets/icons/coin.png"
+import coinURL from "/icons/coin.png"
 
 interface LevelUpProps {
   id: string

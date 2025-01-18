@@ -1,9 +1,9 @@
 import { useState } from "react"
 import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
-import { CancelIcon } from "../../assets/svg/metaIcons"
+import { CancelIcon } from "../svgIcons/svg/metaIcons"
 import Achievements from "./achievements"
-import handURL from "../../assets/icons/hand.png"
+import handURL from "/icons/hand.png"
 
 export default function Navigation() {
   const [viewAchievements, setViewAchievements] = useState(false)

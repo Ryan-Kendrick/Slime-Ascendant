@@ -1,7 +1,7 @@
 import clsx from "clsx/lite"
 import { useAppSelector } from "../../redux/hooks"
 import { selectZoneState } from "../../redux/zoneSlice"
-import { BossIcon, CookieEnjoyerIcon, MoneybagIcon } from "../../assets/svg/stageIcons"
+import { BossIcon, CookieEnjoyerIcon, MoneybagIcon } from "../svgIcons/svg/stageIcons"
 
 export default function ZoneMap() {
   const {

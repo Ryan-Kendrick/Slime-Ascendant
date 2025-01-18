@@ -5,7 +5,7 @@ import { prestigeUpgradeMap } from "../../gameconfig/utils"
 import { useAppSelector } from "../../redux/hooks"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { selectPCanAfford } from "../../redux/playerSlice"
-import { MinPlasmaIcon } from "../../assets/svg/resourceIcons"
+import { MinPlasmaIcon } from "../svgIcons/svg/resourceIcons"
 
 interface PrestigeBtnProps {
   config: PrestigeUpgradeConfig
