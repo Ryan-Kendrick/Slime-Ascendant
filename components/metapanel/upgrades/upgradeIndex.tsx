@@ -15,7 +15,7 @@ import {
 } from "../../../redux/playerSlice"
 import { ClickOTPIcon1, ClickOTPIcon2, ClickOTPIcon3 } from "../../../assets/svg/clickIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
-import { HeroName } from "../../../models/upgrades"
+import { HeroName, UpgradeId } from "../../../models/upgrades"
 import UpgradePane from "./upgradePane"
 import Currency from "../currency"
 import { GoldIcon } from "../../../assets/svg/resourceIcons"
@@ -73,14 +73,16 @@ export default function UpgradeIndex() {
     isAffordable: boolean,
   ) {
     if (!isAffordable || hidden) return
-    const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".")
-    console.log(upgradeId, cost, isAffordable)
-    const upgradeActions = {
-      "adventurer-otp": updateClickDamage("adventurer-otp"),
-      "warrior-otp": updateDotDamage("warrior-otp"),
+    const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".") as [UpgradeId, string]
+    let upgradeAction
+
+    if (upgradeId === "adventurer-otp") {
+      upgradeAction = updateClickDamage(upgradeId)
+    } else {
+      upgradeAction = updateDotDamage(upgradeId)
     }
 
-    dispatch(upgradeActions[upgradeId as keyof typeof upgradeActions])
+    dispatch(upgradeAction)
     dispatch(decreaseGold(cost))
   }
 
@@ -118,7 +120,7 @@ export default function UpgradeIndex() {
               <h2 className="text-2xl font-outline">Total</h2>
               <div className="flex text-lg w-full justify-evenly">
                 <h3>Click Damage: {Math.round(clickDamage)}</h3>
-                <h3>Damage Over Time: {Math.round(dotDamage)}</h3>
+                <h3>Passive Damage: {Math.round(dotDamage)}</h3>
               </div>
             </div>
           </div>

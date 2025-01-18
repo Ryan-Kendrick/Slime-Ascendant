@@ -161,7 +161,12 @@ export const playerSlice = createSlice({
       if (state.adventurerLevel < 500) {
         return (state = debugState)
       } else {
-        return (state = { ...initialState, gold: 1000000, plasma: 1000000 })
+        return (state = {
+          ...initialState,
+          activeHeroes: ["adventurer", "warrior", "healer"],
+          gold: 1000000,
+          plasma: 1000000,
+        })
       }
     },
   },

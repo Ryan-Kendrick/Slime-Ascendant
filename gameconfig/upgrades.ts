@@ -12,9 +12,9 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       OTPCosts: [100, 400, 1000],
       OTPModifiers: [2, 2, 2],
       OTPDescriptions: [
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
       ],
     },
     levelUpCost: (currentLevel) => {
@@ -28,16 +28,16 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     visibleAtZone: 3,
     elementId: "warrior-otp",
     displayName: "Warrior",
-    displayStat: "Damage Over Time",
-    baseDamage: 3,
-    levelUpMod: 2,
+    displayStat: "Damage",
+    baseDamage: 5,
+    levelUpMod: 4,
     OneTimePurchases: {
       OTPCosts: [5000, 10000, 25000],
       OTPModifiers: [2, 2, 2],
       OTPDescriptions: [
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
       ],
     },
     levelUpCost: (currentLevel) => {
@@ -49,18 +49,18 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
   },
   healer: {
     visibleAtZone: 12,
-    elementId: "mage-otp",
-    displayName: "Mage",
-    displayStat: "Damage Over Time",
-    baseDamage: 50,
-    levelUpMod: 30,
+    elementId: "healer-otp",
+    displayName: "Healer",
+    displayStat: "Passive Damage",
+    baseDamage: 60,
+    levelUpMod: 40,
     OneTimePurchases: {
-      OTPCosts: [40000, 100000, 250000],
+      OTPCosts: [75000, 100000, 250000],
       OTPModifiers: [2, 2, 2],
       OTPDescriptions: [
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
       ],
     },
     levelUpCost: (currentLevel) => {
@@ -74,16 +74,16 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     visibleAtZone: 22,
     elementId: "mage-otp",
     displayName: "Warrior",
-    displayStat: "Damage Over Time",
-    baseDamage: 800,
-    levelUpMod: 500,
+    displayStat: "Passive Damage",
+    baseDamage: 300,
+    levelUpMod: 100,
     OneTimePurchases: {
-      OTPCosts: [500000, 1000000, 2500000],
+      OTPCosts: [1000000, 2500000, 5000000],
       OTPModifiers: [2, 2, 2],
       OTPDescriptions: [
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
-        "Increase Damage Over Time by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 100%",
       ],
     },
     levelUpCost: (currentLevel) => {
@@ -100,7 +100,6 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       "healer-otp": this.healer.OneTimePurchases.OTPCosts,
       "mage-otp": this.mage.OneTimePurchases.OTPCosts,
     }
-    console.log(upgradeName, upgradeCount, costs[upgradeName][upgradeCount])
     return costs[upgradeName][upgradeCount]
   },
   prestige: [
