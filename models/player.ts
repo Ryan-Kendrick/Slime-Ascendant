@@ -24,6 +24,7 @@ export interface PlayerState {
   achievementModifier: number
 
   activeHeroes: HeroName[]
+  UIProgression: number
   hasInitAdventurerOTP: number
   hasInitWarriorPane: boolean
   hasInitWarriorOTP: number

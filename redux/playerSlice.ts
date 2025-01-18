@@ -31,6 +31,7 @@ const debugState: PlayerState = {
 
   activeHeroes: ["warrior"],
   plasmaReserved: 0,
+  UIProgression: 99,
   hasInitAdventurerOTP: 99,
   hasInitWarriorPane: true,
   hasInitWarriorOTP: 99,
@@ -63,6 +64,7 @@ const initialState: PlayerState = {
   activeHeroes: [],
   plasmaReserved: 0,
   // Prevents animation triggering again on mount
+  UIProgression: 0,
   hasInitAdventurerOTP: 0,
   hasInitWarriorPane: false,
   hasInitWarriorOTP: 0,
@@ -146,6 +148,9 @@ export const playerSlice = createSlice({
       const payloadValue = Math.round(action.payload * 100)
       state.achievementModifier = (currentValue + payloadValue) / 100
     },
+    incrementUIProgression: (state) => {
+      state.UIProgression++
+    },
     initialiseElement(state, action: PayloadAction<UpgradeId | HeroName>) {
       setInitElementMap[action.payload](state)
     },
@@ -211,6 +216,7 @@ export const {
   incrementPHealthUpgradeCount,
   prestigeRespec,
   increaseAchievementModifier,
+  incrementUIProgression,
   initialiseElement,
   setActiveHero,
   setTabInView,
@@ -260,27 +266,6 @@ export const selectPrestigeState = createSelector([(state: RootState) => state.p
   pDamageUpgradeCount: player.pDamageUpgradeCount,
   // pHealthUpgradeCount: player.pHealthUpgradeCount,
 }))
-
-export const selectInitState = createSelector(
-  [(state: RootState) => state.player],
-  ({
-    hasInitAdventurerOTP,
-    hasInitWarriorPane,
-    hasInitWarriorOTP,
-    hasInitHealerPane,
-    hasInitHealerOTP,
-    hasInitMagePane,
-    hasInitMageOTP,
-  }) => ({
-    hasInitAdventurerOTP,
-    hasInitWarriorPane,
-    hasInitWarriorOTP,
-    hasInitHealerPane,
-    hasInitHealerOTP,
-    hasInitMagePane,
-    hasInitMageOTP,
-  }),
-)
 
 export const selectAdventurerLevel = (state: RootState) => state.player.adventurerLevel
 export const selectGold = (state: RootState) => state.player.gold
@@ -335,12 +320,6 @@ export const selectDotDamage = createSelector(
       1 + achievementModifier,
     )
   },
-)
-
-export const selectTabInView = (state: RootState) => state.player.tabInView
-export const selectPrestigeTabVisible = createSelector(
-  [selectPlasma, selectPlasmaReserved, (state: RootState) => state.player.plasmaSpent],
-  (plasma, plasmaReserved, plasmaSpent) => plasma || plasmaReserved || plasmaSpent > 0,
 )
 
 export const updateClickDamage = (whatChanged: string) => (dispatch: AppDispatch, getState: () => RootState) => {
@@ -418,5 +397,34 @@ export const updatePrestige =
       },
     ])
   }
+
+export const selectInitState = createSelector(
+  [(state: RootState) => state.player],
+  ({
+    hasInitAdventurerOTP,
+    hasInitWarriorPane,
+    hasInitWarriorOTP,
+    hasInitHealerPane,
+    hasInitHealerOTP,
+    hasInitMagePane,
+    hasInitMageOTP,
+  }) => ({
+    hasInitAdventurerOTP,
+    hasInitWarriorPane,
+    hasInitWarriorOTP,
+    hasInitHealerPane,
+    hasInitHealerOTP,
+    hasInitMagePane,
+    hasInitMageOTP,
+  }),
+)
+
+export const selectUIProgress = (state: RootState) => state.player.UIProgression
+export const selectTabInView = (state: RootState) => state.player.tabInView
+export const selectPrestigeTabVisible = createSelector(
+  [selectPlasma, selectPlasmaReserved, (state: RootState) => state.player.plasmaSpent],
+  (plasma, plasmaReserved, plasmaSpent) => plasma || plasmaReserved || plasmaSpent > 0,
+)
+export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 0)
 
 export default playerSlice.reducer

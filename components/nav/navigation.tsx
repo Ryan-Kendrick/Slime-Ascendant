@@ -30,7 +30,7 @@ export default function Navigation() {
           {CancelIcon()}
         </button>
       </ReactModal>
-      <div className="self-start opacity-60">{METADATA_CONFIG.version}</div>
+      <div className="self-start text-sm opacity-50">{METADATA_CONFIG.version}</div>
       {/* <ReactModal
         isOpen={viewOptions}
         onRequestClose={() => setViewOptions(false)}
