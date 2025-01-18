@@ -4,13 +4,14 @@ import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/svg/metaIcons"
 import Achievements from "./achievements"
 import handURL from "/icons/hand.png"
+import { METADATA_CONFIG } from "../../gameconfig/meta"
 
 export default function Navigation() {
   const [viewAchievements, setViewAchievements] = useState(false)
   const [viewOptions, setViewOptions] = useState(false)
 
   return (
-    <div className="flex flex-wrap gap-4 justify-between items-center text-white h-full px-3 py-2 lg:min-h-[5rem] lg:h-[10%] shrink-0">
+    <div className="flex relative flex-wrap gap-4 justify-between items-center text-white h-full px-3 py-2 lg:min-h-[5rem] lg:h-[10%] shrink-0">
       <div className="flex flex-wrap gap-3 items-center">
         <NavigationLinkButton text="Achievements" onClick={() => setViewAchievements(true)} />
       </div>
@@ -29,6 +30,7 @@ export default function Navigation() {
           {CancelIcon()}
         </button>
       </ReactModal>
+      <div className="self-start text-sm opacity-50">{METADATA_CONFIG.version}</div>
       {/* <ReactModal
         isOpen={viewOptions}
         onRequestClose={() => setViewOptions(false)}

@@ -1,52 +1,93 @@
 // @ts-nocheck
 
 import { useEffect, useState } from "react"
-import { PrestigeUpgradeConfig, PrestigeUpgradeName, UpgradeIdWithLevel, UpgradeKey } from "../models/upgrades"
+import {
+  PrestigeUpgradeConfig,
+  PrestigeUpgradeName,
+  UpgradeIdWithLevel,
+  HeroName,
+  HeroState,
+  UpgradeId,
+} from "../models/upgrades"
 import { RootState } from "../redux/store"
 import { PlayerState } from "../models/player"
 import { selectInitState, selectPrestigeState } from "../redux/playerSlice"
 import * as LZString from "lz-string"
 import { METADATA_CONFIG } from "./meta"
 
-export const setInitElementMap: Record<UpgradeIdWithLevel | UpgradeKey, (state: PlayerState) => boolean> = {
-  "click-multi.1": (state) => {
-    state.hasInitClickMulti1 = true
+export const heroStateMap: Record<HeroName, { level: keyof PlayerState; upgradeCount: keyof PlayerState }> = {
+  adventurer: {
+    level: "adventurerLevel",
+    upgradeCount: "adventurerOTPUpgradeCount",
   },
-  "click-multi.2": (state) => {
-    state.hasInitClickMulti2 = true
+  warrior: {
+    level: "warriorLevel",
+    upgradeCount: "warriorOTPUpgradeCount",
   },
-  "click-multi.3": (state) => {
-    state.hasInitClickMulti3 = true
+  healer: {
+    level: "healerLevel",
+    upgradeCount: "healerOTPUpgradeCount",
   },
-  "dot-multi.1": (state) => {
-    state.hasInitDotMulti1 = true
+  mage: {
+    level: "mageLevel",
+    upgradeCount: "mageOTPUpgradeCount",
   },
-  "dot-multi.2": (state) => {
-    state.hasInitDotMulti2 = true
-  },
-  "dot-multi.3": (state) => {
-    state.hasInitDotMulti3 = true
-  },
-  dot: (state) => {
-    state.hasInitDotPane = true
-  },
-  click: (state) => true,
-}
+} as const
 
-export const initSelectorMap: Record<UpgradeIdWithLevel | UpgradeKey, (state: RootState) => boolean> = {
-  "click-multi.1": (state) => selectInitState(state).hasInitClickMulti1,
-  "click-multi.2": (state) => selectInitState(state).hasInitClickMulti2,
-  "click-multi.3": (state) => selectInitState(state).hasInitClickMulti3,
-  "dot-multi.1": (state) => selectInitState(state).hasInitDotMulti1,
-  "dot-multi.2": (state) => selectInitState(state).hasInitDotMulti2,
-  "dot-multi.3": (state) => selectInitState(state).hasInitDotMulti3,
-  dot: (state) => selectInitState(state).hasInitDotPane,
-}
+// export const heroDamageMap: Record<HeroName, (state: RootState) => HeroState> = {
+//   adventurer: (state) => {
+//     return { level: state.player.adventurerLevel, upgradeCount: state.player.adventurerOTPUpgradeCount }
+//   },
+//   warrior: (state) => {
+//     return { level: state.player.warriorLevel, upgradeCount: state.player.warriorOTPUpgradeCount }
+//   },
+//   healer: (state) => {
+//     return { level: state.player.healerLevel, upgradeCount: state.player.healerOTPUpgradeCount }
+//   },
+//   mage: (state) => {
+//     return { level: state.player.mageLevel, upgradeCount: state.player.mageOTPUpgradeCount }
+//   },
+// } as const
+
+export const setInitElementMap: Record<UpgradeId | HeroName, (state: PlayerState) => boolean> = {
+  "adventurer-otp": (state: PlayerState) => {
+    state.hasInitAdventurerOTP++
+  },
+  "warrior-otp": (state: PlayerState) => {
+    state.hasInitWarriorOTP++
+  },
+  "healer-otp": (state: PlayerState) => {
+    state.hasInitHealerOTP++
+  },
+  "mage-otp": (state: PlayerState) => {
+    state.hasInitMageOTP++
+  },
+  adventurer: (state: PlayerState) => true,
+  warrior: (state: PlayerState) => {
+    state.hasInitWarriorPane = true
+  },
+  healer: (state: PlayerState) => {
+    state.hasInitHealerPane = true
+  },
+  mage: (state: PlayerState) => {
+    state.hasInitMagePane = true
+  },
+} as const
+
+export const initSelectorMap: Record<UpgradeId | HeroName, (state: RootState) => number | boolean> = {
+  "adventurer-otp": (state: PlayerState) => selectInitState(state).hasInitAdventurerOTP,
+  "warrior-otp": (state: PlayerState) => selectInitState(state).hasInitWarriorOTP,
+  "healer-otp": (state: PlayerState) => selectInitState(state).hasInitHealerOTP,
+  "mage-otp": (state: PlayerState) => selectInitState(state).hasInitMageOTP,
+  warrior: (state: PlayerState) => selectInitState(state).hasInitWarriorPane,
+  healer: (state: PlayerState) => selectInitState(state).hasInitHealerPane,
+  mage: (state: PlayerState) => selectInitState(state).hasInitMagePane,
+} as const
 
 export const prestigeUpgradeMap: Record<PrestigeUpgradeName, (state: RootState) => number> = {
   damage: (state) => selectPrestigeState(state).pDamageUpgradeCount,
   health: (state) => selectPrestigeState(state).pHealthUpgradeCount,
-}
+} as const
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -100,7 +141,26 @@ export function loadFromLocalStorage(): RootState | undefined {
 
     console.log("Decompressed from local storage", gameState)
 
-    return { ...gameState, stats: { ...gameState.stats, gameVersion: METADATA_CONFIG.version } }
+    const saveVersion = gameState.meta?.gameVersion
+    if (!saveVersion) return undefined
+
+    const saveMinorVersion = saveVersion.split(".")?.[1]
+    const currentVersion = METADATA_CONFIG.version
+    const currentMinorVersion = currentVersion.split(".")[1]
+    console.log(saveVersion, currentVersion)
+    if (saveMinorVersion !== currentMinorVersion) {
+      setTimeout(() => {
+        alert(`
+Attention Slime Slayer!
+
+Your save from ${saveVersion} doesn't quite fit into the ${currentVersion} world.
+
+The time has come to start a brand new adventure.`)
+      }, 100)
+      return undefined
+    }
+
+    return { ...gameState, meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version } }
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)
     return undefined

@@ -4,13 +4,20 @@ import clsx from "clsx/lite"
 import Prestige from "./prestige"
 import { TabData } from "../../models/player"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { selectPrestigeTabVisible, selectTabInView, setTabInView } from "../../redux/playerSlice"
+import {
+  selectPrestigeTabVisible,
+  selectTabInView,
+  selectTabAnimationComplete,
+  setTabInView,
+  incrementUIProgression,
+} from "../../redux/playerSlice"
 
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
 
   const activeTab = useAppSelector(selectTabInView)
   const prestigeTabVisible = useAppSelector(selectPrestigeTabVisible)
+  const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
   const [tabHeight, setTabHeight] = useState(0)
   const tabRef = useRef<HTMLDivElement>(null)
 
@@ -37,6 +44,10 @@ export default function PanelIndex() {
   useEffect(() => {
     if (tabRef.current) {
       setTabHeight(prestigeTabVisible ? tabRef.current.scrollHeight : 0)
+      if (!tabAnimationComplete) {
+        const timeout = setTimeout(() => dispatch(incrementUIProgression()), 1100)
+        return () => clearTimeout(timeout)
+      }
     }
   }, [prestigeTabVisible])
 
@@ -45,9 +56,11 @@ export default function PanelIndex() {
       <div
         className={clsx(
           // Base
-          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-3 lg:m-6 overflow-y-auto",
+          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-3 lg:m-6",
         )}>
-        <div style={{ height: `${tabHeight}px` }} className="transition-[height]">
+        <div
+          style={{ height: `${tabHeight}px` }}
+          className={clsx(tabAnimationComplete ? "transition-none" : "transition-[height] duration-1000")}>
           {prestigeTabVisible && (
             <div ref={tabRef} className="flex gap-1 h-12 w-full">
               {tabs.map((tab) => (
@@ -68,7 +81,7 @@ export default function PanelIndex() {
         </div>
         <div
           className={clsx(
-            "h-full shadow-panel rounded-t",
+            "flex flex-col grow shadow-panel rounded-t rounded-b-xl",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
           )}>

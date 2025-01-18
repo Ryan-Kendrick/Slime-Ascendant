@@ -19,7 +19,6 @@ interface StatsState {
   achievementsUnlocked: string[]
   highestZone: number
   zoneTenCompleted: boolean
-  gameVersion: string
 }
 
 const initialState: StatsState = {
@@ -38,7 +37,6 @@ const initialState: StatsState = {
 
   // Persisted data
   zoneTenCompleted: false,
-  gameVersion: METADATA_CONFIG.version,
 }
 
 export const statsSlice = createSlice({
@@ -46,8 +44,10 @@ export const statsSlice = createSlice({
   initialState,
   reducers: {
     unlockAchievement(state, action: PayloadAction<string>) {
-      state.achievementsUnlocked.push(action.payload)
-      console.log("Achievement unlocked", action.payload)
+      if (!state.achievementsUnlocked.includes(action.payload)) {
+        state.achievementsUnlocked.push(action.payload)
+        console.log("Achievement unlocked", action.payload)
+      }
     },
     monsterClicked(state, action: PayloadAction<number>) {
       state.clickCount++

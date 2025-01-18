@@ -5,7 +5,7 @@ import {
   increasePlasma,
   selectClickDamage,
   selectDotDamage,
-  selectPlayerState,
+  selectHeroState,
 } from "../../redux/playerSlice"
 import { monsterSlice, selectMonsterAlive, selectMonsterState, spawnMonster } from "../../redux/monsterSlice"
 import {
@@ -24,7 +24,6 @@ import { clearCatchUpTime, saveGame, selectLastSaveCatchUp, selectLoading, setLo
 export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
 
-  const { clickLevel } = useAppSelector(selectPlayerState)
   const clickDamage = useAppSelector(selectClickDamage)
   const dotDamage = useAppSelector(selectDotDamage)
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
@@ -57,7 +56,7 @@ export default function Monster({ children }: PropsWithChildren) {
   const TICK_RATE = 20
   const TICK_TIME = 1000 / TICK_RATE
 
-  const checkAchievements = useCallback(() => {}, [clickLevel])
+  const checkAchievements = useCallback(() => {}, [])
   const runTasks = useCallback(
     (catchup?: boolean) => {
       // 200ms

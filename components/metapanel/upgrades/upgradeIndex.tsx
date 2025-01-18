@@ -4,15 +4,18 @@ import {
   selectGCanAfford,
   selectClickDamage,
   selectDotDamage,
-  selectClickLevelUpCost,
-  selectDotLevelUpCost,
+  selectAdventurerLevelUpCost,
+  selectWarriorLevelUpCost,
   selectGold,
   updateDotDamage,
   updateClickDamage,
+  selectAdventurerDamage,
+  selectWarriorDamage,
+  selectLevelUpCosts,
 } from "../../../redux/playerSlice"
 import { ClickMultiIcon1, ClickMultiIcon2, ClickMultiIcon3 } from "../../svgIcons/svg/clickIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
-import { LevelUpID } from "../../../models/upgrades"
+import { HeroName, UpgradeId } from "../../../models/upgrades"
 import UpgradePane from "./upgradePane"
 import Currency from "../currency"
 import { GoldIcon } from "../../svgIcons/svg/resourceIcons"
@@ -22,32 +25,43 @@ export default function UpgradeIndex() {
 
   const clickDamage = useAppSelector(selectClickDamage)
   const dotDamage = useAppSelector(selectDotDamage)
-  const clickLevelUpCost = useAppSelector(selectClickLevelUpCost)
-  const dotLevelUpCost = useAppSelector(selectDotLevelUpCost)
-  const goldSelector = selectGold
+  const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
+    useAppSelector(selectLevelUpCosts)
 
   const LevelUp = {
-    click: {
-      cost: clickLevelUpCost,
-      canAfford: useAppSelector(selectGCanAfford(clickLevelUpCost)),
-      action: updateClickDamage("levelup"),
+    adventurer: {
+      cost: adventurerLevelUpCost,
+      canAfford: useAppSelector(selectGCanAfford(adventurerLevelUpCost)),
+      action: updateClickDamage("adventurer-levelup"),
     },
-    dot: {
-      cost: dotLevelUpCost,
-      canAfford: useAppSelector(selectGCanAfford(dotLevelUpCost)),
-      action: updateDotDamage("levelup"),
+    warrior: {
+      cost: warriorLevelUpCost,
+      canAfford: useAppSelector(selectGCanAfford(warriorLevelUpCost)),
+      action: updateDotDamage("warrior-levelup"),
+    },
+    healer: {
+      // TODO: replace placeholder values
+      cost: healerLevelUpCost,
+      canAfford: useAppSelector(selectGCanAfford(healerLevelUpCost)),
+      action: updateDotDamage("healer-levelup"),
+    },
+    mage: {
+      // TODO: replace placeholder values
+      cost: mageLevelUpCost,
+      canAfford: useAppSelector(selectGCanAfford(mageLevelUpCost)),
+      action: updateDotDamage("mage-levelup"),
     },
   }
 
   function onLevelup(e: React.MouseEvent<HTMLButtonElement>) {
-    const levelUpId = e.currentTarget.id as LevelUpID
+    const levelUpId = e.currentTarget.id as HeroName
 
     const { cost, canAfford, action } = LevelUp[levelUpId]
 
     if (canAfford) {
       dispatch(action)
       dispatch(decreaseGold(cost))
-    } else {
+    } else if (!cost) {
       throw new Error(`Unexpected levelup target ${levelUpId}`)
     }
   }
@@ -58,38 +72,59 @@ export default function UpgradeIndex() {
     cost: number,
     isAffordable: boolean,
   ) {
-    const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".")
-    const upgradeActions = {
-      "click-multi": updateClickDamage("multi"),
-      "dot-multi": updateDotDamage("multi"),
+    if (!isAffordable || hidden) return
+    const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".") as [UpgradeId, string]
+    let upgradeAction
+
+    if (upgradeId === "adventurer-otp") {
+      upgradeAction = updateClickDamage(upgradeId)
+    } else {
+      upgradeAction = updateDotDamage(upgradeId)
     }
 
-    if (isAffordable && !hidden) {
-      dispatch(upgradeActions[upgradeId as keyof typeof upgradeActions])
-      dispatch(decreaseGold(cost))
-    } else {
-      throw new Error(`Unexpected upgrade target ${upgradeId}`)
-    }
+    dispatch(upgradeAction)
+    dispatch(decreaseGold(cost))
   }
 
   return (
     <>
-      <Currency image={GoldIcon()} fontstyle="text-white font-outline-2" currencySelector={goldSelector} />
-      <div>
+      <Currency image={GoldIcon()} fontstyle="text-white font-outline-2" currencySelector={selectGold} />
+      <div className="flex flex-col flex-1">
         <UpgradePane
-          config={UPGRADE_CONFIG.click}
-          damage={clickDamage}
-          multiIcons={[ClickMultiIcon1(), ClickMultiIcon2(), ClickMultiIcon3()]}
+          config={UPGRADE_CONFIG.adventurer}
+          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
         <UpgradePane
-          config={UPGRADE_CONFIG.dot}
-          damage={dotDamage}
-          multiIcons={[ClickMultiIcon1(), ClickMultiIcon2(), ClickMultiIcon3()]}
+          config={UPGRADE_CONFIG.warrior}
+          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
+        <UpgradePane
+          config={UPGRADE_CONFIG.healer}
+          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+          onUpgrade={onUpgrade}
+          onLevelUp={onLevelup}
+        />
+        <UpgradePane
+          config={UPGRADE_CONFIG.mage}
+          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+          onUpgrade={onUpgrade}
+          onLevelUp={onLevelup}
+        />
+        {dotDamage > 0 && (
+          <div className="flex gap mt-auto mb-2">
+            <div className="flex-col text-white place-items-center w-full">
+              <h2 className="text-2xl font-outline">Total</h2>
+              <div className="flex text-lg w-full justify-evenly">
+                <h3>Click Damage: {Math.round(clickDamage)}</h3>
+                <h3>Passive Damage: {Math.round(dotDamage)}</h3>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

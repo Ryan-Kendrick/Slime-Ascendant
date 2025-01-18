@@ -1,4 +1,4 @@
-# Chrimps (working title)
+# Slime Ascendant
 
 An incremental game inspired by the adventure and discover of [Trimps](https://trimps.github.io/), and the presentation and RPG mechanics of [Clicker Heroes](https://www.clickerheroes.com/).
 
@@ -9,11 +9,11 @@ A [React](https://react.dev/) app created using the [Vike framework](https://vik
 Current status: Pre-MVP
 
 - Pre-MVP
-  - Placeholder assets, no live site
-- MVP (Make it playable)
-  - Static site deployment
-- Core (Make it good)
-  - Server supported with multiplayer guild content
+  - Static site deployment, essential features incomplete
+- MVP (Actually playable?)
+  - Static site deployment, basic game loop fully implemented
+- Core (Actually good?)
+  - Production server support for multiplayer content
 
 ## Credits
 
