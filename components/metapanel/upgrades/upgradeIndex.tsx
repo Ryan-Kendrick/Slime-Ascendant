@@ -27,7 +27,6 @@ export default function UpgradeIndex() {
   const dotDamage = useAppSelector(selectDotDamage)
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
-  const goldSelector = selectGold
 
   const LevelUp = {
     adventurer: {
@@ -74,8 +73,8 @@ export default function UpgradeIndex() {
     isAffordable: boolean,
   ) {
     if (!isAffordable || hidden) return
-
     const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".")
+    console.log(upgradeId, cost, isAffordable)
     const upgradeActions = {
       "adventurer-otp": updateClickDamage("adventurer-otp"),
       "warrior-otp": updateDotDamage("warrior-otp"),
@@ -87,7 +86,7 @@ export default function UpgradeIndex() {
 
   return (
     <>
-      <Currency image={GoldIcon()} fontstyle="text-white font-outline-2" currencySelector={goldSelector} />
+      <Currency image={GoldIcon()} fontstyle="text-white font-outline-2" currencySelector={selectGold} />
       <div className="flex flex-col flex-1">
         <UpgradePane
           config={UPGRADE_CONFIG.adventurer}

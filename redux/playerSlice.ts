@@ -3,8 +3,15 @@ import type { PayloadAction } from "@reduxjs/toolkit"
 import { AppDispatch, type RootState } from "./store"
 import { PlayerState, Tab } from "../models/player"
 import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
-import { heroDamageMap, heroStateMap, setInitElementMap } from "../gameconfig/utils"
-import { PrestigeState, PrestigeUpgradeName, UpgradeIdWithLevel, HeroName, UpgradeId } from "../models/upgrades"
+import { heroStateMap, setInitElementMap } from "../gameconfig/utils"
+import {
+  PrestigeState,
+  PrestigeUpgradeName,
+  UpgradeIdWithLevel,
+  HeroName,
+  UpgradeId,
+  HeroState,
+} from "../models/upgrades"
 import { prestigeReset } from "./shared/actions"
 import { ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
@@ -205,16 +212,6 @@ export const {
   toggleDebugState,
 } = playerSlice.actions
 
-export const selectHeroState = createSelector(
-  [(state: RootState) => state.player],
-  ({ adventurerLevel, adventurerOTPUpgradeCount, warriorLevel, warriorOTPUpgradeCount }) => ({
-    adventurerLevel,
-    adventurerOTPUpgradeCount,
-    warriorLevel,
-    warriorOTPUpgradeCount,
-  }),
-)
-
 export const createHeroSelector = (heroName: HeroName) =>
   createSelector([(state: RootState) => state.player], (player) => ({
     level: player[heroStateMap[heroName].level] as number,
@@ -225,6 +222,15 @@ export const selectAdventurerState = createHeroSelector("adventurer")
 export const selectWarriorState = createHeroSelector("warrior")
 export const selectHealerState = createHeroSelector("healer")
 export const selectMageState = createHeroSelector("mage")
+export const selectHeroState = createSelector(
+  [selectAdventurerState, selectWarriorState, selectHealerState, selectMageState],
+  (adventurerState, warriorState, healerState, mageState) => ({
+    adventurer: adventurerState,
+    warrior: warriorState,
+    healer: healerState,
+    mage: mageState,
+  }),
+)
 
 export const selectAdventurerLevelUpCost = (state: RootState) =>
   UPGRADE_CONFIG.adventurer.levelUpCost(state.player.adventurerLevel)
@@ -242,6 +248,7 @@ export const selectLevelUpCosts = createSelector(
   }),
 )
 
+const prestigeDamageMod = UPGRADE_CONFIG.prestige.find((pUpgrade) => pUpgrade.id === "damage")!.modifier
 export const selectPrestigeState = createSelector([(state: RootState) => state.player], (player) => ({
   plasma: player.plasma,
   plasmaSpent: player.plasmaSpent,
@@ -272,13 +279,13 @@ export const selectInitState = createSelector(
 
 export const selectAdventurerLevel = (state: RootState) => state.player.adventurerLevel
 export const selectGold = (state: RootState) => state.player.gold
-export const selectGCanAfford = (cost: number) => createSelector([selectGold], (gold) => gold >= cost)
+export const selectGCanAfford = (cost: number) => (state: RootState) => selectGold(state) >= cost
 export const selectPlasma = (state: RootState) => state.player.plasma
 export const selectPCanAfford = (cost: number) => createSelector([selectPlasma], (plasma) => plasma >= cost)
 export const selectPlasmaReserved = (state: RootState) => state.player.plasmaReserved
+const selectPDamageUpgradeCount = (state: RootState) => state.player.pDamageUpgradeCount
 export const selectAchievementModifier = (state: RootState) => state.player.achievementModifier
 
-const prestigeDamage = UPGRADE_CONFIG.prestige.find((pUpgrade) => pUpgrade.id === "damage")!.modifier
 export const selectAdventurerDamage = createSelector([selectAdventurerState], (adventurerState) =>
   playerCalc.heroDamage("adventurer", adventurerState),
 )
@@ -295,29 +302,35 @@ export const selectClickDamage = (state: RootState): number =>
   playerCalc.clickDamage(
     state.player.adventurerLevel,
     state.player.adventurerOTPUpgradeCount,
-    1 + state.player.pDamageUpgradeCount * prestigeDamage,
+    1 + state.player.pDamageUpgradeCount * prestigeDamageMod,
     1 + state.player.achievementModifier,
   )
-export const selectDotDamage = (state: RootState): number => {
-  // exclude adventurer from dot calc and memoise
-  if (state.player.activeHeroes.length < 1) return 0
-  type HeroStats = { level: number; upgradeCount: number }
+export const selectDotDamage = createSelector(
+  [
+    (state: RootState) => state.player.activeHeroes,
+    selectHeroState,
+    selectPDamageUpgradeCount,
+    selectAchievementModifier,
+  ],
+  (activeHeroes, heroState, pDamageUpgradeCount, achievementModifier) => {
+    if (activeHeroes.length < 1) return 0
 
-  const heroes = state.player.activeHeroes.slice(1)
-  const heroStats = [] as HeroStats[]
+    const heroes = activeHeroes.slice(1)
+    const heroStats = [] as HeroState[]
 
-  for (const hero of heroes) {
-    const thisHeroStats = heroDamageMap[hero](state)
-    heroStats.push(thisHeroStats)
-  }
+    for (const hero of heroes) {
+      const thisHeroState = heroState[hero]
+      heroStats.push(thisHeroState)
+    }
 
-  return playerCalc.heroDamage(
-    heroes,
-    heroStats,
-    1 + state.player.pDamageUpgradeCount * prestigeDamage,
-    1 + state.player.achievementModifier,
-  )
-}
+    return playerCalc.heroDamage(
+      heroes,
+      heroStats,
+      1 + pDamageUpgradeCount * prestigeDamageMod,
+      1 + achievementModifier,
+    )
+  },
+)
 
 export const selectTabInView = (state: RootState) => state.player.tabInView
 export const selectPrestigeTabVisible = createSelector(

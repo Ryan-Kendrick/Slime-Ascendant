@@ -64,9 +64,10 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
   const damage = upgradeProps[thisHeroName].damage
 
   const canAffordLevelUp = useAppSelector(selectGCanAfford(thisUpgradeProps.levelUpCost))
-  const canAffordOTPUpgrade = useAppSelector(
-    selectGCanAfford(UPGRADE_CONFIG.calcOTPCost(config.elementId, thisUpgradeProps.upgradeCount)),
-  )
+  const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, thisUpgradeProps.upgradeCount)
+  const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
+  // const canAffordThisUpgrade = (level: number) =>
+  //   useAppSelector(selectGCanAfford(UPGRADE_CONFIG.calcOTPCost(config.elementId, level)))
 
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
 
@@ -108,7 +109,7 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
       className={clsx(
         "flex w-full items-start justify-between align-start py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2 shadow-md border-t-purple-950 border-b-purple-950 border-x-2 transition-opacity duration-1000",
         upgradeName === "adventurer" ? "border-y-2" : "border-b-2",
-        canAffordOTPUpgrade && thisUpgradeProps.level > 10 ? "border-x-gold" : "border-x-yellow-700",
+        canAffordNextOTPUpgrade && thisUpgradeProps.level > 10 ? "border-x-gold" : "border-x-yellow-700",
         isVisible && isNotAdventurer && "opacity-100",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
         animationComplete && "opacity-100 transition-none",
@@ -126,8 +127,8 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
               onClick={onUpgrade}
               icon={icon}
               hidden={i === 0 ? thisUpgradeProps.level < 10 : thisUpgradeProps.upgradeCount < i}
-              cost={thisUpgradeProps.levelUpCost}
-              isAffordable={canAffordOTPUpgrade}
+              cost={nextOTPCost}
+              isAffordable={canAffordNextOTPUpgrade}
               isPurchased={thisUpgradeProps.upgradeCount > i}
             />
           ))}

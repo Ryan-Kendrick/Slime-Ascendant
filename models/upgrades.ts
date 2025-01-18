@@ -61,7 +61,7 @@ export interface PlayerCalc {
   clickDamage: (clickLevel: number, clickMulti: number, pDamage: number, achievementModifier: number) => number
   heroDamage: (
     heroName: HeroName | HeroName[],
-    heroStats: HeroStats | HeroStats[],
+    heroState: HeroState | HeroState[],
     pDamage?: number,
     achievementModifier?: number,
   ) => number
@@ -69,7 +69,7 @@ export interface PlayerCalc {
 
 export type HeroName = "adventurer" | "warrior" | "healer" | "mage"
 
-export type HeroStats = { level: number; upgradeCount: number }
+export type HeroState = { level: number; upgradeCount: number }
 
 export type UpgradeProps = {
   [key in HeroName]: {

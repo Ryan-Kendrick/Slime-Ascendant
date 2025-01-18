@@ -1,4 +1,4 @@
-import { HeroName, HeroStats, PlayerCalc, Upgrade, UpgradeConfig } from "../models/upgrades"
+import { HeroName, HeroState, PlayerCalc, UpgradeConfig } from "../models/upgrades"
 
 export const UPGRADE_CONFIG: UpgradeConfig = {
   adventurer: {
@@ -100,6 +100,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       "healer-otp": this.healer.OneTimePurchases.OTPCosts,
       "mage-otp": this.mage.OneTimePurchases.OTPCosts,
     }
+    console.log(upgradeName, upgradeCount, costs[upgradeName][upgradeCount])
     return costs[upgradeName][upgradeCount]
   },
   prestige: [
@@ -124,13 +125,13 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
 export const playerCalc: PlayerCalc = {
   clickDamage: (clickLevel, clickOTPUpgradeCount, pDamage, achievementModifier): number =>
     clickLevel * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
-  heroDamage: (heroName, heroStats, pDamage?, achievementModifier?): number => {
+  heroDamage: (heroName, heroState, pDamage?, achievementModifier?): number => {
     let damage = 0
 
-    if (Array.isArray(heroName) && Array.isArray(heroStats) && pDamage && achievementModifier) {
+    if (Array.isArray(heroName) && Array.isArray(heroState) && pDamage && achievementModifier) {
       for (let i = 0; i < heroName.length; i++) {
         const { baseDamage, levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName[i]]
-        const { level, upgradeCount } = heroStats[i]
+        const { level, upgradeCount } = heroState[i]
 
         damage += baseDamage + (level - 1) * levelUpMod
         const upgradeModifiers = OneTimePurchases.OTPModifiers.slice(0, upgradeCount)
@@ -143,7 +144,7 @@ export const playerCalc: PlayerCalc = {
       }
     } else if (typeof heroName === "string") {
       const { baseDamage, levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName as HeroName]
-      const { level, upgradeCount } = heroStats as HeroStats
+      const { level, upgradeCount } = heroState as HeroState
       if (level === 0) return 0
       damage += baseDamage + (level - 1) * levelUpMod
       const upgradeModifiers = OneTimePurchases.OTPModifiers.slice(0, upgradeCount)
@@ -153,7 +154,7 @@ export const playerCalc: PlayerCalc = {
       }
     } else {
       throw new Error(
-        `Unexpected values in hero damage calculation: ${heroName} ${heroStats} ${pDamage} ${achievementModifier}`,
+        `Unexpected values in hero damage calculation: ${heroName} ${heroState} ${pDamage} ${achievementModifier}`,
       )
     }
     return damage

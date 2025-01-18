@@ -6,7 +6,7 @@ import {
   PrestigeUpgradeName,
   UpgradeIdWithLevel,
   HeroName,
-  HeroStats,
+  HeroState,
   UpgradeId,
 } from "../models/upgrades"
 import { RootState } from "../redux/store"
@@ -34,20 +34,20 @@ export const heroStateMap: Record<HeroName, { level: keyof PlayerState; upgradeC
   },
 } as const
 
-export const heroDamageMap: Record<HeroName, (state: RootState) => HeroStats> = {
-  adventurer: (state) => {
-    return { level: state.player.adventurerLevel, upgradeCount: state.player.adventurerOTPUpgradeCount }
-  },
-  warrior: (state) => {
-    return { level: state.player.warriorLevel, upgradeCount: state.player.warriorOTPUpgradeCount }
-  },
-  healer: (state) => {
-    return { level: state.player.healerLevel, upgradeCount: state.player.healerOTPUpgradeCount }
-  },
-  mage: (state) => {
-    return { level: state.player.mageLevel, upgradeCount: state.player.mageOTPUpgradeCount }
-  },
-} as const
+// export const heroDamageMap: Record<HeroName, (state: RootState) => HeroState> = {
+//   adventurer: (state) => {
+//     return { level: state.player.adventurerLevel, upgradeCount: state.player.adventurerOTPUpgradeCount }
+//   },
+//   warrior: (state) => {
+//     return { level: state.player.warriorLevel, upgradeCount: state.player.warriorOTPUpgradeCount }
+//   },
+//   healer: (state) => {
+//     return { level: state.player.healerLevel, upgradeCount: state.player.healerOTPUpgradeCount }
+//   },
+//   mage: (state) => {
+//     return { level: state.player.mageLevel, upgradeCount: state.player.mageOTPUpgradeCount }
+//   },
+// } as const
 
 export const setInitElementMap: Record<UpgradeId | HeroName, (state: PlayerState) => boolean> = {
   "adventurer-otp": (state: PlayerState) => {
