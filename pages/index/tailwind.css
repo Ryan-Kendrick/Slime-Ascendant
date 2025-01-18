@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+@font-face {
+  font-family: "Sigmar";
+  src: url("/fonts/Sigmar-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
+@layer base {
+  html {
+    font-family: "Sigmar", system-ui, sans-serif;
+  }
   .font-outline {
     -webkit-text-stroke: 1px black;
   }
