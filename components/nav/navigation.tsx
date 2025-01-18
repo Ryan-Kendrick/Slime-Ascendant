@@ -1,7 +1,7 @@
 import { useState } from "react"
 import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
-import { CancelIcon } from "../svgIcons/svg/metaIcons"
+import { CancelIcon } from "../svgIcons/metaIcons"
 import Achievements from "./achievements"
 import handURL from "/icons/hand.png"
 import { METADATA_CONFIG } from "../../gameconfig/meta"

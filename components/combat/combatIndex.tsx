@@ -7,7 +7,7 @@ import Monster from "./monster"
 import ZoneMap from "./zoneMap"
 import ZoneSelector from "./zoneSelector"
 import { toggleDebugState } from "../../redux/playerSlice"
-import { CookieEnjoyerIcon } from "../svgIcons/svg/stageIcons"
+import { CookieEnjoyerIcon } from "../svgIcons/stageIcons"
 import FarmToggle from "./farmToggle"
 
 export default function CombatIndex() {

@@ -13,12 +13,12 @@ import {
   selectWarriorDamage,
   selectLevelUpCosts,
 } from "../../../redux/playerSlice"
-import { ClickMultiIcon1, ClickMultiIcon2, ClickMultiIcon3 } from "../../svgIcons/svg/clickIcons"
+import { ClickOTPIcon1, ClickOTPIcon2, ClickOTPIcon3 } from "../../svgIcons/clickIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { HeroName, UpgradeId } from "../../../models/upgrades"
 import UpgradePane from "./upgradePane"
 import Currency from "../currency"
-import { GoldIcon } from "../../svgIcons/svg/resourceIcons"
+import { GoldIcon } from "../../svgIcons/resourceIcons"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
