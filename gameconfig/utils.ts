@@ -142,10 +142,10 @@ export function loadFromLocalStorage(): RootState | undefined {
     console.log("Decompressed from local storage", gameState)
 
     const saveVersion = gameState.meta.gameVersion
-    const saveMinorVersion = saveVersion.split(".")[1]
+    const saveMinorVersion = (saveVersion.split(".")[1] ??= false)
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
-
+    console.log(saveVersion, currentVersion)
     if (saveMinorVersion !== currentMinorVersion) {
       setTimeout(() => {
         alert(`
