@@ -12,7 +12,10 @@ interface LevelUpProps {
 export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, isAffordable }: LevelUpProps) {
   return (
     <div className="border-2 border-amber-900 ring-1 ring-amber-950">
-      <div className="border-4 border-amber-950 bg-amber-950">
+      <div className="relative border-4 border-amber-950 bg-amber-950">
+        <div className="absolute ml-1 mt-[0.13rem] rounded-tl-sm bg-white/50 inset-x-0 top-0 bottom-3/4 z-20 pointer-events-none" />
+        <div className="absolute ml-1 rounded-bl bg-gradient-to-t from-white/0 to-white/50 inset-x-0 top-1/4 bottom-1/2 z-20 pointer-events-none" />
+        <div className="absolute z-20 pointer-events-none" />
         <button
           disabled={!isAffordable}
           id={id}
