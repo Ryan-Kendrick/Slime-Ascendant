@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Sigmar";
-  src: url("/fonts/Sigmar-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
   font-display: swap;
+  font-family: "Sigmar";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/Sigmar.woff2") format("woff2");
 }
 
 @layer base {
