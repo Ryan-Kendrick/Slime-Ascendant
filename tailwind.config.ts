@@ -15,7 +15,9 @@ export default {
       },
       fontFamily: {
         sans: [...defaultTheme.fontFamily.sans],
-        sigmar: ["Sigmar", ...defaultTheme.fontFamily.sans],
+        sigmar: ["Sigmar", "system-ui", "sans-serif"],
+        paytone: ["Paytone", "system-ui", "sans-serif"],
+        passion: ["Passion", "system-ui", "sans-serif"],
       },
       cursor: {
         hand: "url('icons/hand.png') 0 0, pointer",
