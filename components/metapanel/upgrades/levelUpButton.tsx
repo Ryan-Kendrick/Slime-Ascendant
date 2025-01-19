@@ -18,7 +18,7 @@ export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, 
           id={id}
           className={clsx(
             // Base
-            "flex flex-col items-center py-2 px-4 min-w-32 text-white text-lg cursor-hand",
+            "flex flex-col items-center py-2 px-4 min-w-32 text-white text-xl font-paytone cursor-hand",
             "border-2 border-amber-300",
             "transition-all duration-75",
             "shadow-[0_0_8px_0px_rgba(251,191,36,0.9),inset_0_0_4px_-1px_rgba(251,191,36,0.8)]",
@@ -42,7 +42,7 @@ export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, 
           </span>
         </button>
         <div className="absolute ml-1 mt-1 mr-1 rounded-t-sm bg-white/50 inset-x-0 top-0 bottom-3/4 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5  pointer-events-none" />
-        <div className="absolute ml-1 mr-1 rounded-bl bg-gradient-to-t from-white/0 to-white/50 inset-x-0 top-1/4 bottom-1/2 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none" />
+        <div className="absolute ml-1 mr-1 rounded-bl bg-gradient-to-t from-white/0 to-white/50 inset-x-0 top-[calc(25%+0.0009rem)] bottom-1/2 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none" />
       </div>{" "}
     </div>
   )
