@@ -41,8 +41,8 @@ export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, 
             <img className="w-[1.4rem] inline-block self-center" src={`${coinURL}`} alt="gold coin" /> {levelUpCost}
           </span>
         </button>
-        <div className="absolute ml-1 mt-1 mr-1 rounded-t-sm bg-white/50 inset-x-0 top-0 bottom-3/4 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5  pointer-events-none" />
-        <div className="absolute ml-1 mr-1 rounded-bl bg-gradient-to-t from-white/0 to-white/50 inset-x-0 top-[calc(25%+0.0009rem)] bottom-1/2 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none" />
+        <div className="absolute ml-1 mt-1 mr-1 rounded-t-sm bg-blue-300/50 inset-x-0 top-0 bottom-3/4 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5  pointer-events-none" />
+        <div className="absolute ml-1 mr-1 rounded-bl bg-gradient-to-t from-blue-300/0 to-blue-300/50 inset-x-0 top-[calc(25%+0.0009rem)] bottom-1/2 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none" />
       </div>{" "}
     </div>
   )
