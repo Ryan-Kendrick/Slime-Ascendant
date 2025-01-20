@@ -1,7 +1,7 @@
 import vikeReact from "vike-react/config"
 import type { Config } from "vike/types"
 
-const logoURL = "/icons/logo.svg"
+const logoURL = "/assets/icons/logo.svg"
 
 export default {
   title: "Slime Ascendant",

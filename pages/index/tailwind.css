@@ -5,19 +5,19 @@
 @font-face {
   font-display: swap;
   font-family: "Sigmar";
-  src: url("/fonts/Sigmar.woff2") format("woff2");
+  src: url("./assets/fonts/Sigmar.woff2") format("woff2");
 }
 
 @font-face {
   font-display: swap;
   font-family: "Paytone";
-  src: url("/fonts/paytone-one.woff2") format("woff2");
+  src: url("./assets/fonts/paytone-one.woff2") format("woff2");
 }
 
 @font-face {
   font-display: swap;
   font-family: "Passion";
-  src: url("/fonts/passion-one.woff2") format("woff2");
+  src: url("./assets/fonts/passion-one.woff2") format("woff2");
 }
 
 @layer base {

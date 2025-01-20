@@ -17,7 +17,7 @@ import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
 import { selectZoneTenComplete } from "../../redux/statsSlice"
-import handURL from "/icons/hand.png"
+import handURL from "/assets/icons/hand.png"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()

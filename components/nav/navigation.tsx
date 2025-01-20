@@ -3,7 +3,7 @@ import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
 import Achievements from "./achievements"
-import handURL from "/icons/hand.png"
+import handURL from "/assets/icons/hand.png"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
 
 export default function Navigation() {
