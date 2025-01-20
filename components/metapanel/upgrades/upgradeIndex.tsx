@@ -88,7 +88,7 @@ export default function UpgradeIndex() {
 
   return (
     <>
-      <Currency image={GoldIcon()} fontstyle="text-white font-outline-2" currencySelector={selectGold} />
+      <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
       <div className="flex flex-col flex-1">
         <UpgradePane
           config={UPGRADE_CONFIG.adventurer}

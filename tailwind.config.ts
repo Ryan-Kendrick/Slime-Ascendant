@@ -12,6 +12,7 @@ export default {
         darkgreen: "#11772D",
         gold: "#ffbf00",
         lightgold: "#ffcf40",
+        darkgold: "#cca533",
       },
       fontFamily: {
         sans: [...defaultTheme.fontFamily.sans],

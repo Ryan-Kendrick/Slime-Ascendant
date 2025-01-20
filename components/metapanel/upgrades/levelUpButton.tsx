@@ -36,8 +36,8 @@ export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, 
             isAffordable ? "bg-blue-600 hover:bg-blue-700 active:bg-blue-800" : "bg-blue-950 border-amber-950",
           )}
           onClick={onClick}>
-          <span>Level {currentLevel}</span>
-          <span>
+          <span className="z-30">Level {currentLevel}</span>
+          <span className="text-lg">
             <img className="w-[1.4rem] inline-block self-center" src={`${coinURL}`} alt="gold coin" /> {levelUpCost}
           </span>
         </button>
