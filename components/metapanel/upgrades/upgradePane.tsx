@@ -116,7 +116,7 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
       )}>
       <div className="flex gap-1 flex-col w-40 md:w-52 2xl:w-56 items-center text-white font-outline">
         <div className="text-2xl">{config.displayName}</div>
-        <div className="self-center">
+        <div className="self-center font-paytone text-lg">
           {config.displayStat}: <span className="">{Math.round(damage)}</span>
         </div>
         <div className="flex gap-2.5 pt-1">
