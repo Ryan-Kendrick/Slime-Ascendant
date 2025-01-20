@@ -13,7 +13,15 @@ import {
   selectWarriorDamage,
   selectLevelUpCosts,
 } from "../../../redux/playerSlice"
-import { ClickOTPIcon1, ClickOTPIcon2, ClickOTPIcon3 } from "../../svgIcons/clickIcons"
+import {
+  ClickOTPIcon1,
+  ClickOTPIcon2,
+  ClickOTPIcon3,
+  MageOTPIcon1,
+  MageOTPIcon2,
+  MageOTPIcon3,
+  MageOTPIcon4,
+} from "../../svgIcons/clickIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { HeroName, UpgradeId } from "../../../models/upgrades"
 import UpgradePane from "./upgradePane"
@@ -110,7 +118,7 @@ export default function UpgradeIndex() {
         />
         <UpgradePane
           config={UPGRADE_CONFIG.mage}
-          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+          OTPIcons={[MageOTPIcon1(), MageOTPIcon2(), MageOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
