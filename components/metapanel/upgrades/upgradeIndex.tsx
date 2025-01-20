@@ -117,7 +117,7 @@ export default function UpgradeIndex() {
         {dotDamage > 0 && (
           <div className="flex gap mt-auto mb-2">
             <div className="flex-col text-white place-items-center w-full">
-              <h2 className="text-2xl font-outline">Total</h2>
+              <h2 className="text-3xl font-outline">Total</h2>
               <div className="flex text-lg w-full justify-evenly">
                 <h3>Click Damage: {Math.round(clickDamage)}</h3>
                 <h3>Passive Damage: {Math.round(dotDamage)}</h3>
