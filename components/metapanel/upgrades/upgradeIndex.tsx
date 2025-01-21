@@ -17,11 +17,12 @@ import {
   ClickOTPIcon1,
   ClickOTPIcon2,
   ClickOTPIcon3,
+  ClickOTPIcon4,
   MageOTPIcon1,
   MageOTPIcon2,
   MageOTPIcon3,
   MageOTPIcon4,
-} from "../../svgIcons/clickIcons"
+} from "../../svgIcons/OTPIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { HeroName, UpgradeId } from "../../../models/upgrades"
 import UpgradePane from "./upgradePane"
