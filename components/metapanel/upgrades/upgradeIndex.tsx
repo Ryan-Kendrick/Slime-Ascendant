@@ -18,10 +18,18 @@ import {
   ClickOTPIcon2,
   ClickOTPIcon3,
   ClickOTPIcon4,
+  HealerOTPIcon1,
+  HealerOTPIcon2,
+  HealerOTPIcon3,
+  HealerOTPIcon4,
   MageOTPIcon1,
   MageOTPIcon2,
   MageOTPIcon3,
   MageOTPIcon4,
+  WarriorOTPIcon1,
+  WarriorOTPIcon2,
+  WarriorOTPIcon3,
+  WarriorOTPIcon4,
 } from "../../svgIcons/OTPIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { HeroName, UpgradeId } from "../../../models/upgrades"
@@ -107,13 +115,13 @@ export default function UpgradeIndex() {
         />
         <UpgradePane
           config={UPGRADE_CONFIG.warrior}
-          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+          OTPIcons={[WarriorOTPIcon1(), WarriorOTPIcon2(), WarriorOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
         <UpgradePane
           config={UPGRADE_CONFIG.healer}
-          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+          OTPIcons={[HealerOTPIcon1(), HealerOTPIcon2(), HealerOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
