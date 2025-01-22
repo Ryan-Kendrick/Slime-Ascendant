@@ -97,5 +97,5 @@ export function GoldIcon() {
 
 //   <path d="M50 5A45 45 0 0 1 95 50" stroke="url(#edgeShine)" stroke-width="4" fill="none" />
 
-//   <ellipse cx="35" cy="35" rx="15" ry="10" fill="#ffffff" fill-opacity="0.2" transform="rotate(-30 35 35)" />
+//   <ellipse cx="35" cy="35" rx="15" ry="10" fill="#ffffff" fillOpacity="0.2" transform="rotate(-30 35 35)" />
 // </svg>
