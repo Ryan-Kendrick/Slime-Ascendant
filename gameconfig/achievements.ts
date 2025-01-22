@@ -5,8 +5,6 @@ interface AchievementTier {
   modifier: number
 }
 
-type AchievementConfig = Record<string, Record<string, Achievement[]>>
-
 const ACHIEVEMENT_TIER_CONFIG: Record<Difficulty, AchievementTier> = {
   beginner: {
     difficulty: "beginner",
@@ -31,46 +29,60 @@ export interface Achievement {
   modifier: number
 }
 
+interface AchievementCategory {
+  displayName: string
+  achievements: Achievement[]
+}
+
+interface AchievementFeature {
+  displayName: string
+  [key: string]: string | AchievementCategory // Allow for displayName and category properties
+}
+
 // Feature{} > Achievement[] per category > Achievement{}
-export const ACHIEVEMENT_CONFIG: AchievementConfig = {
+export const ACHIEVEMENT_CONFIG: Record<string, AchievementFeature> = {
   zone: {
-    count: [
-      {
-        id: "zone-count.1",
-        title: "Geological Genesis",
-        description: "Complete 50 zones",
-        condition: 50,
-        ...ACHIEVEMENT_TIER_CONFIG.beginner,
-      },
-      {
-        id: "zone-count.2",
-        title: "Tectonic Trascendence",
-        description: "Complete 250 zones",
-        condition: 250,
-        ...ACHIEVEMENT_TIER_CONFIG.beginner,
-      },
-      {
-        id: "zone-count.3",
-        title: "Sedimentary Sage",
-        description: "Complete 500 zones",
-        condition: 500,
-        ...ACHIEVEMENT_TIER_CONFIG.novice,
-      },
-      {
-        id: "zone-count.4",
-        title: "Metamorphic Mastery",
-        description: "Complete 1000 zones",
-        condition: 1000,
-        ...ACHIEVEMENT_TIER_CONFIG.novice,
-      },
-      {
-        id: "zone-count.5",
-        title: "Supercontinental Serenity",
-        description: "Complete 2500 zones",
-        condition: 2500,
-        ...ACHIEVEMENT_TIER_CONFIG.intermediate,
-      },
-    ],
+    displayName: "Zone",
+    count: {
+      displayName: "Completed",
+      achievements: [
+        {
+          id: "zone-count.1",
+          title: "Geological Genesis",
+          description: "Complete 50 zones",
+          condition: 50,
+          ...ACHIEVEMENT_TIER_CONFIG.beginner,
+        },
+        {
+          id: "zone-count.2",
+          title: "Tectonic Trascendence",
+          description: "Complete 250 zones",
+          condition: 250,
+          ...ACHIEVEMENT_TIER_CONFIG.beginner,
+        },
+        {
+          id: "zone-count.3",
+          title: "Sedimentary Sage",
+          description: "Complete 500 zones",
+          condition: 500,
+          ...ACHIEVEMENT_TIER_CONFIG.novice,
+        },
+        {
+          id: "zone-count.4",
+          title: "Metamorphic Mastery",
+          description: "Complete 1000 zones",
+          condition: 1000,
+          ...ACHIEVEMENT_TIER_CONFIG.novice,
+        },
+        {
+          id: "zone-count.5",
+          title: "Supercontinental Serenity",
+          description: "Complete 2500 zones",
+          condition: 2500,
+          ...ACHIEVEMENT_TIER_CONFIG.intermediate,
+        },
+      ],
+    },
     progression: [
       {
         id: "zone-progression.1",
