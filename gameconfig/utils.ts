@@ -161,7 +161,11 @@ The time has come to start a brand new adventure.`)
       return undefined
     }
 
-    return { ...gameState, meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version } }
+    return {
+      ...gameState,
+      player: { ...gameState.player, tabInView: "upgrade" },
+      meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version },
+    }
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)
     return undefined
