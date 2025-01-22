@@ -32,7 +32,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     baseDamage: 5,
     levelUpMod: 4,
     OneTimePurchases: {
-      OTPCosts: [5000, 10000, 25000],
+      OTPCosts: [8000, 15000, 25000],
       OTPModifiers: [2, 2, 2],
       OTPDescriptions: [
         "Increase Passive Damage by 100%",
