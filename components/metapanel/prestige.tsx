@@ -68,7 +68,7 @@ export default function Prestige() {
     <div className="flex flex-col h-full">
       <Currency
         image={PlasmaIcon()}
-        fontstyle="text-cyan-300"
+        fontstyle="text-cyan-300 font-paytone"
         currencySelector={plasmaSelector}
         suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
       />
