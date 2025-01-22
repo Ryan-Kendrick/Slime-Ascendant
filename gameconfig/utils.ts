@@ -148,7 +148,8 @@ export function loadFromLocalStorage(): RootState | undefined {
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
     console.log(saveVersion, currentVersion)
-    if (saveMinorVersion !== currentMinorVersion) {
+
+    if (Number(saveMinorVersion) < 3) {
       setTimeout(() => {
         alert(`
 Attention Slime Slayer!
