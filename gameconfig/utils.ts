@@ -147,7 +147,6 @@ export function loadFromLocalStorage(): RootState | undefined {
     const saveMinorVersion = saveVersion.split(".")?.[1]
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
-    console.log(saveVersion, currentVersion)
 
     if (Number(saveMinorVersion) < 3) {
       setTimeout(() => {
