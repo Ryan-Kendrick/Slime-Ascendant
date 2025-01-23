@@ -28,7 +28,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     visibleAtZone: 3,
     elementId: "warrior-otp",
     displayName: "Warrior",
-    displayStat: "Damage",
+    displayStat: "Passive Damage",
     baseDamage: 5,
     levelUpMod: 4,
     OneTimePurchases: {
