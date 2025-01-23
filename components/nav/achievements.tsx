@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import { Achievement, ACHIEVEMENT_CONFIG } from "../../gameconfig/achievements"
+import { Achievement, ACHIEVEMENT_CONFIG, AchievementCategory } from "../../gameconfig/achievements"
 import { useAppSelector } from "../../redux/hooks"
 import { selectUnlockedAchievements } from "../../redux/statsSlice"
 import { useState } from "react"
@@ -22,7 +22,6 @@ export default function Achievements() {
   })
 
   const isAchievementUnlocked = (id: string) => unlockedAchievements.includes(id)
-  const formatFeature = (word: string) => word.charAt(0).toUpperCase() + word.slice(1)
   const formatCategory = (id: string) => id.charAt(0).toUpperCase() + id.slice(1)
 
   return (
@@ -36,44 +35,46 @@ export default function Achievements() {
       )}
 
       <div id="achievements-cont" className="flex-1 min-h-0 overflow-y-auto border-t border-lightgold pt-2">
-        {Object.entries(ACHIEVEMENT_CONFIG).map(([feature, categories]) => (
+        {Object.entries(ACHIEVEMENT_CONFIG).map(([feature, featureData]) => (
           // Achievement pane
 
           <div id="achievement-cont" key={`${feature}-container`} className="flex flex-col pb-2">
-            <div
-              id="feature-category:achievement-grid"
-              className="grid grid-cols-[100px_1fr] md:grid-cols-[100px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr] gap-4 border-b border-lightgold font-paytone text-white">
-              <h2 className="place-self-center font-bold text-4xl">{formatFeature(feature)}</h2>
-              <div id="category-achievement-cont" className="flex flex-col gap-2 mb-2">
-                {Object.entries(categories).map(([category, achievements]) => (
+            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] xl:grid-cols-[200px_1fr] gap-4 border-b border-lightgold font-paytone text-white">
+              <h2 className="place-self-center font-bold text-center text-2xl md:text-4xl">
+                {featureData.displayName}
+              </h2>
+              <div id="category-achievement-cont" className="flex flex-col gap-2 ml-2 mb-2">
+                {Object.entries(featureData).map(([categoryKey, categoryData]) => {
+                  if (categoryKey === "displayName") return null
+                  categoryData = categoryData as AchievementCategory
                   // Category title: Achievement grid
+                  return (
+                    <div
+                      key={`${feature}-${categoryKey}`}
+                      className="grid grid-row md:grid-cols-[120px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr] gap-4">
+                      <h3 className="text-center md:text-left">{categoryData.displayName}</h3>
+                      <div id="achievements-for-category" className="flex flex-wrap gap-2">
+                        {categoryData.achievements.map((achievement) => {
+                          // Grid items
 
-                  <div
-                    id="category:achievement"
-                    key={`${feature}-${category}`}
-                    className="grid grid-row md:grid-cols-[100px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr] gap-4">
-                    <h3 className="text-center md:text-left">{formatCategory(category)}</h3>
-                    <div id="achievements-for-category" className="flex flex-wrap gap-2">
-                      {achievements.map((achievement) => {
-                        // Grid items
-
-                        const unlocked = isAchievementUnlocked(achievement.id)
-                        return (
-                          <div
-                            key={achievement.id}
-                            className={clsx(
-                              "h-9 w-16 ",
-                              unlocked
-                                ? "rounded-sm border-gold bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]"
-                                : "border-2 border-white/60 bg-black/60",
-                            )}
-                            onPointerOver={() => onViewAchievement(achievement)}
-                            onMouseLeave={() => setSelectedAchievement(false)}></div>
-                        )
-                      })}
+                          const unlocked = isAchievementUnlocked(achievement.id)
+                          return (
+                            <div
+                              key={achievement.id}
+                              className={clsx(
+                                "h-9 w-16 ",
+                                unlocked
+                                  ? "rounded-sm border-gold bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]"
+                                  : "border-2 border-white/60 bg-black/60",
+                              )}
+                              onPointerOver={() => onViewAchievement(achievement)}
+                              onMouseLeave={() => setSelectedAchievement(false)}></div>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </div>

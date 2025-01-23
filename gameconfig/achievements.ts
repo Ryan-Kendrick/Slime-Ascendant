@@ -29,14 +29,14 @@ export interface Achievement {
   modifier: number
 }
 
-interface AchievementCategory {
+export interface AchievementCategory {
   displayName: string
   achievements: Achievement[]
 }
 
 interface AchievementFeature {
   displayName: string
-  [key: string]: string | AchievementCategory // Allow for displayName and category properties
+  [key: string]: string | AchievementCategory
 }
 
 // Feature{} > Achievement[] per category > Achievement{}
