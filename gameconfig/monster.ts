@@ -1,11 +1,11 @@
 import { BaseEnemy, Enemy, MonsterType, BaseMonsterConfig, EnemyState } from "../models/monsters"
 import { ZONE_CONFIG } from "./zone"
-import slimeURL from "/assets/monsters/slime.webp"
-import wormURL from "/assets/monsters/ph-worm.webp"
-import cacodemonURL from "/assets/monsters/ph-cacodemon.webp"
-import yetiURL from "/assets/monsters/ph-yeti.webp"
-import toothURL from "/assets/monsters/ph-boss-tooth.webp"
-import treasureGoblinURL from "/assets/monsters/ph-treasure-monster.webp"
+import slimeURL from "../assets/monsters/slime.webp"
+import wormURL from "../assets/monsters/ph-worm.webp"
+import cacodemonURL from "../assets/monsters/ph-cacodemon.webp"
+import yetiURL from "../assets/monsters/ph-yeti.webp"
+import toothURL from "../assets/monsters/ph-boss-tooth.webp"
+import treasureGoblinURL from "../assets/monsters/ph-treasure-monster.webp"
 
 const MONSTER_CONFIG: BaseMonsterConfig = {
   health: {
