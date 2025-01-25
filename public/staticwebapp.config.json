@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "route": "/static/*",
+      "route": "/assets/static/*",
       "headers": {
         "cache-control": "public, max-age=14500"
       }
