@@ -14,8 +14,6 @@ interface PrestigeBtnProps {
 }
 
 export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidden }: PrestigeBtnProps) {
-  if (hidden) return null
-
   const thisUpgradeName = config.id
   const upgradeCount = useAppSelector(prestigeUpgradeMap[thisUpgradeName])
 
@@ -24,6 +22,8 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
   const [totalCost, setTotalCost] = useState(0)
 
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
+
+  if (hidden) return null
 
   function onSelectPrestigeUpgrade(
     e: React.MouseEvent<HTMLButtonElement>,

@@ -1,14 +1,7 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import { useEffect, useState } from "react"
-import {
-  PrestigeUpgradeConfig,
-  PrestigeUpgradeName,
-  UpgradeIdWithLevel,
-  HeroName,
-  HeroState,
-  UpgradeId,
-} from "../models/upgrades"
+import { PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
 import { RootState } from "../redux/store"
 import { PlayerState } from "../models/player"
 import { selectInitState, selectPrestigeState } from "../redux/playerSlice"
@@ -49,7 +42,7 @@ export const heroStateMap: Record<HeroName, { level: keyof PlayerState; upgradeC
 //   },
 // } as const
 
-export const setInitElementMap: Record<UpgradeId | HeroName, (state: PlayerState) => boolean> = {
+export const setInitElementMap: Record<UpgradeId | HeroName, (state: PlayerState) => void> = {
   "adventurer-otp": (state: PlayerState) => {
     state.hasInitAdventurerOTP++
   },

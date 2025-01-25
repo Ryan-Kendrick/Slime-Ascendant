@@ -22,7 +22,6 @@ export default function Achievements() {
   })
 
   const isAchievementUnlocked = (id: string) => unlockedAchievements.includes(id)
-  const formatCategory = (id: string) => id.charAt(0).toUpperCase() + id.slice(1)
 
   return (
     <div className="flex flex-col h-full text-lg relative">

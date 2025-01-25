@@ -10,7 +10,6 @@ import {
   selectWarriorState,
   selectHealerState,
   selectMageState,
-  selectClickDamage,
   selectWarriorDamage,
   selectHealerDamage,
   selectMageDamage,
@@ -78,7 +77,8 @@ export default function UpgradePane({ config, OTPIcons: OTPIcons, onUpgrade, onL
   const isNotAdventurer = upgradeName !== "adventurer"
 
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
-  const hasInitialised = isNotAdventurer ? thisSelector && useAppSelector(thisSelector) : true
+  const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
+  const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
 
   useEffect(() => {
     if (isNotAdventurer) {

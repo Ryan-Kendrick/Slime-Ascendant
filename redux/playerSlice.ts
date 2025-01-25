@@ -4,16 +4,9 @@ import { AppDispatch, type RootState } from "./store"
 import { PlayerState, Tab } from "../models/player"
 import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { heroStateMap, setInitElementMap } from "../gameconfig/utils"
-import {
-  PrestigeState,
-  PrestigeUpgradeName,
-  UpgradeIdWithLevel,
-  HeroName,
-  UpgradeId,
-  HeroState,
-} from "../models/upgrades"
+import { PrestigeState, PrestigeUpgradeName, HeroName, UpgradeId, HeroState } from "../models/upgrades"
 import { prestigeReset } from "./shared/actions"
-import { ACHIEVEMENTS } from "../gameconfig/achievements"
+import { AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
 
 const debugState: PlayerState = {
@@ -132,7 +125,7 @@ export const playerSlice = createSlice({
       state.pDamageUpgradeCount++
     },
     incrementPHealthUpgradeCount: (state) => {
-      // state.pHealthUpgradeCount++
+      //   state.pHealthUpgradeCount++
     },
     prestigeRespec: (state) => {
       state.plasma += state.plasmaReserved
@@ -336,10 +329,12 @@ export const updateClickDamage = (whatChanged: string) => (dispatch: AppDispatch
       throw new Error("Unexpected updateDotDamage argument: " + whatChanged)
   }
 
+  const achievementData = ACHIEVEMENTS.click.value as AchievementCategory
   const state = getState()
+
   checkAchievementUnlock(dispatch, [
     {
-      achievements: ACHIEVEMENTS.click.value,
+      achievements: achievementData.achievements,
       value: selectClickDamage(state),
     },
   ])
@@ -371,11 +366,12 @@ export const updateDotDamage = (whatChanged: string) => (dispatch: AppDispatch, 
       throw new Error("Unexpected updateDotDamage argument: " + whatChanged)
   }
 
+  const achievementData = ACHIEVEMENTS.dot.value as AchievementCategory
   const state = getState()
 
   checkAchievementUnlock(dispatch, [
     {
-      achievements: ACHIEVEMENTS.dot.value,
+      achievements: achievementData.achievements,
       value: selectDotDamage(state),
     },
   ])
@@ -385,14 +381,18 @@ export const updatePrestige =
   (prestigePurchase: Record<PrestigeUpgradeName, PrestigeState>) =>
   (dispatch: AppDispatch, getState: () => RootState) => {
     dispatch(prestigeReset(prestigePurchase))
+
+    const countAchievements = ACHIEVEMENTS.prestige.count as AchievementCategory
+    const spentAchievements = ACHIEVEMENTS.prestige.plasmaSpent as AchievementCategory
     const state = getState()
+
     checkAchievementUnlock(dispatch, [
       {
-        achievements: ACHIEVEMENTS.prestige.count,
+        achievements: countAchievements.achievements,
         value: state.stats.prestigeCount,
       },
       {
-        achievements: ACHIEVEMENTS.prestige.plasmaSpent,
+        achievements: spentAchievements.achievements,
         value: state.player.plasmaSpent,
       },
     ])

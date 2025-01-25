@@ -3,9 +3,8 @@ import type { PayloadAction } from "@reduxjs/toolkit"
 import type { AppDispatch, RootState } from "./store"
 import { zoneComplete } from "./zoneSlice"
 import { prestigeReset } from "./shared/actions"
-import { ACHIEVEMENTS } from "../gameconfig/achievements"
+import { AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
-import { METADATA_CONFIG } from "../gameconfig/meta"
 
 interface StatsState {
   clickCount: number
@@ -111,10 +110,13 @@ export const selectZoneTenComplete = createSelector(
 
 export const updateFarmZonesCompleted = () => (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(incrementFarmZonesCompleted())
+
+  const achievementData = ACHIEVEMENTS.zone.farm as AchievementCategory
   const state = getState()
+
   checkAchievementUnlock(dispatch, [
     {
-      achievements: ACHIEVEMENTS.zone.farm,
+      achievements: achievementData.achievements,
       value: state.stats.farmZonesCompleted,
     },
   ])
@@ -123,15 +125,17 @@ export const updateFarmZonesCompleted = () => (dispatch: AppDispatch, getState: 
 export const updateZone = () => (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(zoneComplete())
 
+  const countAchievements = ACHIEVEMENTS.zone.count as AchievementCategory
+  const progressAchievements = ACHIEVEMENTS.zone.progression as AchievementCategory
   const state = getState()
 
   checkAchievementUnlock(dispatch, [
     {
-      achievements: ACHIEVEMENTS.zone.count,
+      achievements: countAchievements.achievements,
       value: state.stats.totalZonesCompleted,
     },
     {
-      achievements: ACHIEVEMENTS.zone.progression,
+      achievements: progressAchievements.achievements,
       value: state.stats.highestZoneEver,
     },
   ])
@@ -140,15 +144,17 @@ export const updateZone = () => (dispatch: AppDispatch, getState: () => RootStat
 export const updateMonsterClicked = (damage: number) => (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(monsterClicked(damage))
 
+  const countAchievements = ACHIEVEMENTS.click.count as AchievementCategory
+  const damageAchievements = ACHIEVEMENTS.click.damage as AchievementCategory
   const state = getState()
 
   checkAchievementUnlock(dispatch, [
     {
-      achievements: ACHIEVEMENTS.click.count,
+      achievements: countAchievements.achievements,
       value: state.stats.clickCount,
     },
     {
-      achievements: ACHIEVEMENTS.click.damage,
+      achievements: damageAchievements.achievements,
       value: state.stats.totalClickDamage,
     },
   ])
@@ -158,10 +164,11 @@ export const updateDotDamageDealt = (damage: number) => (dispatch: AppDispatch, 
   dispatch(increaseTotalDotDamageDealt(damage))
 
   const state = getState()
+  const dotAchievements = ACHIEVEMENTS.dot.damage as AchievementCategory
 
   checkAchievementUnlock(dispatch, [
     {
-      achievements: ACHIEVEMENTS.dot.damage,
+      achievements: dotAchievements.achievements,
       value: state.stats.totalDotDamage,
     },
   ])

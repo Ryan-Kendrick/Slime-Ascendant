@@ -60,26 +60,25 @@ export default function Monster({ children }: PropsWithChildren) {
   const runTasks = useCallback(
     (catchup?: boolean) => {
       // 200ms
-      if (tickCount.current % 4 === 0) {
-      }
+      // if (tickCount.current % 4 === 0) {
+      // }
 
       // 500ms
-      if (tickCount.current % 10 === 0) {
-      }
+      // if (tickCount.current % 10 === 0) {
+      // }
 
       // 1 second
-      if (tickCount.current % 20 === 0) {
-        checkAchievements()
-      }
+      // if (tickCount.current % 20 === 0) {
+      //   checkAchievements()
+      // }
 
       // 2 seconds
-      if (tickCount.current % 40 === 0) {
-      }
+      // if (tickCount.current % 40 === 0) {
+      // }
 
       // 10 seconds
-      if (tickCount.current % 200 === 0) {
-        // dispatch(updateLastPlayed)
-      }
+      // if (tickCount.current % 200 === 0) {
+      // }
 
       // 30 seconds
       if (!catchup && tickCount.current % 600 === 0) {
@@ -96,7 +95,7 @@ export default function Monster({ children }: PropsWithChildren) {
     }
   }
 
-  const onMonsterDeath = () => {
+  const onMonsterDeath = useCallback(() => {
     const {
       currentZoneNumber: currentZone,
       zoneMonsters,
@@ -156,7 +155,7 @@ export default function Monster({ children }: PropsWithChildren) {
     if (nextMonster) {
       dispatch(spawnMonster(nextMonster))
     }
-  }
+  }, [zoneLength])
 
   useEffect(() => {
     let nextMonster: undefined | EnemyState
@@ -202,7 +201,7 @@ export default function Monster({ children }: PropsWithChildren) {
       }
       return delta
     },
-    [tickCount, dealDamageOverTime, runTasks, store, onMonsterDeath, dispatch],
+    [tickCount, dealDamageOverTime, runTasks, store, onMonsterDeath],
   )
 
   const handleOfflineProgress = useCallback(
@@ -257,7 +256,7 @@ export default function Monster({ children }: PropsWithChildren) {
 
       handleCatchUp()
     },
-    [onMonsterDeath, handleOfflineProgress, handleProgress],
+    [onMonsterDeath, handleOfflineProgress, handleProgress, loading],
   )
 
   useEffect(() => {

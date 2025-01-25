@@ -1,4 +1,4 @@
-import { configureStore, createSlice, Middleware } from "@reduxjs/toolkit"
+import { configureStore, Middleware } from "@reduxjs/toolkit"
 import statsReducer from "./statsSlice"
 import monsterReducer from "./monsterSlice"
 import zoneReducer from "./zoneSlice"

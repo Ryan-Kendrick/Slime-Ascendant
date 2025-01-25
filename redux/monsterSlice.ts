@@ -24,11 +24,13 @@ export const monsterSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(prestigeReset, (state) => {
-      return (state = initialState)
+    builder.addCase(prestigeReset, () => {
+      return initialState
     })
     builder.addMatcher(isAnyOf(monsterClicked, increaseTotalDotDamageDealt), (state, action) => {
-      state.health - action.payload < 1 ? (state.alive = false) : (state.health -= action.payload)
+      const newHealth = state.health - action.payload
+      state.health = newHealth
+      state.alive = newHealth >= 1
     })
   },
 })
