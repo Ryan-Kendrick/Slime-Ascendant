@@ -423,7 +423,7 @@ export const selectUIProgress = (state: RootState) => state.player.UIProgression
 export const selectTabInView = (state: RootState) => state.player.tabInView
 export const selectPrestigeTabVisible = createSelector(
   [selectPlasma, selectPlasmaReserved, (state: RootState) => state.player.plasmaSpent],
-  (plasma, plasmaReserved, plasmaSpent) => plasma || plasmaReserved || plasmaSpent > 0,
+  (plasma, plasmaReserved, plasmaSpent) => plasma > 0 || plasmaReserved > 0 || plasmaSpent > 0,
 )
 export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 0)
 

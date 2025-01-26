@@ -12,6 +12,7 @@ import {
   selectAdventurerDamage,
   selectWarriorDamage,
   selectLevelUpCosts,
+  selectPrestigeTabVisible,
 } from "../../../redux/playerSlice"
 import {
   ClickOTPIcon1,
@@ -44,6 +45,7 @@ export default function UpgradeIndex() {
   const dotDamage = useAppSelector(selectDotDamage)
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
+  const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
 
   const LevelUp = {
     adventurer: {
@@ -131,7 +133,7 @@ export default function UpgradeIndex() {
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
-        {dotDamage > 0 && (
+        {(dotDamage > 0 || hasPrestiged) && (
           <div className="flex gap mt-auto mb-2">
             <div className="flex flex-col text-white place-items-center w-full">
               <h2 className="text-3xl font-outline">Total</h2>
