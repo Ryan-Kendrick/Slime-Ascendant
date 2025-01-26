@@ -174,6 +174,10 @@ export const playerSlice = createSlice({
       state.adventurerOTPUpgradeCount = 0
       state.warriorLevel = 0
       state.warriorOTPUpgradeCount = 0
+      state.healerLevel = 0
+      state.healerOTPUpgradeCount = 0
+      state.mageLevel = 0
+      state.mageOTPUpgradeCount = 0
       state.gold = 0
       state.plasmaSpent += state.plasmaReserved
       state.activeHeroes = ["adventurer"]
@@ -181,6 +185,10 @@ export const playerSlice = createSlice({
       state.hasInitAdventurerOTP = 0
       state.hasInitWarriorPane = false
       state.hasInitWarriorOTP = 0
+      state.hasInitHealerPane = false
+      state.hasInitHealerOTP = 0
+      state.hasInitMagePane = false
+      state.hasInitMageOTP = 0
 
       state.tabInView = "upgrade"
 
