@@ -17,7 +17,9 @@ Current status: Pre-MVP
 
 ## License
 
-Source code licensed under the [MIT license/](./LICENSE)
+Source code licensed under the [MIT license.](./LICENSE)
+
+Assets under `/assets/*` are licensed under their respective license agreements and reuse is generally not permitted.
 
 ## Credits
 
