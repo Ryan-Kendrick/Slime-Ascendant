@@ -1,7 +1,7 @@
 import { BaseEnemy, Enemy, MonsterType, BaseMonsterConfig, EnemyState } from "../models/monsters"
 import { ZONE_CONFIG } from "./zone"
 import slimeURL from "../assets/monsters/slime.webp"
-import wormURL from "../assets/monsters/ph-worm.webp"
+import olmURL from "../assets/monsters/great-olm.webp"
 import cacodemonURL from "../assets/monsters/ph-cacodemon.webp"
 import yetiURL from "../assets/monsters/ph-yeti.webp"
 import toothURL from "../assets/monsters/ph-boss-tooth.webp"
@@ -31,7 +31,7 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
 
 const MONSTER_VARIATIONS: MonsterType[] = [
   { name: "Slime", kind: "regular", healthMulti: 1, imagePath: `${slimeURL}` },
-  { name: "Worm", kind: "regular", healthMulti: 1.05, imagePath: `${wormURL}` },
+  { name: "Great Olm", kind: "regular", healthMulti: 1.05, imagePath: `${olmURL}` },
   { name: "Cacodemon", kind: "regular", healthMulti: 1.1, imagePath: `${cacodemonURL}` },
   { name: "Yeti", kind: "regular", healthMulti: 1.2, imagePath: `${yetiURL}` },
 ]

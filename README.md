@@ -15,6 +15,10 @@ Current status: Pre-MVP
 - Core (Actually good?)
   - Production server support for multiplayer content
 
+## License
+
+Source code licensed under the [MIT license/](./LICENSE)
+
 ## Credits
 
 Made with styling and layout contributions from [Olivia Grace](https://github.com/olivia-clarkeedwards)
