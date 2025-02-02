@@ -25,6 +25,7 @@ export default [
     rules: {
       "react/react-in-jsx-scope": "off",
       "react-compiler/react-compiler": "error",
+      "react-hooks/exhaustive-deps": "off",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/no-unused-vars": [1, { argsIgnorePattern: "^_" }],

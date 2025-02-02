@@ -13,73 +13,73 @@ import { monsterClicked, increaseTotalDotDamageDealt } from "../statsSlice"
 export const deathMiddleware: Middleware = (store) => (next) => (action) => {
   const nextAction = next(action)
 
-  if (isAnyOf(monsterClicked, increaseTotalDotDamageDealt)(action)) {
-    const state: RootState = store.getState()
-    const { monsterAlive, monsterGoldValue, monsterPlasmaValue } = selectMonsterState(state)
+  if (!isAnyOf(monsterClicked, increaseTotalDotDamageDealt)(action)) return nextAction
 
-    if (!monsterAlive) {
-      const {
-        currentZoneNumber: currentZone,
-        zoneMonsters,
-        stageNumber: currentStage,
-        isFarming,
-        farmZoneMonsters,
-        farmStageNumber,
-        zoneInView,
-      } = selectZoneState(state)
+  const state: RootState = store.getState()
+  const { monsterAlive, monsterGoldValue, monsterPlasmaValue } = selectMonsterState(state)
 
-      const dispatch = store.dispatch
-      const zoneLength = ZONE_CONFIG.length
+  if (monsterAlive) return nextAction
 
-      dispatch(incrementKillCount())
-      dispatch(increaseGold(monsterGoldValue))
-      let nextMonster: undefined | EnemyState
+  const {
+    currentZoneNumber,
+    zoneMonsters,
+    stageNumber: currentStage,
+    isFarming,
+    farmZoneMonsters,
+    farmStageNumber,
+    zoneInView,
+  } = selectZoneState(state)
 
-      const isProgressing = zoneInView === currentZone
-      const stageNumber = isProgressing ? currentStage : farmStageNumber
+  const dispatch = store.dispatch
+  const zoneLength = ZONE_CONFIG.length
 
-      // Zone transition
-      if (stageNumber === zoneLength) {
-        // When highest zone
-        if (isProgressing) {
-          updateZonesCompleted(dispatch)
-          if (currentZone > 9) dispatch(increasePlasma(monsterPlasmaValue))
+  dispatch(incrementKillCount())
+  dispatch(increaseGold(monsterGoldValue))
+  let nextMonster: undefined | EnemyState
 
-          // Highest zone & farming toggled; zone transition in place
-          if (isFarming) {
-            const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
-            if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
-          } else {
-            const newZoneMonsters = selectZoneState(store.getState()).zoneMonsters
-            nextMonster = newZoneMonsters[0]
-          }
+  const isProgressing = zoneInView === currentZoneNumber
+  const stageNumber = isProgressing ? currentStage : farmStageNumber
 
-          // When farming and farming is toggled, continue; else goto zoneInView useEffect block
-        } else if (zoneInView < currentZone) {
-          updateFarmAchievements(dispatch)
-          if (isFarming && farmZoneMonsters) {
-            dispatch(refreshFarmZone())
-            const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
-            if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
-          } else if (!isFarming) {
-            dispatch(setZoneInView(currentZone))
-          } else throw new Error("Logic error during farm zone transition")
-        } else throw new Error("Logic error during highest zone transition")
+  // Zone transition
+  if (stageNumber === zoneLength) {
+    // When highest zone
+    if (isProgressing) {
+      updateZonesCompleted(dispatch)
+      if (currentZoneNumber > 9) dispatch(increasePlasma(monsterPlasmaValue))
 
-        // Stage transition case
+      // Highest zone & farming toggled; zone transition in place
+      if (isFarming) {
+        const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
+        if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
       } else {
-        dispatch(incrementStageNumber())
-        if (zoneInView < currentZone && farmZoneMonsters) {
-          nextMonster = farmZoneMonsters[stageNumber]
-        } else {
-          nextMonster = zoneMonsters[stageNumber]
-        }
+        const newZoneMonsters = selectZoneState(store.getState()).zoneMonsters
+        nextMonster = newZoneMonsters[0]
       }
-      // Spawn the next monster when we didn't jump to zoneInView transition
-      if (nextMonster) {
-        dispatch(spawnMonster(nextMonster))
-      }
+
+      // When farming and farming is toggled, continue; else goto zoneInView useEffect block
+    } else if (zoneInView < currentZoneNumber) {
+      updateFarmAchievements(dispatch)
+      if (isFarming && farmZoneMonsters) {
+        dispatch(refreshFarmZone())
+        const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
+        if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
+      } else if (!isFarming) {
+        dispatch(setZoneInView(currentZoneNumber))
+      } else throw new Error("Logic error during farm zone transition")
+    } else throw new Error("Logic error during highest zone transition")
+
+    // Stage transition case
+  } else {
+    dispatch(incrementStageNumber())
+    if (zoneInView < currentZoneNumber && farmZoneMonsters) {
+      nextMonster = farmZoneMonsters[stageNumber]
+    } else {
+      nextMonster = zoneMonsters[stageNumber]
     }
+  }
+  // Spawn the next monster when we didn't jump to zoneInView transition
+  if (nextMonster) {
+    dispatch(spawnMonster(nextMonster))
   }
 
   return nextAction

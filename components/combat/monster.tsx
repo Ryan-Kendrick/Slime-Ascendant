@@ -1,11 +1,12 @@
 import { PropsWithChildren, useCallback, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { selectClickDamage, selectDotDamage } from "../../redux/playerSlice"
-import { selectMonsterAlive, selectMonsterState } from "../../redux/monsterSlice"
+import { selectMonsterState, spawnMonster } from "../../redux/monsterSlice"
 import { updateDotDamageDealt, updateMonsterClicked } from "../../redux/statsSlice"
-import { selectZoneState } from "../../redux/zoneSlice"
 import { store } from "../../redux/store"
 import { clearCatchUpTime, saveGame, selectLastSaveCatchUp, selectLoading, setLoading } from "../../redux/metaSlice"
+import { EnemyState } from "../../models/monsters"
+import { selectZoneState } from "../../redux/zoneSlice"
 
 export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
@@ -22,7 +23,9 @@ export default function Monster({ children }: PropsWithChildren) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  const { monsterName, monsterImage, monsterAlive } = useAppSelector(selectMonsterState)
+  const { monsterName, monsterImage, monsterLevel } = useAppSelector(selectMonsterState)
+  const { currentZoneNumber, zoneInView, isFarming, zoneMonsters, farmZoneMonsters, farmZoneNumber, stageNumber } =
+    useAppSelector(selectZoneState)
 
   const tickCount = useRef(0)
   const lastFrameTime = useRef(performance.now())
@@ -30,37 +33,12 @@ export default function Monster({ children }: PropsWithChildren) {
   const TICK_RATE = 20
   const TICK_TIME = 1000 / TICK_RATE
 
-  const checkAchievements = useCallback(() => {}, [])
-  const runTasks = useCallback(
-    (catchup?: boolean) => {
-      // 200ms
-      // if (tickCount.current % 4 === 0) {
-      // }
-
-      // 500ms
-      // if (tickCount.current % 10 === 0) {
-      // }
-
-      // 1 second
-      // if (tickCount.current % 20 === 0) {
-      //   checkAchievements()
-      // }
-
-      // 2 seconds
-      // if (tickCount.current % 40 === 0) {
-      // }
-
-      // 10 seconds
-      // if (tickCount.current % 200 === 0) {
-      // }
-
-      // 30 seconds
-      if (!catchup && tickCount.current % 600 === 0) {
-        dispatch(saveGame())
-      }
-    },
-    [checkAchievements],
-  )
+  const runTasks = useCallback((catchup?: boolean) => {
+    // 30 seconds
+    if (!catchup && tickCount.current % 600 === 0) {
+      dispatch(saveGame())
+    }
+  }, [])
 
   const dealDamageOverTime = () => {
     if (dotDamage) {
@@ -68,6 +46,30 @@ export default function Monster({ children }: PropsWithChildren) {
       dispatch(updateDotDamageDealt(damageThisTick))
     }
   }
+
+  useEffect(() => {
+    let nextMonster: undefined | EnemyState
+
+    if (currentZoneNumber === zoneInView && !isFarming) {
+      const monsterFromThisZone = monsterLevel >= currentZoneNumber * 30 - 29
+      // If zone in view changed due to progression, do nothing; else return currentZone to view
+      if (monsterFromThisZone) {
+        return
+      } else {
+        nextMonster = zoneMonsters[stageNumber - 1]
+      }
+    }
+
+    // Zone in view changed due to farming toggle or previous zone selection
+    // Spawn monster from another zone
+    if (farmZoneNumber === zoneInView && farmZoneMonsters) {
+      nextMonster = farmZoneMonsters[0]
+    }
+
+    if (nextMonster) {
+      dispatch(spawnMonster(nextMonster))
+    } else throw new Error("Monster undefined during zone transition")
+  }, [zoneInView])
 
   const handleProgress = useCallback(
     (delta: number): number => {

@@ -133,7 +133,7 @@ export const {
   setZoneInView,
 } = zoneSlice.actions
 
-export const selectZoneState = createSelector([(state) => state.zone], (zone) => ({
+export const selectZoneState = createSelector([(state: RootState) => state.zone], (zone) => ({
   currentZoneNumber: zone.currentZoneNumber,
   currentZoneLength: zone.currentZoneLength,
   zoneMonsters: zone.monsters,
