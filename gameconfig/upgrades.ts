@@ -132,6 +132,8 @@ export const playerCalc: PlayerCalc = {
         const { baseDamage, levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName[i]]
         const { level, upgradeCount } = heroState[i]
 
+        if (level === 0) continue
+
         damage += baseDamage + (level - 1) * levelUpMod
         const upgradeModifiers = OneTimePurchases.OTPModifiers.slice(0, upgradeCount)
 

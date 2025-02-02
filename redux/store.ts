@@ -1,10 +1,12 @@
 import { configureStore, Middleware } from "@reduxjs/toolkit"
 import statsReducer from "./statsSlice"
 import monsterReducer from "./monsterSlice"
+import { deathMiddleware } from "./middleware/deathMiddleware"
 import zoneReducer from "./zoneSlice"
 import playerReducer from "./playerSlice"
-import metaReducer, { saveGame } from "./metaSlice"
-import { loadFromLocalStorage, saveToLocalStorage } from "../gameconfig/utils"
+import metaReducer from "./metaSlice"
+import { loadFromLocalStorage } from "../gameconfig/utils"
+import { saveMiddleware } from "./middleware/saveMiddleware"
 
 export interface StoreState {
   monster: ReturnType<typeof monsterReducer>
@@ -12,16 +14,6 @@ export interface StoreState {
   stats: ReturnType<typeof statsReducer>
   zone: ReturnType<typeof zoneReducer>
   meta: ReturnType<typeof metaReducer>
-}
-
-const saveMiddleware: Middleware = (store) => (next) => (action) => {
-  const nextAction = next(action)
-
-  if (saveGame.match(action)) {
-    saveToLocalStorage(store.getState())
-  }
-
-  return nextAction
 }
 
 export const store = configureStore({
@@ -33,7 +25,7 @@ export const store = configureStore({
     meta: metaReducer,
   },
   preloadedState: loadFromLocalStorage(),
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveMiddleware, deathMiddleware),
 })
 
 export type RootState = StoreState

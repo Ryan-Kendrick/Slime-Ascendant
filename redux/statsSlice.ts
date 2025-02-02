@@ -108,39 +108,6 @@ export const selectZoneTenComplete = createSelector(
   (highestZone) => highestZone > 10,
 )
 
-export const updateFarmZonesCompleted = () => (dispatch: AppDispatch, getState: () => RootState) => {
-  dispatch(incrementFarmZonesCompleted())
-
-  const achievementData = ACHIEVEMENTS.zone.farm as AchievementCategory
-  const state = getState()
-
-  checkAchievementUnlock(dispatch, [
-    {
-      achievements: achievementData.achievements,
-      value: state.stats.farmZonesCompleted,
-    },
-  ])
-}
-
-export const updateZone = () => (dispatch: AppDispatch, getState: () => RootState) => {
-  dispatch(zoneComplete())
-
-  const countAchievements = ACHIEVEMENTS.zone.count as AchievementCategory
-  const progressAchievements = ACHIEVEMENTS.zone.progression as AchievementCategory
-  const state = getState()
-
-  checkAchievementUnlock(dispatch, [
-    {
-      achievements: countAchievements.achievements,
-      value: state.stats.totalZonesCompleted,
-    },
-    {
-      achievements: progressAchievements.achievements,
-      value: state.stats.highestZoneEver,
-    },
-  ])
-}
-
 export const updateMonsterClicked = (damage: number) => (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(monsterClicked(damage))
 

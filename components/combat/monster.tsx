@@ -1,24 +1,10 @@
 import { PropsWithChildren, useCallback, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import {
-  increaseGold,
-  increasePlasma,
-  selectClickDamage,
-  selectDotDamage,
-  selectHeroState,
-} from "../../redux/playerSlice"
-import { monsterSlice, selectMonsterAlive, selectMonsterState, spawnMonster } from "../../redux/monsterSlice"
-import {
-  incrementKillCount,
-  updateDotDamageDealt,
-  updateMonsterClicked,
-  updateFarmZonesCompleted,
-  updateZone,
-} from "../../redux/statsSlice"
-import { selectZoneState, incrementStageNumber, refreshFarmZone, setZoneInView } from "../../redux/zoneSlice"
-import { ZONE_CONFIG } from "../../gameconfig/zone"
+import { selectClickDamage, selectDotDamage } from "../../redux/playerSlice"
+import { selectMonsterAlive, selectMonsterState } from "../../redux/monsterSlice"
+import { updateDotDamageDealt, updateMonsterClicked } from "../../redux/statsSlice"
+import { selectZoneState } from "../../redux/zoneSlice"
 import { store } from "../../redux/store"
-import { EnemyState } from "../../models/monsters"
 import { clearCatchUpTime, saveGame, selectLastSaveCatchUp, selectLoading, setLoading } from "../../redux/metaSlice"
 
 export default function Monster({ children }: PropsWithChildren) {
@@ -36,19 +22,7 @@ export default function Monster({ children }: PropsWithChildren) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  const zoneLength = ZONE_CONFIG.length
-  const {
-    currentZoneNumber: currentZone,
-    stageNumber: currentStageNumber,
-    zoneMonsters,
-    isFarming,
-    farmZoneMonsters,
-    farmZoneNumber,
-    zoneInView,
-  } = useAppSelector(selectZoneState)
-
-  const { monsterName, monsterPlasmaValue, monsterLevel, monsterImage, monsterAlive } =
-    useAppSelector(selectMonsterState)
+  const { monsterName, monsterImage, monsterAlive } = useAppSelector(selectMonsterState)
 
   const tickCount = useRef(0)
   const lastFrameTime = useRef(performance.now())
@@ -95,92 +69,6 @@ export default function Monster({ children }: PropsWithChildren) {
     }
   }
 
-  const onMonsterDeath = useCallback(() => {
-    const {
-      currentZoneNumber: currentZone,
-      zoneMonsters,
-      stageNumber: currentStage,
-      isFarming,
-      farmZoneMonsters,
-      farmStageNumber,
-      zoneInView,
-    } = selectZoneState(store.getState())
-    const { monsterGoldValue, monsterPlasmaValue } = selectMonsterState(store.getState())
-
-    dispatch(incrementKillCount())
-    dispatch(increaseGold(monsterGoldValue))
-    let nextMonster: undefined | EnemyState
-
-    const isProgressing = zoneInView === currentZone
-    const stageNumber = isProgressing ? currentStage : farmStageNumber
-
-    // Zone transition
-    if (stageNumber === zoneLength) {
-      // When highest zone
-      if (isProgressing) {
-        dispatch(updateZone())
-        if (currentZone > 9) dispatch(increasePlasma(monsterPlasmaValue))
-
-        // Highest zone & farming toggled; zone transition in place
-        if (isFarming) {
-          const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
-          if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
-        } else {
-          const newZoneMonsters = selectZoneState(store.getState()).zoneMonsters
-          nextMonster = newZoneMonsters[0]
-        }
-
-        // When farming and farming is toggled, continue; else goto zoneInView useEffect block
-      } else if (zoneInView < currentZone) {
-        dispatch(updateFarmZonesCompleted())
-        if (isFarming && farmZoneMonsters) {
-          dispatch(refreshFarmZone())
-          const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
-          if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
-        } else if (!isFarming) {
-          dispatch(setZoneInView(currentZone))
-        } else throw new Error("Logic error during farm zone transition")
-      } else throw new Error("Logic error during highest zone transition")
-
-      // Stage transition case
-    } else {
-      dispatch(incrementStageNumber())
-      if (zoneInView < currentZone && farmZoneMonsters) {
-        nextMonster = farmZoneMonsters[stageNumber]
-      } else {
-        nextMonster = zoneMonsters[stageNumber]
-      }
-    }
-    // Spawn the next monster when we didn't jump to zoneInView transition
-    if (nextMonster) {
-      dispatch(spawnMonster(nextMonster))
-    }
-  }, [zoneLength])
-
-  useEffect(() => {
-    let nextMonster: undefined | EnemyState
-
-    if (currentZone === zoneInView && !isFarming) {
-      const monsterFromThisZone = monsterLevel >= currentZone * 30 - 29
-      // If zone in view changed due to progression, do nothing; else return currentZone to view
-      if (monsterFromThisZone) {
-        return
-      } else {
-        nextMonster = zoneMonsters[currentStageNumber - 1]
-      }
-    }
-
-    // Zone in view changed due to farming toggle or previous zone selection
-    // Spawn monster from another zone
-    if (farmZoneNumber === zoneInView && farmZoneMonsters) {
-      nextMonster = farmZoneMonsters[0]
-    }
-
-    if (nextMonster) {
-      dispatch(spawnMonster(nextMonster))
-    } else throw new Error("Monster undefined during zone transition")
-  }, [zoneInView])
-
   const handleProgress = useCallback(
     (delta: number): number => {
       while (delta >= TICK_TIME) {
@@ -193,15 +81,13 @@ export default function Monster({ children }: PropsWithChildren) {
         } else {
           runTasks()
         }
-        const monsterDied = selectMonsterAlive(store.getState()) === false
-        if (monsterDied) onMonsterDeath()
 
         if (lastSaveCatchUpRef.current && delta <= 100) dispatch(clearCatchUpTime())
         delta -= TICK_TIME
       }
       return delta
     },
-    [tickCount, dealDamageOverTime, runTasks, store, onMonsterDeath],
+    [tickCount, dealDamageOverTime, runTasks, store],
   )
 
   const handleOfflineProgress = useCallback(
@@ -256,7 +142,7 @@ export default function Monster({ children }: PropsWithChildren) {
 
       handleCatchUp()
     },
-    [onMonsterDeath, handleOfflineProgress, handleProgress, loading],
+    [handleOfflineProgress, handleProgress, loading],
   )
 
   useEffect(() => {
@@ -289,10 +175,6 @@ export default function Monster({ children }: PropsWithChildren) {
     dispatch(updateMonsterClicked(clickDamage))
     // Goto !monsterAlive useEffect if monster died
   }
-
-  useEffect(() => {
-    if (!monsterAlive) onMonsterDeath()
-  }, [monsterAlive, onMonsterDeath])
 
   return (
     <>
