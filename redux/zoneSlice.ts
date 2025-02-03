@@ -68,21 +68,21 @@ export const zoneSlice = createSlice({
         state.farmStageIndex++
       }
     },
-    zoneSelection(state, action: PayloadAction<number>) {
-      const zoneNumber = state.currentZoneNumber - action.payload
+    zoneSelected(state, action: PayloadAction<{ nextZone: number; prevZone: number }>) {
+      const selectedZone = action.payload.nextZone
 
-      if (zoneNumber === state.zoneInView) {
+      if (selectedZone === state.zoneInView) {
         return
-      } else if (zoneNumber === state.currentZoneNumber) {
-        state.zoneInView = zoneNumber
+      } else if (selectedZone === state.currentZoneNumber) {
+        state.zoneInView = selectedZone
         state.isFarming = false
       } else {
-        const thisFarmZone = new Zone(zoneNumber, true)
-        state.farmZoneNumber = zoneNumber
+        const thisFarmZone = new Zone(selectedZone, true)
+        state.farmZoneNumber = selectedZone
         state.farmStageIndex = 1
         state.farmZoneMonsters = thisFarmZone.monsters
         state.isFarming = true
-        state.zoneInView = zoneNumber
+        state.zoneInView = selectedZone
       }
     },
     refreshFarmZone: (state) => {
@@ -125,7 +125,7 @@ export const zoneSlice = createSlice({
 export const {
   zoneComplete,
   incrementStageNumber,
-  zoneSelection,
+  zoneSelected,
   refreshFarmZone,
   setMonsters,
   toggleFarming,

@@ -47,30 +47,6 @@ export default function Monster({ children }: PropsWithChildren) {
     }
   }
 
-  useEffect(() => {
-    let nextMonster: undefined | EnemyState
-
-    if (currentZoneNumber === zoneInView && !isFarming) {
-      const monsterFromThisZone = monsterLevel >= currentZoneNumber * 30 - 29
-      // If zone in view changed due to progression, do nothing; else return currentZone to view
-      if (monsterFromThisZone) {
-        return
-      } else {
-        nextMonster = zoneMonsters[stageNumber - 1]
-      }
-    }
-
-    // Zone in view changed due to farming toggle or previous zone selection
-    // Spawn monster from another zone
-    if (farmZoneNumber === zoneInView && farmZoneMonsters) {
-      nextMonster = farmZoneMonsters[0]
-    }
-
-    if (nextMonster) {
-      dispatch(spawnMonster(nextMonster))
-    } else throw new Error("Monster undefined during zone transition")
-  }, [zoneInView])
-
   const handleProgress = useCallback(
     (delta: number): number => {
       while (delta >= TICK_TIME) {

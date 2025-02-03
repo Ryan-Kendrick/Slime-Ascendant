@@ -1,17 +1,23 @@
 import clsx from "clsx/lite"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { selectZoneState, zoneSelection } from "../../redux/zoneSlice"
+import { selectZoneState, zoneSelected } from "../../redux/zoneSlice"
+import { useState } from "react"
 
 export default function ZoneSelector() {
   const dispatch = useAppDispatch()
   const { currentZoneNumber, zoneInView } = useAppSelector(selectZoneState)
+  const [prevZone, setPrevZone] = useState(currentZoneNumber)
 
   const selectedZones = Array.from({ length: 5 }, (cur, acc) => acc + 1)
 
   function handleZoneChange(e: React.MouseEvent<HTMLButtonElement>) {
     const [elementName, deltaSuffix] = e.currentTarget.id.split(".")
     const zoneDelta = Number(deltaSuffix) - 1
-    dispatch(zoneSelection(zoneDelta))
+    const nextZone = currentZoneNumber - zoneDelta
+
+    // prevZone used by spawn middleware to be determine if zone transition is needed
+    dispatch(zoneSelected({ nextZone, prevZone: prevZone }))
+    setPrevZone(nextZone)
   }
 
   const opacitySteps = ["opacity-100", "opacity-90", "opacity-80", "opacity-70", "opacity-60"]

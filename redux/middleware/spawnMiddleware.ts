@@ -1,6 +1,13 @@
-import { Dispatch, isAnyOf, Middleware } from "@reduxjs/toolkit"
+import { Dispatch, isAnyOf, isAllOf, Middleware } from "@reduxjs/toolkit"
 import { selectMonsterState, spawnMonster } from "../monsterSlice"
-import { selectZoneState, incrementStageNumber, refreshFarmZone, setZoneInView, zoneComplete } from "../zoneSlice"
+import {
+  selectZoneState,
+  incrementStageNumber,
+  refreshFarmZone,
+  zoneComplete,
+  zoneSelected,
+  setZoneInView,
+} from "../zoneSlice"
 import { ZONE_CONFIG } from "../../gameconfig/zone"
 import { EnemyState } from "../../models/monsters"
 import { increaseGold, increasePlasma } from "../playerSlice"
@@ -10,14 +17,18 @@ import { AchievementCategory, ACHIEVEMENTS } from "../../gameconfig/achievements
 import { checkAchievementUnlock } from "../shared/helpers"
 import { monsterClicked, increaseTotalDotDamageDealt } from "../statsSlice"
 
-export const deathMiddleware: Middleware = (store) => (next) => (action) => {
+export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
   const nextAction = next(action)
 
-  if (!isAnyOf(monsterClicked, increaseTotalDotDamageDealt)(action)) return nextAction
+  if (!isAnyOf(monsterClicked, increaseTotalDotDamageDealt, zoneSelected)(action)) return nextAction
 
   const state: RootState = store.getState()
+  const dispatch = store.dispatch
   const { monsterAlive, monsterGoldValue, monsterPlasmaValue } = selectMonsterState(state)
 
+  if (isAllOf(zoneSelected)(action)) {
+    zoneTransition(state, dispatch, false, action.payload.prevZone)
+  }
   if (monsterAlive) return nextAction
 
   const {
@@ -30,7 +41,6 @@ export const deathMiddleware: Middleware = (store) => (next) => (action) => {
     zoneInView,
   } = selectZoneState(state)
 
-  const dispatch = store.dispatch
   const zoneLength = ZONE_CONFIG.length
 
   dispatch(incrementKillCount())
@@ -64,7 +74,7 @@ export const deathMiddleware: Middleware = (store) => (next) => (action) => {
         const newFarmZoneMonsters = selectZoneState(store.getState()).farmZoneMonsters
         if (newFarmZoneMonsters) nextMonster = newFarmZoneMonsters[0]
       } else if (!isFarming) {
-        dispatch(setZoneInView(currentZoneNumber))
+        zoneTransition(state, dispatch, true)
       } else throw new Error("Logic error during farm zone transition")
     } else throw new Error("Logic error during highest zone transition")
 
@@ -83,6 +93,33 @@ export const deathMiddleware: Middleware = (store) => (next) => (action) => {
   }
 
   return nextAction
+}
+
+function zoneTransition(state: RootState, dispatch: Dispatch, returnToProgression: boolean, previousZone?: number) {
+  let nextMonster: undefined | EnemyState
+  const stageNumber = state.zone.nextStageIndex - 1
+
+  // Case 1: Transition from farming to the current zone
+  if (returnToProgression) {
+    // TODO: add builder to zoneSlice to handle this as incrementFarmZonesCompelted
+    dispatch(setZoneInView(state.zone.currentZoneNumber))
+    nextMonster = state.zone.monsters[stageNumber]
+    // Case 2: Transitions via zoneSelector
+  } else if (previousZone && previousZone === state.zone.zoneInView) {
+    // Case 2a: Chose same zone, do nothing
+    return
+  } else if (state.zone.zoneInView === state.zone.currentZoneNumber) {
+    // Case 2b: Chose current zone, continue from current stage
+    nextMonster = state.zone.monsters[stageNumber]
+  } else {
+    // Case 2c: Chose farm zone, start from stage 1
+    nextMonster = state.zone.farmZoneMonsters?.[0]
+  }
+
+  if (nextMonster) {
+    console.log("isittrue", nextMonster)
+    dispatch(spawnMonster(nextMonster))
+  } else throw new Error("Monster undefined during zone transition")
 }
 
 function updateZonesCompleted(dispatch: Dispatch) {

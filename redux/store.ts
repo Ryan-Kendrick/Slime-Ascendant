@@ -1,7 +1,7 @@
 import { configureStore, Middleware } from "@reduxjs/toolkit"
 import statsReducer from "./statsSlice"
 import monsterReducer from "./monsterSlice"
-import { deathMiddleware } from "./middleware/deathMiddleware"
+import { spawnMiddleware } from "./middleware/spawnMiddleware"
 import zoneReducer from "./zoneSlice"
 import playerReducer from "./playerSlice"
 import metaReducer from "./metaSlice"
@@ -25,7 +25,7 @@ export const store = configureStore({
     meta: metaReducer,
   },
   preloadedState: loadFromLocalStorage(),
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveMiddleware, deathMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveMiddleware, spawnMiddleware),
 })
 
 export type RootState = StoreState
