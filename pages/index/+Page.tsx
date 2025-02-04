@@ -6,7 +6,7 @@ import Combat from "../../components/combat/combatIndex"
 import { store } from "../../redux/store"
 import { Provider } from "react-redux"
 import Navigation from "../../components/nav/navigation"
-import { useForcedDPI } from "../../gameconfig/utils"
+import { useForcedDPI } from "../../gameconfig/customHooks"
 import ReactModal from "react-modal"
 import Loading from "../../components/Loading"
 

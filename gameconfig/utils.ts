@@ -1,6 +1,5 @@
 //@ts-nocheck
 
-import { useEffect, useState } from "react"
 import { PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
 import { RootState } from "../redux/store"
 import { PlayerState } from "../models/player"
@@ -81,27 +80,6 @@ export const prestigeUpgradeMap: Record<PrestigeUpgradeName, (state: RootState) 
   damage: (state) => selectPrestigeState(state).pDamageUpgradeCount,
   health: (state) => selectPrestigeState(state).pHealthUpgradeCount,
 } as const
-
-export function useForcedDPI(): number {
-  const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
-
-  const [dpiScale, setDpiScale] = useState(getDPIScale)
-
-  useEffect(() => {
-    const queries = [
-      window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`),
-      window.matchMedia("(min-width: 1024px)"),
-    ]
-
-    const handleChange = () => setDpiScale(getDPIScale())
-
-    queries.forEach((query) => query.addEventListener("change", handleChange))
-
-    return () => queries.forEach((query) => query.removeEventListener("change", handleChange))
-  }, [])
-
-  return dpiScale
-}
 
 export function serialize(classInstance) {
   if (classInstance == null || typeof classInstance !== "object") return classInstance
