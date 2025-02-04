@@ -7,6 +7,7 @@ import { store } from "../../redux/store"
 import { clearCatchUpTime, saveGame, selectLastSaveCatchUp, selectLoading, setLoading } from "../../redux/metaSlice"
 import { EnemyState } from "../../models/monsters"
 import { selectZoneState } from "../../redux/zoneSlice"
+import { useGameEngine } from "../../gameconfig/customHooks"
 
 export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
@@ -27,127 +28,7 @@ export default function Monster({ children }: PropsWithChildren) {
   const { currentZoneNumber, zoneInView, isFarming, zoneMonsters, farmZoneMonsters, farmZoneNumber, stageNumber } =
     useAppSelector(selectZoneState)
 
-  const tickCount = useRef(0)
-  const lastFrameTime = useRef(performance.now())
-  const frameRef = useRef<number>()
-  const TICK_RATE = 20
-  const TICK_TIME = 1000 / TICK_RATE
-
-  const runTasks = useCallback((catchup?: boolean) => {
-    // 30 seconds
-    if (!catchup && tickCount.current % 600 === 0) {
-      dispatch(saveGame())
-    }
-  }, [])
-
-  const dealDamageOverTime = () => {
-    if (dotDamage) {
-      const damageThisTick = dotDamage / 20
-      dispatch(updateDotDamageDealt(damageThisTick))
-    }
-  }
-
-  const handleProgress = useCallback(
-    (delta: number): number => {
-      while (delta >= TICK_TIME) {
-        tickCount.current++
-
-        dealDamageOverTime()
-        // More than 30 seconds behind, use catchup flag to prevent save spam
-        if (delta >= 30000) {
-          runTasks(true)
-        } else {
-          runTasks()
-        }
-
-        if (lastSaveCatchUpRef.current && delta <= 100) dispatch(clearCatchUpTime())
-        delta -= TICK_TIME
-      }
-      return delta
-    },
-    [tickCount, dealDamageOverTime, runTasks, store],
-  )
-
-  const handleOfflineProgress = useCallback(
-    async (delta: number, long?: boolean): Promise<number> => {
-      dispatch(setLoading(true))
-      await new Promise((resolve) => setTimeout(resolve, 0))
-      try {
-        if (long) {
-          // TODO: Fullscreen catchup with asynchronous break
-          // Split into chunks, await new Promise(resolve => setTimeout(resolve, 0))
-          console.warn("Reduced offline progression to 1 hour because long catchup is yet to be implemented")
-          delta = 3600000
-          delta = handleProgress(delta)
-        } else {
-          // console.log("Processing offline ticks:", delta / TICK_RATE)
-          delta = handleProgress(delta)
-        }
-      } catch (err) {
-        console.error("Offline progress failed:", err)
-      } finally {
-        dispatch(setLoading(false))
-      }
-      return delta
-    },
-
-    [saveGame, handleProgress],
-  )
-
-  const gameLoop = useCallback(
-    (currentTime: number) => {
-      let delta: number
-      if (lastSaveCatchUpRef.current) {
-        delta = Date.now() - lastSaveCatchUpRef.current
-        dispatch(clearCatchUpTime())
-      } else {
-        delta = currentTime - lastFrameTime.current
-      }
-
-      const handleCatchUp = async () => {
-        delta = delta > 3600000 ? await handleOfflineProgress(delta, true) : await handleOfflineProgress(delta)
-        lastFrameTime.current = currentTime - (delta % TICK_TIME)
-        frameRef.current = requestAnimationFrame(gameLoop)
-      }
-
-      if (delta <= 600000) {
-        delta = handleProgress(delta)
-        lastFrameTime.current = currentTime - (delta % TICK_TIME)
-        frameRef.current = requestAnimationFrame(gameLoop)
-        if (loading) dispatch(setLoading(false))
-        return
-      }
-
-      handleCatchUp()
-    },
-    [handleOfflineProgress, handleProgress, loading],
-  )
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        if (frameRef.current) {
-          cancelAnimationFrame(frameRef.current)
-          frameRef.current = undefined
-        }
-      } else {
-        setTimeout(() => {
-          if (!frameRef.current) {
-            frameRef.current = requestAnimationFrame(gameLoop)
-          }
-        }, 0)
-      }
-    }
-    document.addEventListener("visibilitychange", handleVisibilityChange)
-    return () => document.removeEventListener("visibilitychange", handleVisibilityChange)
-  }, [gameLoop])
-
-  useEffect(() => {
-    frameRef.current = requestAnimationFrame(gameLoop)
-    return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current)
-    }
-  }, [gameLoop])
+  useGameEngine({ dotDamage, loading, lastSaveCatchUp })
 
   function handleClick() {
     dispatch(updateMonsterClicked(clickDamage))
