@@ -40,6 +40,11 @@ export function useGameEngine(props: EngineProps) {
   const TICK_RATE = 20
   const TICK_TIME = 1000 / TICK_RATE
 
+  const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
+  useEffect(() => {
+    lastSaveCatchUpRef.current = lastSaveCatchUp
+  }, [lastSaveCatchUp])
+
   const runTasks = (catchup?: boolean) => {
     // 30 seconds
     if (!catchup && tickCount.current % 600 === 0) {
@@ -66,7 +71,9 @@ export function useGameEngine(props: EngineProps) {
         runTasks()
       }
 
-      if (lastSaveCatchUp && delta <= 100) dispatch(clearCatchUpTime())
+      if (lastSaveCatchUpRef.current && delta <= 100) {
+        dispatch(clearCatchUpTime())
+      }
       delta -= TICK_TIME
     }
     return delta
@@ -96,8 +103,8 @@ export function useGameEngine(props: EngineProps) {
 
   const gameLoop = (currentTime: number) => {
     let delta: number
-    if (lastSaveCatchUp) {
-      delta = Date.now() - lastSaveCatchUp
+    if (lastSaveCatchUpRef.current) {
+      delta = Date.now() - lastSaveCatchUpRef.current
       dispatch(clearCatchUpTime())
     } else {
       delta = currentTime - lastFrameTime.current
