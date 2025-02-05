@@ -36,8 +36,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const dispatch = useAppDispatch()
   const [upgradeName] = config.elementId.split("-")
   const thisHeroName = upgradeName as HeroName
-  const [isMobile, setIsMobile] = useState(false)
-  const OTPContainerRef = useRef<HTMLDivElement>(null)
 
   const upgradeProps: UpgradeProps = {
     adventurer: {
@@ -73,9 +71,10 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const [shouldMount, setShouldMount] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [animationComplete, setAnimationComplete] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const OTPContainerRef = useRef<HTMLDivElement>(null)
 
   const isNotAdventurer = upgradeName !== "adventurer"
-
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
