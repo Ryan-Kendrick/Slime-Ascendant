@@ -36,7 +36,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const dispatch = useAppDispatch()
   const [upgradeName] = config.elementId.split("-")
   const thisHeroName = upgradeName as HeroName
-  const [purchasingStates, setPurchasingStates] = useState<{ [key: number]: boolean }>({})
   const [isMobile, setIsMobile] = useState(false)
   const OTPContainerRef = useRef<HTMLDivElement>(null)
 
@@ -91,28 +90,12 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  const handlePurchase = (index: number) => {
-    // Only run complex animation on desktop
-    if (!isMobile) {
-      setPurchasingStates((prev) => ({ ...prev, [index]: true }))
-      setTimeout(() => {
-        setPurchasingStates((prev) => ({ ...prev, [index]: false }))
-      }, 250) // Half of the total animation time
-    }
-  }
-
   const handleUpgradeWithAnimation = (
     e: React.MouseEvent<HTMLDivElement>,
     hidden: boolean,
     cost: number,
     isAffordable: boolean,
-    index: number,
-  ) => {
-    if (isAffordable) {
-      handlePurchase(index)
-    }
-    onUpgrade(e, hidden, cost, isAffordable)
-  }
+  ) => onUpgrade(e, hidden, cost, isAffordable)
 
   useEffect(() => {
     if (OTPContainerRef.current) {
@@ -120,22 +103,21 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       const items = container.getElementsByClassName("upgrade-item")
       const containerWidth = container.offsetWidth
       const itemWidth = 40
-      const itemGap = 8
 
       Array.from(items).forEach((item, index) => {
         const element = item as HTMLElement
-        const basePosition = index * (itemWidth + itemGap)
+        const basePosition = index * itemWidth
         element.style.left = `${basePosition}px`
 
         if (element.classList.contains("purchased") && isMobile) {
-          const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
+          const rightEdgePosition = containerWidth - itemWidth - index * itemWidth
 
           const travelDistance = rightEdgePosition - basePosition
 
           element.style.transform = `translateX(${travelDistance}px)`
         } else if (element.classList.contains("purchased")) {
           // Todo: Add a desktop specific animation
-          const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
+          const rightEdgePosition = containerWidth - itemWidth - index * itemWidth
 
           const travelDistance = rightEdgePosition - basePosition
 
@@ -192,14 +174,14 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
               <div
                 key={upgradeName + i}
                 className={clsx(
-                  "upgrade-item",
+                  "upgrade-item transition-transform",
+                  // Animation properties
+                  isMobile ? "duration-500" : "duration-200",
                   isPurchased && "purchased",
-                  purchasingStates[i] && "purchasing",
-                  "transition-all",
                 )}>
                 <OneTimePurchaseUpgrade
                   id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
-                  onClick={(e) => handleUpgradeWithAnimation(e, false, nextOTPCost, canAffordNextOTPUpgrade, i)}
+                  onClick={(e) => handleUpgradeWithAnimation(e, false, nextOTPCost, canAffordNextOTPUpgrade)}
                   icon={icon}
                   hidden={isHidden}
                   cost={nextOTPCost}
