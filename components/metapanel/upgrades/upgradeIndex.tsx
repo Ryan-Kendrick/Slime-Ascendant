@@ -34,7 +34,7 @@ import {
 } from "../../svgIcons/OTPIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { HeroName, UpgradeId } from "../../../models/upgrades"
-import UpgradePane from "./upgradePane"
+import HeroCard from "./heroCard"
 import Currency from "../currency"
 import { GoldIcon } from "../../svgIcons/resourceIcons"
 
@@ -59,13 +59,11 @@ export default function UpgradeIndex() {
       action: updateDotDamage("warrior-levelup"),
     },
     healer: {
-      // TODO: replace placeholder values
       cost: healerLevelUpCost,
       canAfford: useAppSelector(selectGCanAfford(healerLevelUpCost)),
       action: updateDotDamage("healer-levelup"),
     },
     mage: {
-      // TODO: replace placeholder values
       cost: mageLevelUpCost,
       canAfford: useAppSelector(selectGCanAfford(mageLevelUpCost)),
       action: updateDotDamage("mage-levelup"),
@@ -108,33 +106,33 @@ export default function UpgradeIndex() {
   return (
     <>
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
-      <div className="flex flex-col flex-1">
-        <UpgradePane
+      <div className="grid grid-cols-2 gap-1">
+        <HeroCard
           config={UPGRADE_CONFIG.adventurer}
           OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
-        <UpgradePane
+        <HeroCard
           config={UPGRADE_CONFIG.warrior}
           OTPIcons={[WarriorOTPIcon1(), WarriorOTPIcon2(), WarriorOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
-        <UpgradePane
+        <HeroCard
           config={UPGRADE_CONFIG.healer}
           OTPIcons={[HealerOTPIcon1(), HealerOTPIcon2(), HealerOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
-        <UpgradePane
+        <HeroCard
           config={UPGRADE_CONFIG.mage}
           OTPIcons={[MageOTPIcon1(), MageOTPIcon2(), MageOTPIcon3()]}
           onUpgrade={onUpgrade}
           onLevelUp={onLevelup}
         />
         {(dotDamage > 0 || hasPrestiged) && (
-          <div className="flex gap mt-auto mb-2">
+          <div className="col-span-2 mt-auto mb-2">
             <div className="flex flex-col text-white place-items-center w-full">
               <h2 className="text-3xl font-outline">Total</h2>
               <div className="flex text-lg w-full justify-evenly">

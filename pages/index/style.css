@@ -20,11 +20,28 @@ body {
   box-sizing: border-box;
 }
 
-/* Page Transition Animation */
-#page-content {
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
+/* One-time Purchase Animation */
+
+.upgrade-item {
+  position: absolute;
+  transition: transform 0.3s ease-in-out;
 }
-body.page-is-transitioning #page-content {
-  opacity: 0;
+
+/* Desktop - Arc */
+@media (min-width: 769px) {
+  .upgrade-container {
+    min-height: 80px;
+  }
+
+  .upgrade-item {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .upgrade-item.purchased {
+    transform: translate(calc(100% - 40px), 0);
+  }
+
+  .upgrade-item.purchasing {
+    transform: translate(calc(50% - 25px), -25px);
+  }
 }

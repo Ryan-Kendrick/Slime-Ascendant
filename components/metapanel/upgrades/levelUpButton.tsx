@@ -11,14 +11,14 @@ interface LevelUpProps {
 
 export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, isAffordable }: LevelUpProps) {
   return (
-    <div className="border-2 border-amber-900 ring-1 ring-amber-950">
-      <div className="relative border-4 border-amber-950 bg-amber-950">
+    <div className="w-full md:w-auto border-2 border-amber-900 ring-1 ring-amber-950">
+      <div className="w-full md:w-auto relative border-4 border-amber-950 bg-amber-950">
         <button
           disabled={!isAffordable}
           id={id}
           className={clsx(
             // Base
-            "flex flex-col items-center py-2 px-4 min-w-32 text-white text-xl font-paytone cursor-hand",
+            "flex flex-col items-center py-2 px-4 w-full md:w-auto min-w-32 text-white text-xl font-paytone cursor-hand",
             "border-2 border-amber-300",
             "transition-all duration-75",
             "shadow-[0_0_8px_0px_rgba(251,191,36,0.9),inset_0_0_4px_-1px_rgba(251,191,36,0.8)]",
