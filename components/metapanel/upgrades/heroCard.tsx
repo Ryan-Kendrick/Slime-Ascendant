@@ -96,37 +96,50 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     isAffordable: boolean,
   ) => onUpgrade(e, hidden, cost, isAffordable)
 
+  const updateOTPIconPositions = () => {
+    if (!OTPContainerRef.current) return
+
+    const container = OTPContainerRef.current
+    const items = container.getElementsByClassName("upgrade-item")
+    const containerWidth = container.offsetWidth
+    const itemWidth = 40
+    const itemGap = 4
+    const borderAdjustment = 5
+
+    Array.from(items).forEach((item, index) => {
+      const element = item as HTMLElement
+      const basePosition = borderAdjustment
+      element.style.left = `${basePosition}px`
+
+      if (element.classList.contains("purchased") && isMobile) {
+        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
+
+        const travelDistance = rightEdgePosition - basePosition
+
+        element.style.transform = `translateX(${travelDistance}px)`
+      } else if (element.classList.contains("purchased")) {
+        // Todo: Add a desktop specific animation
+        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
+
+        const travelDistance = rightEdgePosition - basePosition
+
+        element.style.transform = `translateX(${travelDistance}px)`
+      } else {
+        element.style.transform = ""
+      }
+    })
+  }
+
   useEffect(() => {
-    if (OTPContainerRef.current) {
-      const container = OTPContainerRef.current
-      const items = container.getElementsByClassName("upgrade-item")
-      const containerWidth = container.offsetWidth
-      const itemWidth = 40
-      const itemGap = 4
-      const borderAdjustment = 5
+    if (!OTPContainerRef.current) return
 
-      Array.from(items).forEach((item, index) => {
-        const element = item as HTMLElement
-        const basePosition = borderAdjustment
-        element.style.left = `${basePosition}px`
+    requestAnimationFrame(updateOTPIconPositions)
 
-        if (element.classList.contains("purchased") && isMobile) {
-          const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
+    const resizeObserver = new ResizeObserver(() => requestAnimationFrame(updateOTPIconPositions))
+    resizeObserver.observe(OTPContainerRef.current)
 
-          const travelDistance = rightEdgePosition - basePosition
-
-          element.style.transform = `translateX(${travelDistance}px)`
-        } else if (element.classList.contains("purchased")) {
-          // Todo: Add a desktop specific animation
-          const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
-
-          const travelDistance = rightEdgePosition - basePosition
-
-          element.style.transform = `translateX(${travelDistance}px)`
-        }
-      })
-    }
-  }, [thisUpgradeProps.upgradeCount, OTPIcons.length, isMobile])
+    return () => resizeObserver.disconnect()
+  }, [thisUpgradeProps.upgradeCount, OTPIcons.length, isMobile, shouldMount])
 
   useEffect(() => {
     if (isNotAdventurer) {
@@ -148,18 +161,35 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     }
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
+  const [isHovering, setIsHovering] = useState(false)
+  const onCardHover = () => {
+    setIsHovering(true)
+    console.log("onHover")
+  }
+  const onCardMouseExit = () => {
+    setIsHovering(false)
+    console.log("onExit")
+  }
+
   if (!shouldMount && isNotAdventurer) return null
 
   return (
     <div
       className={clsx(
-        "flex flex-col shadow-panel rounded-b border-2 transition-opacity duration-1000",
+        "h-full flex flex-col shadow-panel rounded-b border-2 transition-opacity duration-1000 text-white",
         canAffordNextOTPUpgrade && thisUpgradeProps.level > 10 ? "border-gold" : "border-yellow-700",
         isVisible && isNotAdventurer && "opacity-100",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
         animationComplete && "opacity-100 transition-none",
-      )}>
-      <div className="">Top half of card goes here</div>
+      )}
+      onPointerEnter={onCardHover}
+      onMouseLeave={onCardMouseExit}>
+      <div className="flex flex-col grow items-center font-outline">
+        <div className="text-2xl">{config.displayName}</div>
+        <div className="font-paytone text-lg">
+          {config.displayStat}: <span className="">{Math.round(damage)}</span>
+        </div>
+      </div>
       <div
         className={clsx(
           "flex flex-col md:flex-row items-center justify-between align-start py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2",
@@ -203,12 +233,4 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       </div>
     </div>
   )
-}
-
-{
-  /* <div className="text-2xl">{config.displayName}</div>
-
-<div className="self-center font-paytone text-lg">
-        {config.displayStat}: <span className="">{Math.round(damage)}</span>
-      </div> */
 }
