@@ -103,21 +103,23 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       const items = container.getElementsByClassName("upgrade-item")
       const containerWidth = container.offsetWidth
       const itemWidth = 40
+      const itemGap = 4
+      const borderAdjustment = 5
 
       Array.from(items).forEach((item, index) => {
         const element = item as HTMLElement
-        const basePosition = index * itemWidth
+        const basePosition = borderAdjustment
         element.style.left = `${basePosition}px`
 
         if (element.classList.contains("purchased") && isMobile) {
-          const rightEdgePosition = containerWidth - itemWidth - index * itemWidth
+          const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
 
           const travelDistance = rightEdgePosition - basePosition
 
           element.style.transform = `translateX(${travelDistance}px)`
         } else if (element.classList.contains("purchased")) {
           // Todo: Add a desktop specific animation
-          const rightEdgePosition = containerWidth - itemWidth - index * itemWidth
+          const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
 
           const travelDistance = rightEdgePosition - basePosition
 
@@ -174,7 +176,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
               <div
                 key={upgradeName + i}
                 className={clsx(
-                  "upgrade-item transition-transform",
+                  "upgrade-item absolute transition-transform",
                   // Animation properties
                   isMobile ? "duration-500" : "duration-200",
                   isPurchased && "purchased",
