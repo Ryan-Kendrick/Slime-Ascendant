@@ -205,3 +205,11 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     </div>
   )
 }
+
+{
+  /* <div className="text-2xl">{config.displayName}</div>
+
+<div className="self-center font-paytone text-lg">
+        {config.displayStat}: <span className="">{Math.round(damage)}</span>
+      </div> */
+}
