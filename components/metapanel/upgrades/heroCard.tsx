@@ -108,22 +108,21 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     const containerWidth = container.offsetWidth
     const itemWidth = 40
     const itemGap = 4
-    const borderAdjustment = 5
 
     Array.from(items).forEach((item, index) => {
       const element = item as HTMLElement
-      const basePosition = borderAdjustment
+      const basePosition = 0
       element.style.left = `${basePosition}px`
 
       if (element.classList.contains("purchased") && isMobile) {
-        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
+        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + 4
 
         const travelDistance = rightEdgePosition - basePosition
 
         element.style.transform = `translateX(${travelDistance}px)`
       } else if (element.classList.contains("purchased")) {
         // Todo: Add a desktop specific animation
-        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + borderAdjustment
+        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
 
         const travelDistance = rightEdgePosition - basePosition
 
@@ -197,7 +196,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         </div>
       </div>
       {/* Upgrades & Levelup section */}
-      <div className="flex flex-col md:flex-row items-center py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2">
+      <div className="flex flex-col md:flex-row items-center py-4 px-2 md:px-4 gap-2">
         <div
           ref={OTPContainerRef}
           className="upgrade-container relative grow w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">

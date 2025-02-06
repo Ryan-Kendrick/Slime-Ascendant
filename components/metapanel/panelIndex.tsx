@@ -81,7 +81,7 @@ export default function PanelIndex() {
         </div>
         <div
           className={clsx(
-            "flex flex-col grow shadow-panel rounded-t rounded-b-xl",
+            "flex flex-col grow lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
           )}>
