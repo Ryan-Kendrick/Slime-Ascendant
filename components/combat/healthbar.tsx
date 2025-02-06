@@ -2,12 +2,12 @@ import clsx from "clsx/lite"
 import { useEffect, useRef, useState } from "react"
 import { useAppSelector } from "../../redux/hooks"
 import { selectMonsterHealth, selectMonsterMaxHealth } from "../../redux/monsterSlice"
-import { selectHeroState } from "../../redux/playerSlice"
+import { selectHeroState, selectWarriorDamage } from "../../redux/playerSlice"
 
 export default function Healthbar() {
   const monsterHealth = useAppSelector(selectMonsterHealth)
   const monsterMaxHealth = useAppSelector(selectMonsterMaxHealth)
-  const { dotLevel } = useAppSelector(selectHeroState)
+  const warriorDamage = useAppSelector(selectWarriorDamage)
 
   const targetHealth = useRef((monsterHealth / monsterMaxHealth) * 100)
   const interpRate = 5
@@ -40,7 +40,7 @@ export default function Healthbar() {
   }, [monsterHealth, monsterMaxHealth])
 
   let decimals = {}
-  if (!dotLevel) {
+  if (!warriorDamage) {
     decimals = { minimumFractionDigits: 0, maximumFractionDigits: 1 }
   } else {
     decimals = { minimumFractionDigits: 1, maximumFractionDigits: 1 }

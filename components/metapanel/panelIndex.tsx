@@ -56,7 +56,7 @@ export default function PanelIndex() {
       <div
         className={clsx(
           // Base
-          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-3 lg:m-6",
+          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-6",
         )}>
         <div
           style={{ height: `${tabHeight}px` }}
