@@ -106,7 +106,7 @@ export default function UpgradeIndex() {
   return (
     <div className="h-full flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
-      <div className="flex-1 grid grid-cols-2 gap-1 grid-rows-[1fr_1fr_auto]">
+      <div className="flex-1 min-h-[609px] grid grid-cols-2 gap-1 grid-rows-[1fr_1fr_auto]">
         <HeroCard
           config={UPGRADE_CONFIG.adventurer}
           OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}

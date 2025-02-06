@@ -34,8 +34,8 @@ export default function Page() {
       <Provider store={store}>
         <div
           style={appScale}
-          className="cursor-hand flex flex-col-reverse md:flex-col w-screen min-h-[100vh] lg:h-screen select-none font-sigmar bg-gradient-to-b from-purple-800 via-purple-900 to-violet-950">
-          <div className="">
+          className="cursor-hand flex flex-col-reverse md:flex-col w-screen min-h-[100vh] lg:h-screen select-none font-sigmar bg-gradient-to-b from-purple-800 via-purple-900 to-violet-950 overflow-auto">
+          <div className="overflow-hidden">
             <Navigation />
           </div>
           <main className="flex flex-1 md:min-h-0">

@@ -42,21 +42,25 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       ...useAppSelector(selectAdventurerState),
       damage: useAppSelector(selectAdventurerDamage),
       levelUpCost: useAppSelector(selectAdventurerLevelUpCost),
+      cardBackground: "bg-orange-200/50",
     },
     warrior: {
       ...useAppSelector(selectWarriorState),
       damage: useAppSelector(selectWarriorDamage),
       levelUpCost: useAppSelector(selectWarriorLevelUpCost),
+      cardBackground: "bg-red-200/50",
     },
     healer: {
       ...useAppSelector(selectHealerState),
       damage: useAppSelector(selectHealerDamage),
       levelUpCost: useAppSelector(selectHealerLevelUpCost),
+      cardBackground: "bg-green-200/50",
     },
     mage: {
       ...useAppSelector(selectMageState),
       damage: useAppSelector(selectMageDamage),
       levelUpCost: useAppSelector(selectMageLevelUpCost),
+      cardBackground: "bg-electricblue/50",
     },
   }
   const thisUpgradeProps = upgradeProps[thisHeroName]
@@ -184,16 +188,16 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       )}
       onPointerEnter={onCardHover}
       onMouseLeave={onCardMouseExit}>
-      <div className="flex flex-col grow items-center font-outline">
-        <div className="text-2xl">{config.displayName}</div>
+      {/* Title section */}
+      <div
+        className={`flex flex-col grow place-content-center text-center font-outline border-b border-amber-950 ${upgradeProps[thisHeroName].cardBackground}`}>
+        <h2 className="text-2xl">{config.displayName}</h2>
         <div className="font-paytone text-lg">
-          {config.displayStat}: <span className="">{Math.round(damage)}</span>
+          <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
         </div>
       </div>
-      <div
-        className={clsx(
-          "flex flex-col md:flex-row items-center justify-between align-start py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2",
-        )}>
+      {/* Upgrades & Levelup section */}
+      <div className="flex flex-col md:flex-row items-center justify-between align-start py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2">
         <div
           ref={OTPContainerRef}
           className="upgrade-container relative w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
