@@ -197,10 +197,10 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         </div>
       </div>
       {/* Upgrades & Levelup section */}
-      <div className="flex flex-col md:flex-row items-center justify-between align-start py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2">
+      <div className="flex flex-col md:flex-row items-center py-4 px-2 md:px-4 xl:px-6 2xl:pr-8 gap-2">
         <div
           ref={OTPContainerRef}
-          className="upgrade-container relative w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
+          className="upgrade-container relative grow w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
           {OTPIcons.map((icon, i) => {
             const isPurchased = thisUpgradeProps.upgradeCount > i
             const isHidden = i === 0 ? thisUpgradeProps.level < 10 : thisUpgradeProps.upgradeCount < i
