@@ -104,9 +104,9 @@ export default function UpgradeIndex() {
   }
 
   return (
-    <>
+    <div className="h-full flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
-      <div className="grid grid-cols-2 gap-1">
+      <div className="flex-1 grid grid-cols-2 gap-1 grid-rows-[1fr_1fr_auto]">
         <HeroCard
           config={UPGRADE_CONFIG.adventurer}
           OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
@@ -132,7 +132,7 @@ export default function UpgradeIndex() {
           onLevelUp={onLevelup}
         />
         {(dotDamage > 0 || hasPrestiged) && (
-          <div className="col-span-2 mt-auto mb-2">
+          <div className="col-span-2 mb-2">
             <div className="flex flex-col text-white place-items-center w-full">
               <h2 className="text-3xl font-outline">Total</h2>
               <div className="flex text-lg w-full justify-evenly">
@@ -143,6 +143,6 @@ export default function UpgradeIndex() {
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }

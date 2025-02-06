@@ -176,7 +176,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   return (
     <div
       className={clsx(
-        "h-full flex flex-col shadow-panel rounded-b border-2 transition-opacity duration-1000 text-white",
+        "flex flex-col shadow-panel rounded-b border-2 transition-opacity duration-1000 text-white",
         canAffordNextOTPUpgrade && thisUpgradeProps.level > 10 ? "border-gold" : "border-yellow-700",
         isVisible && isNotAdventurer && "opacity-100",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
