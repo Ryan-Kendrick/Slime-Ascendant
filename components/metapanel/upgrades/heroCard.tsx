@@ -106,8 +106,9 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     const container = OTPContainerRef.current
     const items = container.getElementsByClassName("upgrade-item")
     const containerWidth = container.offsetWidth
-    const itemWidth = 40
-    const itemGap = 4
+    const containerHeight = container.offsetHeight
+    const itemWidth = 36
+    const itemGap = 8
 
     Array.from(items).forEach((item, index) => {
       const element = item as HTMLElement
@@ -117,16 +118,17 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       if (element.classList.contains("purchased") && isMobile) {
         const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + 4
 
-        const travelDistance = rightEdgePosition - basePosition
+        const xTravelDistance = rightEdgePosition - basePosition
 
-        element.style.transform = `translateX(${travelDistance}px)`
+        element.style.transform = `translateX(${xTravelDistance}px)`
       } else if (element.classList.contains("purchased")) {
-        // Todo: Add a desktop specific animation
         const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
+        const bottomEdgePosition = containerHeight - itemWidth
 
-        const travelDistance = rightEdgePosition - basePosition
+        const xTravelDistance = rightEdgePosition - basePosition
+        const yTravelDistance = bottomEdgePosition
 
-        element.style.transform = `translateX(${travelDistance}px)`
+        element.style.transform = `translate(${xTravelDistance}px,${yTravelDistance}px)`
       } else {
         element.style.transform = ""
       }
@@ -199,7 +201,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div className="flex flex-col md:flex-row items-center py-4 px-2 md:px-4 gap-2">
         <div
           ref={OTPContainerRef}
-          className="upgrade-container relative grow w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
+          className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
           {OTPIcons.map((icon, i) => {
             const isPurchased = thisUpgradeProps.upgradeCount > i
             const isHidden = i === 0 ? thisUpgradeProps.level < 10 : thisUpgradeProps.upgradeCount < i
