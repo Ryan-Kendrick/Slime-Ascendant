@@ -167,6 +167,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
   const [isHovering, setIsHovering] = useState(false)
+  const hoverAnimationDuration = "duration-500"
   const onCardHover = () => {
     setIsHovering(true)
     console.log("onHover")
@@ -192,16 +193,47 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       onMouseLeave={onCardMouseExit}>
       {/* Title section */}
       <div
-        className={`flex flex-col grow place-content-center text-center font-outline border-b border-amber-950 ${upgradeProps[thisHeroName].cardBackground} transition-all`}>
-        <div className={clsx("bg-black/20", isHovering && "bg-white/50")}>
-          <h2 className="text-2xl">{config.displayName}</h2>
+        className={clsx(
+          `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${upgradeProps[thisHeroName].cardBackground}`,
+        )}>
+        <div
+          className={clsx(
+            "transition-transform h-full",
+            hoverAnimationDuration,
+            isHovering ? "translate-y-0" : "translate-y-[calc(100%-2rem)]",
+          )}>
+          <h2
+            className={clsx(
+              "text-2xl bg-black transition-colors",
+              hoverAnimationDuration,
+              isHovering ? "bg-opacity-60" : "bg-opacity-0",
+            )}>
+            {config.displayName}
+          </h2>
         </div>
-        <div className="font-paytone text-lg">
+        <div
+          className={clsx(
+            `transition-transform ${hoverAnimationDuration} font-paytone text-lg h-full`,
+            isHovering ? "translate-y-[calc(101%)]" : "translate-y-0",
+          )}>
           <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
+        </div>
+        <div
+          className={clsx(
+            "absolute transition-opacity ease-in mt-[1.125rem]",
+
+            isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
+          )}>
+          This is a test description yo yo yo so 300% damage by 3x4 some lore goes here yeyeye joke
         </div>
       </div>
       {/* Upgrades & Levelup section */}
-      <div className="flex flex-col md:flex-row items-center py-4 px-2 md:px-4 gap-2">
+      <div
+        className={clsx(
+          "flex flex-col md:flex-row items-center py-4 px-2 md:px-4 gap-2 transition-all",
+          hoverAnimationDuration,
+          isHovering && "mt-4",
+        )}>
         <div
           ref={OTPContainerRef}
           className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
@@ -214,7 +246,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 key={upgradeName + i}
                 className={clsx(
                   "upgrade-item absolute transition-transform",
-                  // Quick OTP slide animation on desktop
+                  // Quick slide animation on desktop
                   isMobile ? "duration-500" : "duration-200",
                   isPurchased && "purchased",
                 )}>
