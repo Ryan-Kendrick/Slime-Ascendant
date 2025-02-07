@@ -209,8 +209,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div
         className={clsx(
           `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${upgradeProps[thisHeroName].cardBackground}`,
-          "before:absolute before:inset-0 before:bg-[url('/assets/icons/cogs.svg')] before:opacity-0 before:transition-opacity before:duration-500 before:z-0",
-          isHovering && "before:opacity-100",
+          "before:absolute before:inset-0 before:opacity-0 before:transition-opacity before:duration-500 before:z-0",
+          isHovering && "before:bg-[url('/assets/icons/circuitboardBg.svg')] before:opacity-100",
         )}>
         <div
           className={clsx(
