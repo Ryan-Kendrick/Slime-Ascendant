@@ -48,13 +48,13 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       ...useAppSelector(selectWarriorState),
       damage: useAppSelector(selectWarriorDamage),
       levelUpCost: useAppSelector(selectWarriorLevelUpCost),
-      cardBackground: "bg-red-200/50",
+      cardBackground: "bg-red-300/50",
     },
     healer: {
       ...useAppSelector(selectHealerState),
       damage: useAppSelector(selectHealerDamage),
       levelUpCost: useAppSelector(selectHealerLevelUpCost),
-      cardBackground: "bg-green-200/50",
+      cardBackground: "bg-green-300/50",
     },
     mage: {
       ...useAppSelector(selectMageState),
