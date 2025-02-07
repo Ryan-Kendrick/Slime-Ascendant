@@ -28,6 +28,9 @@ export default {
         "85": ".85",
         "80": ".80",
       },
+      backgroundColor: {
+        cogColor: "#DFDBE5",
+      },
       backgroundImage: {
         meadow: "url('/assets/icons/meadow.jpg')",
       },

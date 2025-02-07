@@ -167,12 +167,20 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
   const [isHovering, setIsHovering] = useState(false)
+  const [hoverAnimationsComplete, setHoverAnimationsComplete] = useState(false)
   const hoverAnimationDuration = "duration-500"
+
   const onCardHover = () => {
+    const animationDuration = Number(hoverAnimationDuration.split("-")[1])
+
     setIsHovering(true)
+    setTimeout(() => {
+      setHoverAnimationsComplete(true)
+    }, animationDuration / 2)
     console.log("onHover")
   }
   const onCardMouseExit = () => {
+    setHoverAnimationsComplete(false)
     setIsHovering(false)
     console.log("onExit")
   }
@@ -195,6 +203,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div
         className={clsx(
           `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${upgradeProps[thisHeroName].cardBackground}`,
+          "before:absolute before:inset-0 before:bg-[url('/assets/icons/cogs.svg')] before:opacity-0 before:transition-opacity before:duration-500 before:z-0",
+          isHovering && "before:opacity-100",
         )}>
         <div
           className={clsx(
@@ -206,7 +216,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
             className={clsx(
               "text-2xl bg-black transition-colors",
               hoverAnimationDuration,
-              isHovering ? "bg-opacity-60" : "bg-opacity-0",
+              hoverAnimationsComplete ? "bg-opacity-60" : "bg-opacity-0",
             )}>
             {config.displayName}
           </h2>
