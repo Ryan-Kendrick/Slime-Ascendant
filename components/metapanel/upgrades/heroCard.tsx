@@ -167,20 +167,26 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
   const [isHovering, setIsHovering] = useState(false)
-  const [hoverAnimationsComplete, setHoverAnimationsComplete] = useState(false)
+  const [beginDelayedAnimation, setBeginDelayedAnimation] = useState(false)
   const hoverAnimationDuration = "duration-500"
+  const delayedAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
   const onCardHover = () => {
     const animationDuration = Number(hoverAnimationDuration.split("-")[1])
 
     setIsHovering(true)
-    setTimeout(() => {
-      setHoverAnimationsComplete(true)
+    delayedAnimationRef.current = setTimeout(() => {
+      setBeginDelayedAnimation(true)
     }, animationDuration / 2)
     console.log("onHover")
   }
+
   const onCardMouseExit = () => {
-    setHoverAnimationsComplete(false)
+    if (delayedAnimationRef.current) {
+      clearTimeout(delayedAnimationRef.current)
+      delayedAnimationRef.current = null
+    }
+    setBeginDelayedAnimation(false)
     setIsHovering(false)
     console.log("onExit")
   }
@@ -216,7 +222,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
             className={clsx(
               "text-2xl bg-black transition-colors",
               hoverAnimationDuration,
-              hoverAnimationsComplete ? "bg-opacity-60" : "bg-opacity-0",
+              beginDelayedAnimation ? "bg-opacity-60" : "bg-opacity-0",
             )}>
             {config.displayName}
           </h2>
