@@ -181,18 +181,21 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   return (
     <div
       className={clsx(
-        "flex flex-col shadow-panel rounded-b border-2 transition-opacity duration-1000 text-white",
+        "flex flex-col shadow-panel rounded-b border-2 text-white",
+        !animationComplete && "transition-opacity duration-1000",
         canAffordNextOTPUpgrade && thisUpgradeProps.level > 10 ? "border-gold" : "border-yellow-700",
-        isVisible && isNotAdventurer && "opacity-100",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
-        animationComplete && "opacity-100 transition-none",
+        isVisible && isNotAdventurer && "opacity-100",
+        animationComplete && "opacity-100",
       )}
       onPointerEnter={onCardHover}
       onMouseLeave={onCardMouseExit}>
       {/* Title section */}
       <div
-        className={`flex flex-col grow place-content-center text-center font-outline border-b border-amber-950 ${upgradeProps[thisHeroName].cardBackground}`}>
-        <h2 className="text-2xl">{config.displayName}</h2>
+        className={`flex flex-col grow place-content-center text-center font-outline border-b border-amber-950 ${upgradeProps[thisHeroName].cardBackground} transition-all`}>
+        <div className={clsx("bg-black/20", isHovering && "bg-white/50")}>
+          <h2 className="text-2xl">{config.displayName}</h2>
+        </div>
         <div className="font-paytone text-lg">
           <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
         </div>
@@ -211,7 +214,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 key={upgradeName + i}
                 className={clsx(
                   "upgrade-item absolute transition-transform",
-                  // Animation properties
+                  // Quick OTP slide animation on desktop
                   isMobile ? "duration-500" : "duration-200",
                   isPurchased && "purchased",
                 )}>
