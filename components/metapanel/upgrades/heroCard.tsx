@@ -176,6 +176,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   const [isHovering, setIsHovering] = useState(false)
   const [beginDelayedAnimation, setBeginDelayedAnimation] = useState(false)
+  const [hoveredOTPUpgrade, setHoveredOTPUpgrade] = useState<number | null>(null)
   const hoverAnimationDuration = "duration-500"
   const delayedAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -199,9 +200,14 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     console.log("onExit")
   }
 
+  const onOTPHover = (hoveredUpgrade: number | null) => {
+    console.log(hoveredUpgrade)
+    setHoveredOTPUpgrade(hoveredUpgrade)
+  }
+
   if (!shouldMount && isNotAdventurer) return null
 
-  console.log(`('${thisUpgradeProps.backgroundImage}')`)
+  console.log(hoveredOTPUpgrade)
 
   return (
     <div
@@ -247,11 +253,17 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         </div>
         <div
           className={clsx(
-            "absolute transition-opacity ease-in mt-[1.125rem]",
+            "absolute h-full transition-opacity ease-in",
 
             isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
           )}>
-          This is a test description yo yo yo so 300% damage by 3x4 some lore goes here yeyeye joke
+          <div className="flex mt-4 h-full items-center">
+            {hoveredOTPUpgrade ? (
+              config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]
+            ) : (
+              <div className="self-center">Test</div>
+            )}
+          </div>
         </div>
       </div>
       {/* Upgrades & Levelup section */}
@@ -280,6 +292,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 <OneTimePurchaseUpgrade
                   id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
                   onClick={(e) => handleUpgradeWithAnimation(e, false, nextOTPCost, canAffordNextOTPUpgrade)}
+                  setHoveredOTPDescription={onOTPHover}
                   icon={icon}
                   hidden={isHidden}
                   cost={nextOTPCost}

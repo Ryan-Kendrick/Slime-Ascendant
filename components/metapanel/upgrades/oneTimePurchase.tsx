@@ -9,6 +9,7 @@ interface OneTimePurchaseProps {
   id: UpgradeIdWithLevel
   icon: JSX.Element
   onClick: (e: React.MouseEvent<HTMLDivElement>, hidden: boolean, cost: number, isAffordable: boolean) => void
+  setHoveredOTPDescription: (selectedUpgrade: number | null) => void
   cost: number
   isAffordable: boolean
   isPurchased: boolean
@@ -19,6 +20,7 @@ export default function OneTimePurchaseUpgrade({
   id,
   icon,
   onClick: onUpgrade,
+  setHoveredOTPDescription,
   hidden,
   cost,
   isAffordable,
@@ -28,12 +30,13 @@ export default function OneTimePurchaseUpgrade({
 
   const [shouldMount, setShouldMount] = useState(false)
   const [shimmer, setShimmer] = useState(false)
-  const [heroID, OTPNumber] = id.split(".") as [UpgradeId, string]
+  const [heroID, OTPstr] = id.split(".") as [UpgradeId, string]
+  const OTPNumber = Number(OTPstr)
   const thisSelector = initSelectorMap[heroID]
   const hasInitialised = useAppSelector(thisSelector) as number
 
   useEffect(() => {
-    if (hasInitialised >= Number(OTPNumber)) return undefined
+    if (hasInitialised >= OTPNumber) return undefined
 
     if (!hidden && !shouldMount) {
       setShouldMount(true)
@@ -59,8 +62,12 @@ export default function OneTimePurchaseUpgrade({
         "before:transition-[background-position] before:duration-[2000ms]",
         "before:z-30",
         shimmer && "before:bg-[position:150%_0]",
+        hidden && "-z-10 pointer-events-none",
+        !hidden && "pointer-events-auto z-auto",
       )}
-      onClick={(e) => onUpgrade(e, hidden, cost, isAffordable)}>
+      onClick={(e) => onUpgrade(e, hidden, cost, isAffordable)}
+      onPointerEnter={() => setHoveredOTPDescription(OTPNumber)}
+      onMouseLeave={() => setHoveredOTPDescription(null)}>
       <div
         className={clsx(
           // Base
