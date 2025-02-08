@@ -24,6 +24,10 @@ import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeProps } from "../../../mo
 import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../gameconfig/utils"
+import adventurerBgURL from "../../../assets/icons/adventurerBg.svg"
+import warriorBgURL from "../../../assets/icons/warriorBg.svg"
+import healerBgURL from "../../../assets/icons/healerBg.svg"
+import mageBgURL from "../../../assets/icons/mageBg.svg"
 
 interface HeroCardProps {
   config: Upgrade
@@ -43,24 +47,28 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       damage: useAppSelector(selectAdventurerDamage),
       levelUpCost: useAppSelector(selectAdventurerLevelUpCost),
       cardBackground: "bg-orange-200/50",
+      backgroundImage: `before:bg-[url('/assets/icons/adventurerBg.svg')]`,
     },
     warrior: {
       ...useAppSelector(selectWarriorState),
       damage: useAppSelector(selectWarriorDamage),
       levelUpCost: useAppSelector(selectWarriorLevelUpCost),
       cardBackground: "bg-red-300/50",
+      backgroundImage: `before:bg-[url('/assets/icons/warriorBg.svg')]`,
     },
     healer: {
       ...useAppSelector(selectHealerState),
       damage: useAppSelector(selectHealerDamage),
       levelUpCost: useAppSelector(selectHealerLevelUpCost),
       cardBackground: "bg-green-300/50",
+      backgroundImage: `before:bg-[url('/assets/icons/healerBg.svg')]`,
     },
     mage: {
       ...useAppSelector(selectMageState),
       damage: useAppSelector(selectMageDamage),
       levelUpCost: useAppSelector(selectMageLevelUpCost),
       cardBackground: "bg-electricblue/50",
+      backgroundImage: `before:bg-[url('/assets/icons/mageBg.svg')]`,
     },
   }
   const thisUpgradeProps = upgradeProps[thisHeroName]
@@ -193,6 +201,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   if (!shouldMount && isNotAdventurer) return null
 
+  console.log(`('${thisUpgradeProps.backgroundImage}')`)
+
   return (
     <div
       className={clsx(
@@ -209,8 +219,9 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div
         className={clsx(
           `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${upgradeProps[thisHeroName].cardBackground}`,
-          "before:absolute before:inset-0 before:opacity-0 before:transition-opacity before:duration-500 before:z-0",
-          isHovering && "before:bg-[url('/assets/icons/circuitboardBg.svg')] before:opacity-100",
+          "before:absolute before:inset-0 before:transition-opacity before:duration-500 before:z-0",
+          isHovering && `${thisUpgradeProps.backgroundImage}`,
+          isHovering ? "before:opacity-100" : "before:opacity-0",
         )}>
         <div
           className={clsx(

@@ -78,5 +78,6 @@ export type UpgradeProps = {
     damage: number
     levelUpCost: number
     cardBackground: string
+    backgroundImage: string
   }
 }
