@@ -270,12 +270,20 @@ export const selectPrestigeState = createSelector([(state: RootState) => state.p
 
 export const selectAdventurerLevel = (state: RootState) => state.player.adventurerLevel
 export const selectGold = (state: RootState) => state.player.gold
-export const selectGCanAfford = (cost: number) => (state: RootState) => selectGold(state) >= cost
+export const selectGCanAfford = (cost: number) => createSelector([selectGold], (gold) => gold >= cost)
 export const selectPlasma = (state: RootState) => state.player.plasma
 export const selectPCanAfford = (cost: number) => createSelector([selectPlasma], (plasma) => plasma >= cost)
 export const selectPlasmaReserved = (state: RootState) => state.player.plasmaReserved
-const selectPDamageUpgradeCount = (state: RootState) => state.player.pDamageUpgradeCount
+export const selectPDamageUpgradeCount = (state: RootState) => state.player.pDamageUpgradeCount
+export const selectPDamage = createSelector(
+  [selectPDamageUpgradeCount],
+  (pDamageUpgradeCount) => 1 + pDamageUpgradeCount * prestigeDamageMod,
+)
 export const selectAchievementModifier = (state: RootState) => state.player.achievementModifier
+export const selectAchievementDamage = createSelector(
+  [selectAchievementModifier],
+  (achievementModifier) => 1 + achievementModifier,
+)
 
 export const selectAdventurerDamage = createSelector([selectAdventurerState], (adventurerState) =>
   playerCalc.heroDamage("adventurer", adventurerState),
@@ -289,37 +297,25 @@ export const selectHealerDamage = createSelector([selectHealerState], (healerSta
 export const selectMageDamage = createSelector([selectMageState], (mageState) =>
   playerCalc.heroDamage("mage", mageState),
 )
-export const selectClickDamage = (state: RootState): number =>
-  playerCalc.clickDamage(
-    state.player.adventurerLevel,
-    state.player.adventurerOTPUpgradeCount,
-    1 + state.player.pDamageUpgradeCount * prestigeDamageMod,
-    1 + state.player.achievementModifier,
-  )
-export const selectDotDamage = createSelector(
+export const selectClickDamage = createSelector(
   [
-    (state: RootState) => state.player.activeHeroes,
-    selectHeroState,
-    selectPDamageUpgradeCount,
-    selectAchievementModifier,
+    selectAdventurerLevel,
+    (state: RootState) => state.player.adventurerOTPUpgradeCount,
+    selectPDamage,
+    selectAchievementDamage,
   ],
-  (activeHeroes, heroState, pDamageUpgradeCount, achievementModifier) => {
+  (adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage) =>
+    playerCalc.clickDamage(adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage),
+)
+export const selectDotDamage = createSelector(
+  [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPDamage, selectAchievementDamage],
+  (activeHeroes, heroState, pDamage, achievementDamage) => {
     if (activeHeroes.length < 1) return 0
 
     const heroes = activeHeroes.slice(1)
-    const heroStats = [] as HeroState[]
+    const heroStats = heroes.map((hero) => heroState[hero])
 
-    for (const hero of heroes) {
-      const thisHeroState = heroState[hero]
-      heroStats.push(thisHeroState)
-    }
-
-    return playerCalc.heroDamage(
-      heroes,
-      heroStats,
-      1 + pDamageUpgradeCount * prestigeDamageMod,
-      1 + achievementModifier,
-    )
+    return playerCalc.heroDamage(heroes, heroStats, pDamage, achievementDamage)
   },
 )
 
