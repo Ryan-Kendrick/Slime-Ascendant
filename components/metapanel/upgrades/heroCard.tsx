@@ -189,7 +189,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     delayedAnimationRef.current = setTimeout(() => {
       setBeginDelayedAnimation(true)
     }, animationDuration / 2)
-    console.log("onHover")
   }
 
   const onCardMouseExit = () => {
@@ -199,7 +198,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     }
     setBeginDelayedAnimation(false)
     setIsHovering(false)
-    console.log("onExit")
   }
 
   const purchaseUpgradeFromLevelUpBtn = () => {
@@ -207,7 +205,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }
 
   const onOTPHover = (hoveredUpgrade: number | null) => {
-    console.log(hoveredUpgrade)
     setHoveredOTPUpgrade(hoveredUpgrade)
   }
 
