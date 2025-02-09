@@ -8,7 +8,7 @@ import { initSelectorMap } from "../../../gameconfig/utils"
 interface OneTimePurchaseProps {
   id: UpgradeIdWithLevel
   icon: JSX.Element
-  onClick: (e: React.MouseEvent<HTMLDivElement>, hidden: boolean, cost: number, isAffordable: boolean) => void
+  onClick: (id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) => void
   setHoveredOTPDescription: (selectedUpgrade: number | null) => void
   cost: number
   isAffordable: boolean
@@ -30,10 +30,21 @@ export default function OneTimePurchaseUpgrade({
 
   const [shouldMount, setShouldMount] = useState(false)
   const [shimmer, setShimmer] = useState(false)
-  const [heroID, OTPstr] = id.split(".") as [UpgradeId, string]
+  const [heroId, OTPstr] = id.split(".") as [UpgradeId, string]
   const OTPNumber = Number(OTPstr)
-  const thisSelector = initSelectorMap[heroID]
+  const thisSelector = initSelectorMap[heroId]
   const hasInitialised = useAppSelector(thisSelector) as number
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") {
+      const isNotMobile = window.matchMedia("(min-width: 1024px)").matches
+      if (isNotMobile) {
+        onUpgrade(heroId, hidden, cost, isAffordable)
+      } else {
+        onUpgrade(heroId, hidden, cost, isAffordable)
+      }
+    }
+  }
 
   useEffect(() => {
     if (hasInitialised >= OTPNumber) return undefined
@@ -42,7 +53,7 @@ export default function OneTimePurchaseUpgrade({
       setShouldMount(true)
       const timeout = setTimeout(() => {
         setShimmer(true)
-        dispatch(initialiseElement(heroID))
+        dispatch(initialiseElement(heroId))
       }, 400)
 
       return () => clearTimeout(timeout)
@@ -65,7 +76,7 @@ export default function OneTimePurchaseUpgrade({
         hidden && "-z-10 pointer-events-none",
         !hidden && "pointer-events-auto z-auto",
       )}
-      onClick={(e) => onUpgrade(e, hidden, cost, isAffordable)}
+      onPointerUp={(e) => handlePointerUp(e)}
       onPointerEnter={() => setHoveredOTPDescription(OTPNumber)}
       onMouseLeave={() => setHoveredOTPDescription(null)}>
       <div

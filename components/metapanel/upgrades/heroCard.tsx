@@ -20,19 +20,19 @@ import {
 } from "../../../redux/playerSlice"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
-import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeProps } from "../../../models/upgrades"
+import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeProps, UpgradeId } from "../../../models/upgrades"
 import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../gameconfig/utils"
-import adventurerBgURL from "../../../assets/icons/adventurerBg.svg"
-import warriorBgURL from "../../../assets/icons/warriorBg.svg"
-import healerBgURL from "../../../assets/icons/healerBg.svg"
-import mageBgURL from "../../../assets/icons/mageBg.svg"
+// import adventurerBgURL from "../../../assets/icons/adventurerBg.svg"
+// import warriorBgURL from "../../../assets/icons/warriorBg.svg"
+// import healerBgURL from "../../../assets/icons/healerBg.svg"
+// import mageBgURL from "../../../assets/icons/mageBg.svg"
 
 interface HeroCardProps {
   config: Upgrade
   OTPIcons: JSX.Element[]
-  onUpgrade: (e: React.MouseEvent<HTMLDivElement>, hidden: boolean, cost: number, isAffordable: boolean) => void
+  onUpgrade: (id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) => void
   onLevelUp: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
@@ -100,13 +100,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     window.addEventListener("resize", checkMobile)
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
-
-  const handleUpgradeWithAnimation = (
-    e: React.MouseEvent<HTMLDivElement>,
-    hidden: boolean,
-    cost: number,
-    isAffordable: boolean,
-  ) => onUpgrade(e, hidden, cost, isAffordable)
 
   const updateOTPIconPositions = () => {
     if (!OTPContainerRef.current) return
@@ -200,6 +193,10 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     console.log("onExit")
   }
 
+  const purchaseUpgradeFromLevelUpBtn = () => {
+    onUpgrade(config.elementId, false, nextOTPCost, canAffordNextOTPUpgrade)
+  }
+
   const onOTPHover = (hoveredUpgrade: number | null) => {
     console.log(hoveredUpgrade)
     setHoveredOTPUpgrade(hoveredUpgrade)
@@ -291,7 +288,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 )}>
                 <OneTimePurchaseUpgrade
                   id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
-                  onClick={(e) => handleUpgradeWithAnimation(e, false, nextOTPCost, canAffordNextOTPUpgrade)}
+                  onClick={onUpgrade}
                   setHoveredOTPDescription={onOTPHover}
                   icon={icon}
                   hidden={isHidden}
@@ -305,10 +302,13 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         </div>
         <LevelUpButton
           id={upgradeName}
-          onClick={onLevelUp}
+          onLevelUp={onLevelUp}
           currentLevel={thisUpgradeProps.level}
           levelUpCost={thisUpgradeProps.levelUpCost}
           isAffordable={canAffordLevelUp}
+          hoveredOTPUpgrade={hoveredOTPUpgrade}
+          nextOTPCost={nextOTPCost}
+          purchaseOTPUpgrade={purchaseUpgradeFromLevelUpBtn}
         />
       </div>
     </div>

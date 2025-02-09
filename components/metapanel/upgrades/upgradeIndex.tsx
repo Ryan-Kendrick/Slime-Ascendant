@@ -83,20 +83,14 @@ export default function UpgradeIndex() {
     }
   }
 
-  function onUpgrade(
-    e: React.MouseEvent<HTMLImageElement> | React.MouseEvent<HTMLDivElement>,
-    hidden: boolean,
-    cost: number,
-    isAffordable: boolean,
-  ) {
+  function onUpgrade(id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) {
     if (!isAffordable || hidden) return
-    const [upgradeId, purchasedUpgradeLevel] = e.currentTarget.id.split(".") as [UpgradeId, string]
     let upgradeAction
 
-    if (upgradeId === "adventurer-otp") {
-      upgradeAction = updateClickDamage(upgradeId)
+    if (id === "adventurer-otp") {
+      upgradeAction = updateClickDamage(id)
     } else {
-      upgradeAction = updateDotDamage(upgradeId)
+      upgradeAction = updateDotDamage(id)
     }
 
     dispatch(upgradeAction)

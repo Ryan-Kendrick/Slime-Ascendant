@@ -3,13 +3,25 @@ import coinURL from "/assets/icons/coin.png"
 
 interface LevelUpProps {
   id: string
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onLevelUp: (e: React.MouseEvent<HTMLButtonElement>) => void
   currentLevel: number
   levelUpCost: number
   isAffordable: boolean
+  hoveredOTPUpgrade: number | null
+  nextOTPCost: number
+  purchaseOTPUpgrade: () => void
 }
 
-export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, isAffordable }: LevelUpProps) {
+export default function LevelUpButton({
+  id,
+  onLevelUp,
+  currentLevel,
+  levelUpCost,
+  isAffordable,
+  hoveredOTPUpgrade,
+  purchaseOTPUpgrade,
+  nextOTPCost,
+}: LevelUpProps) {
   return (
     <div className="w-full md:w-auto border-2 border-amber-900 ring-1 ring-amber-950">
       <div className="w-full md:w-auto relative border-4 border-amber-950 bg-amber-950">
@@ -35,10 +47,25 @@ export default function LevelUpButton({ id, onClick, currentLevel, levelUpCost, 
 
             isAffordable ? "bg-blue-600 hover:bg-blue-700 active:bg-blue-800" : "bg-blue-950 border-amber-950",
           )}
-          onClick={onClick}>
-          <span className="z-30">Level {currentLevel}</span>
+          onClick={hoveredOTPUpgrade ? onLevelUp : purchaseOTPUpgrade}>
+          {hoveredOTPUpgrade ? (
+            <>
+              <span className="z-30 block lg:hidden">Upgrade</span>
+              <span className="z-30 hidden lg:block">Level {currentLevel}</span>
+            </>
+          ) : (
+            <span className="z-30">Level {currentLevel}</span>
+          )}
           <span className="text-lg">
-            <img className="w-[1.4rem] inline-block self-center" src={`${coinURL}`} alt="gold coin" /> {levelUpCost}
+            <img className="w-[1.4rem] inline-block self-center" src={`${coinURL}`} alt="gold coin" />{" "}
+            {hoveredOTPUpgrade ? (
+              <>
+                <span className="inline lg:hidden">{nextOTPCost}</span>
+                <span className="hidden lg:inline">{levelUpCost}</span>
+              </>
+            ) : (
+              levelUpCost
+            )}
           </span>
         </button>
         <div className="absolute ml-1 mt-1 mr-1 rounded-t-sm bg-blue-300/50 inset-x-0 top-0 bottom-3/4 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5  pointer-events-none" />
