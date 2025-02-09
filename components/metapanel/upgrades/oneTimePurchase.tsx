@@ -40,9 +40,9 @@ export default function OneTimePurchaseUpgrade({
       const isNotMobile = window.matchMedia("(min-width: 1024px)").matches
       if (isNotMobile) {
         onUpgrade(heroId, hidden, cost, isAffordable)
-      } else {
-        onUpgrade(heroId, hidden, cost, isAffordable)
       }
+    } else {
+      onUpgrade(heroId, hidden, cost, isAffordable)
     }
   }
 

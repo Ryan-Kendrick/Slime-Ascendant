@@ -47,7 +47,7 @@ export default function LevelUpButton({
 
             isAffordable ? "bg-blue-600 hover:bg-blue-700 active:bg-blue-800" : "bg-blue-950 border-amber-950",
           )}
-          onClick={hoveredOTPUpgrade ? onLevelUp : purchaseOTPUpgrade}>
+          onClick={hoveredOTPUpgrade ? purchaseOTPUpgrade : onLevelUp}>
           {hoveredOTPUpgrade ? (
             <>
               <span className="z-30 block lg:hidden">Upgrade</span>
