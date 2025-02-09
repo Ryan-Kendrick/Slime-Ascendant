@@ -7,7 +7,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayName: "Adventurer",
     displayStat: "Click Damage",
     baseDamage: 1,
-    levelUpMod: 1,
+    levelUpDamageMod: 1,
     OneTimePurchases: {
       OTPCosts: [100, 400, 1000],
       OTPModifiers: [2, 2, 2],
@@ -30,7 +30,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayName: "Warrior",
     displayStat: "Passive Damage",
     baseDamage: 5,
-    levelUpMod: 4,
+    levelUpDamageMod: 4,
     OneTimePurchases: {
       OTPCosts: [8000, 15000, 25000],
       OTPModifiers: [2, 2, 2],
@@ -53,7 +53,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayName: "Healer",
     displayStat: "Passive Damage",
     baseDamage: 60,
-    levelUpMod: 40,
+    levelUpDamageMod: 40,
     OneTimePurchases: {
       OTPCosts: [75000, 100000, 250000],
       OTPModifiers: [2, 2, 2],
@@ -76,7 +76,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayName: "Mage",
     displayStat: "Passive Damage",
     baseDamage: 300,
-    levelUpMod: 100,
+    levelUpDamageMod: 100,
     OneTimePurchases: {
       OTPCosts: [1000000, 2500000, 5000000],
       OTPModifiers: [2, 2, 2],
@@ -129,7 +129,7 @@ export const playerCalc: PlayerCalc = {
 
     if (Array.isArray(heroName) && Array.isArray(heroState) && pDamage && achievementModifier) {
       for (let i = 0; i < heroName.length; i++) {
-        const { baseDamage, levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName[i]]
+        const { baseDamage, levelUpDamageMod: levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName[i]]
         const { level, upgradeCount } = heroState[i]
 
         if (level === 0) continue
@@ -140,11 +140,11 @@ export const playerCalc: PlayerCalc = {
         for (const mod of upgradeModifiers) {
           damage *= mod
         }
-        // If damage for all heroes is being added, return total effective dot damage
-        damage *= pDamage * achievementModifier
       }
+      // If damage for all heroes is being added, return total effective dot damage
+      damage *= pDamage * achievementModifier
     } else if (typeof heroName === "string") {
-      const { baseDamage, levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName as HeroName]
+      const { baseDamage, levelUpDamageMod: levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName as HeroName]
       const { level, upgradeCount } = heroState as HeroState
       if (level === 0) return 0
       damage += baseDamage + (level - 1) * levelUpMod

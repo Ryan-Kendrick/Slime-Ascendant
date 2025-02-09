@@ -275,7 +275,7 @@ export const selectPlasma = (state: RootState) => state.player.plasma
 export const selectPCanAfford = (cost: number) => createSelector([selectPlasma], (plasma) => plasma >= cost)
 export const selectPlasmaReserved = (state: RootState) => state.player.plasmaReserved
 export const selectPDamageUpgradeCount = (state: RootState) => state.player.pDamageUpgradeCount
-export const selectPDamage = createSelector(
+export const selectPMod = createSelector(
   [selectPDamageUpgradeCount],
   (pDamageUpgradeCount) => 1 + pDamageUpgradeCount * prestigeDamageMod,
 )
@@ -301,14 +301,14 @@ export const selectClickDamage = createSelector(
   [
     selectAdventurerLevel,
     (state: RootState) => state.player.adventurerOTPUpgradeCount,
-    selectPDamage,
+    selectPMod,
     selectAchievementDamage,
   ],
   (adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage) =>
     playerCalc.clickDamage(adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage),
 )
 export const selectDotDamage = createSelector(
-  [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPDamage, selectAchievementDamage],
+  [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],
   (activeHeroes, heroState, pDamage, achievementDamage) => {
     if (activeHeroes.length < 1) return 0
 

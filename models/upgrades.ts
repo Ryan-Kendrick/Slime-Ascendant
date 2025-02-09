@@ -43,7 +43,7 @@ export interface Upgrade {
   displayName: string
   displayStat: string
   baseDamage: number
-  levelUpMod: number
+  levelUpDamageMod: number
   OneTimePurchases: OTPConfig
   levelUpCost: (currentLevel: number) => number
 }

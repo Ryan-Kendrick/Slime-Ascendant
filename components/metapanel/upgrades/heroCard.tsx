@@ -17,6 +17,8 @@ import {
   setActiveHero,
   selectHealerLevelUpCost,
   selectMageLevelUpCost,
+  selectPMod,
+  selectAchievementModifier,
 } from "../../../redux/playerSlice"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
@@ -79,6 +81,13 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
 
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
+  const upgradeMod = config.OneTimePurchases.OTPModifiers.reduce((acc, cur, i) => {
+    if (thisUpgradeProps.upgradeCount > i) return acc + cur
+    return acc
+  }, 0)
+
+  const prestigeMod = useAppSelector(selectPMod)
+  const achievementMod = useAppSelector(selectAchievementModifier)
 
   const [shouldMount, setShouldMount] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -204,8 +213,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   if (!shouldMount && isNotAdventurer) return null
 
-  console.log(hoveredOTPUpgrade)
-
   return (
     <div
       className={clsx(
@@ -250,19 +257,49 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         </div>
         <div
           className={clsx(
-            "absolute h-full transition-opacity ease-in",
+            "absolute h-full w-full transition-opacity ease-in",
 
             isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
           )}>
-          <div className="flex mt-4 h-full items-center">
+          <div className="flex mt-[1.05rem] h-full items-center">
             {hoveredOTPUpgrade ? (
               config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]
             ) : (
-              <div className="self-center">Test</div>
+              <div className="self-center divide-y-2 w-full divide-amber-900 font-passion text-lg">
+                <div className="">
+                  <div className="flex justify-between translate-y-1">
+                    <h4>Level</h4>
+                    <p>{thisUpgradeProps.level}</p>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="flex justify-between translate-y-1">
+                    <h4>Upgrade Multiplier</h4>
+                    <p>x{upgradeMod}</p>
+                  </div>
+                </div>
+                {prestigeMod > 1 && (
+                  <div className="">
+                    <div className="flex justify-between translate-y-1">
+                      {" "}
+                      <h4>Prestige</h4>
+                      <p>x{prestigeMod}</p>
+                    </div>
+                  </div>
+                )}
+                <div className="">
+                  <div className="flex justify-between translate-y-">
+                    {" "}
+                    <h4>Achievements</h4>
+                    <p>+{Math.round(achievementMod * 100)}%</p>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>
       </div>
+
       {/* Upgrades & Levelup section */}
       <div
         className={clsx(
@@ -283,7 +320,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 className={clsx(
                   "upgrade-item absolute transition-transform",
                   // Quick slide animation on desktop
-                  isMobile ? "duration-500" : "duration-200",
+                  isMobile ? "duration-500" : "duration-300",
                   isPurchased && "purchased",
                 )}>
                 <OneTimePurchaseUpgrade

@@ -12,7 +12,7 @@ export default function Achievements() {
 
   const [selectedAchievement, setSelectedAchievement] = useState<false | Achievement>(false)
 
-  function onViewAchievement(Achievement: Achievement) {
+  const onViewAchievement = (Achievement: Achievement) => {
     setSelectedAchievement(Achievement)
   }
 
