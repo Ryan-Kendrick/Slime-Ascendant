@@ -23,8 +23,8 @@ interface AchievementCheck {
 
 export const checkAchievementUnlock = (dispatch: AppDispatch, check: AchievementCheck[]) => {
   check.forEach(({ achievements, value }) => {
-    const nextAchievement = achievements[0]
-    if (nextAchievement && value >= nextAchievement.condition) {
+    while (achievements.length > 0 && value >= achievements[0].condition) {
+      const nextAchievement = achievements[0]
       achievements.shift()
       dispatch(unlockAchievement(nextAchievement.id))
       dispatch(increaseAchievementModifier(nextAchievement.modifier))
