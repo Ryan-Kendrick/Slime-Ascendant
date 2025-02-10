@@ -160,4 +160,8 @@ export const playerCalc: PlayerCalc = {
     }
     return damage
   },
+  damageAtLevel: (heroName, heroState): number => {
+    const { baseDamage, levelUpDamageMod } = UPGRADE_CONFIG[heroName]
+    return baseDamage + (heroState.level - 1) * levelUpDamageMod
+  },
 } as const

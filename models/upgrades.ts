@@ -65,6 +65,7 @@ export interface PlayerCalc {
     pDamage?: number,
     achievementModifier?: number,
   ) => number
+  damageAtLevel: (heroName: HeroName, heroState: HeroState) => number
 }
 
 export type HeroName = "adventurer" | "warrior" | "healer" | "mage"
