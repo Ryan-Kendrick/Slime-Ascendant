@@ -4,7 +4,7 @@ import { AppDispatch, type RootState } from "./store"
 import { PlayerState, Tab } from "../models/player"
 import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { heroStateMap, setInitElementMap } from "../gameconfig/utils"
-import { PrestigeState, PrestigeUpgradeName, HeroName, UpgradeId, HeroState } from "../models/upgrades"
+import { PrestigeState, PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
 import { prestigeReset } from "./shared/actions"
 import { AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
@@ -244,12 +244,18 @@ export const selectHeroState = createSelector(
   }),
 )
 
-export const selectAdventurerLevelUpCost = (state: RootState) =>
-  UPGRADE_CONFIG.adventurer.levelUpCost(state.player.adventurerLevel)
-export const selectWarriorLevelUpCost = (state: RootState) =>
-  UPGRADE_CONFIG.warrior.levelUpCost(state.player.warriorLevel)
-export const selectHealerLevelUpCost = (state: RootState) => UPGRADE_CONFIG.healer.levelUpCost(state.player.healerLevel)
-export const selectMageLevelUpCost = (state: RootState) => UPGRADE_CONFIG.mage.levelUpCost(state.player.mageLevel)
+export const selectAdventurerLevelUpCost = createSelector([selectAdventurerState], (heroState) =>
+  UPGRADE_CONFIG.adventurer.levelUpCost(heroState.level),
+)
+export const selectWarriorLevelUpCost = createSelector([selectWarriorState], (heroState) =>
+  UPGRADE_CONFIG.warrior.levelUpCost(heroState.level),
+)
+export const selectHealerLevelUpCost = createSelector([selectHealerState], (heroState) =>
+  UPGRADE_CONFIG.healer.levelUpCost(heroState.level),
+)
+export const selectMageLevelUpCost = createSelector([selectMageState], (heroState) =>
+  UPGRADE_CONFIG.mage.levelUpCost(heroState.level),
+)
 export const selectLevelUpCosts = createSelector(
   [selectAdventurerLevelUpCost, selectWarriorLevelUpCost, selectHealerLevelUpCost, selectMageLevelUpCost],
   (adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost) => ({
@@ -430,5 +436,45 @@ export const selectPrestigeTabVisible = createSelector(
   (plasma, plasmaReserved, plasmaSpent) => plasma > 0 || plasmaReserved > 0 || plasmaSpent > 0,
 )
 export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 0)
+
+export const selectAllAdventurerState = createSelector(
+  [selectAdventurerState, selectAdventurerDamage, selectAdventurerLevelUpCost],
+  (heroState, damage, levelUpCost) => ({
+    level: heroState.level,
+    upgradeCount: heroState.upgradeCount,
+    damage,
+    levelUpCost,
+  }),
+)
+
+export const selectAllWarriorState = createSelector(
+  [selectWarriorState, selectWarriorDamage, selectWarriorLevelUpCost],
+  (heroState, damage, levelUpCost) => ({
+    level: heroState.level,
+    upgradeCount: heroState.upgradeCount,
+    damage,
+    levelUpCost,
+  }),
+)
+
+export const selectAllHealerState = createSelector(
+  [selectHealerState, selectHealerDamage, selectHealerLevelUpCost],
+  (heroState, damage, levelUpCost) => ({
+    level: heroState.level,
+    upgradeCount: heroState.upgradeCount,
+    damage,
+    levelUpCost,
+  }),
+)
+
+export const selectAllMageState = createSelector(
+  [selectMageState, selectMageDamage, selectMageLevelUpCost],
+  (heroState, damage, levelUpCost) => ({
+    level: heroState.level,
+    upgradeCount: heroState.upgradeCount,
+    damage,
+    levelUpCost,
+  }),
+)
 
 export default playerSlice.reducer

@@ -4,32 +4,17 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import {
   initialiseElement,
   selectGCanAfford,
-  selectAdventurerLevelUpCost,
-  selectWarriorLevelUpCost,
-  selectAdventurerState,
-  selectWarriorState,
-  selectHealerState,
-  selectMageState,
-  selectWarriorDamage,
-  selectHealerDamage,
-  selectMageDamage,
-  selectAdventurerDamage,
   setActiveHero,
-  selectHealerLevelUpCost,
-  selectMageLevelUpCost,
   selectPMod,
   selectAchievementModifier,
 } from "../../../redux/playerSlice"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
-import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeProps, UpgradeId } from "../../../models/upgrades"
+import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeId } from "../../../models/upgrades"
 import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../gameconfig/utils"
-// import adventurerBgURL from "../../../assets/icons/adventurerBg.svg"
-// import warriorBgURL from "../../../assets/icons/warriorBg.svg"
-// import healerBgURL from "../../../assets/icons/healerBg.svg"
-// import mageBgURL from "../../../assets/icons/mageBg.svg"
+import { cardProps } from "../../../gameconfig/heroCard"
 
 interface HeroCardProps {
   config: Upgrade
@@ -43,46 +28,19 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const [upgradeName] = config.elementId.split("-")
   const thisHeroName = upgradeName as HeroName
 
-  const upgradeProps: UpgradeProps = {
-    adventurer: {
-      ...useAppSelector(selectAdventurerState),
-      damage: useAppSelector(selectAdventurerDamage),
-      levelUpCost: useAppSelector(selectAdventurerLevelUpCost),
-      cardBackground: "bg-orange-200/50",
-      backgroundImage: `before:bg-[url('/assets/icons/adventurerBg.svg')]`,
-    },
-    warrior: {
-      ...useAppSelector(selectWarriorState),
-      damage: useAppSelector(selectWarriorDamage),
-      levelUpCost: useAppSelector(selectWarriorLevelUpCost),
-      cardBackground: "bg-red-300/50",
-      backgroundImage: `before:bg-[url('/assets/icons/warriorBg.svg')]`,
-    },
-    healer: {
-      ...useAppSelector(selectHealerState),
-      damage: useAppSelector(selectHealerDamage),
-      levelUpCost: useAppSelector(selectHealerLevelUpCost),
-      cardBackground: "bg-green-300/50",
-      backgroundImage: `before:bg-[url('/assets/icons/healerBg.svg')]`,
-    },
-    mage: {
-      ...useAppSelector(selectMageState),
-      damage: useAppSelector(selectMageDamage),
-      levelUpCost: useAppSelector(selectMageLevelUpCost),
-      cardBackground: "bg-electricblue/50",
-      backgroundImage: `before:bg-[url('/assets/icons/mageBg.svg')]`,
-    },
-  }
-  const thisUpgradeProps = upgradeProps[thisHeroName]
-  const damage = upgradeProps[thisHeroName].damage
+  const thisHero = cardProps[thisHeroName]
+  const level = useAppSelector(thisHero.level)
+  const upgradeCount = useAppSelector(thisHero.upgradeCount)
+  const damage = useAppSelector(thisHero.damage)
+  const levelUpCost = useAppSelector(thisHero.levelUpCost)
 
-  const canAffordLevelUp = useAppSelector(selectGCanAfford(thisUpgradeProps.levelUpCost))
-  const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, thisUpgradeProps.upgradeCount)
+  const canAffordLevelUp = useAppSelector(selectGCanAfford(levelUpCost))
+  const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, upgradeCount)
   const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
 
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
   const upgradeMod = config.OneTimePurchases.OTPModifiers.reduce((acc, cur, i) => {
-    if (thisUpgradeProps.upgradeCount > i) return acc + cur
+    if (upgradeCount > i) return acc + cur
     return acc
   }, 0)
 
@@ -154,7 +112,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     resizeObserver.observe(OTPContainerRef.current)
 
     return () => resizeObserver.disconnect()
-  }, [thisUpgradeProps.upgradeCount, OTPIcons.length, isMobile, shouldMount])
+  }, [upgradeCount, OTPIcons.length, isMobile, shouldMount])
 
   useEffect(() => {
     if (isNotAdventurer) {
@@ -215,7 +173,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       className={clsx(
         "flex flex-col shadow-panel rounded-b border-2 text-white",
         !animationComplete && "transition-opacity duration-1000",
-        canAffordNextOTPUpgrade && thisUpgradeProps.level > 10 ? "border-gold" : "border-yellow-700",
+        canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
         isVisible && isNotAdventurer && "opacity-100",
         animationComplete && "opacity-100",
@@ -225,9 +183,9 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       {/* Title section */}
       <div
         className={clsx(
-          `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${upgradeProps[thisHeroName].cardBackground}`,
+          `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${cardProps[thisHeroName].cardBackground}`,
           "before:absolute before:inset-0 before:transition-opacity before:duration-500 before:z-0",
-          isHovering && `${thisUpgradeProps.backgroundImage}`,
+          isHovering && `${thisHero.backgroundImage}`,
           isHovering ? "before:opacity-100" : "before:opacity-0",
         )}>
         <div
@@ -266,7 +224,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 <div className="">
                   <div className="flex justify-between translate-y-1">
                     <h4>Level</h4>
-                    <p>{thisUpgradeProps.level}</p>
+                    <p>{level}</p>
                   </div>
                 </div>
                 <div className="">
@@ -308,8 +266,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           ref={OTPContainerRef}
           className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
           {OTPIcons.map((icon, i) => {
-            const isPurchased = thisUpgradeProps.upgradeCount > i
-            const isHidden = i === 0 ? thisUpgradeProps.level < 10 : thisUpgradeProps.upgradeCount < i
+            const isPurchased = upgradeCount > i
+            const isHidden = i === 0 ? level < 10 : upgradeCount < i
 
             return (
               <div
@@ -337,8 +295,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         <LevelUpButton
           id={upgradeName}
           onLevelUp={onLevelUp}
-          currentLevel={thisUpgradeProps.level}
-          levelUpCost={thisUpgradeProps.levelUpCost}
+          currentLevel={level}
+          levelUpCost={levelUpCost}
           isAffordable={canAffordLevelUp}
           hoveredOTPUpgrade={hoveredOTPUpgrade}
           nextOTPCost={nextOTPCost}

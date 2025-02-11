@@ -1,3 +1,5 @@
+import { RootState } from "../redux/store"
+
 export type UpgradeId = "adventurer-otp" | "warrior-otp" | "healer-otp" | "mage-otp"
 export type UpgradeIdWithLevel =
   | "adventurer-otp.1"
@@ -74,10 +76,10 @@ export type HeroState = { level: number; upgradeCount: number }
 
 export type UpgradeProps = {
   [key in HeroName]: {
-    level: number
-    upgradeCount: number
-    damage: number
-    levelUpCost: number
+    level: (state: RootState) => number
+    upgradeCount: (state: RootState) => number
+    damage: (state: RootState) => number
+    levelUpCost: (state: RootState) => number
     cardBackground: string
     backgroundImage: string
   }

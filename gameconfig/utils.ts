@@ -1,6 +1,6 @@
 //@ts-nocheck
 
-import { PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
+import { PrestigeUpgradeName, HeroName, UpgradeId, UpgradeProps, HeroState } from "../models/upgrades"
 import { RootState } from "../redux/store"
 import { PlayerState } from "../models/player"
 import { selectInitState, selectPrestigeState } from "../redux/playerSlice"
@@ -25,21 +25,6 @@ export const heroStateMap: Record<HeroName, { level: keyof PlayerState; upgradeC
     upgradeCount: "mageOTPUpgradeCount",
   },
 } as const
-
-// export const heroDamageMap: Record<HeroName, (state: RootState) => HeroState> = {
-//   adventurer: (state) => {
-//     return { level: state.player.adventurerLevel, upgradeCount: state.player.adventurerOTPUpgradeCount }
-//   },
-//   warrior: (state) => {
-//     return { level: state.player.warriorLevel, upgradeCount: state.player.warriorOTPUpgradeCount }
-//   },
-//   healer: (state) => {
-//     return { level: state.player.healerLevel, upgradeCount: state.player.healerOTPUpgradeCount }
-//   },
-//   mage: (state) => {
-//     return { level: state.player.mageLevel, upgradeCount: state.player.mageOTPUpgradeCount }
-//   },
-// } as const
 
 export const setInitElementMap: Record<UpgradeId | HeroName, (state: PlayerState) => void> = {
   "adventurer-otp": (state: PlayerState) => {
