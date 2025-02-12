@@ -442,6 +442,7 @@ export const selectAllAdventurerState = createSelector(
   (heroState, damage, levelUpCost) => ({
     level: heroState.level,
     upgradeCount: heroState.upgradeCount,
+    damageAtLevel: playerCalc.damageAtLevel("adventurer", heroState),
     damage,
     levelUpCost,
   }),
@@ -452,6 +453,7 @@ export const selectAllWarriorState = createSelector(
   (heroState, damage, levelUpCost) => ({
     level: heroState.level,
     upgradeCount: heroState.upgradeCount,
+    damageAtLevel: playerCalc.damageAtLevel("warrior", heroState),
     damage,
     levelUpCost,
   }),
@@ -462,6 +464,7 @@ export const selectAllHealerState = createSelector(
   (heroState, damage, levelUpCost) => ({
     level: heroState.level,
     upgradeCount: heroState.upgradeCount,
+    damageAtLevel: playerCalc.damageAtLevel("healer", heroState),
     damage,
     levelUpCost,
   }),
@@ -472,6 +475,7 @@ export const selectAllMageState = createSelector(
   (heroState, damage, levelUpCost) => ({
     level: heroState.level,
     upgradeCount: heroState.upgradeCount,
+    damageAtLevel: playerCalc.damageAtLevel("mage", heroState),
     damage,
     levelUpCost,
   }),

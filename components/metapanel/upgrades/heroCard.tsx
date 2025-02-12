@@ -31,6 +31,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const thisHero = cardProps[thisHeroName]
   const level = useAppSelector(thisHero.level)
   const upgradeCount = useAppSelector(thisHero.upgradeCount)
+  const damageAtLevel = useAppSelector(thisHero.damageAtLevel)
   const damage = useAppSelector(thisHero.damage)
   const levelUpCost = useAppSelector(thisHero.levelUpCost)
 
@@ -223,14 +224,14 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
               <div className="self-center divide-y-2 w-full divide-amber-900 font-passion text-lg">
                 <div className="">
                   <div className="flex justify-between translate-y-1">
-                    <h4>Level</h4>
-                    <p>{level}</p>
+                    <h4>Base Damage</h4>
+                    <p>{Math.round(damageAtLevel)}</p>
                   </div>
                 </div>
                 <div className="">
                   <div className="flex justify-between translate-y-1">
                     <h4>Upgrade Multiplier</h4>
-                    <p>x{upgradeMod.toFixed(2)}</p>
+                    <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                   </div>
                 </div>
                 {prestigeMod > 1 && (
@@ -238,7 +239,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                     <div className="flex justify-between translate-y-1">
                       {" "}
                       <h4>Prestige</h4>
-                      <p>x{prestigeMod}</p>
+                      <p>x{prestigeMod.toFixed(2)}</p>
                     </div>
                   </div>
                 )}

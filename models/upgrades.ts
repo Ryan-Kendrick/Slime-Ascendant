@@ -78,6 +78,7 @@ export type UpgradeProps = {
   [key in HeroName]: {
     level: (state: RootState) => number
     upgradeCount: (state: RootState) => number
+    damageAtLevel: (state: RootState) => number
     damage: (state: RootState) => number
     levelUpCost: (state: RootState) => number
     cardBackground: string
