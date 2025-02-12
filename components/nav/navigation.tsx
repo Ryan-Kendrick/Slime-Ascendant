@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { memo, useState } from "react"
 import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
@@ -6,7 +6,7 @@ import Achievements from "./achievements"
 import handURL from "/assets/icons/hand.png"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
 
-export default function Navigation() {
+export const Navigation = memo(function Navigation() {
   const [viewAchievements, setViewAchievements] = useState(false)
   const [viewOptions, setViewOptions] = useState(false)
 
@@ -44,7 +44,7 @@ export default function Navigation() {
       </ReactModal> */}
     </div>
   )
-}
+})
 
 type NavigationLinkButtonProps = {
   text: string
@@ -96,3 +96,5 @@ const achievementsStyle: ModalStylesheet = {
     zIndex: 1000,
   },
 }
+
+export default Navigation

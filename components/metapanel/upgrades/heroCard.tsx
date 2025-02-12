@@ -230,7 +230,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 <div className="">
                   <div className="flex justify-between translate-y-1">
                     <h4>Upgrade Multiplier</h4>
-                    <p>x{upgradeMod}</p>
+                    <p>x{upgradeMod.toFixed(2)}</p>
                   </div>
                 </div>
                 {prestigeMod > 1 && (
