@@ -3,6 +3,16 @@ import type { Config } from "tailwindcss"
 
 export default {
   content: ["./{pages,layouts,components,src}/**/*.{html,js,jsx,ts,tsx,vue}"],
+  safelist: [
+    "bg-orange-200/50",
+    "bg-red-300/50",
+    "bg-green-300/50",
+    "bg-electricblue/50",
+    "before:bg-[url('/assets/icons/adventurerBg.svg')]",
+    "before:bg-[url('/assets/icons/warriorBg.svg')]",
+    "before:bg-[url('/assets/icons/healerBg.svg')]",
+    "before:bg-[url('/assets/icons/mageBg.svg')]",
+  ],
   theme: {
     extend: {
       colors: {

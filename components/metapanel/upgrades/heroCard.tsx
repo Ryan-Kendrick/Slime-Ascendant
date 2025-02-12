@@ -184,7 +184,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       {/* Title section */}
       <div
         className={clsx(
-          `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${cardProps[thisHeroName].cardBackground}`,
+          `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${thisHero.cardBackground}`,
           "before:absolute before:inset-0 before:transition-opacity before:duration-500 before:z-0",
           isHovering && `${thisHero.backgroundImage}`,
           isHovering ? "before:opacity-100" : "before:opacity-0",
@@ -219,7 +219,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           )}>
           <div className="flex mt-[1.05rem] h-full items-center">
             {hoveredOTPUpgrade ? (
-              config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]
+              <div className="mt-4">config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]</div>
             ) : (
               <div className="self-center divide-y-2 w-full divide-amber-900 font-passion text-lg">
                 <div className="">

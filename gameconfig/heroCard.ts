@@ -40,21 +40,21 @@ export const cardProps: UpgradeProps = {
   adventurer: {
     ...populateHeroState("adventurer"),
     cardBackground: "bg-orange-200/50",
-    backgroundImage: `before:bg-[url('/assets/icons/adventurerBg.svg')]`,
+    backgroundImage: "before:bg-[url('/assets/icons/adventurerBg.svg')]",
   },
   warrior: {
     ...populateHeroState("warrior"),
     cardBackground: "bg-red-300/50",
-    backgroundImage: `before:bg-[url('/assets/icons/warriorBg.svg')]`,
+    backgroundImage: "before:bg-[url('/assets/icons/warriorBg.svg')]",
   },
   healer: {
     ...populateHeroState("healer"),
     cardBackground: "bg-green-300/50",
-    backgroundImage: `before:bg-[url('/assets/icons/healerBg.svg')]`,
+    backgroundImage: "before:bg-[url('/assets/icons/healerBg.svg')]",
   },
   mage: {
     ...populateHeroState("mage"),
     cardBackground: "bg-electricblue/50",
-    backgroundImage: `before:bg-[url('/assets/icons/mageBg.svg')]`,
+    backgroundImage: "before:bg-[url('/assets/icons/mageBg.svg')]",
   },
 }
