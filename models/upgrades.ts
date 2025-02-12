@@ -37,6 +37,7 @@ export interface PrestigeState {
 export interface OTPConfig {
   OTPCosts: number[]
   OTPModifiers: number[]
+  OTPTitles: string[]
   OTPDescriptions: string[]
 }
 export interface Upgrade {

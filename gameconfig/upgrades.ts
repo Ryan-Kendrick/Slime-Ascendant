@@ -11,6 +11,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     OneTimePurchases: {
       OTPCosts: [100, 400, 1000],
       OTPModifiers: [2, 2, 2],
+      OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
         "Increase Passive Damage by 100%",
         "Increase Passive Damage by 100%",
@@ -34,6 +35,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     OneTimePurchases: {
       OTPCosts: [8000, 15000, 25000],
       OTPModifiers: [2, 2, 2],
+      OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
         "Increase Passive Damage by 100%",
         "Increase Passive Damage by 100%",
@@ -57,6 +59,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     OneTimePurchases: {
       OTPCosts: [75000, 100000, 250000],
       OTPModifiers: [2, 2, 2],
+      OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
         "Increase Passive Damage by 100%",
         "Increase Passive Damage by 100%",
@@ -80,6 +83,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     OneTimePurchases: {
       OTPCosts: [1000000, 2500000, 5000000],
       OTPModifiers: [2, 2, 2],
+      OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
         "Increase Passive Damage by 100%",
         "Increase Passive Damage by 100%",

@@ -219,9 +219,19 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           )}>
           <div className="flex mt-[1.05rem] h-full items-center">
             {hoveredOTPUpgrade ? (
-              <div className="mt-4">config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]</div>
+              <div className="flex w-full flex-col mt-2">
+                <div className="mb-2">
+                  <h3 className="text-xl">{config.OneTimePurchases.OTPTitles[hoveredOTPUpgrade - 1]}</h3>
+                </div>
+                <div className="">
+                  <p>{config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]}</p>
+                </div>
+                <div>
+                  <p>Cost: {config.OneTimePurchases.OTPCosts[hoveredOTPUpgrade - 1]}</p>
+                </div>
+              </div>
             ) : (
-              <div className="self-center divide-y-2 w-full divide-amber-900 font-passion text-lg">
+              <div className="divide-y-2 w-full divide-amber-900 font-passion text-lg">
                 <div className="">
                   <div className="flex justify-between translate-y-1">
                     <h4>Base Damage</h4>
