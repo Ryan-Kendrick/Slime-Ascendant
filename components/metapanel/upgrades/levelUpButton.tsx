@@ -1,5 +1,6 @@
 import clsx from "clsx/lite"
 import coinURL from "/assets/icons/coin.png"
+import { formatNumber } from "../../../gameconfig/utils"
 
 interface LevelUpProps {
   id: string
@@ -22,6 +23,8 @@ export default function LevelUpButton({
   purchaseOTPUpgrade,
   nextOTPCost,
 }: LevelUpProps) {
+  const displayCost = formatNumber(levelUpCost)
+
   return (
     <div className="w-full md:w-auto border-2 border-amber-900 ring-1 ring-amber-950">
       <div className="w-full md:w-auto relative border-4 border-amber-950 bg-amber-950">
@@ -64,7 +67,7 @@ export default function LevelUpButton({
                 <span className="hidden lg:inline">{levelUpCost}</span>
               </>
             ) : (
-              levelUpCost
+              displayCost
             )}
           </span>
         </button>

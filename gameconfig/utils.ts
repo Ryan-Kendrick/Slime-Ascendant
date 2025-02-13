@@ -76,7 +76,24 @@ export function serialize(classInstance) {
   for (const key of Object.keys(classInstance)) {
     serialized[key] = serialize(classInstance[key])
   }
+
   return serialized
+}
+
+export function formatNumber(num: number): string {
+  const tiers = [
+    { threshold: 1e15, suffix: "q" },
+    { threshold: 1e10, suffix: "b" },
+    { threshold: 1e6, suffix: "m" },
+  ]
+
+  for (const { threshold, suffix } of tiers) {
+    if (num >= threshold) {
+      return (num / threshold).toFixed(2) + suffix
+    }
+  }
+
+  return num.toString()
 }
 
 export function saveToLocalStorage(state: RootState): void {
@@ -123,6 +140,7 @@ The time has come to start a brand new adventure.`)
     }
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)
+
     return undefined
   }
 }
