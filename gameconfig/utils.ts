@@ -88,8 +88,14 @@ export function formatNumber(num: number): string {
   ]
 
   for (const { threshold, suffix } of tiers) {
-    if (num >= threshold) {
-      return (num / threshold).toFixed(2) + suffix
+    if (num > threshold) {
+      if (threshold === 1e6) {
+        if (num < 1e8) return (num / threshold).toFixed(2) + suffix
+        return Math.floor(num / threshold) + suffix
+      } else {
+        if (num < threshold * 100) return (num / (threshold / 10)).toFixed(2) + suffix
+        return Math.floor(num / threshold) + suffix
+      }
     }
   }
 
