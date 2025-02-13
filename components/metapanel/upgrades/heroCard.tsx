@@ -217,51 +217,61 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
             isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
           )}>
-          <div className="flex mt-[1.05rem] h-full items-center">
-            {hoveredOTPUpgrade ? (
-              <div className="flex w-full flex-col mt-2">
-                <div className="mb-2">
-                  <h3 className="text-xl">{config.OneTimePurchases.OTPTitles[hoveredOTPUpgrade - 1]}</h3>
+          <div className={clsx("flex mt-8 pb-8 h-full items-center relative")}>
+            <div
+              className={clsx(
+                "absolute inset-0 w-full flex flex-col mt-2 transition-opacity duration-200",
+                hoveredOTPUpgrade ? "opacity-100" : "opacity-0",
+                hoveredOTPUpgrade ? "pointer-events-auto" : "pointer-events-none",
+              )}>
+              {hoveredOTPUpgrade && (
+                <>
+                  <div className="mb-4">
+                    <h3 className="text-xl">{config.OneTimePurchases.OTPTitles[hoveredOTPUpgrade - 1]}</h3>
+                  </div>
+                  <div>
+                    <p>{config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]}</p>
+                  </div>
+                  <div>
+                    <p>Cost: {config.OneTimePurchases.OTPCosts[hoveredOTPUpgrade - 1]}</p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div
+              className={clsx(
+                "w-full divide-y-2 divide-amber-900 font-passion text-lg transition-opacity duration-300",
+                hoveredOTPUpgrade ? "opacity-0" : "opacity-100",
+                hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
+              )}>
+              <div>
+                <div className="flex justify-between translate-y-1">
+                  <h4>Base Damage</h4>
+                  <p>{Math.round(damageAtLevel)}</p>
                 </div>
-                <div className="">
-                  <p>{config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]}</p>
+              </div>
+              <div>
+                <div className="flex justify-between translate-y-1">
+                  <h4>Upgrade Multiplier</h4>
+                  <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                 </div>
+              </div>
+              {prestigeMod > 1 && (
                 <div>
-                  <p>Cost: {config.OneTimePurchases.OTPCosts[hoveredOTPUpgrade - 1]}</p>
+                  <div className="flex justify-between translate-y-1">
+                    <h4>Prestige</h4>
+                    <p>x{prestigeMod.toFixed(2)}</p>
+                  </div>
+                </div>
+              )}
+              <div>
+                <div className="flex justify-between translate-y-1">
+                  <h4>Achievements</h4>
+                  <p>+{Math.round(achievementMod * 100)}%</p>
                 </div>
               </div>
-            ) : (
-              <div className="divide-y-2 w-full divide-amber-900 font-passion text-lg">
-                <div className="">
-                  <div className="flex justify-between translate-y-1">
-                    <h4>Base Damage</h4>
-                    <p>{Math.round(damageAtLevel)}</p>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="flex justify-between translate-y-1">
-                    <h4>Upgrade Multiplier</h4>
-                    <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
-                  </div>
-                </div>
-                {prestigeMod > 1 && (
-                  <div className="">
-                    <div className="flex justify-between translate-y-1">
-                      {" "}
-                      <h4>Prestige</h4>
-                      <p>x{prestigeMod.toFixed(2)}</p>
-                    </div>
-                  </div>
-                )}
-                <div className="">
-                  <div className="flex justify-between translate-y-">
-                    {" "}
-                    <h4>Achievements</h4>
-                    <p>+{Math.round(achievementMod * 100)}%</p>
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
