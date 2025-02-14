@@ -23,7 +23,8 @@ export default function LevelUpButton({
   purchaseOTPUpgrade,
   nextOTPCost,
 }: LevelUpProps) {
-  const displayCost = formatNumber(levelUpCost)
+  const formattedLevelUpCost = formatNumber(levelUpCost)
+  const formattedOTPCost = nextOTPCost && formatNumber(nextOTPCost)
 
   return (
     <div className="w-full md:w-auto border-2 border-amber-900 ring-1 ring-amber-950">
@@ -63,11 +64,11 @@ export default function LevelUpButton({
             <img className="w-[1.4rem] inline-block self-center" src={`${coinURL}`} alt="gold coin" />{" "}
             {hoveredOTPUpgrade ? (
               <>
-                <span className="inline lg:hidden">{nextOTPCost}</span>
-                <span className="hidden lg:inline">{levelUpCost}</span>
+                <span className="inline lg:hidden">{formattedOTPCost}</span>
+                <span className="hidden lg:inline">{formattedLevelUpCost}</span>
               </>
             ) : (
-              displayCost
+              formattedLevelUpCost
             )}
           </span>
         </button>
