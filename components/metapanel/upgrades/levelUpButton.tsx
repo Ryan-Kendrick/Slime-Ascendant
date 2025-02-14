@@ -71,7 +71,19 @@ export default function LevelUpButton({
             )}
           </span>
         </button>
-        <div className="absolute ml-1 mt-1 mr-1 rounded-t-sm bg-blue-300/50 inset-x-0 top-0 bottom-3/4 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5  pointer-events-none" />
+        <div
+          className={clsx(
+            "absolute inset-0 m-[2px] z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none",
+            "border-2 border-l-4 border-t-4 border-t-[#EBEBEB] border-l-[#8289c7] border-b-[#062A77] border-r-[#343F66]",
+          )}
+        />
+        <div
+          className="absolute top-[2px] right-[2px] w-[4px] h-[6px] bg-[#343F66] z-30 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none"
+          style={{ clipPath: "polygon(100% 0, 100% 100%, 0 0)" }}
+        />
+        <div className="absolute right-[2px] top-[2px] bottom-[2px] w-[2px] z-20 bg-[#343F66] transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 " />
+
+        <div className="absolute ml-1 mt-1 mr-1 bg-blue-300/50 inset-x-0 top-0 bottom-3/4 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none" />
         <div className="absolute ml-1 mr-1 rounded-bl bg-gradient-to-t from-blue-300/0 to-blue-300/50 inset-x-0 top-[calc(25%+0.0009rem)] bottom-1/2 z-20 transition-transform duration-75 peer-enabled:peer-active:translate-y-0.5 pointer-events-none" />
       </div>{" "}
     </div>
