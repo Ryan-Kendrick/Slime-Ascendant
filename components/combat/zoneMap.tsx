@@ -27,7 +27,7 @@ export default function ZoneMap() {
     const monster = monsters[stageIndex]
     switch (monster.kind) {
       case "rare":
-        if (monster.name === "Treasure Goblin") return MoneybagIcon()
+        if (monster.name === "Gem Crab") return MoneybagIcon()
         break
       case "boss":
         return BossIcon()
