@@ -1,11 +1,15 @@
 import { BaseEnemy, Enemy, MonsterType, BaseMonsterConfig, EnemyState } from "../models/monsters"
 import { ZONE_CONFIG } from "./zone"
+import caveTrollURL from "../assets/monsters/cave-troll.webp"
+import dagonmireURL from "../assets/monsters/dagonmire.webp"
+import errantPlasmaURL from "../assets/monsters/errnat-plasma.webp"
+import forestGuardURL from "../assets/monsters/forest-guard.webp"
+import gemCrabURL from "../assets/monsters/gem-crab.webp"
+import ohcreJellyURL from "../assets/monsters/ochre-jelly.webp"
+import pollenRuntURL from "../assets/monsters/pollen-runt.webp"
+import wailShroomURL from "../assets/monsters/wail-shroom.webp"
 import slimeURL from "../assets/monsters/slime.webp"
-import wormURL from "../assets/monsters/ph-worm.webp"
-import cacodemonURL from "../assets/monsters/ph-cacodemon.webp"
-import yetiURL from "../assets/monsters/ph-yeti.webp"
-import toothURL from "../assets/monsters/ph-boss-tooth.webp"
-import treasureGoblinURL from "../assets/monsters/ph-treasure-monster.webp"
+import toothURL from "../assets/monsters/tooth.webp"
 
 const MONSTER_CONFIG: BaseMonsterConfig = {
   health: {
@@ -30,22 +34,29 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
 }
 
 const MONSTER_VARIATIONS: MonsterType[] = [
+  { name: "Cave Troll", kind: "regular", healthMulti: 1.2, imagePath: `${caveTrollURL}` },
+  { name: "Dagonmire Spawn", kind: "regular", healthMulti: 1.1, imagePath: `${dagonmireURL}` },
+  { name: "Forest Guard", kind: "regular", healthMulti: 1.2, imagePath: `${forestGuardURL}` },
+  { name: "Ochre Jelly", kind: "regular", healthMulti: 1.05, imagePath: `${ohcreJellyURL}` },
+  { name: "Pollen Runt", kind: "regular", healthMulti: 1.05, imagePath: `${pollenRuntURL}` },
   { name: "Slime", kind: "regular", healthMulti: 1, imagePath: `${slimeURL}` },
-  { name: "Worm", kind: "regular", healthMulti: 1.05, imagePath: `${wormURL}` },
-  { name: "Cacodemon", kind: "regular", healthMulti: 1.1, imagePath: `${cacodemonURL}` },
-  { name: "Yeti", kind: "regular", healthMulti: 1.2, imagePath: `${yetiURL}` },
+  { name: "Wail Shroom", kind: "regular", healthMulti: 1, imagePath: `${wailShroomURL}` },
 ]
 
 const BOSS_VARIATIONS: MonsterType[] = [{ name: "Tooth", kind: "boss", healthMulti: 2, imagePath: `${toothURL}` }]
 const RARE_VARIATIONS: MonsterType[] = [
   {
-    name: "Treasure Goblin",
+    name: "Gem Crab",
     kind: "rare",
     healthMulti: 0.5,
     goldMulti: 20,
-    imagePath: `${treasureGoblinURL}`,
+    imagePath: `${gemCrabURL}`,
   },
 ]
+const SPECIAL_VARIATIONS: MonsterType[] = [
+  { name: "Errant Plasma", kind: "special", healthMulti: 1, goldMulti: 0, imagePath: `${errantPlasmaURL}` },
+]
+
 class BaseMonster implements BaseEnemy {
   level = 0
   basehealth = 0
@@ -90,6 +101,7 @@ export function getRandomMonster(zoneNumber = 1, stageNumber = 1, isBoss = false
     randomMonster = BOSS_VARIATIONS[Math.floor(Math.random() * BOSS_VARIATIONS.length)]
   } else {
     const randomValue = Math.random()
+    // TODO: add special spawn check - use threshold array of objects in MONSTER_CONFIG and a utility function
     // Special monster bonus to be implemented via an upgrade system; currently does nothing
     const regularSpawnChance = MONSTER_CONFIG.regularSpawnChance * Math.pow(0.99, specialMonsterBonus)
     randomMonster =
