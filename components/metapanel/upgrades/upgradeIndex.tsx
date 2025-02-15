@@ -37,12 +37,15 @@ import { HeroName, UpgradeId } from "../../../models/upgrades"
 import HeroCard from "./heroCard"
 import Currency from "../currency"
 import { GoldIcon } from "../../svgIcons/resourceIcons"
+import { formatSmallNumber } from "../../../gameconfig/utils"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
 
   const clickDamage = useAppSelector(selectClickDamage)
   const dotDamage = useAppSelector(selectDotDamage)
+  const displayClickDamage = formatSmallNumber(clickDamage)
+  const displayDotDamage = formatSmallNumber(dotDamage)
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
@@ -130,8 +133,8 @@ export default function UpgradeIndex() {
             <div className="flex flex-col text-white place-items-center w-full">
               <h2 className="text-3xl font-outline">Total</h2>
               <div className="flex text-lg w-full justify-evenly">
-                <h3>Click Damage: {Math.round(clickDamage)}</h3>
-                <h3>Passive Damage: {Math.round(dotDamage)}</h3>
+                <h3>Click Damage: {displayClickDamage}</h3>
+                <h3>Passive Damage: {displayDotDamage}</h3>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import clsx from "clsx/lite"
 import coinURL from "/assets/icons/coin.png"
-import { formatNumber } from "../../../gameconfig/utils"
+import { formatSmallNumber } from "../../../gameconfig/utils"
 
 interface LevelUpProps {
   id: string
@@ -23,8 +23,8 @@ export default function LevelUpButton({
   purchaseOTPUpgrade,
   nextOTPCost,
 }: LevelUpProps) {
-  const formattedLevelUpCost = formatNumber(levelUpCost)
-  const formattedOTPCost = nextOTPCost && formatNumber(nextOTPCost)
+  const formattedLevelUpCost = formatSmallNumber(levelUpCost)
+  const formattedOTPCost = nextOTPCost && formatSmallNumber(nextOTPCost)
 
   return (
     <div className="w-full md:w-auto border-2 border-amber-900 ring-1 ring-amber-950">

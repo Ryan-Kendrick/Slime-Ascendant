@@ -80,7 +80,9 @@ export function serialize(classInstance) {
   return serialized
 }
 
-export function formatNumber(num: number): string {
+export function formatSmallNumber(num: number): string {
+  num = Math.round(num)
+
   const tiers = [
     { threshold: 1e15, suffix: "q" },
     { threshold: 1e10, suffix: "b" },
