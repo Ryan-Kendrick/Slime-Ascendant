@@ -20,6 +20,7 @@ export default function PanelIndex() {
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
   const [tabHeight, setTabHeight] = useState(0)
   const tabRef = useRef<HTMLDivElement>(null)
+  const mask = activeTab === "upgrade" ? maskStyle : undefined
 
   const tabs = useMemo(() => {
     const tabsToRender: TabData[] = [
@@ -84,10 +85,71 @@ export default function PanelIndex() {
             "flex flex-col grow lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
-          )}>
+          )}
+          style={mask}>
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>
       </div>
     </>
   )
+}
+
+const maskStyle = {
+  //   maskImage: `
+  //   linear-gradient(
+  //     to bottom,
+  //     black 0px,
+  //     black 390px,
+  //     transparent 390px,
+  //     transparent 396px,
+  //     black 396px,
+  //     black 675px,
+  //     transparent 675px,
+  //     transparent 681px,
+  //     black 681px,
+  //     black 100%
+  //   ),
+  //   linear-gradient(
+  //     90deg,
+  //     black 0px,
+  //     black 190px,
+  //     transparent 190px,
+  //     transparent 210px,
+  //     black 210px,
+  //     black 100%
+  //   ),
+  // `,
+  //   maskSize: "100% 100%, 100% 100%",
+  //   // maskPosition: "0 0, 0 396px",
+  //   maskRepeat: "no-repeat, no-repeat",
+  //   WebkitMaskImage: `
+  //   linear-gradient(
+  //     to bottom,
+  //     black 0px,
+  //     black 390px,
+  //     transparent 390px,
+  //     transparent 396px,
+  //     black 396px,
+  //     black 675px,
+  //     transparent 675px,
+  //     transparent 681px,
+  //     black 681px,
+  //     black 100%
+  //   ),
+  //   linear-gradient(
+  //     90deg,
+  //     black 0px,
+  //     black 470px,
+  //     transparent 470px,
+  //     transparent 480px,
+  //     black 480px,
+  //     black 100%
+  //   )
+  // `,
+  //   // WebkitMaskSize: "100% 100%, 100% 100%",
+  //   // WebkitMaskPosition: "0 0, 0 0",
+  //   WebkitMaskRepeat: "no-repeat, no-repeat",
+  //   // Try explicitly setting the composite (experiment with different values)
+  //   maskComposite: "intersect",
+  //   WebkitMaskComposite: "destination-in",
 }
