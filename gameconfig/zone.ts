@@ -14,7 +14,11 @@ export class Zone implements BaseZone {
     const length = (zoneLength ??= this.zoneLength)
     for (let i = 0; i < length; i++) {
       const isBoss = (i === length - 1 ? true : false) && !isFarming
-      this.monsters.push(getRandomMonster(currentZoneNumber, i + 1, isBoss))
+      this.monsters.push(getRandomMonster(currentZoneNumber, i + 1, isBoss, isFarming))
     }
   }
 }
+
+console.log(new Zone(12, false, 30).monsters)
+console.log(new Zone(12, false, 30).monsters)
+console.log(new Zone(12, false, 30).monsters)

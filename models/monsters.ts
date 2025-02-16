@@ -43,6 +43,7 @@ export interface BaseMonsterConfig {
   gold: GoldConfig
   boss: BossConfig
   regularSpawnChance: number
+  specialSpawnChance: number
 }
 
 export interface EnemyState extends Enemy {

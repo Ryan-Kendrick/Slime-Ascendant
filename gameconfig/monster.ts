@@ -30,6 +30,7 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
     },
   },
   regularSpawnChance: 0.97,
+  specialSpawnChance: 0.005,
   // attack etc.
 }
 
@@ -95,26 +96,35 @@ class Monster extends BaseMonster implements Enemy {
   }
 }
 
-export function getRandomMonster(zoneNumber = 1, stageNumber = 1, isBoss = false, specialMonsterBonus = 0): EnemyState {
+export function getRandomMonster(
+  zoneNumber = 1,
+  stageNumber = 1,
+  isBoss = false,
+  isFarming = false,
+  rareMonsterBonus = 0,
+): EnemyState {
   let randomMonster: MonsterType
   if (isBoss) {
     randomMonster = BOSS_VARIATIONS[Math.floor(Math.random() * BOSS_VARIATIONS.length)]
   } else {
     const randomValue = Math.random()
-    // TODO: add special spawn check - use threshold array of objects in MONSTER_CONFIG and a utility function
-    // Special monster bonus to be implemented via an upgrade system; currently does nothing
-    const regularSpawnChance = MONSTER_CONFIG.regularSpawnChance * Math.pow(0.99, specialMonsterBonus)
-    randomMonster =
-      regularSpawnChance > randomValue
-        ? MONSTER_VARIATIONS[Math.floor(Math.random() * MONSTER_VARIATIONS.length)]
-        : RARE_VARIATIONS[Math.floor(Math.random() * RARE_VARIATIONS.length)]
+    const regularSpawnChance = MONSTER_CONFIG.regularSpawnChance * Math.pow(0.99, rareMonsterBonus)
+    const specialSpawnChance = MONSTER_CONFIG.specialSpawnChance
+
+    if (specialSpawnChance > randomValue && zoneNumber > 10 && !isFarming) {
+      randomMonster = SPECIAL_VARIATIONS[Math.floor(Math.random() * SPECIAL_VARIATIONS.length)]
+    } else if (regularSpawnChance > randomValue) {
+      randomMonster = MONSTER_VARIATIONS[Math.floor(Math.random() * MONSTER_VARIATIONS.length)]
+    } else {
+      randomMonster = RARE_VARIATIONS[Math.floor(Math.random() * RARE_VARIATIONS.length)]
+    }
   }
   const newMonster = serializableMonster(new Monster(randomMonster, zoneNumber, stageNumber, isBoss))
   return newMonster
 }
 
 export function getMonster(monsterName: string, zoneNumber = 1, stageNumber = 1, isBoss = false): EnemyState {
-  const allMonsters = MONSTER_VARIATIONS.concat(BOSS_VARIATIONS, RARE_VARIATIONS)
+  const allMonsters = MONSTER_VARIATIONS.concat(BOSS_VARIATIONS, RARE_VARIATIONS, SPECIAL_VARIATIONS)
   for (const monster of allMonsters) {
     if (monster.name === monsterName) return serializableMonster(new Monster(monster, zoneNumber, stageNumber, isBoss))
   }
