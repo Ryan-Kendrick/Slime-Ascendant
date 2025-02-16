@@ -117,7 +117,6 @@ function zoneTransition(state: RootState, dispatch: Dispatch, returnToProgressio
   }
 
   if (nextMonster) {
-    console.log("isittrue", nextMonster)
     dispatch(spawnMonster(nextMonster))
   } else throw new Error("Monster undefined during zone transition")
 }
