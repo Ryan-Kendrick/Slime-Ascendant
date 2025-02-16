@@ -34,11 +34,11 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
 }
 
 const MONSTER_VARIATIONS: MonsterType[] = [
-  { name: "Cave Troll", kind: "regular", healthMulti: 1.2, imagePath: `${caveTrollURL}` },
-  { name: "Dagonmire Spawn", kind: "regular", healthMulti: 1.1, imagePath: `${dagonmireURL}` },
-  { name: "Forest Guard", kind: "regular", healthMulti: 1.2, imagePath: `${forestGuardURL}` },
-  { name: "Ochre Jelly", kind: "regular", healthMulti: 1.05, imagePath: `${ohcreJellyURL}` },
-  { name: "Pollen Runt", kind: "regular", healthMulti: 1.05, imagePath: `${pollenRuntURL}` },
+  { name: "Cave Troll", kind: "regular", healthMulti: 2.5, imagePath: `${caveTrollURL}` },
+  { name: "Dagonmire Spawn", kind: "regular", healthMulti: 1.3, imagePath: `${dagonmireURL}` },
+  { name: "Forest Guard", kind: "regular", healthMulti: 1.75, imagePath: `${forestGuardURL}` },
+  { name: "Ochre Jelly", kind: "regular", healthMulti: 1.1, imagePath: `${ohcreJellyURL}` },
+  { name: "Pollen Runt", kind: "regular", healthMulti: 1.2, imagePath: `${pollenRuntURL}` },
   { name: "Slime", kind: "regular", healthMulti: 1, imagePath: `${slimeURL}` },
   { name: "Wail Shroom", kind: "regular", healthMulti: 1, imagePath: `${wailShroomURL}` },
 ]
