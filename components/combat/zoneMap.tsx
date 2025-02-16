@@ -1,7 +1,7 @@
 import clsx from "clsx/lite"
 import { useAppSelector } from "../../redux/hooks"
 import { selectZoneState } from "../../redux/zoneSlice"
-import { BossIcon, CookieEnjoyerIcon, MoneybagIcon } from "../svgIcons/stageIcons"
+import { BossIcon, CookieEnjoyerIcon, GemCrabIcon, MoneybagIcon } from "../svgIcons/stageIcons"
 
 export default function ZoneMap() {
   const {
@@ -27,7 +27,7 @@ export default function ZoneMap() {
     const monster = monsters[stageIndex]
     switch (monster.kind) {
       case "rare":
-        if (monster.name === "Gem Crab") return MoneybagIcon()
+        if (monster.name === "Gem Crab") return GemCrabIcon()
         break
       case "boss":
         return BossIcon()
@@ -58,7 +58,7 @@ export default function ZoneMap() {
                 "bg-yellow-500",
             )}>
             <div className="flex bg-gradient-to-tr from-white/30 to-blue-700/20 w-full h-full items-center justify-center">
-              <div className="w-7 fill-white">{getIcon(stageNumber - 1)}</div>
+              <div className="w-8 h-7">{getIcon(stageNumber - 1)}</div>
             </div>
           </div>
         ))}

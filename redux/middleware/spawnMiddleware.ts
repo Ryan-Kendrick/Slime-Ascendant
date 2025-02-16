@@ -10,7 +10,7 @@ import {
 } from "../zoneSlice"
 import { ZONE_CONFIG } from "../../gameconfig/zone"
 import { EnemyState } from "../../models/monsters"
-import { increaseGold, increasePlasma } from "../playerSlice"
+import { increaseGold, increasePlasma, incrementPDamageUpgradeCount } from "../playerSlice"
 import { incrementFarmZonesCompleted, incrementKillCount } from "../statsSlice"
 import { RootState, store } from "../store"
 import { AchievementCategory, ACHIEVEMENTS } from "../../gameconfig/achievements"
@@ -42,7 +42,10 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
   } = selectZoneState(state)
 
   const zoneLength = ZONE_CONFIG.length
+  const killedMonster =
+    isFarming && farmZoneMonsters ? farmZoneMonsters[farmStageNumber - 1] : zoneMonsters[currentStage - 1]
 
+  if (killedMonster.name === "Errant Plasma") dispatch(incrementPDamageUpgradeCount())
   dispatch(incrementKillCount())
   dispatch(increaseGold(monsterGoldValue))
   let nextMonster: undefined | EnemyState
