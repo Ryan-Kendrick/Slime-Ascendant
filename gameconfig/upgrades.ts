@@ -68,7 +68,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
     levelUpCost: (currentLevel) => {
       const base = 5000
-      const growthRate = 1.09
+      const growthRate = 1.08
 
       return Math.floor(base * (1 + Math.log10(currentLevel + 1)) * Math.pow(growthRate, currentLevel))
     },
@@ -92,7 +92,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
     levelUpCost: (currentLevel) => {
       const base = 8000
-      const growthRate = 1.11
+      const growthRate = 1.09
 
       return Math.floor(base * (1 + Math.log10(currentLevel + 1)) * Math.pow(growthRate, currentLevel))
     },
