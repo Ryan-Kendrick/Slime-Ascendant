@@ -8,3 +8,11 @@ export interface BaseZone {
 export interface ZoneConfig {
   length: number
 }
+
+export interface Stage {
+  thisStageNumber: number
+  isSpecial: boolean
+  iconVisible: boolean
+  isCurrentStage: boolean
+  isCompleted: boolean
+}

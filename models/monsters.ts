@@ -12,9 +12,11 @@ export interface Enemy {
   plasma?: number
 }
 
+type MonsterKind = "regular" | "rare" | "special" | "boss"
+
 export interface MonsterType {
   name: string
-  kind: "regular" | "rare" | "special" | "boss"
+  kind: MonsterKind
   healthMulti: number
   goldMulti?: number
   imagePath: string
@@ -48,5 +50,5 @@ export interface BaseMonsterConfig {
 
 export interface EnemyState extends Enemy {
   level: number
-  kind: string
+  kind: MonsterKind
 }

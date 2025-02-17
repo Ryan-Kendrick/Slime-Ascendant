@@ -18,7 +18,3 @@ export class Zone implements BaseZone {
     }
   }
 }
-
-console.log(new Zone(12, false, 30).monsters)
-console.log(new Zone(12, false, 30).monsters)
-console.log(new Zone(12, false, 30).monsters)
