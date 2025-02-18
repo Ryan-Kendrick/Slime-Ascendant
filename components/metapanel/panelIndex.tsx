@@ -20,7 +20,7 @@ export default function PanelIndex() {
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
   const [tabHeight, setTabHeight] = useState(0)
   const tabRef = useRef<HTMLDivElement>(null)
-  const mask = activeTab === "upgrade" ? maskStyle : undefined
+  // const mask = activeTab === "upgrade" ? maskStyle : undefined
 
   const tabs = useMemo(() => {
     const tabsToRender: TabData[] = [

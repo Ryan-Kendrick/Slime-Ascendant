@@ -53,7 +53,7 @@ export default function ZoneMap() {
       iconVisible,
     }
   })
-  console.log(stages)
+
   return (
     <div className="flex items-end opacity-100">
       <div className="flex w-[20rem] border-2 md:w-[32rem] md:border-0 lg:w-[20rem] lg:border-2 xl:w-[32rem] xl:border-0 2xl:w-[40rem] 2xl:border-2 mb-2 flex-wrap-reverse content-start border-gray-300 box-content z-10">
