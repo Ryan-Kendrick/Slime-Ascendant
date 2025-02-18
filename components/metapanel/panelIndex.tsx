@@ -87,7 +87,7 @@ export default function PanelIndex() {
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
           )}
           // style={mask}
-          >
+        >
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>
       </div>
@@ -150,4 +150,4 @@ export default function PanelIndex() {
 //   // Try explicitly setting the composite (experiment with different values)
 //   maskComposite: "intersect",
 //   // WebkitMaskComposite: "source-in, xor",
-}
+// }
