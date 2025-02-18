@@ -10,7 +10,9 @@ import {
   selectTabAnimationComplete,
   setTabInView,
   incrementUIProgression,
+  selectInitState,
 } from "../../redux/playerSlice"
+import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
@@ -18,9 +20,19 @@ export default function PanelIndex() {
   const activeTab = useAppSelector(selectTabInView)
   const prestigeTabVisible = useAppSelector(selectPrestigeTabVisible)
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
+  const { hasInitWarriorPane, hasInitHealerPane } = useAppSelector(selectInitState)
   const [tabHeight, setTabHeight] = useState(0)
   const tabRef = useRef<HTMLDivElement>(null)
-  // const mask = activeTab === "upgrade" ? maskStyle : undefined
+
+  const renderMask = (): undefined | Mask => {
+    if (activeTab !== "upgrade") return undefined
+
+    if (hasInitHealerPane) {
+      return partialMask
+    } else {
+      return fullMask
+    }
+  }
 
   const tabs = useMemo(() => {
     const tabsToRender: TabData[] = [
@@ -86,8 +98,7 @@ export default function PanelIndex() {
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
           )}
-          // style={mask}
-        >
+          style={renderMask()}>
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>
       </div>
@@ -95,59 +106,61 @@ export default function PanelIndex() {
   )
 }
 
-// const maskStyle = {
-//   // maskImage: `
-//   //   linear-gradient(
-//   //     to bottom,
-//   //     black 0px,
-//   //     black 390px,
-//   //     transparent 390px,
-//   //     transparent 396px,
-//   //     black 396px,
-//   //     black 675px,
-//   //     transparent 675px,
-//   //     transparent 681px,
-//   //     black 681px,
-//   //     black 100%
-//   //   ),
-//   //   linear-gradient(
-//   //     90deg,
-//   //     black 0px,
-//   //     black 190px,
-//   //     transparent 190px,
-//   //     transparent 210px,
-//   //     black 210px,
-//   //     black 100%
-//   //   ),
-//   // `,
-//   WebkitMaskImage: `
-//   linear-gradient(
-//     to bottom,
-//     black 0px,
-//     black 390px,
-//     transparent 390px,
-//     transparent 396px,
-//     black 396px,
-//     black 675px,
-//     transparent 675px,
-//     transparent 681px,
-//     black 681px,
-//     black 100%
-//     ),
-//     linear-gradient(
-//       90deg,
-//       black 0px,
-//       black 470px,
-//       transparent 470px,
-//       transparent 480px,
-//       black 480px,
-//       black 100%
-//       )
-//       `,
+interface Mask {
+  maskImage: string
+  maskRepeat: string
+  WebkitMaskRepeat: string
+  maskComposite: string
+  WebkitMaskComposite: string
+}
 
-//   maskRepeat: "no-repeat, no-repeat",
-//   // WebkitMaskRepeat: "no-repeat, no-repeat",
-//   // Try explicitly setting the composite (experiment with different values)
-//   maskComposite: "intersect",
-//   // WebkitMaskComposite: "source-in, xor",
-// }
+const partialMask = {
+  maskImage: `linear-gradient(
+  to bottom,
+  black 0px,
+  black 390px,
+  transparent 390px,
+  transparent 396px,
+  black 396px,
+  black 100%
+)`,
+
+  maskRepeat: "no-repeat, no-repeat",
+  WebkitMaskRepeat: "no-repeat, no-repeat",
+  maskComposite: "intersect",
+  WebkitMaskComposite: "source-in, xor",
+}
+
+const fullMask = {
+  maskImage: `
+    linear-gradient(
+      to bottom,
+      black 0px,
+      black 390px,
+      transparent 390px,
+      transparent 396px,
+      black 396px,
+      black 675px,
+      transparent 675px,
+      transparent 681px,
+      black 681px,
+      black 100%`,
+  WebkitMaskImage: `
+  linear-gradient(
+    to bottom,
+    black 0px,
+    black 390px,
+    transparent 390px,
+    transparent 396px,
+    black 396px,
+    black 675px,
+    transparent 675px,
+    transparent 681px,
+    black 681px,
+    black 100%`,
+
+  maskRepeat: "no-repeat, no-repeat",
+  WebkitMaskRepeat: "no-repeat, no-repeat",
+  maskComposite: "intersect",
+  WebkitMaskComposite: "source-in, xor",
+}
