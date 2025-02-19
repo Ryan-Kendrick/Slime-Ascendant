@@ -13,6 +13,7 @@ import {
   selectWarriorDamage,
   selectLevelUpCosts,
   selectPrestigeTabVisible,
+  selectInitState,
 } from "../../../redux/playerSlice"
 import {
   ClickOTPIcon1,
@@ -38,10 +39,13 @@ import HeroCard from "./heroCard"
 import Currency from "../currency"
 import { GoldIcon } from "../../svgIcons/resourceIcons"
 import { formatSmallNumber } from "../../../gameconfig/utils"
+import clsx from "clsx/lite"
+import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
 
+  const currentZone = useAppSelector(selectCurrentZoneNumber)
   const clickDamage = useAppSelector(selectClickDamage)
   const dotDamage = useAppSelector(selectDotDamage)
   const displayClickDamage = formatSmallNumber(clickDamage)
@@ -49,6 +53,7 @@ export default function UpgradeIndex() {
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
+  const isHealerVisible = UPGRADE_CONFIG.healer.visibleAtZone >= currentZone
 
   const LevelUp = {
     adventurer: {
@@ -103,7 +108,11 @@ export default function UpgradeIndex() {
   return (
     <div className="h-full flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
-      <div className="flex-1 min-h-[609px] grid grid-cols-2 gap-1 grid-rows-[1fr_1fr_auto]">
+      <div
+        className={clsx(
+          "flex-1 min-h-[609px] grid grid-cols-2 gap-1",
+          isHealerVisible ? "grid-rows-[1fr_1fr_auto]" : "grid-rows-[1fr_auto]",
+        )}>
         <HeroCard
           config={UPGRADE_CONFIG.adventurer}
           OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}

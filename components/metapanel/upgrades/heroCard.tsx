@@ -172,7 +172,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   return (
     <div
       className={clsx(
-        "flex flex-col shadow-panel rounded-b border-2 text-white",
+        "flex flex-col shadow-panel rounded-b border-2 text-white h-[333px]",
         !animationComplete && "transition-opacity duration-1000",
         canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
@@ -211,6 +211,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           )}>
           <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
         </div>
+
+        {/* OTP info on hover */}
         <div
           className={clsx(
             "absolute h-full w-full transition-opacity ease-in",
@@ -239,9 +241,10 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
               )}
             </div>
 
+            {/*Damage calculation table  */}
             <div
               className={clsx(
-                "w-full divide-y-2 divide-amber-900 font-passion text-lg transition-opacity duration-300",
+                "w-full divide-y-[2px] divide-amber-900 font-passion text-xl transition-opacity duration-300",
                 hoveredOTPUpgrade ? "opacity-0" : "opacity-100",
                 hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
               )}>
@@ -257,6 +260,13 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                   <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                 </div>
               </div>
+
+              <div>
+                <div className="flex justify-between translate-y-1">
+                  <h4>Prestige</h4>
+                  <p>x{prestigeMod.toFixed(2)}</p>
+                </div>
+              </div>
               {prestigeMod > 1 && (
                 <div>
                   <div className="flex justify-between translate-y-1">
@@ -269,6 +279,12 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 <div className="flex justify-between translate-y-1">
                   <h4>Achievements</h4>
                   <p>+{Math.round(achievementMod * 100)}%</p>
+                </div>
+              </div>
+              <div>
+                <div className="flex text-3xl justify-between translate-y-1">
+                  <h4>Total</h4>
+                  <p>321,321</p>
                 </div>
               </div>
             </div>

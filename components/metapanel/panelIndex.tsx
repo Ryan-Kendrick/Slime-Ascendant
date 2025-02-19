@@ -17,6 +17,7 @@ import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
 
+  const currentZone = useAppSelector(selectCurrentZoneNumber)
   const activeTab = useAppSelector(selectTabInView)
   const prestigeTabVisible = useAppSelector(selectPrestigeTabVisible)
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
@@ -27,8 +28,15 @@ export default function PanelIndex() {
   const renderMask = (): undefined | Mask => {
     if (activeTab !== "upgrade") return undefined
 
-    if (hasInitHealerPane) {
-      return partialMask
+    if (!hasInitWarriorPane) {
+      return
+    } else if (hasInitWarriorPane && !hasInitHealerPane) {
+      if (currentZone < 10) {
+        return OneLineMask
+      } else {
+        return tabAdjustedOneLineMask
+      }
+      return tabAdjustedOneLineMask
     } else {
       return fullMask
     }
@@ -114,15 +122,50 @@ interface Mask {
   WebkitMaskComposite: string
 }
 
-const partialMask = {
+const OneLineMask = {
   maskImage: `linear-gradient(
-  to bottom,
-  black 0px,
-  black 390px,
-  transparent 390px,
-  transparent 396px,
-  black 396px,
-  black 100%
+    to bottom,
+    black 0px,
+    black 445px,
+    transparent 445px,
+    transparent 451px,
+    black 451px,
+    black 100%
+)`,
+  WebkitMaskImage: `linear-gradient(
+    to bottom,
+    black 0px,
+    black 445px,
+    transparent 445px,
+    transparent 451px,
+    black 451px,
+    black 100%
+)`,
+
+  maskRepeat: "no-repeat, no-repeat",
+  WebkitMaskRepeat: "no-repeat, no-repeat",
+  maskComposite: "intersect",
+  WebkitMaskComposite: "source-in, xor",
+}
+
+const tabAdjustedOneLineMask = {
+  maskImage: `linear-gradient(
+      to bottom,
+      black 0px,
+      black 390px,
+      transparent 390px,
+      transparent 396px,
+      black 396px,
+      black 100%
+)`,
+  WebkitMaskImage: `linear-gradient(
+      to bottom,
+      black 0px,
+      black 390px,
+      transparent 390px,
+      transparent 396px,
+      black 396px,
+      black 100%
 )`,
 
   maskRepeat: "no-repeat, no-repeat",
@@ -144,7 +187,8 @@ const fullMask = {
       transparent 675px,
       transparent 681px,
       black 681px,
-      black 100%`,
+      black 100%
+)`,
   WebkitMaskImage: `
   linear-gradient(
     to bottom,
@@ -157,7 +201,8 @@ const fullMask = {
     transparent 675px,
     transparent 681px,
     black 681px,
-    black 100%`,
+    black 100%
+)`,
 
   maskRepeat: "no-repeat, no-repeat",
   WebkitMaskRepeat: "no-repeat, no-repeat",
