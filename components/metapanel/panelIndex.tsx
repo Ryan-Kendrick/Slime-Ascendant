@@ -31,12 +31,13 @@ export default function PanelIndex() {
     if (!hasInitWarriorPane) {
       return
     } else if (hasInitWarriorPane && !hasInitHealerPane) {
-      if (currentZone < 10) {
+      if (currentZone < 11) {
+        console.log("one line mask")
         return OneLineMask
       } else {
-        return tabAdjustedOneLineMask
+        console.log("tab adjusted mask")
+        return OneLineMask
       }
-      return tabAdjustedOneLineMask
     } else {
       return fullMask
     }
@@ -77,7 +78,7 @@ export default function PanelIndex() {
       <div
         className={clsx(
           // Base
-          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-6",
+          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-0",
         )}>
         <div
           style={{ height: `${tabHeight}px` }}
@@ -102,7 +103,7 @@ export default function PanelIndex() {
         </div>
         <div
           className={clsx(
-            "flex flex-col grow lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl z-50",
+            "flex flex-col lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl z-50",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
           )}
@@ -178,11 +179,11 @@ const fullMask = {
   maskImage: `
     linear-gradient(
       to bottom,
-      black 0px,
-      black 390px,
-      transparent 390px,
-      transparent 396px,
-      black 396px,
+    black 0px,
+    black 445px,
+    transparent 445px,
+    transparent 451px,
+    black 451px,
       black 675px,
       transparent 675px,
       transparent 681px,
@@ -193,10 +194,10 @@ const fullMask = {
   linear-gradient(
     to bottom,
     black 0px,
-    black 390px,
-    transparent 390px,
-    transparent 396px,
-    black 396px,
+    black 445px,
+    transparent 445px,
+    transparent 451px,
+    black 451px,
     black 675px,
     transparent 675px,
     transparent 681px,

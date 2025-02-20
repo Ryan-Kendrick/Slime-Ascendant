@@ -53,7 +53,7 @@ export default function UpgradeIndex() {
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
-  const isHealerVisible = UPGRADE_CONFIG.healer.visibleAtZone >= currentZone
+  const isHealerVisible = currentZone >= UPGRADE_CONFIG.healer.visibleAtZone
 
   const LevelUp = {
     adventurer: {
@@ -104,41 +104,39 @@ export default function UpgradeIndex() {
     dispatch(upgradeAction)
     dispatch(decreaseGold(cost))
   }
-
+  console.log(isHealerVisible, UPGRADE_CONFIG.healer.visibleAtZone, currentZone)
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
-      <div
-        className={clsx(
-          "flex-1 min-h-[609px] grid grid-cols-2 gap-1",
-          isHealerVisible ? "grid-rows-[1fr_1fr_auto]" : "grid-rows-[1fr_auto]",
-        )}>
-        <HeroCard
-          config={UPGRADE_CONFIG.adventurer}
-          OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
-          onUpgrade={onUpgrade}
-          onLevelUp={onLevelup}
-        />
-        <HeroCard
-          config={UPGRADE_CONFIG.warrior}
-          OTPIcons={[WarriorOTPIcon1(), WarriorOTPIcon2(), WarriorOTPIcon3()]}
-          onUpgrade={onUpgrade}
-          onLevelUp={onLevelup}
-        />
-        <HeroCard
-          config={UPGRADE_CONFIG.healer}
-          OTPIcons={[HealerOTPIcon1(), HealerOTPIcon2(), HealerOTPIcon3()]}
-          onUpgrade={onUpgrade}
-          onLevelUp={onLevelup}
-        />
-        <HeroCard
-          config={UPGRADE_CONFIG.mage}
-          OTPIcons={[MageOTPIcon1(), MageOTPIcon2(), MageOTPIcon3()]}
-          onUpgrade={onUpgrade}
-          onLevelUp={onLevelup}
-        />
+      <div className="flex-1 flex flex-col">
+        <div className={clsx("grid  grid-cols-2 gap-1", isHealerVisible ? "grid-rows-2" : "grid-rows-1")}>
+          <HeroCard
+            config={UPGRADE_CONFIG.adventurer}
+            OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+            onUpgrade={onUpgrade}
+            onLevelUp={onLevelup}
+          />
+          <HeroCard
+            config={UPGRADE_CONFIG.warrior}
+            OTPIcons={[WarriorOTPIcon1(), WarriorOTPIcon2(), WarriorOTPIcon3()]}
+            onUpgrade={onUpgrade}
+            onLevelUp={onLevelup}
+          />
+          <HeroCard
+            config={UPGRADE_CONFIG.healer}
+            OTPIcons={[HealerOTPIcon1(), HealerOTPIcon2(), HealerOTPIcon3()]}
+            onUpgrade={onUpgrade}
+            onLevelUp={onLevelup}
+          />
+          <HeroCard
+            config={UPGRADE_CONFIG.mage}
+            OTPIcons={[MageOTPIcon1(), MageOTPIcon2(), MageOTPIcon3()]}
+            onUpgrade={onUpgrade}
+            onLevelUp={onLevelup}
+          />
+        </div>
         {(dotDamage > 0 || hasPrestiged) && (
-          <div className="col-span-2 mb-2">
+          <div className="mb-2">
             <div className="flex flex-col text-white place-items-center w-full">
               <h2 className="text-3xl font-outline">Total</h2>
               <div className="flex text-lg w-full justify-evenly">
@@ -148,6 +146,7 @@ export default function UpgradeIndex() {
             </div>
           </div>
         )}
+        {/* <div className="grow" /> */}
       </div>
     </div>
   )
