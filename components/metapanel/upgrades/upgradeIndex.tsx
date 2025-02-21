@@ -54,6 +54,7 @@ export default function UpgradeIndex() {
     useAppSelector(selectLevelUpCosts)
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
   const isHealerVisible = currentZone >= UPGRADE_CONFIG.healer.visibleAtZone
+  const isWarriorVisible = currentZone >= UPGRADE_CONFIG.warrior.visibleAtZone
 
   const LevelUp = {
     adventurer: {
@@ -109,7 +110,7 @@ export default function UpgradeIndex() {
     <div className="flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
       <div className="flex-1 flex flex-col">
-        <div className={clsx("grid  grid-cols-2 gap-1", isHealerVisible ? "grid-rows-2" : "grid-rows-1")}>
+        <div className={clsx("relative grid grid-cols-2 gap-1 z-50", isHealerVisible ? "grid-rows-2" : "grid-rows-1")}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
             OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
@@ -134,6 +135,15 @@ export default function UpgradeIndex() {
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}
           />
+          <div
+            className={clsx(
+              "left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
+              !isWarriorVisible && "hidden",
+              isWarriorVisible && "absolute from-[#531A83] to-[#441677] md:from-[#631F9A] md:to-[#541B84]",
+              isHealerVisible &&
+                "absolute from-[#531A83] via-[#441677] to-[#35126B] md:from-[#631F9A] md:via-[#541B84] md:to-[#38136D]",
+            )}
+          />
         </div>
         {(dotDamage > 0 || hasPrestiged) && (
           <div className="mb-2">
@@ -146,7 +156,6 @@ export default function UpgradeIndex() {
             </div>
           </div>
         )}
-        {/* <div className="grow" /> */}
       </div>
     </div>
   )

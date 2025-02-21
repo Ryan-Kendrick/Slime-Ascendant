@@ -136,10 +136,10 @@ const OneLineMask = {
   WebkitMaskImage: `linear-gradient(
     to bottom,
     black 0px,
-    black 445px,
-    transparent 445px,
-    transparent 451px,
-    black 451px,
+    black 403px,
+    transparent 403px,
+    transparent 409px,
+    black 409px,
     black 100%
 )`,
 
@@ -177,31 +177,31 @@ const tabAdjustedOneLineMask = {
 
 const fullMask = {
   maskImage: `
-    linear-gradient(
-      to bottom,
+  linear-gradient(
+    to bottom,
     black 0px,
-    black 445px,
-    transparent 445px,
-    transparent 451px,
-    black 451px,
-      black 675px,
-      transparent 675px,
-      transparent 681px,
-      black 681px,
-      black 100%
+    black 403px,
+    transparent 403px,
+    transparent 408px,
+    black 408px,
+    black 722px,
+    transparent 722px,
+    transparent 727px,
+    black 727px,
+    black 100%
 )`,
   WebkitMaskImage: `
   linear-gradient(
     to bottom,
     black 0px,
-    black 445px,
-    transparent 445px,
-    transparent 451px,
-    black 451px,
-    black 675px,
-    transparent 675px,
-    transparent 681px,
-    black 681px,
+    black 403px,
+    transparent 403px,
+    transparent 409px,
+    black 409px,
+    black 722px,
+    transparent 722px,
+    transparent 728px,
+    black 728px,
     black 100%
 )`,
 
