@@ -172,7 +172,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   return (
     <div
       className={clsx(
-        "flex flex-col shadow-panel rounded-b border-2 text-white h-[333px]",
+        "flex flex-col shadow-panel rounded-b border-2 text-white h-[315px]",
         !animationComplete && "transition-opacity duration-1000",
         canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
@@ -261,12 +261,12 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <div className="flex justify-between translate-y-1">
                   <h4>Prestige</h4>
                   <p>x{prestigeMod.toFixed(2)}</p>
                 </div>
-              </div>
+              </div> */}
               {prestigeMod > 1 && (
                 <div>
                   <div className="flex justify-between translate-y-1">
@@ -295,7 +295,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       {/* Upgrades & Levelup section */}
       <div
         className={clsx(
-          "flex flex-col md:flex-row items-center py-4 px-2 md:px-4 gap-2 transition-all",
+          "flex flex-col md:flex-row items-center py-2 px-2 md:px-4 gap-2 transition-all",
           hoverAnimationDuration,
           isHovering && "mt-4",
         )}>
