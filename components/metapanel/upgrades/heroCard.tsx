@@ -168,11 +168,11 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }
 
   if (!shouldMount && isNotAdventurer) return null
-
   return (
     <div
+      id={`${thisHeroName}-card`}
       className={clsx(
-        "flex flex-col shadow-panel rounded-b border-2 text-white h-[315px]",
+        "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px]",
         !animationComplete && "transition-opacity duration-1000",
         canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",

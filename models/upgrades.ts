@@ -84,5 +84,6 @@ export type UpgradeProps = {
     levelUpCost: (state: RootState) => number
     cardBackground: string
     backgroundImage: string
+    radialMask?: string
   }
 }

@@ -105,7 +105,7 @@ export default function UpgradeIndex() {
     dispatch(upgradeAction)
     dispatch(decreaseGold(cost))
   }
-  console.log(isHealerVisible, UPGRADE_CONFIG.healer.visibleAtZone, currentZone)
+
   return (
     <div className="flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
