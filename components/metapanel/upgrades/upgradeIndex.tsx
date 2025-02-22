@@ -146,10 +146,10 @@ export default function UpgradeIndex() {
             className={clsx(
               "left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
               oneLineMaskVisible
-                ? "absolute from-purpleTopSm to-purpleMidSm md:from-purpleTop md:to-purpleMid"
+                ? "absolute from-purpleTop to-purpleMid md:from-purpleTopSm md:to-purpleMidSm"
                 : "hidden",
               isHealerVisible &&
-                "absolute from-purpleTopSm via-purpleMidSm to-purpleBottomSm md:from-purpleTop md:via-purpleMid md:to-purpleBottom",
+                "absolute from-purpleTop via-purpleMid to-purpleBottom md:from-purpleTopSm md:via-purpleMidSm md:to-purpleBottomSm",
             )}
           />
         </div>
