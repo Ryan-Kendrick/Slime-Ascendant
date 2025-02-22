@@ -9,6 +9,7 @@ import ohcreJellyURL from "../assets/monsters/ochre-jelly.webp"
 import pollenRuntURL from "../assets/monsters/pollen-runt.webp"
 import wailShroomURL from "../assets/monsters/wail-shroom.webp"
 import slimeURL from "../assets/monsters/slime.webp"
+import jungleProwlerURL from "../assets/monsters/jungle-prowler.webp"
 import toothURL from "../assets/monsters/tooth.webp"
 
 const MONSTER_CONFIG: BaseMonsterConfig = {
@@ -40,8 +41,9 @@ const MONSTER_VARIATIONS: MonsterType[] = [
   { name: "Forest Guard", kind: "regular", healthMulti: 1.75, imagePath: `${forestGuardURL}` },
   { name: "Ochre Jelly", kind: "regular", healthMulti: 1.1, imagePath: `${ohcreJellyURL}` },
   { name: "Pollen Runt", kind: "regular", healthMulti: 1.2, imagePath: `${pollenRuntURL}` },
-  { name: "Slime", kind: "regular", healthMulti: 1, imagePath: `${slimeURL}` },
   { name: "Wail Shroom", kind: "regular", healthMulti: 1, imagePath: `${wailShroomURL}` },
+  { name: "Slime", kind: "regular", healthMulti: 1, imagePath: `${slimeURL}` },
+  { name: "Jungle Prowler", kind: "regular", healthMulti: 1.4, imagePath: `${jungleProwlerURL}` },
 ]
 
 const BOSS_VARIATIONS: MonsterType[] = [{ name: "Tooth", kind: "boss", healthMulti: 2, imagePath: `${toothURL}` }]
