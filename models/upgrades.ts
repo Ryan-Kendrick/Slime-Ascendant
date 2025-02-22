@@ -67,6 +67,7 @@ export interface PlayerCalc {
     heroState: HeroState | HeroState[],
     pDamage?: number,
     achievementModifier?: number,
+    displayHeroContribution?: boolean,
   ) => number
   damageAtLevel: (heroName: HeroName, heroState: HeroState) => number
 }
@@ -82,6 +83,7 @@ export type UpgradeProps = {
     damageAtLevel: (state: RootState) => number
     damage: (state: RootState) => number
     levelUpCost: (state: RootState) => number
+    totalDamageContribution: (state: RootState) => number
     cardBackground: string
     backgroundImage: string
     radialMask?: string

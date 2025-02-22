@@ -128,7 +128,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
 export const playerCalc: PlayerCalc = {
   clickDamage: (clickLevel, clickOTPUpgradeCount, pDamage, achievementModifier): number =>
     clickLevel * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
-  heroDamage: (heroName, heroState, pDamage?, achievementModifier?): number => {
+  heroDamage: (heroName, heroState, pDamage?, achievementModifier?, displayHeroContribution?): number => {
     let damage = 0
 
     if (Array.isArray(heroName) && Array.isArray(heroState) && pDamage && achievementModifier) {
@@ -156,6 +156,19 @@ export const playerCalc: PlayerCalc = {
 
       for (const mod of upgradeModifiers) {
         damage *= mod
+      }
+
+      // When total damage contribution is being calculated for display on a hero card
+      if (displayHeroContribution) {
+        if (pDamage && achievementModifier) {
+          damage *= pDamage * achievementModifier
+        } else if (achievementModifier) {
+          damage *= achievementModifier
+        } else {
+          throw new Error(
+            `Unexpected values in display hero contribution calculation: ${heroName} ${heroState} ${pDamage} ${achievementModifier}`,
+          )
+        }
       }
     } else {
       throw new Error(

@@ -325,6 +325,26 @@ export const selectDotDamage = createSelector(
   },
 )
 
+export const selectAdventurerContribution = createSelector(
+  [selectAdventurerState, selectPMod, selectAchievementDamage],
+  (adventurerState, pDamage, achievementDamage) =>
+    playerCalc.heroDamage("adventurer", adventurerState, pDamage, achievementDamage, true),
+)
+export const selectWarriorContribution = createSelector(
+  [selectWarriorState, selectPMod, selectAchievementDamage],
+  (warriorState, pDamage, achievementDamage) =>
+    playerCalc.heroDamage("warrior", warriorState, pDamage, achievementDamage, true),
+)
+export const selectHealerContribution = createSelector(
+  [selectHealerState, selectPMod, selectAchievementDamage],
+  (healerState, pDamage, achievementDamage) =>
+    playerCalc.heroDamage("healer", healerState, pDamage, achievementDamage, true),
+)
+export const selectMageContribution = createSelector(
+  [selectMageState, selectPMod, selectAchievementDamage],
+  (mageState, pDamage, achievementDamage) => playerCalc.heroDamage("mage", mageState, pDamage, achievementDamage, true),
+)
+
 export const updateClickDamage = (whatChanged: string) => (dispatch: AppDispatch, getState: () => RootState) => {
   switch (whatChanged) {
     case "adventurer-levelup":

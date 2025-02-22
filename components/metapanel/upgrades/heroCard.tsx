@@ -34,6 +34,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const damageAtLevel = useAppSelector(thisHero.damageAtLevel)
   const damage = useAppSelector(thisHero.damage)
   const levelUpCost = useAppSelector(thisHero.levelUpCost)
+  const totalDamageContribution = useAppSelector(thisHero.totalDamageContribution)
 
   const canAffordLevelUp = useAppSelector(selectGCanAfford(levelUpCost))
   const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, upgradeCount)
@@ -244,40 +245,40 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
             {/*Damage calculation table  */}
             <div
               className={clsx(
-                "w-full divide-y-[2px] divide-amber-900 font-passion text-xl transition-opacity duration-300",
+                "w-full font-passion text-xl transition-opacity duration-300",
                 hoveredOTPUpgrade ? "opacity-0" : "opacity-100",
                 hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
               )}>
-              <div>
-                <div className="flex justify-between translate-y-1">
+              <div className="border-b-2 border-amber-900">
+                <div className="flex justify-between translate-y-0.5">
                   <h4>Base Damage</h4>
                   <p>{Math.round(damageAtLevel)}</p>
                 </div>
               </div>
-              <div>
-                <div className="flex justify-between translate-y-1">
+              <div className="border-b-2 border-amber-900">
+                <div className="flex justify-between translate-y-0.5">
                   <h4>Upgrade Multiplier</h4>
                   <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                 </div>
               </div>
               {prestigeMod > 1 && (
-                <div>
-                  <div className="flex justify-between translate-y-1">
+                <div className="border-b-2 border-amber-900">
+                  <div className="flex justify-between translate-y-0.5">
                     <h4>Prestige</h4>
-                    <p>x{prestigeMod.toFixed(2)}</p>
+                    <p className="font-outline-electricblue">x{prestigeMod.toFixed(2)}</p>
                   </div>
                 </div>
               )}
-              <div>
-                <div className="flex justify-between translate-y-1">
+              <div className="border-b-2 border-amber-900">
+                <div className="flex justify-between translate-y-0.5">
                   <h4>Achievements</h4>
-                  <p>+{Math.round(achievementMod * 100)}%</p>
+                  <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
                 </div>
               </div>
               <div>
                 <div className="flex text-3xl justify-between translate-y-1">
                   <h4>Total</h4>
-                  <p>321,321</p>
+                  <p className="">{Math.round(totalDamageContribution)}</p>
                 </div>
               </div>
             </div>

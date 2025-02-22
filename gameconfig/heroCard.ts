@@ -1,9 +1,13 @@
 import { HeroName, UpgradeProps } from "../models/upgrades"
 import {
+  selectAdventurerContribution,
   selectAllAdventurerState,
   selectAllHealerState,
   selectAllMageState,
   selectAllWarriorState,
+  selectHealerContribution,
+  selectMageContribution,
+  selectWarriorContribution,
 } from "../redux/playerSlice"
 import { RootState } from "../redux/store"
 
@@ -13,24 +17,39 @@ type HeroStateFunctions = {
   damageAtLevel: (state: RootState) => number
   damage: (state: RootState) => number
   levelUpCost: (state: RootState) => number
+  totalDamageContribution: (state: RootState) => number
 }
 
 const heroStateSelectors = {
-  adventurer: selectAllAdventurerState,
-  warrior: selectAllWarriorState,
-  healer: selectAllHealerState,
-  mage: selectAllMageState,
+  adventurer: {
+    allState: selectAllAdventurerState,
+    totalDamageContribution: selectAdventurerContribution,
+  },
+  warrior: {
+    allState: selectAllWarriorState,
+    totalDamageContribution: selectWarriorContribution,
+  },
+  healer: {
+    allState: selectAllHealerState,
+    totalDamageContribution: selectHealerContribution,
+  },
+  mage: {
+    allState: selectAllMageState,
+    totalDamageContribution: selectMageContribution,
+  },
 } as const
 
 const populateHeroState = (heroName: HeroName): HeroStateFunctions => {
-  const thisSelector = heroStateSelectors[heroName]
+  const heroStateSelector = heroStateSelectors[heroName].allState
+  const damageContributionSelector = heroStateSelectors[heroName].totalDamageContribution
 
   const thisHeroState = {
-    level: (state: RootState) => thisSelector(state).level,
-    upgradeCount: (state: RootState) => thisSelector(state).upgradeCount,
-    damageAtLevel: (state: RootState) => thisSelector(state).damageAtLevel,
-    damage: (state: RootState) => thisSelector(state).damage,
-    levelUpCost: (state: RootState) => thisSelector(state).levelUpCost,
+    level: (state: RootState) => heroStateSelector(state).level,
+    upgradeCount: (state: RootState) => heroStateSelector(state).upgradeCount,
+    damageAtLevel: (state: RootState) => heroStateSelector(state).damageAtLevel,
+    damage: (state: RootState) => heroStateSelector(state).damage,
+    levelUpCost: (state: RootState) => heroStateSelector(state).levelUpCost,
+    totalDamageContribution: (state: RootState) => damageContributionSelector(state),
   } as HeroStateFunctions
 
   return thisHeroState

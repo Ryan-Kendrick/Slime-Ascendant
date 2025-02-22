@@ -30,4 +30,13 @@
   .font-outline-2 {
     -webkit-text-stroke: 2px black;
   }
+  .font-outline-electricblue {
+    -webkit-text-stroke: 1px #7df9ff;
+  }
+  .font-outline-gold {
+    -webkit-text-stroke: 1px #ffbf00;
+  }
+  .font-outline-none {
+    -webkit-text-stroke: initial;
+  }
 }
