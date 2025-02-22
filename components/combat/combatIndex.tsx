@@ -54,7 +54,13 @@ export default function CombatIndex() {
           {CookieEnjoyerIcon()}
         </div> */}
         {currentZoneNumber > 4 && (
-          <div className={clsx("transition-opacity opacity-0 duration-300", fadeIn && "opacity-100")}>
+          <div
+            className={clsx(
+              "opacity-0 duration-300",
+              shouldMount ? "transition-opacity" : "transition-none",
+              fadeIn && "opacity-100",
+              hasFadedIn && "opacity-100 transition-none",
+            )}>
             <FarmToggle />
           </div>
         )}
