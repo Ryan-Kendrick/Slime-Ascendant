@@ -173,190 +173,185 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   if (!shouldMount && isNotAdventurer) return null
 
   return (
-    <div
-      id={`${thisHeroName}-card`}
-      className={clsx(
-        "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px]",
-        !isNotAdventurer && "transform transition-transform duration-700",
-        !isNotAdventurer && !isWarriorVisible && "absolute max-w-[567px] left-1/2 -translate-x-1/2",
-        !isNotAdventurer && isWarriorVisible && "max-w-none m-0 translate-x-0",
-        !animationComplete && "transition-opacity duration-1000",
-        canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
-        !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
-        isVisible && isNotAdventurer && "opacity-100",
-        animationComplete && "opacity-100",
+    <div className="relative">
+      {/* Card rounded corners mask */}
+      {(thisHeroName !== "adventurer" || isHealerVisible) && (
+        <>
+          <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -left-0.5 -z-10 bg-purpleMidSm md:bg-purpleMid" />
+          <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -right-0.5 -z-10 bg-purpleMidSm md:bg-purpleMid" />
+        </>
       )}
-      onPointerEnter={onCardHover}
-      onMouseLeave={onCardMouseExit}>
-      {/* Title section */}
       <div
+        id={`${thisHeroName}-card`}
         className={clsx(
-          `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${thisHero.cardBackground}`,
-          "before:absolute before:inset-0 before:transition-opacity before:duration-500 before:z-0",
-          isHovering && `${thisHero.backgroundImage}`,
-          isHovering ? "before:opacity-100" : "before:opacity-0",
-        )}>
+          "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px]",
+          !isNotAdventurer && "transform transition-transform duration-700",
+          !isNotAdventurer && !isWarriorVisible && "absolute max-w-[567px] left-1/2 -translate-x-1/2",
+          !isNotAdventurer && isWarriorVisible && "max-w-none m-0 translate-x-0",
+          !animationComplete && "transition-opacity duration-1000",
+          canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
+          !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
+          isVisible && isNotAdventurer && "opacity-100",
+          animationComplete && "opacity-100",
+        )}
+        onPointerEnter={onCardHover}
+        onMouseLeave={onCardMouseExit}>
+        {/* Title section */}
         <div
           className={clsx(
-            "transition-transform h-full",
-            hoverAnimationDuration,
-            isHovering ? "translate-y-0" : "translate-y-[calc(100%-2rem)]",
+            `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${thisHero.cardBackground}`,
+            "before:absolute before:inset-0 before:transition-opacity before:duration-500 before:z-0",
+            isHovering && `${thisHero.backgroundImage}`,
+            isHovering ? "before:opacity-100" : "before:opacity-0",
           )}>
-          <h2
+          <div
             className={clsx(
-              "text-2xl bg-black transition-colors",
+              "transition-transform h-full",
               hoverAnimationDuration,
-              beginDelayedAnimation ? "bg-opacity-60" : "bg-opacity-0",
+              isHovering ? "translate-y-0" : "translate-y-[calc(100%-2rem)]",
             )}>
-            {config.displayName}
-          </h2>
-        </div>
-        <div
-          className={clsx(
-            `transition-transform ${hoverAnimationDuration} font-paytone text-lg h-full`,
-            isHovering ? "translate-y-[calc(101%)]" : "translate-y-0",
-          )}>
-          <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
-        </div>
-
-        {/* OTP info on hover */}
-        <div
-          className={clsx(
-            "absolute h-full w-full transition-opacity ease-in",
-
-            isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
-          )}>
-          <div className={clsx("flex mt-8 pb-8 h-full items-center relative")}>
-            <div
+            <h2
               className={clsx(
-                "absolute inset-0 w-full flex flex-col mt-2 transition-opacity duration-200",
-                hoveredOTPUpgrade ? "opacity-100" : "opacity-0",
-                hoveredOTPUpgrade ? "pointer-events-auto" : "pointer-events-none",
+                "text-2xl bg-black transition-colors",
+                hoverAnimationDuration,
+                beginDelayedAnimation ? "bg-opacity-60" : "bg-opacity-0",
               )}>
-              {hoveredOTPUpgrade && (
-                <>
-                  <div className="mb-4">
-                    <h3 className="text-xl">{config.OneTimePurchases.OTPTitles[hoveredOTPUpgrade - 1]}</h3>
-                  </div>
-                  <div>
-                    <p>{config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]}</p>
-                  </div>
-                  <div>
-                    <p>Cost: {config.OneTimePurchases.OTPCosts[hoveredOTPUpgrade - 1]}</p>
-                  </div>
-                </>
-              )}
-            </div>
+              {config.displayName}
+            </h2>
+          </div>
+          <div
+            className={clsx(
+              `transition-transform ${hoverAnimationDuration} font-paytone text-lg h-full`,
+              isHovering ? "translate-y-[calc(101%)]" : "translate-y-0",
+            )}>
+            <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
+          </div>
 
-            {/*Damage calculation table  */}
-            <div
-              className={clsx(
-                "w-full font-passion text-xl transition-opacity duration-300",
-                hoveredOTPUpgrade ? "opacity-0" : "opacity-100",
-                hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
-              )}>
-              <div className="border-b-2 border-amber-900">
-                <div className="flex justify-between translate-y-0.5">
-                  <h4>Base Damage</h4>
-                  <p>{Math.round(damageAtLevel)}</p>
-                </div>
+          {/* OTP info on hover */}
+          <div
+            className={clsx(
+              "absolute h-full w-full transition-opacity ease-in",
+
+              isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
+            )}>
+            <div className={clsx("flex mt-8 pb-8 h-full items-center relative")}>
+              <div
+                className={clsx(
+                  "absolute inset-0 w-full flex flex-col mt-2 transition-opacity duration-200",
+                  hoveredOTPUpgrade ? "opacity-100" : "opacity-0",
+                  hoveredOTPUpgrade ? "pointer-events-auto" : "pointer-events-none",
+                )}>
+                {hoveredOTPUpgrade && (
+                  <>
+                    <div className="mb-4">
+                      <h3 className="text-xl">{config.OneTimePurchases.OTPTitles[hoveredOTPUpgrade - 1]}</h3>
+                    </div>
+                    <div>
+                      <p>{config.OneTimePurchases.OTPDescriptions[hoveredOTPUpgrade - 1]}</p>
+                    </div>
+                    <div>
+                      <p>Cost: {config.OneTimePurchases.OTPCosts[hoveredOTPUpgrade - 1]}</p>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="border-b-2 border-amber-900">
-                <div className="flex justify-between translate-y-0.5">
-                  <h4>Upgrade Multiplier</h4>
-                  <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
-                </div>
-              </div>
-              {prestigeMod > 1 && (
+
+              {/*Damage calculation table  */}
+              <div
+                className={clsx(
+                  "w-full font-passion text-xl transition-opacity duration-300",
+                  hoveredOTPUpgrade ? "opacity-0" : "opacity-100",
+                  hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
+                )}>
                 <div className="border-b-2 border-amber-900">
                   <div className="flex justify-between translate-y-0.5">
-                    <h4>Prestige</h4>
-                    <p className="font-outline-electricblue">x{prestigeMod.toFixed(2)}</p>
+                    <h4>Base Damage</h4>
+                    <p>{Math.round(damageAtLevel)}</p>
                   </div>
                 </div>
-              )}
-              {achievementMod > 0 && (
                 <div className="border-b-2 border-amber-900">
                   <div className="flex justify-between translate-y-0.5">
-                    <h4>Achievements</h4>
-                    <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
+                    <h4>Upgrade Multiplier</h4>
+                    <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                   </div>
                 </div>
-              )}
+                {prestigeMod > 1 && (
+                  <div className="border-b-2 border-amber-900">
+                    <div className="flex justify-between translate-y-0.5">
+                      <h4>Prestige</h4>
+                      <p className="font-outline-electricblue">x{prestigeMod.toFixed(2)}</p>
+                    </div>
+                  </div>
+                )}
+                {achievementMod > 0 && (
+                  <div className="border-b-2 border-amber-900">
+                    <div className="flex justify-between translate-y-0.5">
+                      <h4>Achievements</h4>
+                      <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
+                    </div>
+                  </div>
+                )}
 
-              <div>
-                <div className="flex text-3xl justify-between translate-y-1">
-                  <h4>Total</h4>
-                  <p className="">{Math.round(totalDamageContribution)}</p>
+                <div>
+                  <div className="flex text-3xl justify-between translate-y-1">
+                    <h4>Total</h4>
+                    <p className="">{Math.round(totalDamageContribution)}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Upgrades & Levelup section */}
-      <div
-        className={clsx(
-          "flex flex-col md:flex-row items-center py-2 px-2 md:px-4 gap-2 transition-all",
-          hoverAnimationDuration,
-          isHovering && "mt-4",
-        )}>
+        {/* Upgrades & Levelup section */}
         <div
-          ref={OTPContainerRef}
-          className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
-          {OTPIcons.map((icon, i) => {
-            const isPurchased = upgradeCount > i
-            const isHidden = i === 0 ? level < 10 : upgradeCount < i
+          className={clsx(
+            "flex flex-col md:flex-row items-center py-2 px-2 md:px-4 gap-2 transition-all",
+            hoverAnimationDuration,
+            isHovering && "mt-4",
+          )}>
+          <div
+            ref={OTPContainerRef}
+            className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
+            {OTPIcons.map((icon, i) => {
+              const isPurchased = upgradeCount > i
+              const isHidden = i === 0 ? level < 10 : upgradeCount < i
 
-            return (
-              <div
-                key={upgradeName + i}
-                className={clsx(
-                  "upgrade-item absolute transition-transform",
-                  // Quick slide animation on desktop
-                  isMobile ? "duration-500" : "duration-300",
-                  isPurchased && "purchased",
-                )}>
-                <OneTimePurchaseUpgrade
-                  id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
-                  onClick={onUpgrade}
-                  setHoveredOTPDescription={onOTPHover}
-                  icon={icon}
-                  hidden={isHidden}
-                  cost={nextOTPCost}
-                  isAffordable={canAffordNextOTPUpgrade}
-                  isPurchased={isPurchased}
-                />
-              </div>
-            )
-          })}
+              return (
+                <div
+                  key={upgradeName + i}
+                  className={clsx(
+                    "upgrade-item absolute transition-transform",
+                    // Quick slide animation on desktop
+                    isMobile ? "duration-500" : "duration-300",
+                    isPurchased && "purchased",
+                  )}>
+                  <OneTimePurchaseUpgrade
+                    id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
+                    onClick={onUpgrade}
+                    setHoveredOTPDescription={onOTPHover}
+                    icon={icon}
+                    hidden={isHidden}
+                    cost={nextOTPCost}
+                    isAffordable={canAffordNextOTPUpgrade}
+                    isPurchased={isPurchased}
+                  />
+                </div>
+              )
+            })}
+          </div>
+          <LevelUpButton
+            id={upgradeName}
+            onLevelUp={onLevelUp}
+            currentLevel={level}
+            levelUpCost={levelUpCost}
+            isAffordable={canAffordLevelUp}
+            hoveredOTPUpgrade={hoveredOTPUpgrade}
+            nextOTPCost={nextOTPCost}
+            purchaseOTPUpgrade={purchaseUpgradeFromLevelUpBtn}
+          />
         </div>
-        <LevelUpButton
-          id={upgradeName}
-          onLevelUp={onLevelUp}
-          currentLevel={level}
-          levelUpCost={levelUpCost}
-          isAffordable={canAffordLevelUp}
-          hoveredOTPUpgrade={hoveredOTPUpgrade}
-          nextOTPCost={nextOTPCost}
-          purchaseOTPUpgrade={purchaseUpgradeFromLevelUpBtn}
-        />
       </div>
-
-      {/* Corner masks */}
-      <div
-        className={clsx(
-          "absolute rounded-full w-[6px] h-[6px] -bottom-1 -left-1 -z-10 bg-purpleMid md:bg-purpleMidSm",
-          thisHeroName === "adventurer" && !isHealerVisible ? "hidden" : "absolute",
-        )}
-      />
-      <div
-        className={clsx(
-          "rounded-full w-[6px] h-[6px] -bottom-1 -right-1 -z-10 bg-purpleMid md:bg-purpleMidSm",
-          thisHeroName === "adventurer" && !isHealerVisible ? "hidden" : "absolute",
-        )}
-      />
     </div>
   )
 }
