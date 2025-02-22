@@ -56,6 +56,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const OTPContainerRef = useRef<HTMLDivElement>(null)
 
   const isNotAdventurer = upgradeName !== "adventurer"
+  const isHealerVisible = UPGRADE_CONFIG.healer.visibleAtZone < currentZoneNumber
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
@@ -341,7 +342,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       />
       <div
         className={clsx(
-          "absolute rounded-full w-[6px] h-[6px] -bottom-1 -right-1 -z-10 bg-purpleMid md:bg-purpleMidSm",
+          "rounded-full w-[6px] h-[6px] -bottom-1 -right-1 -z-10 bg-purpleMid md:bg-purpleMidSm",
+          thisHeroName === "adventurer" && !isHealerVisible ? "hidden" : "absolute",
         )}
       />
     </div>
