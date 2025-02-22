@@ -455,7 +455,9 @@ export const selectPrestigeTabVisible = createSelector(
   [selectPlasma, selectPlasmaReserved, (state: RootState) => state.player.plasmaSpent],
   (plasma, plasmaReserved, plasmaSpent) => plasma > 0 || plasmaReserved > 0 || plasmaSpent > 0,
 )
-export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 0)
+
+export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 1)
+export const selectOneLineMaskVisible = createSelector([selectUIProgress], (UIProgress) => UIProgress > 0)
 
 export const selectAllAdventurerState = createSelector(
   [selectAdventurerState, selectAdventurerDamage, selectAdventurerLevelUpCost],

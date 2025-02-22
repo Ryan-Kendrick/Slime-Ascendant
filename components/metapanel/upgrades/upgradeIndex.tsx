@@ -14,6 +14,7 @@ import {
   selectLevelUpCosts,
   selectPrestigeTabVisible,
   selectInitState,
+  selectOneLineMaskVisible,
 } from "../../../redux/playerSlice"
 import {
   ClickOTPIcon1,
@@ -55,6 +56,7 @@ export default function UpgradeIndex() {
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
   const isHealerVisible = currentZone >= UPGRADE_CONFIG.healer.visibleAtZone
   const isWarriorVisible = currentZone >= UPGRADE_CONFIG.warrior.visibleAtZone
+  const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
   const LevelUp = {
     adventurer: {
@@ -110,7 +112,12 @@ export default function UpgradeIndex() {
     <div className="flex flex-col">
       <Currency image={GoldIcon()} fontstyle="text-white font-paytone font-outline" currencySelector={selectGold} />
       <div className="flex-1 flex flex-col">
-        <div className={clsx("relative grid grid-cols-2 gap-1 z-50", isHealerVisible ? "grid-rows-2" : "grid-rows-1")}>
+        <div
+          className={clsx(
+            "relative grid gap-1 z-50",
+            isHealerVisible ? "grid-rows-2" : "grid-rows-1",
+            isWarriorVisible ? "grid-cols-2 mb-0" : "grid-cols-1 mb-8",
+          )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
             OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
@@ -138,8 +145,9 @@ export default function UpgradeIndex() {
           <div
             className={clsx(
               "left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
-              !isWarriorVisible && "hidden",
-              isWarriorVisible && "absolute from-purpleTopSm to-purpleMidSm md:from-purpleTop md:to-purpleMid",
+              oneLineMaskVisible
+                ? "absolute from-purpleTopSm to-purpleMidSm md:from-purpleTop md:to-purpleMid"
+                : "hidden",
               isHealerVisible &&
                 "absolute from-purpleTopSm via-purpleMidSm to-purpleBottomSm md:from-purpleTop md:via-purpleMid md:to-purpleBottom",
             )}

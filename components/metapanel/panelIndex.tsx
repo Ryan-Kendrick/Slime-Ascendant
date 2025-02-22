@@ -10,9 +10,10 @@ import {
   selectTabAnimationComplete,
   setTabInView,
   incrementUIProgression,
-  selectInitState,
+  selectOneLineMaskVisible,
 } from "../../redux/playerSlice"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
+import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
@@ -21,18 +22,28 @@ export default function PanelIndex() {
   const activeTab = useAppSelector(selectTabInView)
   const prestigeTabVisible = useAppSelector(selectPrestigeTabVisible)
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
-  const { hasInitWarriorPane, hasInitHealerPane } = useAppSelector(selectInitState)
+  const [isWarriorVisible, isHealerVisible] = [
+    currentZone >= UPGRADE_CONFIG.warrior.visibleAtZone,
+    currentZone >= UPGRADE_CONFIG.healer.visibleAtZone,
+  ]
   const [tabHeight, setTabHeight] = useState(0)
   const tabRef = useRef<HTMLDivElement>(null)
+  const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
+  // const delayedAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
   const renderMask = (): undefined | Mask => {
     if (activeTab !== "upgrade") return undefined
-
-    if (!hasInitWarriorPane) {
+    console.log(oneLineMaskVisible)
+    if (!isWarriorVisible) {
       return
-    } else if (hasInitWarriorPane) {
-      if (currentZone < 11) {
-        return OneLineMask
+    } else if (isWarriorVisible) {
+      if (!isHealerVisible) {
+        if (!oneLineMaskVisible) {
+          setTimeout(() => dispatch(incrementUIProgression()), 600)
+        } else {
+          console.log("render mask")
+          return OneLineMask
+        }
       } else {
         return fullMask
       }
@@ -74,7 +85,8 @@ export default function PanelIndex() {
       <div
         className={clsx(
           // Base
-          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-0",
+          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-0 ",
+          !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
         )}>
         <div
           style={{ height: `${tabHeight}px` }}

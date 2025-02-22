@@ -34,7 +34,7 @@ export default function Page() {
       <Provider store={store}>
         <div
           style={appScale}
-          className="cursor-hand flex flex-col-reverse md:flex-col w-screen min-h-screen select-none font-sigmar bg-gradient-to-b from-purple-800 via-purple-900 to-violet-950 overflow-y-auto">
+          className="cursor-hand flex flex-col-reverse md:flex-col w-screen min-h-screen select-none font-sigmar bg-gradient-to-b from-purple-800 via-purple-900 to-violet-950 overflow-y-auto overflow-x-hidden">
           <div className="flex-none">
             <Navigation />
           </div>

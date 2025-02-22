@@ -56,7 +56,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const OTPContainerRef = useRef<HTMLDivElement>(null)
 
   const isNotAdventurer = upgradeName !== "adventurer"
-  const isHealerVisible = UPGRADE_CONFIG.healer.visibleAtZone < currentZoneNumber
+  const isHealerVisible = currentZoneNumber >= UPGRADE_CONFIG.healer.visibleAtZone
+  const isWarriorVisible = currentZoneNumber >= UPGRADE_CONFIG.warrior.visibleAtZone
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
@@ -170,11 +171,15 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }
 
   if (!shouldMount && isNotAdventurer) return null
+
   return (
     <div
       id={`${thisHeroName}-card`}
       className={clsx(
         "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px]",
+        !isNotAdventurer && "transform transition-transform duration-700",
+        !isNotAdventurer && !isWarriorVisible && "absolute max-w-[567px] left-1/2 -translate-x-1/2",
+        !isNotAdventurer && isWarriorVisible && "max-w-none m-0 translate-x-0",
         !animationComplete && "transition-opacity duration-1000",
         canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
         !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
@@ -270,12 +275,15 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                   </div>
                 </div>
               )}
-              <div className="border-b-2 border-amber-900">
-                <div className="flex justify-between translate-y-0.5">
-                  <h4>Achievements</h4>
-                  <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
+              {achievementMod > 0 && (
+                <div className="border-b-2 border-amber-900">
+                  <div className="flex justify-between translate-y-0.5">
+                    <h4>Achievements</h4>
+                    <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
+                  </div>
                 </div>
-              </div>
+              )}
+
               <div>
                 <div className="flex text-3xl justify-between translate-y-1">
                   <h4>Total</h4>
@@ -338,7 +346,10 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
       {/* Corner masks */}
       <div
-        className={clsx("absolute rounded-full w-[6px] h-[6px] -bottom-1 -left-1 -z-10 bg-purpleMid md:bg-purpleMidSm")}
+        className={clsx(
+          "absolute rounded-full w-[6px] h-[6px] -bottom-1 -left-1 -z-10 bg-purpleMid md:bg-purpleMidSm",
+          thisHeroName === "adventurer" && !isHealerVisible ? "hidden" : "absolute",
+        )}
       />
       <div
         className={clsx(
