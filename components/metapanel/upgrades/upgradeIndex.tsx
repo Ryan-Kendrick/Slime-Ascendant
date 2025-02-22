@@ -139,9 +139,9 @@ export default function UpgradeIndex() {
             className={clsx(
               "left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
               !isWarriorVisible && "hidden",
-              isWarriorVisible && "absolute from-[#531A83] to-[#441677] md:from-[#631F9A] md:to-[#541B84]",
+              isWarriorVisible && "absolute from-purpleTopSm to-purpleMidSm md:from-purpleTop md:to-purpleMid",
               isHealerVisible &&
-                "absolute from-[#531A83] via-[#441677] to-[#35126B] md:from-[#631F9A] md:via-[#541B84] md:to-[#38136D]",
+                "absolute from-purpleTopSm via-purpleMidSm to-purpleBottomSm md:from-purpleTop md:via-purpleMid md:to-purpleBottom",
             )}
           />
         </div>

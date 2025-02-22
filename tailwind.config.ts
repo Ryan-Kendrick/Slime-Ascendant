@@ -16,6 +16,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        purpleTop: "#631F9A",
+        purpleMid: "#541B84",
+        purpleBottom: "#38136D",
+        purpleTopSm: "#531A83",
+        purpleMidSm: "#441677",
+        purpleBottomSm: "#35126B",
         electricblue: "#7DF9FF",
         islam: "#009000",
         hpgreen: "#00BB27",

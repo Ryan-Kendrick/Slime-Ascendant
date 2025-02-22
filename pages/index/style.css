@@ -20,20 +20,17 @@ body {
   box-sizing: border-box;
 }
 
-#adventurer-card::before {
+/* #adventurer-card::before {
   content: "";
   position: absolute;
   margin: -2px;
-  inset: 0; /* covers the entire element */
-  pointer-events: none; /* so it doesn't interfere with interactions */
-  background: 
-    /* Top corners for desktop */
-    radial-gradient(circle at top left, #531a83 2px, transparent 2px),
-    radial-gradient(circle at top right, #531a83 2px, transparent 2px),
-    /* Bottom corners for desktop */ radial-gradient(circle at bottom left, #441677 2px, transparent 2px),
-    radial-gradient(circle at bottom right, #441677 2px, transparent 2px);
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle farthest-corner at top left, #531a83 0%, transparent 50%),
+    radial-gradient(circle farthest-corner at top right, #531a83 0%, transparent 50%),
+    radial-gradient(circle farthest-corner at bottom left, #441677 0%, transparent 50%),
+    radial-gradient(circle farthest-corner at bottom right, #441677 0%, transparent 50%);
   background-repeat: no-repeat;
-  /* Adjust background positions if needed; by default they’re positioned at the corners */
 }
 
 @media (max-width: 768px) {
@@ -43,4 +40,4 @@ body {
       radial-gradient(circle at bottom left, #541b84 2px, transparent 2px),
       radial-gradient(circle at bottom right, #541b84 2px, transparent 2px);
   }
-}
+} */

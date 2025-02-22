@@ -30,16 +30,12 @@ export default function PanelIndex() {
 
     if (!hasInitWarriorPane) {
       return
-    } else if (hasInitWarriorPane && !hasInitHealerPane) {
+    } else if (hasInitWarriorPane) {
       if (currentZone < 11) {
-        console.log("one line mask")
         return OneLineMask
       } else {
-        console.log("tab adjusted mask")
-        return OneLineMask
+        return fullMask
       }
-    } else {
-      return fullMask
     }
   }
 
@@ -127,10 +123,10 @@ const OneLineMask = {
   maskImage: `linear-gradient(
     to bottom,
     black 0px,
-    black 445px,
-    transparent 445px,
-    transparent 451px,
-    black 451px,
+    black 403px,
+    transparent 403px,
+    transparent 407px,
+    black 407px,
     black 100%
 )`,
   WebkitMaskImage: `linear-gradient(
@@ -138,35 +134,9 @@ const OneLineMask = {
     black 0px,
     black 403px,
     transparent 403px,
-    transparent 409px,
-    black 409px,
+    transparent 407px,
+    black 407px,
     black 100%
-)`,
-
-  maskRepeat: "no-repeat, no-repeat",
-  WebkitMaskRepeat: "no-repeat, no-repeat",
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in, xor",
-}
-
-const tabAdjustedOneLineMask = {
-  maskImage: `linear-gradient(
-      to bottom,
-      black 0px,
-      black 390px,
-      transparent 390px,
-      transparent 396px,
-      black 396px,
-      black 100%
-)`,
-  WebkitMaskImage: `linear-gradient(
-      to bottom,
-      black 0px,
-      black 390px,
-      transparent 390px,
-      transparent 396px,
-      black 396px,
-      black 100%
 )`,
 
   maskRepeat: "no-repeat, no-repeat",
@@ -182,8 +152,8 @@ const fullMask = {
     black 0px,
     black 403px,
     transparent 403px,
-    transparent 408px,
-    black 408px,
+    transparent 407px,
+    black 407px,
     black 722px,
     transparent 722px,
     transparent 727px,
@@ -196,12 +166,12 @@ const fullMask = {
     black 0px,
     black 403px,
     transparent 403px,
-    transparent 409px,
-    black 409px,
+    transparent 407px,
+    black 407px,
     black 722px,
     transparent 722px,
-    transparent 728px,
-    black 728px,
+    transparent 727px,
+    black 727px,
     black 100%
 )`,
 
