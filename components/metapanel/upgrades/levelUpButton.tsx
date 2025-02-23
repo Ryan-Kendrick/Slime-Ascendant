@@ -34,7 +34,7 @@ export default function LevelUpButton({
           id={id}
           className={clsx(
             // Base
-            "flex flex-col items-center py-2 w-full md:w-auto min-w-32 text-white text-xl font-paytone cursor-hand",
+            "flex flex-col items-center py-2 w-full md:w-auto min-w-32 text-white text-xl font-paytone cursor-active disabled:cursor-inactive",
             "border-2 border-amber-300",
             "transition-transform duration-75",
             "shadow-[0_0_8px_0px_rgba(251,191,36,0.9),inset_0_0_4px_-1px_rgba(251,191,36,0.8)]",

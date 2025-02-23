@@ -3,7 +3,7 @@ import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
 import Achievements from "./achievements"
-import handURL from "/assets/icons/hand.png"
+import handURL from "/assets/icons/hand-dark.webp"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
 
 export const Navigation = memo(function Navigation() {
@@ -25,7 +25,7 @@ export const Navigation = memo(function Navigation() {
         style={achievementsStyle}>
         <Achievements />
         <button
-          className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-hand"
+          className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-active"
           onClick={() => setViewAchievements(false)}>
           {CancelIcon()}
         </button>
@@ -37,7 +37,7 @@ export const Navigation = memo(function Navigation() {
         contentLabel="Prestige confirmation prompt"
         style={optionsStyle}>
         <button
-          className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-hand"
+          className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-active"
           onClick={() => setViewOptions(false)}>
           {CancelIcon()}
         </button>
@@ -60,7 +60,7 @@ export function NavigationLinkButton({ text, onClick }: NavigationLinkButtonProp
         WebkitTextFillColor: "white",
         WebkitTextStrokeWidth: "1px",
       }}
-      className="py-3 px-6 cursor-hand tracking-wider text-center uppercase transition duration-200 bg-gradient-to-tr from-red-500 via-orange-400 to-amber-500 text-white rounded-lg block border-0 shadow-lg select-none hover:bg-right-center active:transform active:scale-95 hover:scale-105"
+      className="py-3 px-6 cursor-active tracking-wider text-center uppercase transition duration-200 bg-gradient-to-tr from-red-500 via-orange-400 to-amber-500 text-white rounded-lg block border-0 shadow-lg select-none hover:bg-right-center active:transform active:scale-95 hover:scale-105"
       role="dialog">
       {text}
     </button>

@@ -49,7 +49,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable}
       className={clsx(
-        "w-56 cursor-hand text-lg bg-cyan-800/50 text-cyan-300 py-2 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
+        "w-56 cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
         "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:bg-cyan-800/50 disabled:shadow-none disabled:text-gray-300/80 disabled:border-black",
       )}>
       <div className="relative flex flex-col items-center">
@@ -78,7 +78,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
 // <button
 //   onClick={onPrestige}
 //   className={clsx(
-//     "w-56 cursor-hand bg-cyan-800/50 font-extrabold text-cyan-300 py-4 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
+//     "w-56 cursor-active disabled:cursor-inactive bg-cyan-800/50 font-extrabold text-cyan-300 py-4 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
 //     "hover:bg-cyan-700/80 hover:shadow-cyan-500/40",
 //   )}>
 //   <div className="relative flex items-center gap-2">
@@ -96,7 +96,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable}
       className={clsx(
-        "relative w-56 cursor-hand font-extrabold bg-black text-white py-4 px-6 rounded-lg flex items-center justify-center gap-2 border-2 border-pink-500 shadow-lg shadow-pink-500/20 transition-[background-color,box-shadow] duration-300 overflow-hidden group",
+        "relative w-56 cursor-active disabled:cursor-inactive font-extrabold bg-black text-white py-4 px-6 rounded-lg flex items-center justify-center gap-2 border-2 border-pink-500 shadow-lg shadow-pink-500/20 transition-[background-color,box-shadow] duration-300 overflow-hidden group",
         "hover:bg-gray-900 hover:shadow-pink-500/40",
       )}>
       <div

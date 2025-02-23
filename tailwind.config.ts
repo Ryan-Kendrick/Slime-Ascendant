@@ -37,7 +37,8 @@ export default {
         passion: ["Passion", "system-ui", "sans-serif"],
       },
       cursor: {
-        hand: "url('/assets/icons/hand.png') 0 0, pointer",
+        active: "url('/assets/icons/hand.webp') 0 0, pointer",
+        inactive: "url('/assets/icons/hand-dark.webp') 0 0, pointer",
         dagger: "url('/assets/icons/dagger.png') 0 0, pointer",
       },
       scale: {

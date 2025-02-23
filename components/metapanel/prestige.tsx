@@ -17,7 +17,7 @@ import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
 import { selectZoneTenComplete } from "../../redux/statsSlice"
-import handURL from "/assets/icons/hand.png"
+import handURL from "/assets/icons/hand-dark.webp"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
@@ -82,7 +82,7 @@ export default function Prestige() {
           onClick={() => setConfirmPrestige(true)}
           disabled={!zoneTenComplete}
           className={clsx(
-            "w-40 h-16 my-4 cursor-hand rounded-lg border-2 border-white bg-red-600 text-white font-sans font-extrabold text-2xl",
+            "w-40 h-16 my-4 cursor-active rounded-lg border-2 border-white bg-red-600 text-white font-sans font-extrabold text-2xl",
             !zoneTenComplete && "opacity-50 bg-red-800",
           )}>
           Prestige
@@ -91,7 +91,7 @@ export default function Prestige() {
           onClick={() => dispatch(resetPlasmaReserved())}
           disabled={!zoneTenComplete}
           className={clsx(
-            "w-40 h-16 my-4 cursor-hand rounded-lg border-2 border-black bg-gray-700 text-white font-sans font-extrabold text-2xl",
+            "w-40 h-16 my-4 cursor-active rounded-lg border-2 border-black bg-gray-700 text-white font-sans font-extrabold text-2xl",
             !zoneTenComplete && "opacity-50 bg-gray-800",
           )}>
           Reset
@@ -104,7 +104,7 @@ export default function Prestige() {
         style={confirmPrestigeStyle}>
         <div className="flex h-full flex-col">
           <button
-            className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-hand"
+            className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-active disabled:cursor-inactive"
             onClick={() => setConfirmPrestige(false)}>
             {CancelIcon()}
           </button>
@@ -135,7 +135,7 @@ export default function Prestige() {
           <div className="mt-auto">
             <button
               onClick={() => dispatch(updatePrestige(prestigePurchase))}
-              className="w-40 h-16 my-4 self-start cursor-hand rounded-lg border-2 border-white bg-red-600 text-white font-sans font-bold text-2xl">
+              className="w-40 h-16 my-4 self-start cursor-active disabled:cursor-inactive rounded-lg border-2 border-white bg-red-600 text-white font-sans font-bold text-2xl">
               Confirm
             </button>
           </div>

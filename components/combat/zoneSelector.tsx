@@ -35,7 +35,7 @@ export default function ZoneSelector() {
             className={clsx(
               "flex h-16 w-[7.111rem] border-4",
               scaleSteps[zoneIndex - 1],
-              zoneInView === thisZoneNumber ? "border-yellow-500" : "border-gray-800",
+              zoneInView === thisZoneNumber ? "border-yellow-500 cursor-inactive" : "border-gray-800 cursor-active",
             )}
             onClick={handleZoneChange}>
             <div

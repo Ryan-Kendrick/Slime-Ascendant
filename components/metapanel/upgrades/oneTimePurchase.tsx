@@ -75,6 +75,7 @@ export default function OneTimePurchaseUpgrade({
         shimmer && "before:bg-[position:150%_0]",
         hidden && "-z-10 pointer-events-none",
         !hidden && "pointer-events-auto z-auto",
+        !hidden && isAffordable && !isPurchased ? "cursor-active" : "cursor-inactive",
       )}
       onPointerUp={(e) => handlePointerUp(e)}
       onPointerEnter={() => setHoveredOTPDescription(OTPNumber)}
@@ -82,7 +83,7 @@ export default function OneTimePurchaseUpgrade({
       <div
         className={clsx(
           // Base
-          "relative cursor-pointer rounded-lg",
+          "relative rounded-lg",
           "ring-2 ring-offset-2 ring-amber-800",
           "opacity-0 transition-all duration-1000",
 
