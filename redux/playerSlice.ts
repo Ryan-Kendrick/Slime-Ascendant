@@ -41,7 +41,7 @@ const debugState: PlayerState = {
   plasmaSpent: 50000,
 }
 
-const initialState: PlayerState = {
+export const initialState: PlayerState = {
   adventurerLevel: 1,
   adventurerOTPUpgradeCount: 0,
   warriorLevel: 0,

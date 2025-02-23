@@ -3,7 +3,7 @@
 import { PrestigeUpgradeName, HeroName, UpgradeId, UpgradeProps, HeroState } from "../models/upgrades"
 import { RootState } from "../redux/store"
 import { PlayerState } from "../models/player"
-import { selectInitState, selectPrestigeState } from "../redux/playerSlice"
+import { initialState, selectInitState, selectPrestigeState } from "../redux/playerSlice"
 import * as LZString from "lz-string"
 import { METADATA_CONFIG } from "./meta"
 
@@ -129,7 +129,7 @@ export function loadFromLocalStorage(): RootState | undefined {
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
 
-    if (Number(saveMinorVersion) < 5) {
+    if (Number(saveMinorVersion) < 4) {
       setTimeout(() => {
         alert(`
 Attention Slime Slayer!
@@ -139,12 +139,26 @@ Your save from ${saveVersion} doesn't quite fit into the ${currentVersion} world
 The time has come to start a brand new adventure.`)
       }, 100)
       return undefined
+    } else if (Number(saveMinorVersion) === 4) {
+      setTimeout(() => {
+        alert(`
+Attention Slime Slayer!
+
+Your save from ${saveVersion} doesn't quite fit into the ${currentVersion} world.
+
+We managed to salvage your achievements, but the time has come to start a new adventure.`)
+      }, 100)
+      return {
+        player: { ...initialState, achievementModifier: gameState.player.achievementModifier },
+        stats: { ...gameState.stats },
+        meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version },
+      }
     }
 
     return {
       ...gameState,
       player: { ...gameState.player, tabInView: "upgrade" },
-      meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version },
+      meta: { ...gameState.meta, lastSaveCatchUp: null, gameVersion: METADATA_CONFIG.version },
     }
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)
