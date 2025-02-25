@@ -1,12 +1,16 @@
 import clsx from "clsx/lite"
 import { Achievement, ACHIEVEMENT_CONFIG, AchievementCategory } from "../../gameconfig/achievements"
-import { useAppSelector } from "../../redux/hooks"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { selectUnlockedAchievements } from "../../redux/statsSlice"
 import { useState } from "react"
 import { achievementSelectorMap } from "../../redux/shared/helpers"
-import { selectAchievementModifier } from "../../redux/playerSlice"
+import { recalculateAchievementMod, selectAchievementModifier } from "../../redux/playerSlice"
+import { store } from "../../redux/store"
 
 export default function Achievements() {
+  const dispatch = useAppDispatch()
+  const state = store.getState()
+
   const unlockedAchievements = useAppSelector(selectUnlockedAchievements)
   const achievementModifier = useAppSelector(selectAchievementModifier)
 
@@ -57,7 +61,7 @@ export default function Achievements() {
                           // Grid items
 
                           const unlocked = isAchievementUnlocked(achievement.id)
-                          return (
+                          return achievement.id === "prestige-count.2" ? (
                             <div
                               key={achievement.id}
                               className={clsx(
@@ -67,7 +71,24 @@ export default function Achievements() {
                                   : "border-2 border-white/60 bg-black/60",
                               )}
                               onPointerOver={() => onViewAchievement(achievement)}
-                              onMouseLeave={() => setSelectedAchievement(false)}></div>
+                              onMouseLeave={() => setSelectedAchievement(false)}
+                              onClick={() => {
+                                alert("Validating achievement damage")
+                                dispatch(recalculateAchievementMod())
+                              }}
+                            />
+                          ) : (
+                            <div
+                              key={achievement.id}
+                              className={clsx(
+                                "h-9 w-16 ",
+                                unlocked
+                                  ? "rounded-sm border-gold bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]"
+                                  : "border-2 border-white/60 bg-black/60",
+                              )}
+                              onPointerOver={() => onViewAchievement(achievement)}
+                              onMouseLeave={() => setSelectedAchievement(false)}
+                            />
                           )
                         })}
                       </div>

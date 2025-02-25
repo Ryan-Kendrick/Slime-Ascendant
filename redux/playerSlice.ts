@@ -6,7 +6,7 @@ import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { heroStateMap, setInitElementMap } from "../gameconfig/utils"
 import { PrestigeState, PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
 import { prestigeReset } from "./shared/actions"
-import { AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
+import { ACHIEVEMENT_CONFIG, AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
 
 const debugState: PlayerState = {
@@ -141,6 +141,9 @@ export const playerSlice = createSlice({
       const payloadValue = Math.round(action.payload * 100)
       state.achievementModifier = (currentValue + payloadValue) / 100
     },
+    setAchievementModifier(state, action: PayloadAction<number>) {
+      state.achievementModifier = action.payload
+    },
     incrementUIProgression: (state) => {
       state.UIProgression++
     },
@@ -217,6 +220,7 @@ export const {
   incrementPHealthUpgradeCount,
   prestigeRespec,
   increaseAchievementModifier,
+  setAchievementModifier,
   incrementUIProgression,
   initialiseElement,
   setActiveHero,
@@ -364,6 +368,7 @@ export const updateClickDamage = (whatChanged: string) => (dispatch: AppDispatch
 
   checkAchievementUnlock(dispatch, [
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: achievementData.achievements,
       value: selectClickDamage(state),
     },
@@ -401,6 +406,7 @@ export const updateDotDamage = (whatChanged: string) => (dispatch: AppDispatch, 
 
   checkAchievementUnlock(dispatch, [
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: achievementData.achievements,
       value: selectDotDamage(state),
     },
@@ -418,15 +424,46 @@ export const updatePrestige =
 
     checkAchievementUnlock(dispatch, [
       {
+        unlockedAchievements: state.stats.achievementsUnlocked,
         achievements: countAchievements.achievements,
         value: state.stats.prestigeCount,
       },
       {
+        unlockedAchievements: state.stats.achievementsUnlocked,
         achievements: spentAchievements.achievements,
         value: state.player.plasmaSpent,
       },
     ])
   }
+
+export const recalculateAchievementMod = () => (dispatch: AppDispatch, getState: () => RootState) => {
+  const config = ACHIEVEMENT_CONFIG
+  const state = getState()
+  const unlockAchievements = state.stats.achievementsUnlocked
+  let achievementModifier = 0
+
+  {
+    Object.entries(config).forEach(([feature, featureData]) => {
+      if (feature === "displayName") return null
+      {
+        Object.entries(featureData).forEach(([categoryKey, categoryData]) => {
+          if (categoryKey === "displayName") return null
+          categoryData = categoryData as AchievementCategory
+          {
+            categoryData.achievements.forEach((achievement) => {
+              const isUnlocked = unlockAchievements.find((id) => id === achievement.id)
+              if (isUnlocked) {
+                achievementModifier += achievement.modifier
+              }
+            })
+          }
+        })
+      }
+    })
+  }
+
+  dispatch(setAchievementModifier(achievementModifier))
+}
 
 export const selectInitState = createSelector(
   [(state: RootState) => state.player],

@@ -11,7 +11,7 @@ import {
 import { ZONE_CONFIG } from "../../gameconfig/zone"
 import { EnemyState } from "../../models/monsters"
 import { increaseGold, increasePlasma, incrementPDamageUpgradeCount } from "../playerSlice"
-import { incrementFarmZonesCompleted, incrementKillCount } from "../statsSlice"
+import { incrementFarmZonesCompleted, incrementKillCount, selectUnlockedAchievements } from "../statsSlice"
 import { RootState, store } from "../store"
 import { AchievementCategory, ACHIEVEMENTS } from "../../gameconfig/achievements"
 import { checkAchievementUnlock } from "../shared/helpers"
@@ -132,10 +132,12 @@ function updateZonesCompleted(dispatch: Dispatch) {
 
   checkAchievementUnlock(dispatch, [
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: countAchievements.achievements,
       value: state.stats.totalZonesCompleted,
     },
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: progressAchievements.achievements,
       value: state.stats.highestZoneEver,
     },
@@ -149,6 +151,7 @@ function updateFarmAchievements(dispatch: Dispatch) {
 
   checkAchievementUnlock(dispatch, [
     {
+      unlockedAchievements: selectUnlockedAchievements(state),
       achievements: countAchievements.achievements,
       value: state.stats.farmZonesCompleted,
     },

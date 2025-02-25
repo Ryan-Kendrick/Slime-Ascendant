@@ -98,10 +98,7 @@ export const selectStatsState = createSelector([(state: RootState) => state.stat
   highestZone: stats.highestZone,
   prestigeCount: stats.prestigeCount,
 }))
-export const selectUnlockedAchievements = createSelector(
-  [(state: RootState) => state.stats.achievementsUnlocked],
-  (achievements) => achievements,
-)
+export const selectUnlockedAchievements = (state: RootState) => state.stats.achievementsUnlocked
 
 export const selectHighestZoneEver = (state: RootState) => state.stats.highestZoneEver
 export const selectZoneTenComplete = createSelector(
@@ -118,10 +115,12 @@ export const updateMonsterClicked = (damage: number) => (dispatch: AppDispatch, 
 
   checkAchievementUnlock(dispatch, [
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: countAchievements.achievements,
       value: state.stats.clickCount,
     },
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: damageAchievements.achievements,
       value: state.stats.totalClickDamage,
     },
@@ -136,6 +135,7 @@ export const updateDotDamageDealt = (damage: number) => (dispatch: AppDispatch, 
 
   checkAchievementUnlock(dispatch, [
     {
+      unlockedAchievements: state.stats.achievementsUnlocked,
       achievements: dotAchievements.achievements,
       value: state.stats.totalDotDamage,
     },

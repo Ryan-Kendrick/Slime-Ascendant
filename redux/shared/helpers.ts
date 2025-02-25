@@ -1,5 +1,5 @@
-import { store, type AppDispatch, type RootState } from "../store"
-import { selectStatsState, selectUnlockedAchievements, unlockAchievement } from "../statsSlice"
+import { type AppDispatch, type RootState } from "../store"
+import { selectStatsState, unlockAchievement } from "../statsSlice"
 import { increaseAchievementModifier, selectClickDamage, selectDotDamage, selectPrestigeState } from "../playerSlice"
 import { type Achievement } from "../../gameconfig/achievements"
 
@@ -17,14 +17,13 @@ export const achievementSelectorMap: Record<string, (state: RootState) => number
 }
 
 interface AchievementCheck {
+  unlockedAchievements: string[]
   achievements: Achievement[]
   value: number
 }
 
 export const checkAchievementUnlock = (dispatch: AppDispatch, check: AchievementCheck[]) => {
-  const state = store.getState()
-  const unlockedAchievements = selectUnlockedAchievements(state)
-  check.forEach(({ achievements, value }) => {
+  check.forEach(({ unlockedAchievements, achievements, value }) => {
     while (achievements.length > 0 && value >= achievements[0].condition) {
       const nextAchievement = achievements[0]
       const isUnlocked = unlockedAchievements.find((achievementId) => achievementId === nextAchievement.id)

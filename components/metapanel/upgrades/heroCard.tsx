@@ -123,7 +123,10 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   useEffect(() => {
     if (isNotAdventurer) {
-      if (hasInitialised) setAnimationComplete(true)
+      if (hasInitialised) {
+        setAnimationComplete(true)
+        setIsVisible(true)
+      }
       // if ((thisHeroName === "warrior" && animationComplete) || (thisHeroName === "warrior" && hasInitialised)) {
       //   if (UIProgression === 0) {
       //     const timeout = setTimeout(() => dispatch(incrementUIProgression()), 50)
@@ -193,15 +196,16 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       "transition-transform duration-700",
       isWarriorVisible ? "-left-96 max-w-none m-0 translate-x-96" : "m-auto m-auto max-w-[567px] left-0",
     ),
-    warrior: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
+    warrior:
+      "transition-all transform duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
     healer: "transition-all duration-[1200ms] absolute left-0 translate-x-full pointer-events-none ease-out",
     mage: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
   }
   const heroAnimationEnd = {
     adventurer: "",
-    warrior: "translate-x-[0px] opacity-0",
-    healer: "translate-x-[0px] opacity-0",
-    mage: "translate-x-[0px] opacity-0",
+    warrior: "transform-none",
+    healer: "transform-none",
+    mage: "transform-none",
   }
 
   const beginningState = heroAnimationStart[thisHeroName]
@@ -225,7 +229,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100",
           isVisible && endingState,
-          animationComplete && isNotAdventurer && "opacity-100 transition-none transform-none pointer-events-auto",
+          animationComplete && isNotAdventurer && "opacity-100 pointer-events-auto",
         )}
         onPointerEnter={onCardHover}
         onMouseLeave={onCardMouseExit}>
