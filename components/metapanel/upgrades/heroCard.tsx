@@ -127,12 +127,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         setAnimationComplete(true)
         setIsVisible(true)
       }
-      // if ((thisHeroName === "warrior" && animationComplete) || (thisHeroName === "warrior" && hasInitialised)) {
-      //   if (UIProgression === 0) {
-      //     const timeout = setTimeout(() => dispatch(incrementUIProgression()), 50)
-      //     return () => clearTimeout(timeout)
-      //   }
-      // }
 
       if (animationComplete && !hasInitialised) dispatch(initialiseElement(thisHeroName))
     }
@@ -142,16 +136,19 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       const fadeinTimeout = setTimeout(() => {
         setIsVisible(true)
         dispatch(setActiveHero(thisHeroName))
-        let timeout = null as null | NodeJS.Timeout
+        let allTransitionsTimeout = null as null | NodeJS.Timeout
         if (thisHeroName === "warrior") {
           if (UIProgression === 0) {
-            timeout = setTimeout(() => dispatch(incrementUIProgression()), 1215)
+            allTransitionsTimeout = setTimeout(() => dispatch(incrementUIProgression()), 1215)
           }
         }
         const preventFurtherAnimations = setTimeout(() => {
           setAnimationComplete(true)
-        }, 750)
-        return () => [clearTimeout(preventFurtherAnimations), timeout && clearTimeout(timeout)]
+        }, 1215)
+        return () => [
+          clearTimeout(preventFurtherAnimations),
+          allTransitionsTimeout && clearTimeout(allTransitionsTimeout),
+        ]
       }, 350)
       return () => clearTimeout(fadeinTimeout)
     }
@@ -223,13 +220,14 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div
         id={`${thisHeroName}-card`}
         className={clsx(
-          "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px]",
+          "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px] border-yellow-700",
           beginningState,
-          canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
+          isHovering && "border-inherit lg:border-yellow-700",
+          canAffordNextOTPUpgrade && level > 10 && "border-gold",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100",
           isVisible && endingState,
-          animationComplete && isNotAdventurer && "opacity-100 pointer-events-auto",
+          animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
         )}
         onPointerEnter={onCardHover}
         onMouseLeave={onCardMouseExit}>
