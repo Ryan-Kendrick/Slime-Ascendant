@@ -43,10 +43,8 @@ export const statsSlice = createSlice({
   initialState,
   reducers: {
     unlockAchievement(state, action: PayloadAction<string>) {
-      if (!state.achievementsUnlocked.includes(action.payload)) {
-        state.achievementsUnlocked.push(action.payload)
-        console.log("Achievement unlocked", action.payload)
-      }
+      state.achievementsUnlocked.push(action.payload)
+      console.log("Achievement unlocked", action.payload)
     },
     monsterClicked(state, action: PayloadAction<number>) {
       state.clickCount++
@@ -100,7 +98,10 @@ export const selectStatsState = createSelector([(state: RootState) => state.stat
   highestZone: stats.highestZone,
   prestigeCount: stats.prestigeCount,
 }))
-export const selectUnlockedAchievements = (state: RootState) => state.stats.achievementsUnlocked
+export const selectUnlockedAchievements = createSelector(
+  [(state: RootState) => state.stats.achievementsUnlocked],
+  (achievements) => achievements,
+)
 
 export const selectHighestZoneEver = (state: RootState) => state.stats.highestZoneEver
 export const selectZoneTenComplete = createSelector(
