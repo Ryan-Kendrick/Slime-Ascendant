@@ -222,7 +222,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         className={clsx(
           "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px] border-yellow-700",
           beginningState,
-          isHovering && "border-inherit lg:border-yellow-700",
+          isHovering && "border-neutral-50 lg:border-yellow-700",
           canAffordNextOTPUpgrade && level > 10 && "border-gold",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100",
