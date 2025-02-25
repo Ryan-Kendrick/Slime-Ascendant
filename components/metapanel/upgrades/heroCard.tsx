@@ -198,7 +198,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     ),
     warrior:
       "transition-all transform duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
-    healer: "transition-all duration-[1200ms] absolute left-0 translate-x-full pointer-events-none ease-out",
+    healer: "transition-all duration-[1200ms] absolute left-0 -translate-x-full pointer-events-none ease-out",
     mage: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
   }
   const heroAnimationEnd = {
