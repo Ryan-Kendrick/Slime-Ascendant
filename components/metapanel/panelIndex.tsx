@@ -29,19 +29,17 @@ export default function PanelIndex() {
   const [tabHeight, setTabHeight] = useState(0)
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
-  // const delayedAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
   const renderMask = (): undefined | Mask => {
     if (activeTab !== "upgrade") return undefined
-    console.log(oneLineMaskVisible)
     if (!isWarriorVisible) {
       return
     } else if (isWarriorVisible) {
       if (!isHealerVisible) {
         if (!oneLineMaskVisible) {
-          setTimeout(() => dispatch(incrementUIProgression()), 600)
+          // Wait for the cue from heroCard.tsx that the animations are in the right state
+          return
         } else {
-          console.log("render mask")
           return OneLineMask
         }
       } else {

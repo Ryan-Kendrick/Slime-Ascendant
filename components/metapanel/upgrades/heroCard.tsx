@@ -7,6 +7,8 @@ import {
   setActiveHero,
   selectPMod,
   selectAchievementModifier,
+  incrementUIProgression,
+  selectUIProgress,
 } from "../../../redux/playerSlice"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
@@ -61,6 +63,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
+  const UIProgression = useAppSelector(selectUIProgress)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -121,6 +124,13 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   useEffect(() => {
     if (isNotAdventurer) {
       if (hasInitialised) setAnimationComplete(true)
+      // if ((thisHeroName === "warrior" && animationComplete) || (thisHeroName === "warrior" && hasInitialised)) {
+      //   if (UIProgression === 0) {
+      //     const timeout = setTimeout(() => dispatch(incrementUIProgression()), 50)
+      //     return () => clearTimeout(timeout)
+      //   }
+      // }
+
       if (animationComplete && !hasInitialised) dispatch(initialiseElement(thisHeroName))
     }
 
@@ -129,10 +139,16 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       const fadeinTimeout = setTimeout(() => {
         setIsVisible(true)
         dispatch(setActiveHero(thisHeroName))
+        let timeout = null as null | NodeJS.Timeout
+        if (thisHeroName === "warrior") {
+          if (UIProgression === 0) {
+            timeout = setTimeout(() => dispatch(incrementUIProgression()), 1215)
+          }
+        }
         const preventFurtherAnimations = setTimeout(() => {
           setAnimationComplete(true)
-        }, 500)
-        return () => clearTimeout(preventFurtherAnimations)
+        }, 750)
+        return () => [clearTimeout(preventFurtherAnimations), timeout && clearTimeout(timeout)]
       }, 350)
       return () => clearTimeout(fadeinTimeout)
     }
@@ -172,6 +188,25 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   if (!shouldMount && isNotAdventurer) return null
 
+  const heroAnimationStart = {
+    adventurer: clsx(
+      "transition-transform duration-700",
+      isWarriorVisible ? "-left-96 max-w-none m-0 translate-x-96" : "m-auto m-auto max-w-[567px] left-0",
+    ),
+    warrior: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
+    healer: "transition-all duration-[1200ms] absolute left-0 translate-x-full pointer-events-none ease-out",
+    mage: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
+  }
+  const heroAnimationEnd = {
+    adventurer: "",
+    warrior: "-translate-x-0",
+    healer: "-translate-x-0",
+    mage: "-translate-x-0",
+  }
+
+  const beginningState = heroAnimationStart[thisHeroName]
+  const endingState = heroAnimationEnd[thisHeroName]
+
   return (
     <div className="relative">
       {/* Card rounded corners mask */}
@@ -185,14 +220,12 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
         id={`${thisHeroName}-card`}
         className={clsx(
           "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px]",
-          !isNotAdventurer && "transform transition-transform duration-700",
-          !isNotAdventurer && !isWarriorVisible && "absolute max-w-[567px] left-1/2 -translate-x-1/2",
-          !isNotAdventurer && isWarriorVisible && "max-w-none m-0 translate-x-0",
-          !animationComplete && "transition-opacity duration-1000",
+          beginningState,
           canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100",
-          animationComplete && "opacity-100",
+          isVisible && endingState,
+          animationComplete && "opacity-100 pointer-events-auto",
         )}
         onPointerEnter={onCardHover}
         onMouseLeave={onCardMouseExit}>

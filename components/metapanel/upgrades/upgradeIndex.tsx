@@ -142,6 +142,7 @@ export default function UpgradeIndex() {
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}
           />
+          {/* Vertical mask to go with the horizonal mask in panelIndex*/}
           <div
             className={clsx(
               "left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
