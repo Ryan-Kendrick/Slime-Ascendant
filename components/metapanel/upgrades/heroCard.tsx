@@ -199,9 +199,9 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
   }
   const heroAnimationEnd = {
     adventurer: "",
-    warrior: "-translate-x-0",
-    healer: "-translate-x-0",
-    mage: "-translate-x-0",
+    warrior: "translate-x-[0px] opacity-0",
+    healer: "translate-x-[0px] opacity-0",
+    mage: "translate-x-[0px] opacity-0",
   }
 
   const beginningState = heroAnimationStart[thisHeroName]
@@ -225,7 +225,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100",
           isVisible && endingState,
-          animationComplete && "opacity-100 pointer-events-auto",
+          animationComplete && isNotAdventurer && "opacity-100 transition-none transform-none pointer-events-auto",
         )}
         onPointerEnter={onCardHover}
         onMouseLeave={onCardMouseExit}>
