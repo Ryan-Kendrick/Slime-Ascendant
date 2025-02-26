@@ -116,7 +116,7 @@ export default function UpgradeIndex() {
           className={clsx(
             "relative grid gap-1 z-50",
             isHealerVisible ? "grid-rows-2" : "grid-rows-1",
-            isWarriorVisible ? "grid-cols-2 mb-0" : "grid-cols-1 mb-8",
+            isWarriorVisible ? "grid-cols-1 md:grid-cols-2 mb-0" : "grid-cols-1 mb-8",
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
@@ -142,10 +142,10 @@ export default function UpgradeIndex() {
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}
           />
-          {/* Vertical mask to go with the horizonal mask in panelIndex*/}
+          {/* Vertical mask to go with the horizonal mask in panelIndex on large screens*/}
           <div
             className={clsx(
-              "left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
+              "hidden md:block left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
               oneLineMaskVisible
                 ? "absolute from-purpleTop to-purpleMid md:from-purpleTopSm md:to-purpleMidSm"
                 : "hidden",

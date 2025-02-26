@@ -220,7 +220,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div
         id={`${thisHeroName}-card`}
         className={clsx(
-          "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[315px] border-yellow-700 hover:lg:border-yellow-700 hover:border-white",
+          "relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px] border-yellow-700 hover:lg:border-yellow-700 hover:border-white",
           beginningState,
           canAffordNextOTPUpgrade && level > 10 && "border-gold",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
