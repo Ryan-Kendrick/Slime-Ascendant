@@ -22,7 +22,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       const base = 10
       const growthRate = 1.05
 
-      return Math.floor(base * (1 + Math.log10(currentLevel)) * Math.pow(growthRate, currentLevel) - 1)
+      return Math.floor(base * (1 + Math.log10(currentLevel)) * Math.pow(growthRate, currentLevel))
     },
   },
   warrior: {
