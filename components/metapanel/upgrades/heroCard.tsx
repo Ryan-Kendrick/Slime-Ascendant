@@ -5,11 +5,11 @@ import {
   initialiseElement,
   selectGCanAfford,
   setActiveHero,
-  selectPMod,
-  selectAchievementModifier,
   incrementUIProgression,
   selectUIProgress,
 } from "../../../redux/playerSlice"
+import { selectAchievementModifier } from "../../../redux/shared/heroSelectors"
+import { selectPMod } from "../../../redux/shared/heroSelectors"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeId } from "../../../models/upgrades"

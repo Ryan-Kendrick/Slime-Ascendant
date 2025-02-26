@@ -1,19 +1,16 @@
 import { PlayerState } from "../../models/player"
 import { HeroName, PrestigeUpgradeName, UpgradeId, UpgradeProps } from "../../models/upgrades"
+import { selectClickDamage, selectDotDamage, selectInitState, selectPrestigeState } from "../playerSlice"
+import { selectMageContribution } from "./heroSelectors"
+import { selectHealerContribution } from "./heroSelectors"
+import { selectWarriorContribution } from "./heroSelectors"
+import { selectAdventurerContribution } from "./heroSelectors"
 import {
-  selectAdventurerContribution,
   selectAllAdventurerState,
   selectAllHealerState,
   selectAllMageState,
   selectAllWarriorState,
-  selectClickDamage,
-  selectDotDamage,
-  selectHealerContribution,
-  selectInitState,
-  selectMageContribution,
-  selectPrestigeState,
-  selectWarriorContribution,
-} from "../playerSlice"
+} from "./heroSelectors"
 import { selectStatsState } from "../statsSlice"
 import type { RootState } from "../store"
 

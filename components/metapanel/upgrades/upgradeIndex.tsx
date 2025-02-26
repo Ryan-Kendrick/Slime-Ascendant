@@ -4,18 +4,18 @@ import {
   selectGCanAfford,
   selectClickDamage,
   selectDotDamage,
-  selectAdventurerLevelUpCost,
-  selectWarriorLevelUpCost,
   selectGold,
   updateDotDamage,
   updateClickDamage,
-  selectAdventurerDamage,
-  selectWarriorDamage,
-  selectLevelUpCosts,
   selectPrestigeTabVisible,
   selectInitState,
   selectOneLineMaskVisible,
 } from "../../../redux/playerSlice"
+import { selectWarriorDamage } from "../../../redux/shared/heroSelectors"
+import { selectAdventurerDamage } from "../../../redux/shared/heroSelectors"
+import { selectLevelUpCosts } from "../../../redux/shared/heroSelectors"
+import { selectWarriorLevelUpCost } from "../../../redux/shared/heroSelectors"
+import { selectAdventurerLevelUpCost } from "../../../redux/shared/heroSelectors"
 import {
   ClickOTPIcon1,
   ClickOTPIcon2,

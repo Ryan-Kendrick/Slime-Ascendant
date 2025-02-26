@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { selectUnlockedAchievements } from "../../redux/statsSlice"
 import { useState } from "react"
 import { achievementSelectorMap } from "../../redux/shared/maps"
-import { recalculateAchievementMod, selectAchievementModifier } from "../../redux/playerSlice"
+import { recalculateAchievementMod } from "../../redux/playerSlice"
+import { selectAchievementModifier } from "../../redux/shared/heroSelectors"
 import { store } from "../../redux/store"
 
 export default function Achievements() {
