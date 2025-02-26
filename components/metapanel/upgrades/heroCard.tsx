@@ -298,20 +298,20 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                   hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
                 )}>
                 <div className="border-b-2 border-amber-900">
-                  <div className="flex justify-between translate-y-0.5">
+                  <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
                     <h4>Base Damage</h4>
                     <p>{Math.round(damageAtLevel)}</p>
                   </div>
                 </div>
                 <div className="border-b-2 border-amber-900">
-                  <div className="flex justify-between translate-y-0.5">
+                  <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
                     <h4>Upgrade Multiplier</h4>
                     <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                   </div>
                 </div>
                 {prestigeMod > 1 && (
                   <div className="border-b-2 border-amber-900">
-                    <div className="flex justify-between translate-y-0.5">
+                    <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
                       <h4>Prestige</h4>
                       <p className="font-outline-electricblue">x{prestigeMod.toFixed(2)}</p>
                     </div>
@@ -319,7 +319,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 )}
                 {achievementMod > 0 && (
                   <div className="border-b-2 border-amber-900">
-                    <div className="flex justify-between translate-y-0.5">
+                    <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
                       <h4>Achievements</h4>
                       <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
                     </div>
@@ -327,7 +327,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 )}
 
                 <div>
-                  <div className="flex text-3xl justify-between translate-y-1">
+                  <div className="flex text-3xl justify-between px-1 md:px-0.5 translate-y-1">
                     <h4>Total</h4>
                     <p className="">{Math.round(totalDamageContribution)}</p>
                   </div>
