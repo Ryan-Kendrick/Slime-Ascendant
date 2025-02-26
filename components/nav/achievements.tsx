@@ -72,7 +72,7 @@ export default function Achievements() {
                                   : "border-2 border-white/60 bg-black/60",
                               )}
                               onPointerOver={() => onViewAchievement(achievement)}
-                              onMouseLeave={() => setSelectedAchievement(false)}
+                              onPointerLeave={() => setSelectedAchievement(false)}
                               onClick={() => {
                                 alert("Validating achievement damage")
                                 dispatch(recalculateAchievementMod())
@@ -88,7 +88,7 @@ export default function Achievements() {
                                   : "border-2 border-white/60 bg-black/60",
                               )}
                               onPointerOver={() => onViewAchievement(achievement)}
-                              onMouseLeave={() => setSelectedAchievement(false)}
+                              onPointerLeave={() => setSelectedAchievement(false)}
                             />
                           )
                         })}

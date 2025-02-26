@@ -229,7 +229,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
           animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
         )}
         onPointerEnter={onCardHover}
-        onMouseLeave={onCardMouseExit}>
+        onPointerLeave={onCardMouseExit}>
         {/* Title section */}
         <div
           className={clsx(

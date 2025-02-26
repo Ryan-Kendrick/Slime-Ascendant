@@ -79,7 +79,7 @@ export default function OneTimePurchaseUpgrade({
       )}
       onPointerUp={(e) => handlePointerUp(e)}
       onPointerEnter={() => setHoveredOTPDescription(OTPNumber)}
-      onMouseLeave={() => setHoveredOTPDescription(null)}>
+      onPointerLeave={() => setHoveredOTPDescription(null)}>
       <div
         className={clsx(
           // Base
