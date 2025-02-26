@@ -1,7 +1,7 @@
 import clsx from "clsx/lite"
 import { useState } from "react"
 import { PrestigeUpgradeConfig } from "../../models/upgrades"
-import { prestigeUpgradeMap } from "../../gameconfig/utils"
+import { prestigeUpgradeMap } from "../../redux/shared/maps"
 import { useAppSelector } from "../../redux/hooks"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { selectPCanAfford } from "../../redux/playerSlice"

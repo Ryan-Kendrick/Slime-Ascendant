@@ -15,7 +15,7 @@ export interface UpgradeElement {
   purchasedUpgradeLevel: string
 }
 
-export type PrestigeUpgradeName = "damage" | "health"
+export type PrestigeUpgradeName = "damage" //| "health"
 
 export interface PrestigeUpgradeConfig {
   id: PrestigeUpgradeName

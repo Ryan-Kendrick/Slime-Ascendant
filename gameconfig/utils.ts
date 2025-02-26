@@ -1,70 +1,10 @@
 //@ts-nocheck
 
-import { PrestigeUpgradeName, HeroName, UpgradeId, UpgradeProps, HeroState } from "../models/upgrades"
+import { UpgradeProps, HeroState } from "../models/upgrades"
 import { RootState } from "../redux/store"
-import { PlayerState } from "../models/player"
-import { initialState, selectInitState, selectPrestigeState } from "../redux/playerSlice"
+import { initialState } from "../redux/playerSlice"
 import * as LZString from "lz-string"
 import { METADATA_CONFIG } from "./meta"
-
-export const heroStateMap: Record<HeroName, { level: keyof PlayerState; upgradeCount: keyof PlayerState }> = {
-  adventurer: {
-    level: "adventurerLevel",
-    upgradeCount: "adventurerOTPUpgradeCount",
-  },
-  warrior: {
-    level: "warriorLevel",
-    upgradeCount: "warriorOTPUpgradeCount",
-  },
-  healer: {
-    level: "healerLevel",
-    upgradeCount: "healerOTPUpgradeCount",
-  },
-  mage: {
-    level: "mageLevel",
-    upgradeCount: "mageOTPUpgradeCount",
-  },
-} as const
-
-export const setInitElementMap: Record<UpgradeId | HeroName, (state: PlayerState) => void> = {
-  "adventurer-otp": (state: PlayerState) => {
-    state.hasInitAdventurerOTP++
-  },
-  "warrior-otp": (state: PlayerState) => {
-    state.hasInitWarriorOTP++
-  },
-  "healer-otp": (state: PlayerState) => {
-    state.hasInitHealerOTP++
-  },
-  "mage-otp": (state: PlayerState) => {
-    state.hasInitMageOTP++
-  },
-  adventurer: (state: PlayerState) => true,
-  warrior: (state: PlayerState) => {
-    state.hasInitWarriorPane = true
-  },
-  healer: (state: PlayerState) => {
-    state.hasInitHealerPane = true
-  },
-  mage: (state: PlayerState) => {
-    state.hasInitMagePane = true
-  },
-} as const
-
-export const initSelectorMap: Record<UpgradeId | HeroName, (state: RootState) => number | boolean> = {
-  "adventurer-otp": (state: PlayerState) => selectInitState(state).hasInitAdventurerOTP,
-  "warrior-otp": (state: PlayerState) => selectInitState(state).hasInitWarriorOTP,
-  "healer-otp": (state: PlayerState) => selectInitState(state).hasInitHealerOTP,
-  "mage-otp": (state: PlayerState) => selectInitState(state).hasInitMageOTP,
-  warrior: (state: PlayerState) => selectInitState(state).hasInitWarriorPane,
-  healer: (state: PlayerState) => selectInitState(state).hasInitHealerPane,
-  mage: (state: PlayerState) => selectInitState(state).hasInitMagePane,
-} as const
-
-export const prestigeUpgradeMap: Record<PrestigeUpgradeName, (state: RootState) => number> = {
-  damage: (state) => selectPrestigeState(state).pDamageUpgradeCount,
-  health: (state) => selectPrestigeState(state).pHealthUpgradeCount,
-} as const
 
 export function serialize(classInstance) {
   if (classInstance == null || typeof classInstance !== "object") return classInstance
@@ -113,6 +53,7 @@ export function saveToLocalStorage(state: RootState): void {
     console.error(`Error saving to local storage: ${err}`)
   }
 }
+
 export function loadFromLocalStorage(): RootState | undefined {
   try {
     const base64GameState = localStorage.getItem("gameState")

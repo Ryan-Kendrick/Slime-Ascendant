@@ -15,8 +15,8 @@ import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeId } from "../../../models/upgrades"
 import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
-import { initSelectorMap } from "../../../gameconfig/utils"
-import { cardProps } from "../../../gameconfig/heroCard"
+import { initSelectorMap } from "../../../redux/shared/maps"
+import { cardProps } from "../../../redux/shared/maps"
 
 interface HeroCardProps {
   config: Upgrade

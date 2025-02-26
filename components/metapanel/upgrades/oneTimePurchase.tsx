@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import { initialiseElement } from "../../../redux/playerSlice"
 import { UpgradeId, UpgradeIdWithLevel } from "../../../models/upgrades"
-import { initSelectorMap } from "../../../gameconfig/utils"
+import { initSelectorMap } from "../../../redux/shared/maps"
 
 interface OneTimePurchaseProps {
   id: UpgradeIdWithLevel

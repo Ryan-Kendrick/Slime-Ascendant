@@ -3,7 +3,7 @@ import { Achievement, ACHIEVEMENT_CONFIG, AchievementCategory } from "../../game
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { selectUnlockedAchievements } from "../../redux/statsSlice"
 import { useState } from "react"
-import { achievementSelectorMap } from "../../redux/shared/helpers"
+import { achievementSelectorMap } from "../../redux/shared/maps"
 import { recalculateAchievementMod, selectAchievementModifier } from "../../redux/playerSlice"
 import { store } from "../../redux/store"
 
