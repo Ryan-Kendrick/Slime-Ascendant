@@ -273,7 +273,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                 className={clsx(
                   "absolute inset-0 w-full flex flex-col mt-2 transition-opacity duration-200",
                   hoveredOTPUpgrade ? "opacity-100" : "opacity-0",
-                  hoveredOTPUpgrade ? "pointer-events-auto" : "pointer-events-none",
+                  hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-none",
                 )}>
                 {hoveredOTPUpgrade && (
                   <>
