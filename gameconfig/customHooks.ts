@@ -157,7 +157,7 @@ export function useGameEngine(props: EngineProps) {
 export function useTouchObserver() {
   const handleTouchStart = (e: TouchEvent) => {
     if (e.target instanceof Element) {
-      console.log(e.target.id)
+      console.log(e.target.closest(".hero-card"))
       return e.target.id
     }
   }
