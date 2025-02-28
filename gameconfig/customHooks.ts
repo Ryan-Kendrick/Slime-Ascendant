@@ -156,11 +156,14 @@ export function useGameEngine(props: EngineProps) {
 
 export function useTouchObserver() {
   const handleTouchStart = (e: TouchEvent) => {
-    console.log(e.currentTarget)
+    if (e.target instanceof Element) {
+      console.log(e.target.id)
+      return e.target.id
+    }
   }
 
   useEffect(() => {
-    document.addEventListener("touchstart", handleTouchStart)
-    return () => document.removeEventListener("touchstart", handleTouchStart)
+    document.addEventListener("touchend", handleTouchStart)
+    return () => document.removeEventListener("touchend", handleTouchStart)
   }, [])
 }
