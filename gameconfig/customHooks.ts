@@ -153,3 +153,14 @@ export function useGameEngine(props: EngineProps) {
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange)
   })
 }
+
+export function useTouchObserver() {
+  const handleTouchStart = (e: TouchEvent) => {
+    console.log(e.currentTarget)
+  }
+
+  useEffect(() => {
+    document.addEventListener("touchstart", handleTouchStart)
+    return () => document.removeEventListener("touchstart", handleTouchStart)
+  }, [])
+}

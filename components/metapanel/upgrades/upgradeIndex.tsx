@@ -42,6 +42,7 @@ import { GoldIcon } from "../../svgIcons/resourceIcons"
 import { formatSmallNumber } from "../../../gameconfig/utils"
 import clsx from "clsx/lite"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
+import { useTouchObserver } from "../../../gameconfig/customHooks"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
@@ -107,6 +108,8 @@ export default function UpgradeIndex() {
     dispatch(upgradeAction)
     dispatch(decreaseGold(cost))
   }
+
+  const touchedElement = useTouchObserver()
 
   return (
     <div className="flex flex-col">
