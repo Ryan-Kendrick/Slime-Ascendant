@@ -9,7 +9,7 @@ interface OneTimePurchaseProps {
   id: UpgradeIdWithLevel
   icon: JSX.Element
   onClick: (id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) => void
-  setHoveredOTPDescription: (selectedUpgrade: number | null) => void
+  setHoveredOTPUpgrade: (selectedUpgrade: number | null) => void
   touchHandler: (e: React.TouchEvent<HTMLDivElement>) => void
   cost: number
   isAffordable: boolean
@@ -21,7 +21,7 @@ export default function OneTimePurchaseUpgrade({
   id,
   icon,
   onClick: onUpgrade,
-  setHoveredOTPDescription,
+  setHoveredOTPUpgrade: setHoveredOTPUpgrade,
   touchHandler,
   hidden,
   cost,
@@ -80,12 +80,12 @@ export default function OneTimePurchaseUpgrade({
         !hidden && isAffordable && !isPurchased ? "cursor-active" : "cursor-inactive",
       )}
       onPointerUp={(e) => purchaseIfNotMobile(e)}
-      onPointerEnter={() => setHoveredOTPDescription(OTPNumber)}
+      onPointerEnter={() => setHoveredOTPUpgrade(OTPNumber)}
       onTouchEnd={(e) => {
         e.stopPropagation()
         touchHandler(e)
       }}
-      onMouseLeave={() => setHoveredOTPDescription(null)}>
+      onMouseLeave={() => setHoveredOTPUpgrade(null)}>
       <div
         className={clsx(
           // Base

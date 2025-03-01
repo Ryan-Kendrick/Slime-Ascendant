@@ -178,9 +178,11 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   }
 
   const onCardTouch = (e: React.TouchEvent) => {
-    // Prevent mouse events from firing then use mouse logic
+    // Prevent on mouse leave event from firing
     e.preventDefault()
-    if (hoveredOTPUpgrade && e.currentTarget.id.split("-")[1].substring(0, 3) !== "otp") {
+    const isOTPUpgrade = e.currentTarget.id.split("-")[1].substring(0, 3) === "otp"
+
+    if (hoveredOTPUpgrade && !isOTPUpgrade) {
       setHoveredOTPUpgrade(null)
     } else {
       displayDamageTable()
@@ -383,7 +385,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
                   <OneTimePurchaseUpgrade
                     id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
                     onClick={onUpgrade}
-                    setHoveredOTPDescription={setHoveredOTPUpgrade}
+                    setHoveredOTPUpgrade={setHoveredOTPUpgrade}
                     touchHandler={onCardTouch}
                     icon={icon}
                     hidden={isHidden}

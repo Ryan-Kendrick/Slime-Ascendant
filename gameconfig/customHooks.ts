@@ -158,7 +158,7 @@ export function useGameEngine(props: EngineProps) {
 export function useTouchObserver() {
   const [selectedHeroCard, setSelectedHeroCard] = useState<HeroName | undefined>(undefined)
 
-  const handleTouchStart = (e: TouchEvent) => {
+  const handleTouchEnd = (e: TouchEvent) => {
     if (e.target instanceof Element) {
       const heroCardElement = e.target.closest(".hero-card")?.id as HeroName | undefined
 
@@ -172,8 +172,8 @@ export function useTouchObserver() {
   }
 
   useEffect(() => {
-    document.addEventListener("touchend", handleTouchStart)
-    return () => document.removeEventListener("touchend", handleTouchStart)
+    document.addEventListener("touchend", handleTouchEnd, true)
+    return () => document.removeEventListener("touchend", handleTouchEnd, true)
   }, [])
 
   return selectedHeroCard
