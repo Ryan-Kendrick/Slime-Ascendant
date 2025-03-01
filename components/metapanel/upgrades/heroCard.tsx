@@ -34,19 +34,19 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
 
   const thisHero = cardProps[thisHeroName]
   const level = useAppSelector(thisHero.level)
-  const upgradeCount = useAppSelector(thisHero.upgradeCount)
+  const OTPUpgradeCount = useAppSelector(thisHero.upgradeCount)
   const damageAtLevel = useAppSelector(thisHero.damageAtLevel)
   const damage = useAppSelector(thisHero.damage)
   const levelUpCost = useAppSelector(thisHero.levelUpCost)
   const totalDamageContribution = useAppSelector(thisHero.totalDamageContribution)
 
   const canAffordLevelUp = useAppSelector(selectGCanAfford(levelUpCost))
-  const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, upgradeCount)
+  const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, OTPUpgradeCount)
   const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
 
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
   const upgradeMod = config.OneTimePurchases.OTPModifiers.reduce((acc, cur, i) => {
-    if (upgradeCount > i) return acc + cur
+    if (OTPUpgradeCount > i) return acc + cur
     return acc
   }, 0)
 
@@ -121,7 +121,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     resizeObserver.observe(OTPContainerRef.current)
 
     return () => resizeObserver.disconnect()
-  }, [upgradeCount, OTPIcons.length, isMobile, shouldMount])
+  }, [OTPUpgradeCount, OTPIcons.length, isMobile, shouldMount])
 
   useEffect(() => {
     if (isNotAdventurer) {
@@ -156,8 +156,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     }
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
-  const [isHovering, setIsHovering] = useState(touchedHero === thisHeroName ? true : false)
-  const isTouchHover = isMobile && isHovering
+  const touchHoverActive = touchedHero === thisHeroName
+  const [isHovering, setIsHovering] = useState(touchHoverActive ? true : false)
   const [beginDelayedAnimation, setBeginDelayedAnimation] = useState(false)
   const [hoveredOTPUpgrade, setHoveredOTPUpgrade] = useState<number | null>(null)
   const hoverAnimationDuration = "duration-500"
@@ -238,7 +238,11 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         className={clsx(
           "hero-card relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px]",
           beginningState,
-          isTouchHover ? "border-white" : canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
+          touchHoverActive
+            ? "border-white"
+            : canAffordNextOTPUpgrade && level > 10
+              ? "border-gold"
+              : "border-yellow-700",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100 transform-none",
           animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
@@ -364,8 +368,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
             ref={OTPContainerRef}
             className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
             {OTPIcons.map((icon, i) => {
-              const isPurchased = upgradeCount > i
-              const isHidden = i === 0 ? level < 10 : upgradeCount < i
+              const isPurchased = OTPUpgradeCount > i
+              const isHidden = i === 0 ? level < 10 : OTPUpgradeCount < i
 
               return (
                 <div
@@ -398,8 +402,10 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
             levelUpCost={levelUpCost}
             isAffordable={canAffordLevelUp}
             hoveredOTPUpgrade={hoveredOTPUpgrade}
+            OTPUpgradeCount={OTPUpgradeCount}
             nextOTPCost={nextOTPCost}
             purchaseOTPUpgrade={purchaseUpgradeFromLevelUpBtn}
+            isMobile={isMobile}
           />
         </div>
       </div>

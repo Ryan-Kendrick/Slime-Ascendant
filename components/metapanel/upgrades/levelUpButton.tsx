@@ -9,8 +9,10 @@ interface LevelUpProps {
   levelUpCost: number
   isAffordable: boolean
   hoveredOTPUpgrade: number | null
+  OTPUpgradeCount: number
   nextOTPCost: number
   purchaseOTPUpgrade: () => void
+  isMobile: boolean
 }
 
 export default function LevelUpButton({
@@ -20,11 +22,15 @@ export default function LevelUpButton({
   levelUpCost,
   isAffordable,
   hoveredOTPUpgrade,
-  purchaseOTPUpgrade,
+  OTPUpgradeCount,
   nextOTPCost,
+  purchaseOTPUpgrade,
+  isMobile,
 }: LevelUpProps) {
   const formattedLevelUpCost = formatSmallNumber(levelUpCost)
   const formattedOTPCost = nextOTPCost && formatSmallNumber(nextOTPCost)
+
+  const displayOTPCost = hoveredOTPUpgrade && OTPUpgradeCount < hoveredOTPUpgrade
 
   return (
     <div className="w-full md:w-auto border-2 border-amber-900 ring-1 ring-amber-950">
@@ -51,8 +57,9 @@ export default function LevelUpButton({
 
             isAffordable ? "bg-blue-600 hover:bg-blue-700 active:bg-blue-950" : "bg-blue-950 border-amber-950",
           )}
-          onClick={hoveredOTPUpgrade ? purchaseOTPUpgrade : onLevelUp}>
-          {hoveredOTPUpgrade ? (
+          onPointerUp={displayOTPCost ? purchaseOTPUpgrade : onLevelUp}>
+          {/* If there is a hovered OTP upgrade, display cost on mobile */}
+          {displayOTPCost ? (
             <>
               <span className="z-30 block lg:hidden">Upgrade</span>
               <span className="z-30 hidden lg:block">Level {currentLevel}</span>
@@ -62,7 +69,7 @@ export default function LevelUpButton({
           )}
           <span className="text-lg">
             <img className="w-[1.4rem] inline-block self-center" src={`${coinURL}`} alt="gold coin" />{" "}
-            {hoveredOTPUpgrade ? (
+            {displayOTPCost ? (
               <>
                 <span className="inline lg:hidden">{formattedOTPCost}</span>
                 <span className="hidden lg:inline">{formattedLevelUpCost}</span>

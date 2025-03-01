@@ -37,7 +37,7 @@ export default function OneTimePurchaseUpgrade({
   const thisSelector = initSelectorMap[heroId]
   const hasInitialised = useAppSelector(thisSelector) as number
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  const purchaseIfNotMobile = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "touch") {
       const isNotMobile = window.matchMedia("(min-width: 1024px)").matches
       if (isNotMobile) {
@@ -79,7 +79,7 @@ export default function OneTimePurchaseUpgrade({
         !hidden && "pointer-events-auto z-auto",
         !hidden && isAffordable && !isPurchased ? "cursor-active" : "cursor-inactive",
       )}
-      onPointerUp={(e) => handlePointerUp(e)}
+      onPointerUp={(e) => purchaseIfNotMobile(e)}
       onPointerEnter={() => setHoveredOTPDescription(OTPNumber)}
       onTouchEnd={(e) => {
         e.stopPropagation()
