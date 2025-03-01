@@ -24,9 +24,10 @@ interface HeroCardProps {
   OTPIcons: JSX.Element[]
   onUpgrade: (id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) => void
   onLevelUp: (e: React.MouseEvent<HTMLButtonElement>) => void
+  touchedHero: HeroName | undefined
 }
 
-export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLevelUp }: HeroCardProps) {
+export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUpgrade, onLevelUp }: HeroCardProps) {
   const dispatch = useAppDispatch()
   const [upgradeName] = config.elementId.split("-")
   const thisHeroName = upgradeName as HeroName
@@ -155,7 +156,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     }
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
-  const [isHovering, setIsHovering] = useState(false)
+  const [isHovering, setIsHovering] = useState(touchedHero === thisHeroName ? true : false)
+  const isMobileHover = touchedHero === thisHeroName && isHovering
   const [beginDelayedAnimation, setBeginDelayedAnimation] = useState(false)
   const [hoveredOTPUpgrade, setHoveredOTPUpgrade] = useState<number | null>(null)
   const hoverAnimationDuration = "duration-500"
@@ -165,9 +167,24 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     const animationDuration = Number(hoverAnimationDuration.split("-")[1])
 
     setIsHovering(true)
+
+    if (delayedAnimationRef.current) {
+      clearTimeout(delayedAnimationRef.current)
+    }
+
     delayedAnimationRef.current = setTimeout(() => {
       setBeginDelayedAnimation(true)
     }, animationDuration / 2)
+  }
+
+  const onCardTouch = (e: React.TouchEvent) => {
+    // Prevent mouse events from firing then use mouse logic
+    e.preventDefault()
+    if (hoveredOTPUpgrade && e.currentTarget.id.split("-")[1].substring(0, 3) !== "otp") {
+      setHoveredOTPUpgrade(null)
+    } else {
+      onCardHover()
+    }
   }
 
   const onCardMouseExit = () => {
@@ -175,6 +192,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       clearTimeout(delayedAnimationRef.current)
       delayedAnimationRef.current = null
     }
+
     setBeginDelayedAnimation(false)
     setIsHovering(false)
   }
@@ -187,7 +205,13 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     setHoveredOTPUpgrade(hoveredUpgrade)
   }
 
-  const touchedHero = useTouchObserver()
+  useEffect(() => {
+    if (touchedHero === thisHeroName) {
+      onCardHover()
+    } else {
+      onCardMouseExit()
+    }
+  }, [touchedHero])
 
   if (!shouldMount && isNotAdventurer) return null
 
@@ -213,7 +237,6 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 text-electricblue">{touchedHero}</div>
       {/* Card rounded corners mask */}
       {(thisHeroName !== "adventurer" || isHealerVisible) && (
         <>
@@ -224,16 +247,16 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
       <div
         id={`${thisHeroName}-card`}
         className={clsx(
-          "hero-card relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px] border-yellow-700 hover:lg:border-yellow-700 hover:border-white",
+          "hero-card relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px",
           beginningState,
-          canAffordNextOTPUpgrade && level > 10 && "border-gold",
+          isMobileHover ? "border-white" : canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100",
           isVisible && endingState,
           animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
         )}
         onMouseEnter={onCardHover}
-        onTouchEnd={onCardHover}
+        onTouchEnd={onCardTouch}
         onMouseLeave={onCardMouseExit}>
         {/* Title section */}
         <div
@@ -369,6 +392,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
                     id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
                     onClick={onUpgrade}
                     setHoveredOTPDescription={onOTPHover}
+                    touchHandler={onCardTouch}
                     icon={icon}
                     hidden={isHidden}
                     cost={nextOTPCost}

@@ -109,7 +109,7 @@ export default function UpgradeIndex() {
     dispatch(decreaseGold(cost))
   }
 
-  const touchedElement = useTouchObserver()
+  const touchedHero = useTouchObserver()
 
   return (
     <div className="flex flex-col">
@@ -123,24 +123,28 @@ export default function UpgradeIndex() {
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
+            touchedHero={touchedHero}
             OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}
           />
           <HeroCard
             config={UPGRADE_CONFIG.warrior}
+            touchedHero={touchedHero}
             OTPIcons={[WarriorOTPIcon1(), WarriorOTPIcon2(), WarriorOTPIcon3()]}
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}
           />
           <HeroCard
             config={UPGRADE_CONFIG.healer}
+            touchedHero={touchedHero}
             OTPIcons={[HealerOTPIcon1(), HealerOTPIcon2(), HealerOTPIcon3()]}
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}
           />
           <HeroCard
             config={UPGRADE_CONFIG.mage}
+            touchedHero={touchedHero}
             OTPIcons={[MageOTPIcon1(), MageOTPIcon2(), MageOTPIcon3()]}
             onUpgrade={onUpgrade}
             onLevelUp={onLevelup}

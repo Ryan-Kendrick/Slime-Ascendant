@@ -160,9 +160,14 @@ export function useTouchObserver() {
 
   const handleTouchStart = (e: TouchEvent) => {
     if (e.target instanceof Element) {
-      const selectedHeroCardElement = e.target.closest(".hero-card")?.id as HeroName | undefined
-      const selectedHero = selectedHeroCardElement?.split("-")[0] as HeroName
-      setSelectedHeroCard(selectedHero)
+      const heroCardElement = e.target.closest(".hero-card")?.id as HeroName | undefined
+
+      if (heroCardElement) {
+        const selectedHero = heroCardElement?.split("-")[0] as HeroName
+        setSelectedHeroCard(selectedHero)
+      } else {
+        setSelectedHeroCard(undefined)
+      }
     }
   }
 
