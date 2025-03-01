@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { useAppDispatch } from "../redux/hooks"
 import { clearCatchUpTime, saveGame, setLoading } from "../redux/metaSlice"
 import { updateDotDamageDealt } from "../redux/statsSlice"
+import { HeroName } from "../models/upgrades"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -155,10 +156,13 @@ export function useGameEngine(props: EngineProps) {
 }
 
 export function useTouchObserver() {
+  const [selectedHeroCard, setSelectedHeroCard] = useState<HeroName | undefined>(undefined)
+
   const handleTouchStart = (e: TouchEvent) => {
     if (e.target instanceof Element) {
-      console.log(e.target.closest(".hero-card"))
-      return e.target.id
+      const selectedHeroCardElement = e.target.closest(".hero-card")?.id as HeroName | undefined
+      const selectedHero = selectedHeroCardElement?.split("-")[0] as HeroName
+      setSelectedHeroCard(selectedHero)
     }
   }
 
@@ -166,4 +170,6 @@ export function useTouchObserver() {
     document.addEventListener("touchend", handleTouchStart)
     return () => document.removeEventListener("touchend", handleTouchStart)
   }, [])
+
+  return selectedHeroCard
 }

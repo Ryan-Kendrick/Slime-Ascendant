@@ -17,6 +17,7 @@ import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../redux/shared/maps"
 import { cardProps } from "../../../redux/shared/maps"
+import { useTouchObserver } from "../../../gameconfig/customHooks"
 
 interface HeroCardProps {
   config: Upgrade
@@ -186,6 +187,8 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
     setHoveredOTPUpgrade(hoveredUpgrade)
   }
 
+  const touchedHero = useTouchObserver()
+
   if (!shouldMount && isNotAdventurer) return null
 
   const heroAnimationStart = {
@@ -210,6 +213,7 @@ export default function HeroCard({ config, OTPIcons: OTPIcons, onUpgrade, onLeve
 
   return (
     <div className="relative">
+      <div className="absolute inset-0 text-electricblue">{touchedHero}</div>
       {/* Card rounded corners mask */}
       {(thisHeroName !== "adventurer" || isHealerVisible) && (
         <>
