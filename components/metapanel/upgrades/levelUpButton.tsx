@@ -25,7 +25,6 @@ export default function LevelUpButton({
   OTPUpgradeCount,
   nextOTPCost,
   purchaseOTPUpgrade,
-  isMobile,
 }: LevelUpProps) {
   const formattedLevelUpCost = formatSmallNumber(levelUpCost)
   const formattedOTPCost = nextOTPCost && formatSmallNumber(nextOTPCost)

@@ -407,7 +407,6 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
             OTPUpgradeCount={OTPUpgradeCount}
             nextOTPCost={nextOTPCost}
             purchaseOTPUpgrade={purchaseUpgradeFromLevelUpBtn}
-            isMobile={isMobile}
           />
         </div>
       </div>
