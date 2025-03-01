@@ -12,7 +12,6 @@ interface LevelUpProps {
   OTPUpgradeCount: number
   nextOTPCost: number
   purchaseOTPUpgrade: () => void
-  isMobile: boolean
 }
 
 export default function LevelUpButton({
