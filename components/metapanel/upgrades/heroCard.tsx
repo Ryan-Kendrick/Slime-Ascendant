@@ -157,13 +157,13 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   }, [currentZoneNumber, config.visibleAtZone, hasInitialised, animationComplete])
 
   const [isHovering, setIsHovering] = useState(touchedHero === thisHeroName ? true : false)
-  const isMobileHover = touchedHero === thisHeroName && isHovering
+  const isTouchHover = isMobile && isHovering
   const [beginDelayedAnimation, setBeginDelayedAnimation] = useState(false)
   const [hoveredOTPUpgrade, setHoveredOTPUpgrade] = useState<number | null>(null)
   const hoverAnimationDuration = "duration-500"
   const delayedAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
-  const onCardHover = () => {
+  const displayDamageTable = () => {
     const animationDuration = Number(hoverAnimationDuration.split("-")[1])
 
     setIsHovering(true)
@@ -183,11 +183,11 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     if (hoveredOTPUpgrade && e.currentTarget.id.split("-")[1].substring(0, 3) !== "otp") {
       setHoveredOTPUpgrade(null)
     } else {
-      onCardHover()
+      displayDamageTable()
     }
   }
 
-  const onCardMouseExit = () => {
+  const hideDamageTable = () => {
     if (delayedAnimationRef.current) {
       clearTimeout(delayedAnimationRef.current)
       delayedAnimationRef.current = null
@@ -201,15 +201,11 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     onUpgrade(config.elementId, false, nextOTPCost, canAffordNextOTPUpgrade)
   }
 
-  const onOTPHover = (hoveredUpgrade: number | null) => {
-    setHoveredOTPUpgrade(hoveredUpgrade)
-  }
-
   useEffect(() => {
     if (touchedHero === thisHeroName) {
-      onCardHover()
-    } else {
-      onCardMouseExit()
+      displayDamageTable()
+    } else if (isHovering) {
+      hideDamageTable()
     }
   }, [touchedHero])
 
@@ -225,15 +221,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     healer: "transition-all duration-[1200ms] absolute left-0 -translate-x-full pointer-events-none ease-out",
     mage: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
   }
-  const heroAnimationEnd = {
-    adventurer: "",
-    warrior: "transform-none",
-    healer: "transform-none",
-    mage: "transform-none",
-  }
 
   const beginningState = heroAnimationStart[thisHeroName]
-  const endingState = heroAnimationEnd[thisHeroName]
 
   return (
     <div className="relative">
@@ -247,17 +236,16 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
       <div
         id={`${thisHeroName}-card`}
         className={clsx(
-          "hero-card relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px",
+          "hero-card relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px]",
           beginningState,
-          isMobileHover ? "border-white" : canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
+          isTouchHover ? "border-white" : canAffordNextOTPUpgrade && level > 10 ? "border-gold" : "border-yellow-700",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
-          isVisible && isNotAdventurer && "opacity-100",
-          isVisible && endingState,
+          isVisible && isNotAdventurer && "opacity-100 transform-none",
           animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
         )}
-        onMouseEnter={onCardHover}
+        onMouseEnter={displayDamageTable}
         onTouchEnd={onCardTouch}
-        onMouseLeave={onCardMouseExit}>
+        onMouseLeave={hideDamageTable}>
         {/* Title section */}
         <div
           className={clsx(
@@ -284,7 +272,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
           <div
             className={clsx(
               `transition-transform ${hoverAnimationDuration} font-paytone text-lg h-full`,
-              isHovering ? "translate-y-[calc(101%)]" : "translate-y-0",
+              isHovering ? "translate-y-[calc(98%)]" : "translate-y-0",
             )}>
             <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
           </div>
@@ -391,7 +379,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
                   <OneTimePurchaseUpgrade
                     id={`${config.elementId}.${i + 1}` as UpgradeIdWithLevel}
                     onClick={onUpgrade}
-                    setHoveredOTPDescription={onOTPHover}
+                    setHoveredOTPDescription={setHoveredOTPUpgrade}
                     touchHandler={onCardTouch}
                     icon={icon}
                     hidden={isHidden}

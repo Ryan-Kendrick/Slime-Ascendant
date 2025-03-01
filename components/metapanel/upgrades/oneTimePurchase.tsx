@@ -66,7 +66,7 @@ export default function OneTimePurchaseUpgrade({
     <div
       id={id}
       className={clsx(
-        "relative",
+        "relative pt-1 md:pt-0",
         // Shimmer effect
         "before:absolute before:inset-0 before:rounded-lg",
         "before:bg-[linear-gradient(60deg,transparent_50%,rgba(255,255,255,0.1)_50%,transparent_75%,transparent_100%)]",
