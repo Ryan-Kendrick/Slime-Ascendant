@@ -27,6 +27,7 @@ export default function PanelIndex() {
     currentZone >= UPGRADE_CONFIG.healer.visibleAtZone,
   ]
   const [tabHeight, setTabHeight] = useState(0)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
@@ -40,10 +41,11 @@ export default function PanelIndex() {
           // Wait for the cue from heroCard.tsx that the animations are in the right state
           return
         } else {
-          return OneLineMask
+          return oneLineMask
         }
       } else {
-        return fullMask
+        const isMobile = window.innerWidth <= 768
+        return isMobile ? fullMobileMask : fullMask
       }
     }
   }
@@ -78,6 +80,18 @@ export default function PanelIndex() {
     }
   }, [prestigeTabVisible])
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
   return (
     <>
       <div
@@ -108,6 +122,7 @@ export default function PanelIndex() {
           )}
         </div>
         <div
+          id="panel-content"
           className={clsx(
             "flex flex-col lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl z-50",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
@@ -129,23 +144,24 @@ interface Mask {
   WebkitMaskComposite: string
 }
 
-const OneLineMask = {
+// Values defined in style.css
+const oneLineMask = {
   maskImage: `linear-gradient(
     to bottom,
     black 0px,
-    black 403px,
-    transparent 403px,
-    transparent 407px,
-    black 407px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
     black 100%
 )`,
   WebkitMaskImage: `linear-gradient(
     to bottom,
     black 0px,
-    black 403px,
-    transparent 403px,
-    transparent 407px,
-    black 407px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
     black 100%
 )`,
 
@@ -160,28 +176,80 @@ const fullMask = {
   linear-gradient(
     to bottom,
     black 0px,
-    black 403px,
-    transparent 403px,
-    transparent 407px,
-    black 407px,
-    black 722px,
-    transparent 722px,
-    transparent 727px,
-    black 727px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
+    black var(--mask-line2-start),
+    transparent var(--mask-line2-start),
+    transparent var(--mask-line2-end),
+    black var(--mask-line2-end),
     black 100%
 )`,
   WebkitMaskImage: `
   linear-gradient(
     to bottom,
     black 0px,
-    black 403px,
-    transparent 403px,
-    transparent 407px,
-    black 407px,
-    black 722px,
-    transparent 722px,
-    transparent 727px,
-    black 727px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
+    black var(--mask-line2-start),
+    transparent var(--mask-line2-start),
+    transparent var(--mask-line2-end),
+    black var(--mask-line2-end),
+    black 100%
+)`,
+
+  maskRepeat: "no-repeat, no-repeat",
+  WebkitMaskRepeat: "no-repeat, no-repeat",
+  maskComposite: "intersect",
+  WebkitMaskComposite: "source-in, xor",
+}
+
+const fullMobileMask = {
+  maskImage: `
+  linear-gradient(
+    to bottom,
+    black 0px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
+    black var(--mask-line2-start),
+    transparent var(--mask-line2-start),
+    transparent var(--mask-line2-end),
+    black var(--mask-line2-end),
+    black var(--mask-line3-start),
+    transparent var(--mask-line3-start),
+    transparent var(--mask-line3-end),
+    black var(--mask-line3-end),
+    black var(--mask-line4-start),
+    transparent var(--mask-line4-start),
+    transparent var(--mask-line4-end),
+    black var(--mask-line4-end),
+    black 100%
+)`,
+  WebkitMaskImage: `
+  linear-gradient(
+    to bottom,
+    black 0px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
+    black var(--mask-line2-start),
+    transparent var(--mask-line2-start),
+    transparent var(--mask-line2-end),
+    black var(--mask-line2-end),
+    black var(--mask-line3-start),
+    transparent var(--mask-line3-start),
+    transparent var(--mask-line3-end),
+    black var(--mask-line3-end),
+    black var(--mask-line4-start),
+    transparent var(--mask-line4-start),
+    transparent var(--mask-line4-end),
+    black var(--mask-line4-end),
     black 100%
 )`,
 

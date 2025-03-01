@@ -19,3 +19,27 @@ body {
 * {
   box-sizing: border-box;
 }
+
+#panel-content {
+  --mask-line1-start: 403px;
+  --mask-line1-end: 407px;
+  --mask-line2-start: 722px;
+  --mask-line2-end: 727px;
+  --mask-line3-start: 722px;
+  --mask-line3-end: 727px;
+  --mask-line4-start: 722px;
+  --mask-line4-end: 727px;
+}
+
+@media (max-width: 768px) {
+  #panel-content {
+    --mask-line1-start: 453px;
+    --mask-line1-end: 457px;
+    --mask-line2-start: 821px;
+    --mask-line2-end: 826px;
+    --mask-line3-start: 1191px;
+    --mask-line3-end: 1195px;
+    --mask-line4-start: 1560px;
+    --mask-line4-end: 1565px;
+  }
+}
