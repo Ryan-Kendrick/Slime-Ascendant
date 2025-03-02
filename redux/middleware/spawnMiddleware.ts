@@ -69,7 +69,7 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
         nextMonster = newZoneMonsters[0]
       }
 
-      // When farming and farming is toggled, continue; else goto zoneInView useEffect block
+      // When farming and farming is toggled, continue; else goto zoneTransition
     } else if (zoneInView < currentZoneNumber) {
       updateFarmAchievements(dispatch)
       if (isFarming && farmZoneMonsters) {
@@ -90,7 +90,7 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
       nextMonster = zoneMonsters[stageNumber]
     }
   }
-  // Spawn the next monster when we didn't jump to zoneInView transition
+  // Spawn the next monster when we didn't jump to zoneTransition
   if (nextMonster) {
     dispatch(spawnMonster(nextMonster))
   }
@@ -118,7 +118,6 @@ function zoneTransition(state: RootState, dispatch: Dispatch, returnToProgressio
     // Case 2c: Chose farm zone, start from stage 1
     nextMonster = state.zone.farmZoneMonsters?.[0]
   }
-
   if (nextMonster) {
     dispatch(spawnMonster(nextMonster))
   } else throw new Error("Monster undefined during zone transition")

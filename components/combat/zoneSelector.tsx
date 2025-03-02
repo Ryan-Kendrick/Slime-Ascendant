@@ -5,8 +5,8 @@ import { useState } from "react"
 
 export default function ZoneSelector() {
   const dispatch = useAppDispatch()
-  const { currentZoneNumber, zoneInView } = useAppSelector(selectZoneState)
-  const [prevZone, setPrevZone] = useState(currentZoneNumber)
+  const { currentZoneNumber, zoneInView, farmZoneNumber } = useAppSelector(selectZoneState)
+  const [prevZone, setPrevZone] = useState(zoneInView === farmZoneNumber ? farmZoneNumber : currentZoneNumber)
 
   const selectedZones = Array.from({ length: 5 }, (cur, acc) => acc + 1)
 
