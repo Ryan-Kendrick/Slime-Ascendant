@@ -224,10 +224,18 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     mage: "transition-all duration-[1200ms] absolute right-0 translate-x-full pointer-events-none ease-out",
   }
 
+  const heroPosition = {
+    adventurer: "row-start-4 md:row-start-auto",
+    warrior: "row-start-3 md:row-start-auto",
+    healer: "row-start-2 md:row-start-auto",
+    mage: "row-start-1 md:row-start-auto",
+  }
+
   const beginningState = heroAnimationStart[thisHeroName]
+  const gridPosition = heroPosition[thisHeroName]
 
   return (
-    <div className="relative">
+    <div className={gridPosition}>
       {/* Card rounded corners mask */}
       {(thisHeroName !== "adventurer" || isHealerVisible) && (
         <>
