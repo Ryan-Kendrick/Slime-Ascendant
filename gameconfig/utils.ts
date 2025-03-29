@@ -25,7 +25,7 @@ export function formatSmallNumber(num: number): string {
 
   const tiers = [
     { threshold: 1e15, suffix: "q" },
-    { threshold: 1e10, suffix: "b" },
+    { threshold: 1e9, suffix: "b" },
     { threshold: 1e6, suffix: "m" },
   ]
 
@@ -35,7 +35,7 @@ export function formatSmallNumber(num: number): string {
         if (num < 1e8) return (num / threshold).toFixed(2) + suffix
         return Math.floor(num / threshold) + suffix
       } else {
-        if (num < threshold * 100) return (num / (threshold / 10)).toFixed(2) + suffix
+        if (num < threshold * 100) return (num / threshold).toFixed(2) + suffix
         return Math.floor(num / threshold) + suffix
       }
     }
