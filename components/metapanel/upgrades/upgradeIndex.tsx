@@ -157,7 +157,7 @@ export default function UpgradeIndex() {
                 ? "absolute from-purpleTopSm to-purpleMidSm lg:from-purpleTop lg:to-purpleMid"
                 : "hidden",
               isHealerVisible &&
-                "absolute from-purpleTopSm via-purpleMidSm to-purpleBottomSm lg:from-purpleTop lg:via-purpleMid lg:to-[#37136D]", // Why does the last stop have to be done inline!?
+                "absolute from-purpleTopSm via-purpleMidSm to-purpleBottomSm lg:from-purpleTop lg:via-purpleMid lg:to-purpleBottom",
             )}
           />
         </div>
