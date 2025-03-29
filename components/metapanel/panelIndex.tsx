@@ -44,7 +44,6 @@ export default function PanelIndex() {
           return oneLineMask
         }
       } else {
-        const isMobile = window.innerWidth <= 768
         return isMobile ? fullMobileMask : fullMask
       }
     }
