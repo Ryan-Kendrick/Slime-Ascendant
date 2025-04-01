@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from "../redux/hooks"
-import { selectLoading, setLoading } from "../redux/metaSlice"
+import { useAppSelector } from "../../redux/hooks"
+import { selectLoading } from "../../redux/metaSlice"
 
 export default function Loading() {
   const loading = useAppSelector(selectLoading)
