@@ -34,7 +34,7 @@ export default function Page() {
     <React.StrictMode>
       <Provider store={store}>
         <Background>
-          <div
+          {/* <div
             style={appScale}
             className="relative z-10 cursor-inactive flex flex-col-reverse md:flex-col w-screen min-h-screen select-none font-sigmar overflow-y-auto overflow-x-hidden">
             <div className="flex-none">
@@ -47,7 +47,7 @@ export default function Page() {
               </div>
             </main>
             <Loading />
-          </div>
+          </div> */}
         </Background>
       </Provider>
     </React.StrictMode>
