@@ -42,6 +42,8 @@ export default {
         dagger: "url('/assets/icons/dagger.png') 0 0, pointer",
       },
       scale: {
+        "120": "1.20",
+        "115": "1.15",
         "85": ".85",
         "80": ".80",
       },
