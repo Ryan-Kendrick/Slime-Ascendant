@@ -7,8 +7,8 @@ export default function Background({ children }: PropsWithChildren) {
         <div className="grow lg:basis-3/5 lg:max-h-screen">
           <div className="h-full lg:ml-12 lg:h-[104%] overflow-clip scale-120 aspect-square rounded-b-[200px] lg:rounded-b-none lg:rounded-tl-[200px] bg-gradient-to-r from-amber-950 to-amber-800 blur-3xl" />
         </div>
-        <div className="h-1/2 lg:h-auto relative lg:basis-2/5 shrink lg:min-h-screen">
-          <div className="h-1/2 lg:h-full scale-125 lg:scale-115 xl:scale-130 lg:-translate-x-[20%] lg:translate-y-[20%] aspect-square rounded-full bg-gradient-to-b from-yellow-400 to-orange-600 blur-3xl" />
+        <div className=" lg:h-auto relative lg:basis-2/5 shrink lg:min-h-screen">
+          <div className=" lg:h-full scale-125 lg:scale-115 xl:scale-130 lg:-translate-x-[20%] lg:translate-y-[20%] aspect-square rounded-full bg-gradient-to-b from-yellow-400 to-orange-600 blur-3xl" />
           <div className="absolute min-h-screen lg:h-full lg:h-full scale-120 lg:scale-110 xl:scale-120 top-0 lg:top-1/2 lg:-translate-y-[45%] lg:-translate-x-[10%] inset-0 aspect-[16/14] lg:aspect-[16/14] rounded-full lg:rounded-[40%] bg-gradient-to-r from-purple-700 to-violet-900 blur-3xl" />
         </div>
       </div>
