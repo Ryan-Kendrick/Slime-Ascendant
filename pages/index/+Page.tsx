@@ -33,22 +33,22 @@ export default function Page() {
   return (
     <React.StrictMode>
       <Provider store={store}>
-        <Background>
-          <div
-            style={appScale}
-            className="relative z-10 cursor-inactive flex flex-col-reverse md:flex-col w-screen min-h-screen select-none font-sigmar overflow-y-auto overflow-x-hidden">
-            <div className="flex-none">
-              <Navigation />
-            </div>
-            <main className="flex flex-1 md:min-h-0">
-              <div className="flex w-full flex-col-reverse lg:flex-row">
-                <Panel />
-                <Combat />
-              </div>
-            </main>
-            <Loading />
+        {/* <Background> */}
+        <div
+          style={appScale}
+          className="bg-amber-200 relative z-10 cursor-inactive flex flex-col-reverse md:flex-col w-screen min-h-screen select-none font-sigmar overflow-y-auto overflow-x-hidden lg:overflow-hidden">
+          <div className="flex-none">
+            <Navigation />
           </div>
-        </Background>
+          <main className="flex flex-1 md:min-h-0 overflow-clip lg:overflow-visible">
+            <div className="relative flex w-full flex-col-reverse lg:flex-row">
+              <Panel />
+              <Combat />
+            </div>
+          </main>
+          <Loading />
+        </div>
+        {/* </Background> */}
       </Provider>
     </React.StrictMode>
   )

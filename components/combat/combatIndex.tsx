@@ -33,41 +33,48 @@ export default function CombatIndex() {
   }, [currentZoneNumber])
 
   return (
-    <div className={clsx("flex flex-col lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white overflow-y-auto")}>
-      {currentZoneNumber > 4 && (
-        <div
-          className={clsx(
-            "flex justify-center opacity-0 duration-1000",
-            shouldMount ? "transition-opacity" : "transition-none",
-            fadeIn && "opacity-100",
-            hasFadedIn && "opacity-100 transition-none",
-          )}>
-          <ZoneSelector />
-        </div>
-      )}
+    <div className="relative lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden="true">
+        <div className="absolute h-full w-full bg-gradient-to-r from-purple-700 to-violet-900 aspect-square rounded-full blur-3xl scale-[1.6]" />
+      </div>
+
       <div
         className={clsx(
-          "flex flex-col h-full items-center relative overflow-y-auto",
+          "flex flex-col h-full w-full items-center relative overflow-hidden z-0",
           currentZoneNumber > 4 ? "justify-normal" : "justify-evenly",
         )}>
-        {/* <div className="absolute top-0 left-0 w-7 h-7 z-20 opacity-10 fill-white" onClick={debug}>
-          {CookieEnjoyerIcon()}
-        </div> */}
-        {currentZoneNumber > 4 && (
-          <div
-            className={clsx(
-              "opacity-0 duration-300",
-              shouldMount ? "transition-opacity" : "transition-none",
-              fadeIn && "opacity-100",
-              hasFadedIn && "opacity-100 transition-none",
-            )}>
-            <FarmToggle />
+        {/* Content that scales  */}
+        <div className="static lg:absolute inset-0 overflow-y-auto">
+          <div className="flex flex-col h-full w-full items-center">
+            {currentZoneNumber > 4 && (
+              <div
+                className={clsx(
+                  "flex w-full justify-center opacity-0 duration-1000",
+                  shouldMount ? "transition-opacity" : "transition-none",
+                  fadeIn && "opacity-100",
+                  hasFadedIn && "opacity-100 transition-none",
+                )}>
+                <ZoneSelector />
+              </div>
+            )}
+            {currentZoneNumber > 4 && (
+              <div
+                className={clsx(
+                  "opacity-0 duration-300",
+                  shouldMount ? "transition-opacity" : "transition-none",
+                  fadeIn && "opacity-100",
+                  hasFadedIn && "opacity-100 transition-none",
+                )}>
+                <FarmToggle />
+              </div>
+            )}
+            <Monster>
+              <Healthbar />
+            </Monster>
+            <ZoneMap />
           </div>
-        )}
-        <Monster>
-          <Healthbar />
-        </Monster>
-        <ZoneMap />
+        </div>
       </div>
     </div>
   )
