@@ -9,6 +9,7 @@ import ZoneSelector from "./zoneSelector"
 import { toggleDebugState } from "../../redux/playerSlice"
 import { CookieEnjoyerIcon } from "../svgIcons/stageIcons"
 import FarmToggle from "./farmToggle"
+import Spotlight from "../miscellanious/Spotlight"
 
 export default function CombatIndex() {
   const dispatch = useAppDispatch()
@@ -35,8 +36,9 @@ export default function CombatIndex() {
   return (
     <div className="relative lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
       {/* Background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute h-full w-full bg-gradient-to-r from-purple-700 to-violet-900 aspect-square rounded-full blur-3xl scale-[1.6]" />
+        <Spotlight />
       </div>
 
       <div
@@ -44,8 +46,8 @@ export default function CombatIndex() {
           "flex flex-col h-full w-full items-center relative overflow-hidden z-0",
           currentZoneNumber > 4 ? "justify-normal" : "justify-evenly",
         )}>
-        {/* Content that scales  */}
-        <div className="static lg:absolute inset-0 overflow-y-auto">
+        {/* Absolutely positioned content container to ignore background */}
+        <div className="static lg:absolute inset-0">
           <div className="flex flex-col h-full w-full items-center">
             {currentZoneNumber > 4 && (
               <div

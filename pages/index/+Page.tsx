@@ -9,7 +9,7 @@ import Navigation from "../../components/nav/navigation"
 import { useForcedDPI } from "../../gameconfig/customHooks"
 import ReactModal from "react-modal"
 import Loading from "../../components/miscellanious/Loading"
-import Background from "../../components/miscellanious/background"
+import Spotlight from "../../components/miscellanious/background"
 
 export default function Page() {
   ReactModal.setAppElement("#root")
@@ -34,19 +34,19 @@ export default function Page() {
     <React.StrictMode>
       <Provider store={store}>
         {/* <Background> */}
-        <div
-          style={appScale}
-          className="bg-amber-200 relative z-10 cursor-inactive flex flex-col-reverse md:flex-col w-screen min-h-screen select-none font-sigmar overflow-y-auto overflow-x-hidden lg:overflow-hidden">
-          <div className="flex-none">
-            <Navigation />
-          </div>
-          <main className="flex flex-1 md:min-h-0 overflow-clip lg:overflow-visible">
-            <div className="relative flex w-full flex-col-reverse lg:flex-row">
-              <Panel />
-              <Combat />
+        <div style={appScale} className="cursor-inactive select-none font-sigmar overflow-hidden">
+          <div className="z-0 bg-amber-200 w-screen min-h-screen relative flex flex-col-reverse md:flex-col overflow-hidden">
+            <div className="flex-none">
+              <Navigation />
             </div>
-          </main>
-          <Loading />
+            <main className="flex flex-1 md:min-h-0 overflow-visible">
+              <div className="relative flex w-full flex-col-reverse lg:flex-row">
+                <Panel />
+                <Combat />
+              </div>
+            </main>
+            <Loading />
+          </div>
         </div>
         {/* </Background> */}
       </Provider>

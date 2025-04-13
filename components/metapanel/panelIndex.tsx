@@ -98,7 +98,7 @@ export default function PanelIndex() {
           // Pseudo element background
           "before:absolute before:w-full before:h-full before:bg-gradient-to-r before:from-amber-950 before:to-amber-800 before:top-0 before:right-10 before:scale-[1.2] before:aspect-square before:rounded-full before:blur-3xl before:-z-10 before:pointer-events-none",
 
-          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-0 transition-[padding] duration-300",
+          "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 lg:my-0 transition-[padding] duration-300 ",
           !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
         )}>
         <div
