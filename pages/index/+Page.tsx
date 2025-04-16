@@ -33,7 +33,6 @@ export default function Page() {
   return (
     <React.StrictMode>
       <Provider store={store}>
-        {/* <Background> */}
         <div style={appScale} className="cursor-inactive select-none font-sigmar overflow-hidden">
           <div className="z-0 bg-amber-200 w-screen min-h-screen relative flex flex-col-reverse md:flex-col overflow-hidden">
             <div className="flex-none">
@@ -42,13 +41,13 @@ export default function Page() {
             <main className="flex flex-1 md:min-h-0 overflow-visible">
               <div className="relative flex w-full flex-col-reverse lg:flex-row">
                 <Panel />
+                {/* <div className="lg:basis-3/5" /> */}
                 <Combat />
               </div>
             </main>
             <Loading />
           </div>
         </div>
-        {/* </Background> */}
       </Provider>
     </React.StrictMode>
   )

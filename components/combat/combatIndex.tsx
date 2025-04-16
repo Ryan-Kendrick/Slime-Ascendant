@@ -37,7 +37,9 @@ export default function CombatIndex() {
     <div className="relative lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
       {/* Background */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute h-full w-full bg-gradient-to-r from-purple-700 to-violet-900 aspect-square rounded-full blur-3xl scale-[1.6]" />
+        <div className="absolute h-full w-full lg:w-auto lg:-translate-x-[5%] xl:-translate-x-[20%] translate-y-[20%] scale-[1.6] aspect-square rounded-full bg-gradient-to-b from-yellow-400 to-orange-600 blur-3xl" />
+        <div className="absolute h-full w-full lg:w-auto lg:-translate-x-[8%] xl:-translate-x-[12%] bg-gradient-to-r from-purple-700 to-violet-900 aspect-square rounded-full blur-3xl lg:scale-[1.3] xl:scale-[1.45]" />
+
         <Spotlight />
       </div>
 
