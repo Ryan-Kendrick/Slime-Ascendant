@@ -9,7 +9,7 @@ import Navigation from "../../components/nav/navigation"
 import { useForcedDPI } from "../../gameconfig/customHooks"
 import ReactModal from "react-modal"
 import Loading from "../../components/miscellanious/Loading"
-import Spotlight from "../../components/miscellanious/background"
+import Spotlight from "../../components/miscellanious/Spotlight"
 
 export default function Page() {
   ReactModal.setAppElement("#root")
