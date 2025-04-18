@@ -9,7 +9,6 @@ import Navigation from "../../components/nav/navigation"
 import { useForcedDPI } from "../../gameconfig/customHooks"
 import ReactModal from "react-modal"
 import Loading from "../../components/miscellanious/Loading"
-import Spotlight from "../../components/miscellanious/Spotlight"
 
 export default function Page() {
   ReactModal.setAppElement("#root")
@@ -41,7 +40,6 @@ export default function Page() {
             <main className="flex flex-1 md:min-h-0 overflow-visible">
               <div className="relative flex w-full flex-col-reverse lg:flex-row">
                 <Panel />
-                {/* <div className="lg:basis-3/5" /> */}
                 <Combat />
               </div>
             </main>
