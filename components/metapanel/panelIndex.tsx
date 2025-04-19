@@ -145,7 +145,7 @@ interface Mask {
   WebkitMaskComposite: string
 }
 
-// Values defined in style.css
+// Values for this horizontal mask defined in style.css
 const oneLineMask = {
   maskImage: `linear-gradient(
     to bottom,

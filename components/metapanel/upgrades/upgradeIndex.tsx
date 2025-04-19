@@ -153,7 +153,7 @@ export default function UpgradeIndex() {
           <div
             className={clsx(
               "hidden md:block left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
-              oneLineMaskVisible
+              (oneLineMaskVisible && !hasPrestiged) || (hasPrestiged && isWarriorVisible)
                 ? "absolute from-purpleTopSm to-purpleMidSm lg:from-purpleTop lg:to-purpleMid"
                 : "hidden",
               isHealerVisible &&
