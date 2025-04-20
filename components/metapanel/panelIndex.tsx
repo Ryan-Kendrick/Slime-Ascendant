@@ -22,31 +22,45 @@ export default function PanelIndex() {
   const activeTab = useAppSelector(selectTabInView)
   const prestigeTabVisible = useAppSelector(selectPrestigeTabVisible)
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
-  const [isWarriorVisible, isHealerVisible] = [
+  const [isWarriorVisible, isHealerVisible, isMageVisible] = [
     currentZone >= UPGRADE_CONFIG.warrior.visibleAtZone,
     currentZone >= UPGRADE_CONFIG.healer.visibleAtZone,
+    currentZone >= UPGRADE_CONFIG.mage.visibleAtZone,
   ]
   const [tabHeight, setTabHeight] = useState(0)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
-  const renderMask = (): undefined | Mask => {
-    if (activeTab !== "upgrade") return undefined
+  const renderMask = (): string | null => {
+    if (activeTab !== "upgrade") return null
     if (!isWarriorVisible) {
-      return
-    } else if (isWarriorVisible) {
-      if (!isHealerVisible) {
+      return null
+    } else if (!isMobile) {
+      if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible) {
           // Wait for the cue from heroCard.tsx that the animations are in the right state
-          return
+          return null
         } else {
-          return warriorMask
+          return "mask-single"
         }
+      } else if (isHealerVisible) {
+        return "mask-full"
+      }
+    } else {
+      if (!isMageVisible && !isHealerVisible) {
+        if (!oneLineMaskVisible) {
+          return null
+        } else {
+          return "mask-mobile-double"
+        }
+      } else if (!isMageVisible && isHealerVisible) {
+        return "mask-mobile-triple"
       } else {
-        return isMobile ? fullMobileMask : fullMask
+        return "mask-mobile-quadruple"
       }
     }
+    return null
   }
 
   const tabs = useMemo(() => {
@@ -128,143 +142,11 @@ export default function PanelIndex() {
             "flex flex-col lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl z-50",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
-          )}
-          style={renderMask()}>
+            renderMask(),
+          )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>
       </div>
     </>
   )
-}
-
-interface Mask {
-  maskImage: string
-  maskRepeat: string
-  WebkitMaskRepeat: string
-  maskComposite: string
-  WebkitMaskComposite: string
-}
-
-// Values for this horizontal mask defined in style.css
-// TODO: define entirely in style.css and toggle classes using clsx
-const warriorMask = {
-  maskImage: `linear-gradient(
-    to bottom,
-    black 0px,
-    black var(--mask-line1-start),
-    transparent var(--mask-line1-start),
-    transparent var(--mask-line1-endThick),
-    black var(--mask-line1-endThick),
-    black var(--mask-mobilegrid-line2-start),
-    transparent var(--mask-mobilegrid-line2-start),
-    transparent var(--mask-mobilegrid-line2-end),
-    black var(--mask-mobilegrid-line2-end),
-    black 100%
-)`,
-  WebkitMaskImage: `linear-gradient(
-    to bottom,
-    black 0px,
-    black var(--mask-line1-start),
-    transparent var(--mask-line1-start),
-    transparent var(--mask-line1-endThick),
-    black var(--mask-line1-endThick),
-    black var(--mask-mobilegrid-line2-start),
-    transparent var(--mask-mobilegrid-line2-start),
-    transparent var(--mask-mobilegrid-line2-end),
-    black var(--mask-mobilegrid-line2-end),
-    black 100%
-)`,
-
-  maskRepeat: "no-repeat, no-repeat",
-  WebkitMaskRepeat: "no-repeat, no-repeat",
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in, xor",
-}
-
-const fullMask = {
-  maskImage: `
-  linear-gradient(
-    to bottom,
-    black 0px,
-    black var(--mask-line1-start),
-    transparent var(--mask-line1-start),
-    transparent var(--mask-line1-end),
-    black var(--mask-line1-end),
-    black var(--mask-line2-start),
-    transparent var(--mask-line2-start),
-    transparent var(--mask-line2-end),
-    black var(--mask-line2-end),
-    black 100%
-)`,
-  WebkitMaskImage: `
-  linear-gradient(
-    to bottom,
-    black 0px,
-    black var(--mask-line1-start),
-    transparent var(--mask-line1-start),
-    transparent var(--mask-line1-end),
-    black var(--mask-line1-end),
-    black var(--mask-line2-start),
-    transparent var(--mask-line2-start),
-    transparent var(--mask-line2-end),
-    black var(--mask-line2-end),
-    black 100%
-)`,
-
-  maskRepeat: "no-repeat, no-repeat",
-  WebkitMaskRepeat: "no-repeat, no-repeat",
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in, xor",
-}
-
-const fullMobileMask = {
-  maskImage: `
-  linear-gradient(
-    to bottom,
-    black 0px,
-    black var(--mask-line1-start),
-    transparent var(--mask-line1-start),
-    transparent var(--mask-line1-end),
-    black var(--mask-line1-end),
-    black var(--mask-line2-start),
-    transparent var(--mask-line2-start),
-    transparent var(--mask-line2-end),
-    black var(--mask-line2-end),
-    black var(--mask-line3-start),
-    transparent var(--mask-line3-start),
-    transparent var(--mask-line3-end),
-    black var(--mask-line3-end),
-    black var(--mask-line4-start),
-    transparent var(--mask-line4-start),
-    transparent var(--mask-line4-end),
-    black var(--mask-line4-end),
-    black 100%
-)`,
-  WebkitMaskImage: `
-  linear-gradient(
-    to bottom,
-    black 0px,
-    black var(--mask-line1-start),
-    transparent var(--mask-line1-start),
-    transparent var(--mask-line1-end),
-    black var(--mask-line1-end),
-    black var(--mask-line2-start),
-    transparent var(--mask-line2-start),
-    transparent var(--mask-line2-end),
-    black var(--mask-line2-end),
-    black var(--mask-line3-start),
-    transparent var(--mask-line3-start),
-    transparent var(--mask-line3-end),
-    black var(--mask-line3-end),
-    black var(--mask-line4-start),
-    transparent var(--mask-line4-start),
-    transparent var(--mask-line4-end),
-    black var(--mask-line4-end),
-    black 100%
-)`,
-
-  maskRepeat: "no-repeat, no-repeat",
-  WebkitMaskRepeat: "no-repeat, no-repeat",
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in, xor",
 }
