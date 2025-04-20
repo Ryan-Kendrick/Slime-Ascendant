@@ -17,7 +17,6 @@ import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../redux/shared/maps"
 import { cardProps } from "../../../redux/shared/maps"
-import { useTouchObserver } from "../../../gameconfig/customHooks"
 
 interface HeroCardProps {
   config: Upgrade

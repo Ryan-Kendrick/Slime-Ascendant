@@ -41,7 +41,7 @@ export default function PanelIndex() {
           // Wait for the cue from heroCard.tsx that the animations are in the right state
           return
         } else {
-          return oneLineMask
+          return warriorMask
         }
       } else {
         return isMobile ? fullMobileMask : fullMask
@@ -146,14 +146,19 @@ interface Mask {
 }
 
 // Values for this horizontal mask defined in style.css
-const oneLineMask = {
+// TODO: define entirely in style.css and toggle classes using clsx
+const warriorMask = {
   maskImage: `linear-gradient(
     to bottom,
     black 0px,
     black var(--mask-line1-start),
     transparent var(--mask-line1-start),
-    transparent var(--mask-line1-end),
-    black var(--mask-line1-end),
+    transparent var(--mask-line1-endThick),
+    black var(--mask-line1-endThick),
+    black var(--mask-mobilegrid-line2-start),
+    transparent var(--mask-mobilegrid-line2-start),
+    transparent var(--mask-mobilegrid-line2-end),
+    black var(--mask-mobilegrid-line2-end),
     black 100%
 )`,
   WebkitMaskImage: `linear-gradient(
@@ -161,8 +166,12 @@ const oneLineMask = {
     black 0px,
     black var(--mask-line1-start),
     transparent var(--mask-line1-start),
-    transparent var(--mask-line1-end),
-    black var(--mask-line1-end),
+    transparent var(--mask-line1-endThick),
+    black var(--mask-line1-endThick),
+    black var(--mask-mobilegrid-line2-start),
+    transparent var(--mask-mobilegrid-line2-start),
+    transparent var(--mask-mobilegrid-line2-end),
+    black var(--mask-mobilegrid-line2-end),
     black 100%
 )`,
 
