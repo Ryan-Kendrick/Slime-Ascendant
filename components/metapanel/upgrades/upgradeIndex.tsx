@@ -117,7 +117,7 @@ export default function UpgradeIndex() {
       <div className="flex-1 flex flex-col">
         <div
           className={clsx(
-            "relative grid gap-1 z-50 ",
+            "relative grid gap-1 -mt-1 md:mt-0 z-50 ",
             isWarriorVisible ? "grid-cols-1 md:grid-cols-2 mb-0" : "grid-cols-1 mb-8",
           )}>
           <HeroCard

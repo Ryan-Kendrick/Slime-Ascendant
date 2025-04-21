@@ -57,7 +57,7 @@ export default function PanelIndex() {
       } else if (!isMageVisible && isHealerVisible) {
         return "mask-mobile-triple"
       } else {
-        return "mask-mobile-quadruple"
+        return "mask-mobile-full"
       }
     }
     return null

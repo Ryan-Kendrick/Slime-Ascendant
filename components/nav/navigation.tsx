@@ -11,7 +11,7 @@ export const Navigation = memo(function Navigation() {
   const [viewOptions, setViewOptions] = useState(false)
 
   return (
-    <div className="flex relative flex-wrap gap-4 justify-between items-center text-white h-full px-3 py-2">
+    <div className="flex relative flex-wrap justify-between items-center text-white h-full px-3 py-2 md:pb-0 lg:pb-2">
       <div className="flex flex-wrap gap-3 items-center">
         <NavigationLinkButton text="Achievements" onClick={() => setViewAchievements(true)} />
       </div>

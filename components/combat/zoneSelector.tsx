@@ -24,7 +24,7 @@ export default function ZoneSelector() {
   const scaleSteps = ["scale-100", "scale-95", "scale-90", "scale-85", "scale-80"]
 
   return (
-    <div className="flex justify-around flex-row-reverse h-20 lg:my-2 border-2 rounded-xl border-white bg-black bg-opacity-30 w-full gap-1.5 p-1.5">
+    <div className="flex justify-around flex-row-reverse h-20 mt-1 lg:mb-2 border-2 rounded-xl border-white bg-black bg-opacity-30 w-full gap-1.5 p-1.5">
       {selectedZones.map((zoneIndex) => {
         const thisZoneNumber = currentZoneNumber - zoneIndex + 1
 

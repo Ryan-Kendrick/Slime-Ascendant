@@ -255,6 +255,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
           isVisible && isNotAdventurer && "opacity-100 transform-none",
           animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
+          // Negative margin to cancel gap-1 from unrendered Mage card
+          !isHealerVisible && isNotAdventurer ? "-mt-1" : "mt-0",
         )}
         onMouseEnter={displayDamageTable}
         onTouchEnd={onCardTouch}
