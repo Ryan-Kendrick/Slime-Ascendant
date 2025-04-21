@@ -224,10 +224,10 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   }
 
   const heroPosition = {
-    adventurer: "row-start-4 md:row-start-auto",
-    warrior: "row-start-3 md:row-start-auto",
-    healer: "row-start-2 md:row-start-auto",
-    mage: "row-start-1 md:row-start-auto",
+    adventurer: "relative row-start-4 md:row-start-auto",
+    warrior: "relative row-start-3 md:row-start-auto",
+    healer: "relative row-start-2 md:row-start-auto",
+    mage: "relative row-start-1 md:row-start-auto",
   }
 
   const beginningState = heroAnimationStart[thisHeroName]
@@ -236,10 +236,15 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   return (
     <div className={gridPosition}>
       {/* Card rounded corners mask */}
-      {(thisHeroName !== "adventurer" || isHealerVisible) && (
+      {(isNotAdventurer || isWarriorVisible) && (
         <>
-          <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -left-0.5 -z-10 bg-purpleMidSm md:bg-purpleMid" />
-          <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -right-0.5 -z-10 bg-purpleMidSm md:bg-purpleMid" />
+          <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -left-0.5 -z-10 bg-[#532105] md:bg-[#532105]" />
+          <div
+            className={clsx(
+              "absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -right-0.5 -z-10 bg-[#532105]",
+              thisHeroName === "warrior" || thisHeroName === "mage" ? "md:bg-[#7D29B9]" : "md:bg-[#532105]",
+            )}
+          />
         </>
       )}
       <div
