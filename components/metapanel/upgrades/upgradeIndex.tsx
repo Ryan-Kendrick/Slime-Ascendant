@@ -151,12 +151,9 @@ export default function UpgradeIndex() {
           {/* Vertical mask to go with the horizonal mask in panelIndex on large screens*/}
           <div
             className={clsx(
-              "hidden md:block left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-gradient-to-b ",
-              (oneLineMaskVisible && !hasPrestiged) || (hasPrestiged && isWarriorVisible)
-                ? "absolute from-purpleTopSm to-purpleMidSm lg:from-purpleTop lg:to-purpleMid"
-                : "hidden",
-              isHealerVisible &&
-                "absolute from-purpleTopSm via-purpleMidSm to-purpleBottomSm lg:from-purpleTop lg:via-purpleMid lg:to-purpleBottom",
+              "hidden md:block left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-[#723209]",
+              (oneLineMaskVisible && !hasPrestiged) || (hasPrestiged && isWarriorVisible) ? "absolute" : "hidden",
+              isHealerVisible && "absolute",
             )}
           />
         </div>
