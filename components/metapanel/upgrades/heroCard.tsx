@@ -59,8 +59,9 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const OTPContainerRef = useRef<HTMLDivElement>(null)
 
   const isNotAdventurer = upgradeName !== "adventurer"
-  const isHealerVisible = currentZoneNumber >= UPGRADE_CONFIG.healer.visibleAtZone
   const isWarriorVisible = currentZoneNumber >= UPGRADE_CONFIG.warrior.visibleAtZone
+  const isHealerVisible = currentZoneNumber >= UPGRADE_CONFIG.healer.visibleAtZone
+  const isMageVisible = currentZoneNumber >= UPGRADE_CONFIG.mage.visibleAtZone
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
@@ -230,6 +231,16 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     mage: "relative row-start-1 md:row-start-auto",
   }
 
+  let isFirstCard = false
+
+  if (isMobile) {
+    if (thisHeroName === "warrior" && isWarriorVisible && !isHealerVisible) {
+      isFirstCard = true
+    } else if (thisHeroName === "healer" && isHealerVisible && !isMageVisible) {
+      isFirstCard = true
+    }
+  }
+
   const beginningState = heroAnimationStart[thisHeroName]
   const gridPosition = heroPosition[thisHeroName]
 
@@ -261,7 +272,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
           isVisible && isNotAdventurer && "opacity-100 transform-none",
           animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
           // Negative margin to cancel gap-1 from unrendered Mage card
-          !isHealerVisible && isNotAdventurer ? "-mt-1" : "mt-0",
+          isFirstCard ? "-mt-1 md:mt-0" : "mt-0",
         )}
         onMouseEnter={displayDamageTable}
         onTouchEnd={onCardTouch}
