@@ -32,8 +32,8 @@ export default function Page() {
   return (
     <React.StrictMode>
       <Provider store={store}>
-        <div style={appScale} className="cursor-inactive select-none font-sigmar overflow-hidden">
-          <div className="z-0 bg-amber-200 w-screen min-h-screen relative flex flex-col-reverse md:flex-col overflow-hidden">
+        <div style={appScale} className="cursor-inactive select-none w-screen min-h-screen font-sigmar overflow-hidden">
+          <div className="z-0 bg-amber-200 w-full h-full relative flex flex-col-reverse md:flex-col">
             <div className="flex-none">
               <Navigation />
             </div>
