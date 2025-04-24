@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useAppDispatch } from "../redux/hooks"
-import { clearCatchUpTime, saveGame, setLoading } from "../redux/metaSlice"
+import { clearCatchUpTime, saveGame, setBreakpoint, setLoading } from "../redux/metaSlice"
 import { updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName } from "../models/upgrades"
 
@@ -23,6 +23,33 @@ export function useForcedDPI(): number {
   }, [])
 
   return dpiScale
+}
+
+export function useBreakpointTracker(storedBreakpoint: number) {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const handleResize = () => {
+      const currentWidth = window.innerWidth
+
+      console.log(storedBreakpoint, currentWidth)
+      // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
+      if (storedBreakpoint !== 768 && currentWidth < 768) {
+        dispatch(setBreakpoint(768))
+      } else if (storedBreakpoint !== 1024 && currentWidth >= 768 && currentWidth < 1024) {
+        dispatch(setBreakpoint(1024))
+      } else if (storedBreakpoint !== 1280 && currentWidth >= 1024 && currentWidth < 1280) {
+        dispatch(setBreakpoint(1280))
+      } else if (storedBreakpoint !== 1536 && currentWidth >= 1280) {
+        dispatch(setBreakpoint(1536))
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+    handleResize()
+
+    return () => window.removeEventListener("resize", handleResize)
+  }, [storedBreakpoint])
 }
 
 interface EngineProps {

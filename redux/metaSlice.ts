@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store"
 import { METADATA_CONFIG } from "../gameconfig/meta"
 
@@ -7,6 +7,9 @@ const initialState = {
   lastPlayed: Date.now(),
   lastSaveCatchUp: null as number | null,
   loading: false,
+
+  // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
+  breakpoint: 0 as Breakpoint,
 }
 
 export const metaSlice = createSlice({
@@ -21,15 +24,21 @@ export const metaSlice = createSlice({
     clearCatchUpTime: (state) => {
       state.lastSaveCatchUp = null
     },
-    setLoading: (state, action) => {
+    setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
+    },
+    setBreakpoint: (state, action: PayloadAction<Breakpoint>) => {
+      state.breakpoint = action.payload
     },
   },
 })
 
-export const { saveGame, clearCatchUpTime, setLoading } = metaSlice.actions
+export const { saveGame, clearCatchUpTime, setLoading, setBreakpoint } = metaSlice.actions
 
 export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCatchUp
 export const selectLoading = (state: RootState) => state.meta.loading
+export const selectBreakpoint = (state: RootState) => state.meta.breakpoint
 
 export default metaSlice.reducer
+
+type Breakpoint = 640 | 768 | 1024 | 1280 | 1536

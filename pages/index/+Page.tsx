@@ -6,34 +6,18 @@ import Combat from "../../components/combat/combatIndex"
 import { store } from "../../redux/store"
 import { Provider } from "react-redux"
 import Navigation from "../../components/nav/navigation"
-import { useForcedDPI } from "../../gameconfig/customHooks"
 import ReactModal from "react-modal"
 import Loading from "../../components/miscellanious/Loading"
+import Wrapper from "../../components/miscellanious/Wrapper"
 
 export default function Page() {
   ReactModal.setAppElement("#root")
 
-  const currentScale = useForcedDPI()
-  const inverseScale = 1 / currentScale
-
-  const appScale: React.CSSProperties | undefined =
-    inverseScale !== 1
-      ? {
-          transform: `scale(${inverseScale})`,
-          transformOrigin: "top left",
-          width: `${100 * currentScale}vw`,
-          height: `${100 * currentScale}vh`,
-          position: "absolute",
-          top: 0,
-          left: 0,
-        }
-      : undefined
-
   return (
     <React.StrictMode>
       <Provider store={store}>
-        <div style={appScale} className="cursor-inactive select-none w-screen min-h-screen font-sigmar overflow-hidden">
-          <div className="z-0 bg-amber-200 w-full h-full relative flex flex-col-reverse md:flex-col">
+        <Wrapper>
+          <div className="w-full h-full relative z-0 bg-amber-200 flex flex-col-reverse md:flex-col">
             <div className="flex-none">
               <Navigation />
             </div>
@@ -45,7 +29,7 @@ export default function Page() {
             </main>
             <Loading />
           </div>
-        </div>
+        </Wrapper>
       </Provider>
     </React.StrictMode>
   )

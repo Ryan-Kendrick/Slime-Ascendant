@@ -70,6 +70,8 @@ export function loadFromLocalStorage(): RootState | undefined {
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
 
+    gameState.meta.breakpoint ??= 0
+
     if (Number(saveMinorVersion) < 4) {
       setTimeout(() => {
         alert(`
