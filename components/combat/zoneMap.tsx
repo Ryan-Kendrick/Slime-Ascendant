@@ -72,7 +72,6 @@ export default function ZoneMap() {
                 !isFarmZone && thisStageNumber === zoneLength && isCurrentStage && "bg-orange-400",
                 isFarmZone && farmZoneMonsters && thisStageNumber === zoneLength && "bg-gray-800",
                 isFarmZone && farmZoneMonsters && isCurrentStage && thisStageNumber === zoneLength && "bg-yellow-500",
-                isSpecial && "bg-fuchsia-500",
               )}>
               <div className="flex bg-gradient-to-tr from-white/30 to-blue-700/20 w-full h-full items-center justify-center">
                 <div className={clsx("w-8 h-7", isSpecial && !iconVisible && "hidden")}>
