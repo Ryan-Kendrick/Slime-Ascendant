@@ -14,6 +14,7 @@ import {
 } from "../../redux/playerSlice"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
+import { selectBreakpoint } from "../../redux/metaSlice"
 
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
@@ -22,13 +23,14 @@ export default function PanelIndex() {
   const activeTab = useAppSelector(selectTabInView)
   const prestigeTabVisible = useAppSelector(selectPrestigeTabVisible)
   const tabAnimationComplete = useAppSelector(selectTabAnimationComplete)
+  const breakpoint = useAppSelector(selectBreakpoint)
   const [isWarriorVisible, isHealerVisible, isMageVisible] = [
     currentZone >= UPGRADE_CONFIG.warrior.visibleAtZone,
     currentZone >= UPGRADE_CONFIG.healer.visibleAtZone,
     currentZone >= UPGRADE_CONFIG.mage.visibleAtZone,
   ]
   const [tabHeight, setTabHeight] = useState(0)
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+  const isMobile = breakpoint === 768
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
@@ -92,18 +94,6 @@ export default function PanelIndex() {
       }
     }
   }, [prestigeTabVisible])
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768)
-    }
-
-    window.addEventListener("resize", handleResize)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [])
 
   return (
     <>

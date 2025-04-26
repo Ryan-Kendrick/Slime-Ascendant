@@ -17,6 +17,7 @@ import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../redux/shared/maps"
 import { cardProps } from "../../../redux/shared/maps"
+import { selectBreakpoint } from "../../../redux/metaSlice"
 
 interface HeroCardProps {
   config: Upgrade
@@ -55,7 +56,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const [shouldMount, setShouldMount] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [animationComplete, setAnimationComplete] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const breakpoint = useAppSelector(selectBreakpoint)
+  const isMobile = breakpoint === 768
   const OTPContainerRef = useRef<HTMLDivElement>(null)
 
   const isNotAdventurer = upgradeName !== "adventurer"
@@ -66,16 +68,6 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
   const UIProgression = useAppSelector(selectUIProgress)
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768)
-    }
-
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
 
   const updateOTPIconPositions = () => {
     if (!OTPContainerRef.current) return

@@ -4,7 +4,7 @@ import { useAppSelector } from "../../redux/hooks"
 import { selectBreakpoint } from "../../redux/metaSlice"
 
 export default function Wrapper({ children }: PropsWithChildren) {
-  // Reverse OS DPI scaling so the game looks normal on small high resolution displays
+  // Reverse OS DPI scaling so the game looks as intended on high resolution displays
   const currentScale = useForcedDPI()
   const inverseScale = 1 / currentScale
 
