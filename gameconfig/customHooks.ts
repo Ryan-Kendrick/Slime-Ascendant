@@ -32,7 +32,6 @@ export function useBreakpointTracker(storedBreakpoint: number) {
     const handleResize = () => {
       const currentWidth = window.innerWidth
 
-      console.log(storedBreakpoint, currentWidth)
       // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
       if (storedBreakpoint !== 768 && currentWidth < 768) {
         dispatch(setBreakpoint(768))
