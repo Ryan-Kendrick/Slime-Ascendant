@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useAppSelector } from "../../redux/hooks"
 import { selectMonsterHealth, selectMonsterMaxHealth } from "../../redux/monsterSlice"
 import { selectWarriorDamage } from "../../redux/shared/heroSelectors"
-import { selectHeroState } from "../../redux/shared/heroSelectors"
+import { formatSmallNumber } from "../../gameconfig/utils"
 
 export default function Healthbar() {
   const monsterHealth = useAppSelector(selectMonsterHealth)
@@ -18,7 +18,7 @@ export default function Healthbar() {
   useEffect(() => {
     targetHealth.current = (monsterHealth / monsterMaxHealth) * 100
 
-    function animateHealth() {
+    const animateHealth = () => {
       setWidth((currentWidth) => {
         const diff = targetHealth.current - currentWidth
 
@@ -40,21 +40,11 @@ export default function Healthbar() {
     }
   }, [monsterHealth, monsterMaxHealth])
 
-  let decimals = {}
-  if (!warriorDamage) {
-    decimals = { minimumFractionDigits: 0, maximumFractionDigits: 1 }
-  } else {
-    decimals = { minimumFractionDigits: 1, maximumFractionDigits: 1 }
-  }
-
-  const healthText =
-    monsterHealth < 100
-      ? monsterHealth.toLocaleString(undefined, { ...decimals })
-      : monsterHealth.toLocaleString(undefined, { maximumFractionDigits: 0 })
+  const formattedHealth = formatSmallNumber(monsterHealth)
 
   return (
     <>
-      <div className="text-center">{healthText}</div>
+      <div className="text-center">{formattedHealth}</div>
       <div className="relative h-8 w-48 border border-black">
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
           <div className={clsx("h-full bg-gradient-to-b from-hpgreen to-darkgreen rounded-sm transform-gpu")}></div>
