@@ -129,9 +129,9 @@ export default function PanelIndex() {
         <div
           id="panel-content"
           className={clsx(
-            "flex flex-col lg:min-w-[627px] shadow-panel rounded-t rounded-b-xl z-50",
-            "bg-gradient-to-tr from-amber-400 via-orange-500 to-purple-950",
-            "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purple-950",
+            "flex flex-col lg:min-w-[627px] shadow-panel-main rounded-t rounded-b-xl z-50",
+            "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
+            "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
             renderMask(),
           )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}

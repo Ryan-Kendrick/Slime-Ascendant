@@ -1,3 +1,4 @@
+import { formatSmallNumber } from "../../gameconfig/utils"
 import { useAppSelector } from "../../redux/hooks"
 import { RootState } from "../../redux/store"
 
@@ -9,7 +10,7 @@ interface CurrencyProps {
 }
 
 export default function Currency({ image, fontstyle, currencySelector, suffix }: CurrencyProps) {
-  const currency = useAppSelector(currencySelector)
+  const currency = formatSmallNumber(useAppSelector(currencySelector))
 
   return (
     <div className="relative flex flex-none flex-col h-[5.5rem] items-center">

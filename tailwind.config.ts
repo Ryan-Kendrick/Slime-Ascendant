@@ -22,6 +22,7 @@ export default {
         purpleTopSm: "#521A82",
         purpleMidSm: "#421675",
         purpleBottomSm: "#321168",
+        purpleOrange: "#631E54",
         electricblue: "#7DF9FF",
         islam: "#009000",
         hpgreen: "#00BB27",
@@ -57,13 +58,15 @@ export default {
       boxShadow: {
         upgrade:
           "inset 5px 5px 13px #fb923c, inset -5px -5px 13px #2e1065, -5px -5px 5px rgb(251 146 60), 3px 5px 25px #2e1065",
-        panel: "inset 5px 5px 13px #fb923c, inset -5px -5px 13px #2e1065",
+        panel: "inset 5px 5px 13px #fb923c, inset -5px -3px 13px #2e1065",
         "panel-t-1": "inset 0 5px 13px #fb923c",
         "panel-t-2": "inset 0 5px 13px #2e1065",
-        "panel-xb": "inset 5px 0 13px #fb923c, inset -5px 0 13px #2e1065, inset 0 -5px 13px #2e1065",
+        "panel-main": `inset 5px -2px 13px #fa7305, 
+        inset 3px -3px 13px #800000, 
+        inset 2px -5px 13px #2e1065`,
       },
       borderRadius: {
-        nm: "61px",
+        m: "61px",
       },
       gradientColorStops: {
         nm: "linear-gradient(145deg, orange, purple)",
