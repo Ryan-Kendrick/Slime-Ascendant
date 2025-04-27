@@ -15,8 +15,6 @@ export default function Monster({ children }: PropsWithChildren) {
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
   const loading = useAppSelector(selectLoading)
 
-  console.log(lastSaveCatchUp)
-
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
 
   // Interface between requestAnimationFrame and React to prevent infinite catchup loops
