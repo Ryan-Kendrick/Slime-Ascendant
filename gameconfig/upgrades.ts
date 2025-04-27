@@ -131,6 +131,7 @@ export const playerCalc: PlayerCalc = {
   heroDamage: (heroName, heroState, pDamage?, achievementModifier?, displayHeroContribution?): number => {
     let damage = 0
 
+    // If damage for all heroes is being added, return total effective dot damage
     if (Array.isArray(heroName) && Array.isArray(heroState) && pDamage && achievementModifier) {
       for (let i = 0; i < heroName.length; i++) {
         const { baseDamage, levelUpDamageMod: levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName[i]]
@@ -138,15 +139,17 @@ export const playerCalc: PlayerCalc = {
 
         if (level === 0) continue
 
-        damage += baseDamage + (level - 1) * levelUpMod
+        let damageInc = baseDamage + (level - 1) * levelUpMod
         const upgradeModifiers = OneTimePurchases.OTPModifiers.slice(0, upgradeCount)
 
         for (const mod of upgradeModifiers) {
-          damage *= mod
+          damageInc *= mod
         }
+        damage += damageInc
       }
-      // If damage for all heroes is being added, return total effective dot damage
       damage *= pDamage * achievementModifier
+
+      // Else if damage is being calculated for a single hero
     } else if (typeof heroName === "string") {
       const { baseDamage, levelUpDamageMod: levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName as HeroName]
       const { level, upgradeCount } = heroState as HeroState
