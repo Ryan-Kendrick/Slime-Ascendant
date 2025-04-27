@@ -124,6 +124,7 @@ export function useGameEngine(props: EngineProps) {
       console.error("Offline progress failed:", err)
     } finally {
       dispatch(setLoading(false))
+      dispatch(clearCatchUpTime())
     }
     return delta
   }
@@ -132,7 +133,6 @@ export function useGameEngine(props: EngineProps) {
     let delta: number
     if (lastSaveCatchUpRef.current) {
       delta = Date.now() - lastSaveCatchUpRef.current
-      dispatch(clearCatchUpTime())
     } else {
       delta = currentTime - lastFrameTime.current
     }
@@ -150,7 +150,6 @@ export function useGameEngine(props: EngineProps) {
       if (loading) dispatch(setLoading(false))
       return
     }
-
     handleCatchUp()
   }
 
