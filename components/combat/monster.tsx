@@ -4,7 +4,6 @@ import { selectClickDamage, selectDotDamage } from "../../redux/playerSlice"
 import { selectMonsterState } from "../../redux/monsterSlice"
 import { updateMonsterClicked } from "../../redux/statsSlice"
 import { selectLastSaveCatchUp, selectLoading } from "../../redux/metaSlice"
-import { selectZoneState } from "../../redux/zoneSlice"
 import { useGameEngine } from "../../gameconfig/customHooks"
 
 export default function Monster({ children }: PropsWithChildren) {
@@ -22,15 +21,12 @@ export default function Monster({ children }: PropsWithChildren) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  const { monsterName, monsterImage, monsterLevel } = useAppSelector(selectMonsterState)
-  const { currentZoneNumber, zoneInView, isFarming, zoneMonsters, farmZoneMonsters, farmZoneNumber, stageNumber } =
-    useAppSelector(selectZoneState)
+  const { monsterName, monsterImage } = useAppSelector(selectMonsterState)
 
   useGameEngine({ dotDamage, loading, lastSaveCatchUp })
 
   function handleClick() {
     dispatch(updateMonsterClicked(clickDamage))
-    // Goto !monsterAlive useEffect if monster died
   }
 
   return (
