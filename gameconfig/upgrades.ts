@@ -121,7 +121,10 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     // { id: "health", title: "Health", basePrice: 2, additiveInc: 1, modifier: 0.05, unlocked: true, tooltip: "" },
   ],
   calcAdditiveCost(atLevel, prestigeUpgrade): number {
-    return (((atLevel - 1) * atLevel) / 2) * prestigeUpgrade.additiveInc + prestigeUpgrade.basePrice * atLevel
+    // Cumulative cost formula
+    // return (((atLevel - 1) * atLevel) / 2) * prestigeUpgrade.additiveInc + prestigeUpgrade.basePrice * atLevel
+
+    return prestigeUpgrade.basePrice + (atLevel - 1) * prestigeUpgrade.additiveInc
   },
 } as const
 
