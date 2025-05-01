@@ -186,6 +186,7 @@ export const playerSlice = createSlice({
       state.plasmaSpent += state.plasmaReserved
       state.activeHeroes = ["adventurer"]
       state.plasmaReserved = 0
+      state.UIProgression = 0
       state.hasInitAdventurerOTP = 0
       state.hasInitWarriorPane = false
       state.hasInitWarriorOTP = 0
