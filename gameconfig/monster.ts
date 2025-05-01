@@ -91,7 +91,7 @@ class Monster extends BaseMonster implements Enemy {
     this.health = Math.floor(this.baseHealth * healthMulti)
     this.maxHealth = this.health
     this.image = config.imagePath
-    const goldMulti = (config.goldMulti ??= 1)
+    const goldMulti = config.goldMulti ?? 1
     const { healthDivisor, healthMultiBonus } = MONSTER_CONFIG.gold
     this.goldValue = Math.floor((this.baseHealth / healthDivisor) * (healthMulti * healthMultiBonus) * goldMulti)
     if (isBoss) this.plasma = MONSTER_CONFIG.boss.plasmaValue(zoneNumber)
