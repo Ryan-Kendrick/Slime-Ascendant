@@ -6,7 +6,7 @@ import {
   selectGCanAfford,
   setActiveHero,
   incrementUIProgression,
-  selectUIProgress,
+  selectOneLineMaskVisible,
 } from "../../../redux/playerSlice"
 import { selectAchievementModifier } from "../../../redux/shared/heroSelectors"
 import { selectPMod } from "../../../redux/shared/heroSelectors"
@@ -67,7 +67,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const thisSelector = isNotAdventurer ? initSelectorMap[thisHeroName] : null
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
-  const UIProgression = useAppSelector(selectUIProgress)
+  const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
   const updateOTPIconPositions = () => {
     if (!OTPContainerRef.current) return
@@ -132,7 +132,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         dispatch(setActiveHero(thisHeroName))
         let allTransitionsTimeout = null as null | NodeJS.Timeout
         if (thisHeroName === "warrior") {
-          if (UIProgression === 0) {
+          if (!oneLineMaskVisible) {
             allTransitionsTimeout = setTimeout(() => dispatch(incrementUIProgression()), 1215)
           }
         }
@@ -239,7 +239,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   return (
     <div className={gridPosition}>
       {/* Card rounded corners mask */}
-      {(isNotAdventurer || isWarriorVisible) && (
+      {(isNotAdventurer || isWarriorVisible) && oneLineMaskVisible && (
         <>
           <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -left-0.5 -z-10 bg-[#532105] md:bg-[#532105]" />
           <div
