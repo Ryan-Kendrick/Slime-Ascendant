@@ -117,15 +117,15 @@ export default function UpgradeIndex() {
         image={GoldIcon()}
         fontStyle="text-white font-paytone font-outline"
         containerStyle="[border-image:linear-gradient(40deg,#C0C0C0,#868686,#E7E7E7,#868686,#868686)_20] border-2 border-solid border-transparent rounded-t bg-slate-300/20
-        
         after:content-[''] after:w-full after:h-full after:[background:radial-gradient(circle_120px_at_15%_-30%,#E2DFD2,transparent),radial-gradient(circle_160px_at_100%_80%,#36454F80,transparent)]
         "
+        innerStyle="currency-gold-inner"
         currencySelector={selectGold}
       />
       <div className="flex-1 flex flex-col">
         <div
           className={clsx(
-            "relative grid gap-1 -mt-1 md:mt-0 z-50 ",
+            "relative grid gap-1 -mt-1 md:mt-0 z-50",
             isWarriorVisible ? "grid-cols-1 md:grid-cols-2 mb-0" : "grid-cols-1 mb-8",
           )}>
           <HeroCard

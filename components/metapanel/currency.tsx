@@ -6,11 +6,19 @@ interface CurrencyProps {
   image: JSX.Element
   fontStyle: string
   containerStyle?: string
+  innerStyle?: string
   currencySelector: (state: RootState) => number
   suffix?: string
 }
 
-export default function Currency({ image, fontStyle, containerStyle, currencySelector, suffix }: CurrencyProps) {
+export default function Currency({
+  image,
+  fontStyle,
+  containerStyle,
+  innerStyle,
+  currencySelector,
+  suffix,
+}: CurrencyProps) {
   const currency = formatSmallNumber(useAppSelector(currencySelector))
 
   return (
@@ -22,6 +30,7 @@ export default function Currency({ image, fontStyle, containerStyle, currencySel
           {suffix}
         </span>
       </div>
+      <div className={`${innerStyle}`}></div>
     </div>
   )
 }
