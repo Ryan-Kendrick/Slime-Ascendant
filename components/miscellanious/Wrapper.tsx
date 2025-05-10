@@ -26,6 +26,7 @@ export default function Wrapper({ children }: PropsWithChildren) {
   const breakpoint = useAppSelector(selectBreakpoint)
   useBreakpointTracker(breakpoint)
 
+  // Force component remount on prestige
   const prestigeCount = useAppSelector(selectPrestigeCount)
 
   return (
