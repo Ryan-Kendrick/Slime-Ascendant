@@ -87,6 +87,8 @@ export const {
   zoneTenCompleted,
 } = statsSlice.actions
 
+export const selectPrestigeCount = (state: RootState) => state.stats.prestigeCount
+
 export const selectStatsState = createSelector([(state: RootState) => state.stats], (stats) => ({
   clickCount: stats.clickCount,
   totalClickDamageDealt: stats.totalClickDamage,

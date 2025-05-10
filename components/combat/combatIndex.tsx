@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react"
 import clsx from "clsx/lite"
-import { useAppDispatch, useAppSelector } from "../../redux/hooks"
+import { useAppSelector } from "../../redux/hooks"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 import Healthbar from "./healthbar"
 import Monster from "./monster"
 import ZoneMap from "./zoneMap"
 import ZoneSelector from "./zoneSelector"
-import { toggleDebugState } from "../../redux/playerSlice"
-import { CookieEnjoyerIcon } from "../svgIcons/stageIcons"
 import FarmToggle from "./farmToggle"
 import Spotlight from "../miscellanious/Spotlight"
+import { selectPrestigeCount } from "../../redux/statsSlice"
 
 export default function CombatIndex() {
-  const dispatch = useAppDispatch()
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
 
   const [shouldMount, setShouldMount] = useState(false)

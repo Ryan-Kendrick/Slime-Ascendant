@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react"
 import { useBreakpointTracker, useForcedDPI } from "../../gameconfig/customHooks"
 import { useAppSelector } from "../../redux/hooks"
 import { selectBreakpoint } from "../../redux/metaSlice"
+import { selectPrestigeCount } from "../../redux/statsSlice"
 
 export default function Wrapper({ children }: PropsWithChildren) {
   // Reverse OS DPI scaling so the game looks as intended on high resolution displays
@@ -25,8 +26,11 @@ export default function Wrapper({ children }: PropsWithChildren) {
   const breakpoint = useAppSelector(selectBreakpoint)
   useBreakpointTracker(breakpoint)
 
+  const prestigeCount = useAppSelector(selectPrestigeCount)
+
   return (
     <div
+      key={`prestige-${prestigeCount}`}
       style={appScale}
       className="cursor-inactive select-none w-screen min-h-screen lg:h-screen font-sigmar overflow-hidden">
       {children}
