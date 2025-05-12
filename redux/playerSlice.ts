@@ -257,11 +257,10 @@ export const selectDotDamage = createSelector(
   [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],
   (activeHeroes, heroState, pDamage, achievementDamage) => {
     if (activeHeroes.length < 1) return 0
+    const dotHeroes = activeHeroes.slice(1)
+    const heroStats = dotHeroes.map((hero) => heroState[hero])
 
-    const heroes = activeHeroes.slice(1)
-    const heroStats = heroes.map((hero) => heroState[hero])
-
-    return playerCalc.heroDamage(heroes, heroStats, pDamage, achievementDamage)
+    return playerCalc.heroDamage(dotHeroes, heroStats, pDamage, achievementDamage)
   },
 )
 

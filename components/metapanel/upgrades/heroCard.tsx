@@ -127,9 +127,9 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
 
     if (currentZoneNumber >= config.visibleAtZone && !shouldMount) {
       setShouldMount(true)
+      dispatch(setActiveHero(thisHeroName))
       const fadeinTimeout = setTimeout(() => {
         setIsVisible(true)
-        dispatch(setActiveHero(thisHeroName))
         let allTransitionsTimeout = null as null | NodeJS.Timeout
         if (thisHeroName === "warrior") {
           if (!oneLineMaskVisible) {
