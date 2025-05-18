@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import clsx from "clsx/lite"
 import { useAppSelector } from "../../redux/hooks"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
@@ -10,7 +10,7 @@ import FarmToggle from "./farmToggle"
 import Spotlight from "../miscellanious/Spotlight"
 import { selectPrestigeCount } from "../../redux/statsSlice"
 
-export default function CombatIndex() {
+export default function CombatIndex({ children }: PropsWithChildren) {
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
 
   const [shouldMount, setShouldMount] = useState(false)
@@ -28,7 +28,7 @@ export default function CombatIndex() {
   }, [currentZoneNumber])
 
   return (
-    <div className="relative lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
+    <div className="relative flex flex-col lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
       {/* Background */}
 
       <div className="absolute inset-0 -z-10 pointer-events-none">
@@ -57,6 +57,7 @@ export default function CombatIndex() {
                 <ZoneSelector />
               </div>
             )}
+
             {currentZoneNumber > 4 && (
               <div
                 className={clsx(
@@ -75,6 +76,7 @@ export default function CombatIndex() {
           </div>
         </div>
       </div>
+      <div className="hidden lg:block items-between">{children}</div>
     </div>
   )
 }

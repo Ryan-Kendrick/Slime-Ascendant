@@ -65,6 +65,14 @@ export default function PanelIndex() {
     return null
   }
 
+  const maskClass = renderMask()
+  const chainsClass =
+    maskClass === "mask-full"
+      ? ["bg-chainsLeft", "bg-chainsRight"]
+      : maskClass === "mask-single"
+        ? ["bg-chainsLeftPartial", "bg-chainsRightPartial"]
+        : undefined
+
   const tabs = useMemo(() => {
     const tabsToRender: TabData[] = [
       {
@@ -106,6 +114,20 @@ export default function PanelIndex() {
           !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
         )}>
         <div
+          className={clsx(
+            `absolute h-full w-[311px] top-[200px] `,
+            "left-16 hidden md:block bg-no-repeat",
+            chainsClass && chainsClass[0],
+          )}
+        />
+        <div
+          className={clsx(
+            `absolute h-full w-[311px] top-[200px] `,
+            "right-16 hidden md:block bg-no-repeat",
+            chainsClass && chainsClass[1],
+          )}
+        />
+        <div
           style={{ height: `${tabHeight}px` }}
           className={clsx(tabAnimationComplete ? "transition-none" : "transition-[height] duration-1000")}>
           {prestigeTabVisible && (
@@ -129,10 +151,10 @@ export default function PanelIndex() {
         <div
           id="panel-content"
           className={clsx(
-            "flex flex-col lg:min-w-[627px] shadow-panel-main rounded-t rounded-b-xl z-50",
+            "relative flex flex-col lg:min-w-[627px] shadow-panel-main rounded-t rounded-b-xl z-50",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
-            renderMask(),
+            maskClass,
           )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>

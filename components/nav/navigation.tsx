@@ -30,7 +30,7 @@ export const Navigation = memo(function Navigation() {
           {CancelIcon()}
         </button>
       </ReactModal>
-      <div className="self-start text-sm opacity-50">{METADATA_CONFIG.version}</div>
+      <div className="self-start lg:self-end text-sm opacity-50">{METADATA_CONFIG.version}</div>
       {/* <ReactModal
         isOpen={viewOptions}
         onRequestClose={() => setViewOptions(false)}

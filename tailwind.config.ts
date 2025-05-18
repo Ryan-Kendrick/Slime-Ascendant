@@ -16,12 +16,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        purpleTop: "#631F9A",
-        purpleMid: "#541B84",
-        purpleBottom: "#37136D",
-        purpleTopSm: "#521A82",
-        purpleMidSm: "#421675",
-        purpleBottomSm: "#321168",
         purpleOrange: "#631E54",
         electricblue: "#7DF9FF",
         islam: "#009000",
@@ -54,6 +48,10 @@ export default {
       },
       backgroundImage: {
         meadow: "url('/assets/icons/meadow.jpg')",
+        chainsLeftPartial: "url('/assets/icons/chains-left-partial.webp')",
+        chainsRightPartial: "url('/assets/icons/chains-right-partial.webp')",
+        chainsLeft: "url('/assets/icons/chains-left.webp')",
+        chainsRight: "url('/assets/icons/chains-right.webp')",
       },
       boxShadow: {
         upgrade:

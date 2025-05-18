@@ -17,14 +17,16 @@ export default function Page() {
     <React.StrictMode>
       <Provider store={store}>
         <Wrapper>
-          <div className="w-full h-full relative z-0 bg-amber-200 flex flex-col-reverse md:flex-col">
-            <div className="flex-none">
+          <div className="w-full h-full lg:mt-1 relative z-0 bg-amber-200 flex flex-col-reverse md:flex-col">
+            <div className="lg:hidden flex-none">
               <Navigation />
             </div>
             <main className="flex flex-1 md:min-h-0 overflow-visible">
               <div className="relative flex w-full flex-col-reverse lg:flex-row">
                 <Panel />
-                <Combat />
+                <Combat>
+                  <Navigation />
+                </Combat>
               </div>
             </main>
             <Loading />

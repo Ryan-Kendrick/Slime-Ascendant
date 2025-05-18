@@ -25,7 +25,7 @@ body {
   --mask-line1-end: 407px;
   --mask-line1-endThick: 409px;
   --mask-line2-start: 722px;
-  --mask-line2-end: 728px;
+  --mask-line2-end: 772px;
 }
 
 @media (max-width: 768px) {

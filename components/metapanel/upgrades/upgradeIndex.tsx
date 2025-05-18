@@ -8,14 +8,9 @@ import {
   updateDotDamage,
   updateClickDamage,
   selectPrestigeTabVisible,
-  selectInitState,
   selectOneLineMaskVisible,
 } from "../../../redux/playerSlice"
-import { selectWarriorDamage } from "../../../redux/shared/heroSelectors"
-import { selectAdventurerDamage } from "../../../redux/shared/heroSelectors"
 import { selectLevelUpCosts } from "../../../redux/shared/heroSelectors"
-import { selectWarriorLevelUpCost } from "../../../redux/shared/heroSelectors"
-import { selectAdventurerLevelUpCost } from "../../../redux/shared/heroSelectors"
 import {
   ClickOTPIcon1,
   ClickOTPIcon2,
@@ -43,15 +38,13 @@ import { formatSmallNumber } from "../../../gameconfig/utils"
 import clsx from "clsx/lite"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { useTouchObserver } from "../../../gameconfig/customHooks"
+import DamageTotals from "./damageTotals"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
 
   const currentZone = useAppSelector(selectCurrentZoneNumber)
-  const clickDamage = useAppSelector(selectClickDamage)
-  const dotDamage = useAppSelector(selectDotDamage)
-  const displayClickDamage = formatSmallNumber(clickDamage)
-  const displayDotDamage = formatSmallNumber(dotDamage)
+
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
@@ -165,17 +158,7 @@ export default function UpgradeIndex() {
             )}
           />
         </div>
-        {(dotDamage > 0 || hasPrestiged) && (
-          <div className="mb-2">
-            <div className="flex flex-col text-white place-items-center w-full">
-              <h2 className="text-3xl font-outline">Total</h2>
-              <div className="flex text-lg w-full justify-evenly">
-                <h3>Click Damage: {displayClickDamage}</h3>
-                <h3>Passive Damage: {displayDotDamage}</h3>
-              </div>
-            </div>
-          </div>
-        )}
+        <DamageTotals />
       </div>
     </div>
   )
