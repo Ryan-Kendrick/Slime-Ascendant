@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import UpgradeIndex from "./upgrades/upgradeIndex"
 import clsx from "clsx/lite"
 import Prestige from "./prestige"
@@ -34,7 +34,7 @@ export default function PanelIndex() {
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
-  const renderMask = (): string | null => {
+  const renderMask = (): string[] | null => {
     if (activeTab !== "upgrade") return null
     if (!isWarriorVisible) {
       return null
@@ -44,34 +44,81 @@ export default function PanelIndex() {
           // Wait for the cue from heroCard.tsx that the animations are in the right state
           return null
         } else {
-          return "mask-single"
+          return ["bg-chainsLeftPartial", "bg-chainsRightPartial", "mask-single"]
         }
       } else if (isHealerVisible) {
-        return "mask-full"
+        return ["bg-chainsLeft", "bg-chainsRight", "mask-full"]
       }
     } else {
       if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible) {
           return null
         } else {
-          return "mask-mobile-double"
+          return ["bg-chainsLeftPartial", "bg-chainsRightPartial", "mask-mobile-double"]
         }
       } else if (!isMageVisible && isHealerVisible) {
-        return "mask-mobile-triple"
+        return ["bg-chainsLeftPartial", "bg-chainsRightPartial", "mask-mobile-triple"]
       } else {
-        return "mask-mobile-full"
+        return ["bg-chainsLeftFull", "bg-chainsRightFull", "mask-mobile-full"]
       }
     }
     return null
   }
-
   const maskClass = renderMask()
-  const chainsClass =
-    maskClass === "mask-full"
-      ? ["bg-chainsLeft", "bg-chainsRight"]
-      : maskClass === "mask-single"
-        ? ["bg-chainsLeftPartial", "bg-chainsRightPartial"]
-        : undefined
+
+  const renderMobileChains = (): ReactNode => {
+    let j = 0
+    const elements = []
+
+    if (maskClass && maskClass[2] === "mask-mobile-full") {
+      j = 4
+    } else if (maskClass && maskClass[2] === "mask-mobile-triple") {
+      j = 3
+    } else if (maskClass && maskClass[2] === "mask-mobile-double") {
+      j = 2
+    }
+
+    for (let i = 0; i < j; i++) {
+      // Arbitrary top position plus card height
+      const top = 246 + i * 365
+      const drawFullMask = i === j - 2
+      console.log("drawFullMask", drawFullMask, "top", top)
+      if (drawFullMask) {
+        elements.push(
+          <React.Fragment key={i}>
+            <div
+              key={`left-${i}`}
+              style={{ top: `${top + 58}px` }}
+              className={clsx(`absolute h-full w-[311px]`, "left-0  bg-no-repeat", "bg-chainsLeft")}
+            />
+            <div
+              key={`right-${i}`}
+              style={{ top: `${top + 58}px` }}
+              className={clsx(`absolute h-full w-[311px]`, "right-0  bg-no-repeat", "bg-chainsRight")}
+            />
+          </React.Fragment>,
+        )
+        break
+      } else {
+        elements.push(
+          <React.Fragment key={i}>
+            <div
+              key={`left-${i}`}
+              style={{ top: `${top}px` }}
+              className={clsx(`absolute h-full w-[311px]`, "left-0  bg-no-repeat", "bg-chainsLeftPartial")}
+            />
+            <div
+              key={`right-${i}`}
+              style={{ top: `${top}px` }}
+              className={clsx(`absolute h-full w-[311px]`, "right-0  bg-no-repeat", "bg-chainsRightPartial")}
+            />
+          </React.Fragment>,
+        )
+      }
+    }
+
+    return elements
+  }
 
   const tabs = useMemo(() => {
     const tabsToRender: TabData[] = [
@@ -113,20 +160,26 @@ export default function PanelIndex() {
           "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 md:mb-3 lg:my-0 transition-[padding] duration-300 ",
           !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
         )}>
-        <div
-          className={clsx(
-            `absolute h-full w-[311px] top-[200px] `,
-            "left-16 hidden md:block bg-no-repeat",
-            chainsClass && chainsClass[0],
-          )}
-        />
-        <div
-          className={clsx(
-            `absolute h-full w-[311px] top-[200px] `,
-            "right-16 hidden md:block bg-no-repeat",
-            chainsClass && chainsClass[1],
-          )}
-        />
+        {isMobile ? (
+          renderMobileChains()
+        ) : (
+          <>
+            <div
+              className={clsx(
+                `absolute hidden md:block h-full w-[311px] top-[200px]`,
+                "left-16  bg-no-repeat",
+                maskClass && maskClass[0],
+              )}
+            />
+            <div
+              className={clsx(
+                `absolute hidden md:block h-full w-[311px] top-[200px]`,
+                "right-16  bg-no-repeat",
+                maskClass && maskClass[1],
+              )}
+            />
+          </>
+        )}
         <div
           style={{ height: `${tabHeight}px` }}
           className={clsx(tabAnimationComplete ? "transition-none" : "transition-[height] duration-1000")}>
@@ -154,7 +207,7 @@ export default function PanelIndex() {
             "relative flex flex-col lg:min-w-[627px] shadow-panel-main rounded-t rounded-b-xl z-50",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
-            maskClass,
+            maskClass && maskClass[2],
           )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>

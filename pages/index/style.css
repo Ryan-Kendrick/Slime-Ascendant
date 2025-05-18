@@ -28,7 +28,7 @@ body {
   --mask-line2-end: 772px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   #panel-content {
     --mask-line1-start: 449px;
     --mask-line1-end: 453px;
@@ -39,7 +39,7 @@ body {
     --mask-line3-end: 1191px;
     --mask-line3-endThick: 1193px;
     --mask-line4-start: 1556px;
-    --mask-line4-end: 1561px;
+    --mask-line4-end: 1606px;
   }
 }
 
