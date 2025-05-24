@@ -34,52 +34,72 @@ export default function PanelIndex() {
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
-  const renderMask = (): string[] | null => {
+  interface MaskConfig {
+    top: number
+    chainImg: string[]
+    mask: string
+  }
+  const getMaskState = (): MaskConfig | null => {
+    let top = 200
+    const chainImg = []
+    let mask = ""
+
     if (activeTab !== "upgrade") return null
     if (!isWarriorVisible) {
-      return null
+      if (prestigeTabVisible) {
+        chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
+        top -= 315 - 32 // Minus px to gap + card height + 32px for mb-8 on card container
+      }
+      mask = "mask-postPrestige"
     } else if (!isMobile) {
       if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible) {
           // Wait for the cue from heroCard.tsx that the animations are in the right state
           return null
         } else {
-          return ["bg-chainsLeftPartial", "bg-chainsRightPartial", "mask-single"]
+          chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
+          top -= 315 // Minus px to gap + card height
+          mask = "mask-single"
         }
       } else if (isHealerVisible) {
-        return ["bg-chainsLeft", "bg-chainsRight", "mask-full"]
+        chainImg.push("bg-chainsLeft", "bg-chainsRight")
+        mask = "mask-full"
       }
     } else {
       if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible) {
           return null
         } else {
-          return ["bg-chainsLeftPartial", "bg-chainsRightPartial", "mask-mobile-double"]
+          chainImg.push("bg-chainsLeft", "bg-chainsRight")
+          mask = "mask-mobile-double"
         }
       } else if (!isMageVisible && isHealerVisible) {
-        return ["bg-chainsLeftPartial", "bg-chainsRightPartial", "mask-mobile-triple"]
+        chainImg.push("bg-chainsLeft", "bg-chainsRight")
+        mask = "mask-mobile-triple"
       } else {
-        return ["bg-chainsLeftFull", "bg-chainsRightFull", "mask-mobile-full"]
+        chainImg.push("bg-chainsLeft", "bg-chainsRight")
+        mask = "mask-mobile-full"
       }
     }
-    return null
+    console.log("mask", mask, "chainImg", chainImg, "top", top)
+    return { top, chainImg, mask }
   }
-  const maskClass = renderMask()
+  const maskClasses = getMaskState()
 
   const renderMobileChains = (): ReactNode => {
     let j = 0
     const elements = []
 
-    if (maskClass && maskClass[2] === "mask-mobile-full") {
+    if (maskClasses && maskClasses.mask === "mask-mobile-full") {
       j = 4
-    } else if (maskClass && maskClass[2] === "mask-mobile-triple") {
+    } else if (maskClasses && maskClasses.mask === "mask-mobile-triple") {
       j = 3
-    } else if (maskClass && maskClass[2] === "mask-mobile-double") {
+    } else if (maskClasses && maskClasses.mask === "mask-mobile-double") {
       j = 2
     }
 
     for (let i = 0; i < j; i++) {
-      // Arbitrary top position plus card height
+      // px to gap plus card height
       const top = 246 + i * 365
       const drawFullMask = i === j - 2
       console.log("drawFullMask", drawFullMask, "top", top)
@@ -143,7 +163,7 @@ export default function PanelIndex() {
   useEffect(() => {
     if (tabRef.current) {
       setTabHeight(prestigeTabVisible ? tabRef.current.scrollHeight : 0)
-      if (!tabAnimationComplete) {
+      if (oneLineMaskVisible && !tabAnimationComplete) {
         const timeout = setTimeout(() => dispatch(incrementUIProgression()), 1100)
         return () => clearTimeout(timeout)
       }
@@ -165,17 +185,19 @@ export default function PanelIndex() {
         ) : (
           <>
             <div
+              style={{ top: `${maskClasses?.top}px` }}
               className={clsx(
-                `absolute hidden md:block h-full w-[311px] top-[200px]`,
+                `absolute hidden md:block h-[150%] w-[311px]`,
                 "left-16  bg-no-repeat",
-                maskClass && maskClass[0],
+                maskClasses && maskClasses.chainImg[0],
               )}
             />
             <div
+              style={{ top: `${maskClasses?.top}px` }}
               className={clsx(
-                `absolute hidden md:block h-full w-[311px] top-[200px]`,
+                `absolute hidden md:block h-[150%] w-[311px]`,
                 "right-16  bg-no-repeat",
-                maskClass && maskClass[1],
+                maskClasses && maskClasses.chainImg[1],
               )}
             />
           </>
@@ -207,7 +229,7 @@ export default function PanelIndex() {
             "relative flex flex-col lg:min-w-[627px] shadow-panel-main rounded-t rounded-b-xl z-50",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
-            maskClass && maskClass[2],
+            maskClasses && maskClasses.mask,
           )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}
         </div>

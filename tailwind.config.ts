@@ -17,7 +17,9 @@ export default {
     extend: {
       colors: {
         purpleOrange: "#631E54",
-        electricblue: "#7DF9FF",
+        electricBlue: "#7DF9FF",
+        electricGreenLight: "#deffdb",
+        electricGreen: "#21fc0d",
         islam: "#009000",
         hpgreen: "#00BB27",
         darkgreen: "#11772D",
@@ -48,10 +50,12 @@ export default {
       },
       backgroundImage: {
         meadow: "url('/assets/icons/meadow.jpg')",
-        chainsLeftPartial: "url('/assets/icons/chains-left-partial.webp')",
-        chainsRightPartial: "url('/assets/icons/chains-right-partial.webp')",
         chainsLeft: "url('/assets/icons/chains-left.webp')",
         chainsRight: "url('/assets/icons/chains-right.webp')",
+        chainsLeftPartial: "url('/assets/icons/chains-left-partial.webp')",
+        chainsRightPartial: "url('/assets/icons/chains-right-partial.webp')",
+        chainsLeftBottom: "url('/assets/icons/chains-left-bottom.webp')",
+        chainsRightBottom: "url('/assets/icons/chains-right-bottom.webp')",
       },
       boxShadow: {
         upgrade:
@@ -59,9 +63,9 @@ export default {
         panel: "inset 5px 5px 13px #fb923c, inset -5px -3px 13px #2e1065",
         "panel-t-1": "inset 0 5px 13px #fb923c",
         "panel-t-2": "inset 0 5px 13px #2e1065",
-        "panel-main": `inset 5px -2px 13px #fa7305, 
-        inset 3px -3px 13px #800000, 
-        inset 2px -5px 13px #2e1065`,
+        "panel-main": `inset 1px -2px 9px #fa7305, 
+        inset 2px -2px 9px #800000, 
+        inset 2px -3px 9px #2e1065`,
       },
       borderRadius: {
         m: "61px",

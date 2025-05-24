@@ -409,6 +409,10 @@ export const selectPrestigeTabVisible = createSelector(
 )
 
 export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 1)
-export const selectOneLineMaskVisible = createSelector([selectUIProgress], (UIProgress) => UIProgress > 0)
+export const selectOneLineMaskVisible = createSelector([selectUIProgress], (UIProgress) => {
+  console.log("oneLineMaskVisible", UIProgress)
+
+  return UIProgress > 0
+})
 
 export default playerSlice.reducer

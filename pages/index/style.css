@@ -22,8 +22,10 @@ body {
 
 #panel-content {
   --mask-line1-start: 403px;
+  --mask-line1-startPostPrestige: 439px;
   --mask-line1-end: 407px;
-  --mask-line1-endThick: 409px;
+  --mask-line1-endThick: 453px;
+  --mask-line1-endPostPrestige: 489px;
   --mask-line2-start: 722px;
   --mask-line2-end: 772px;
 }
@@ -31,7 +33,9 @@ body {
 @media (max-width: 767px) {
   #panel-content {
     --mask-line1-start: 449px;
+    --mask-line1-startPostPrestige: 453px;
     --mask-line1-end: 453px;
+    --mask-line1-endPostPrestige: 503px;
     --mask-line2-start: 818px;
     --mask-line2-end: 822px;
     --mask-line2-endThick: 824px;
@@ -128,6 +132,31 @@ body {
     transparent var(--mask-line2-start),
     transparent var(--mask-line2-end),
     black var(--mask-line2-end),
+    black 100%
+  );
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in, xor;
+}
+
+#panel-content.mask-postPrestige {
+  mask-image: linear-gradient(
+    to bottom,
+    black 0px,
+    black var(--mask-line1-startPostPrestige),
+    transparent var(--mask-line1-startPostPrestige),
+    transparent var(--mask-line1-endPostPrestige),
+    black var(--mask-line1-endPostPrestige),
+    black 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0px,
+    black var(--mask-line1-startPostPrestige),
+    transparent var(--mask-line1-startPostPrestige),
+    transparent var(--mask-line1-endPostPrestige),
+    black var(--mask-line1-endPostPrestige),
     black 100%
   );
   mask-repeat: no-repeat;
