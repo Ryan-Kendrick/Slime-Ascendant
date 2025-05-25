@@ -410,8 +410,6 @@ export const selectPrestigeTabVisible = createSelector(
 
 export const selectTabAnimationComplete = createSelector([selectUIProgress], (UIProgress) => UIProgress > 1)
 export const selectOneLineMaskVisible = createSelector([selectUIProgress], (UIProgress) => {
-  console.log("oneLineMaskVisible", UIProgress)
-
   return UIProgress > 0
 })
 

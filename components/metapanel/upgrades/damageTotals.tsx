@@ -13,7 +13,7 @@ export default function DamageTotals() {
   if (!dotDamage && !hasPrestiged) return null
 
   return (
-    <div className="relative">
+    <div className="relative transition-[transform_0.6s_cubic-bezier(0,0.55,0.45,1)] ease-in-out">
       <div className="mb-2 h-28 flex">
         <div className="flex flex-col mt-auto text-white items-center justify-end w-full">
           <h2 className="text-3xl font-outline z-10">Total</h2>

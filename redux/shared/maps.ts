@@ -14,6 +14,16 @@ import {
 import { selectStatsState } from "../statsSlice"
 import type { RootState } from "../store"
 
+export const heroNames: HeroName[] = ["adventurer", "warrior", "healer", "mage"] as const
+const constructIndexMap = () => {
+  const heroIndexMap = {} as Record<HeroName, number>
+  heroNames.map((heroName, index) => {
+    heroIndexMap[heroName] = index
+  })
+  return heroIndexMap
+}
+export const heroIndexMap = constructIndexMap()
+
 export const achievementSelectorMap: Record<string, (state: RootState) => number> = {
   "click-count": (state) => selectStatsState(state).clickCount,
   "click-damage": (state) => selectStatsState(state).totalClickDamageDealt,

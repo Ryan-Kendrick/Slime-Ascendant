@@ -50,14 +50,14 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
   },
   healer: {
-    visibleAtZone: 12,
+    visibleAtZone: 13,
     elementId: "healer-otp",
     displayName: "Healer",
     displayStat: "Passive Damage",
-    baseDamage: 60,
-    levelUpDamageMod: 40,
+    baseDamage: 70,
+    levelUpDamageMod: 50,
     OneTimePurchases: {
-      OTPCosts: [75000, 100000, 250000],
+      OTPCosts: [150000, 250000, 400000],
       OTPModifiers: [2, 2, 2],
       OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [

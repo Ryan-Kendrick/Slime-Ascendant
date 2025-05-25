@@ -119,7 +119,7 @@ export default function UpgradeIndex() {
         <div
           className={clsx(
             "relative grid gap-1 -mt-1 md:mt-0 z-50",
-            isWarriorVisible ? "grid-cols-1 md:grid-cols-2 mb-0" : "grid-cols-1 mb-8",
+            isWarriorVisible ? "grid-cols-1 md:grid-cols-2 -mt-1 md:mt-0 mb-0" : "grid-cols-1 -mt-3 md:mt-0 mb-8",
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
