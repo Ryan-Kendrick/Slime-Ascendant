@@ -1,9 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store"
 import { METADATA_CONFIG } from "../gameconfig/meta"
 import { UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { HeroName } from "../models/upgrades"
 import { heroIndexMap, heroNames } from "./shared/maps"
+import { StatementSync } from "node:sqlite"
 
 const initialState = {
   gameVersion: METADATA_CONFIG.version,
@@ -11,13 +12,14 @@ const initialState = {
   lastSaveCatchUp: null as number | null,
   loading: false,
   OTPPos: heroNames.map((thisHero) => {
-    return Array.from({ length: UPGRADE_CONFIG[thisHero].OneTimePurchases.OTPCosts.length }, () => ({ x: 0, y: 0 }))
+    return Array.from({ length: UPGRADE_CONFIG[thisHero].OneTimePurchases.OTPCosts.length }, () => ({
+      x: 0,
+      y: 0 as number | true,
+    }))
   }),
 
   breakpoint: 0 as Breakpoint, // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
 }
-
-console.log(initialState.OTPPos)
 
 export const metaSlice = createSlice({
   name: "meta",
@@ -39,11 +41,13 @@ export const metaSlice = createSlice({
       action: PayloadAction<{
         hero: HeroName
         otpIndex: number
-        position: { x: number; y: number }
+        position: { x: number; y: number | true }
       }>,
     ) => {
       const { hero, otpIndex, position } = action.payload
-      state.OTPPos[heroNames.findIndex((heroName) => heroName === hero)][otpIndex] = position
+      const heroIndex = heroNames.findIndex((heroName) => heroName === hero)
+
+      state.OTPPos[heroIndex][otpIndex] = position
     },
     setBreakpoint: (state, action: PayloadAction<Breakpoint>) => {
       state.breakpoint = action.payload
@@ -56,7 +60,11 @@ export const { saveGame, clearCatchUpTime, setLoading, setOTPPos, setBreakpoint 
 export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCatchUp
 export const selectLoading = (state: RootState) => state.meta.loading
 export const selectBreakpoint = (state: RootState) => state.meta.breakpoint
-export const selectOTPPos = (hero: HeroName) => (state: RootState) => state.meta.OTPPos[heroIndexMap[hero]]
+export const selectOTPPos = (hero: HeroName) =>
+  createSelector([(state: RootState) => state.meta.OTPPos, () => heroIndexMap[hero]], (otpPos, heroIndex) => {
+    return otpPos[heroIndex]
+  })
+// export const selectOTPPos = (hero: HeroName) => (state: RootState) => state.meta.OTPPos[heroIndexMap[hero]]
 
 export default metaSlice.reducer
 

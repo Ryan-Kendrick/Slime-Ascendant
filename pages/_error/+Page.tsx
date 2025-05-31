@@ -1,20 +1,23 @@
 import React from "react"
 import { usePageContext } from "vike-react/usePageContext"
+import faviconURL from "../../assets/icons/logo.svg"
 
 export default function Page() {
   const { is404 } = usePageContext()
   if (is404) {
     return (
-      <>
-        <h1>404 Page Not Found</h1>
-        <p>This page could not be found.</p>
-      </>
+      <div className="flex flex-col place-items-center text-red-500">
+        <h1 className="text-4xl font-bold">404 Page Not Found</h1>
+        <p className="text-3xl mb-2">This page could not be found.</p>
+        <img src={faviconURL} alt="Slime Ascend logo" className="h-1/2 w-1/2" />
+      </div>
     )
   }
   return (
-    <>
-      <h1>500 Internal Server Error</h1>
-      <p>Something went wrong.</p>
-    </>
+    <div className="flex flex-col place-items-center text-red-500">
+      <h1 className="text-4xl font-bold">500 Internal Server Error</h1>
+      <p className="text-3xl mb-2">Something went wrong.</p>
+      <img src={faviconURL} alt="Slime Ascend logo" className="h-1/2 w-1/2" />
+    </div>
   )
 }
