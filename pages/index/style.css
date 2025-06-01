@@ -33,9 +33,11 @@ body {
 @media (max-width: 767px) {
   #panel-content {
     --mask-line1-start: 449px;
-    --mask-line1-startPostPrestige: 493px;
+    /* --mask-line1-startPostPrestige: 493px; */
+    --mask-line1-startPostPrestige: 485px;
     --mask-line1-end: 453px;
-    --mask-line1-endPostPrestige: 543px;
+    /* --mask-line1-endPostPrestige: 543px; */
+    --mask-line1-endPostPrestige: 535px;
     --mask-line2-start: 818px;
     --mask-line2-end: 822px;
     --mask-line2-endThick: 872px;

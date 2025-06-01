@@ -161,7 +161,6 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         }
       })
     } else {
-      console.log(`Running RAF for ${thisHeroName}`)
       requestAnimationFrame(updateOTPIconPositions)
     }
     const resizeObserver = new ResizeObserver(() => requestAnimationFrame(updateOTPIconPositions))
