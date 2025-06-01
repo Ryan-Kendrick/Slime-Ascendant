@@ -97,41 +97,110 @@ export default function PanelIndex() {
       j = 2
     }
 
-    for (let i = 0; i < j; i++) {
-      // px to gap plus card height
-      const top = 246 + i * 365
-      const drawFullMask = i === j - 2
-      if (drawFullMask) {
-        elements.push(
-          <React.Fragment key={i}>
-            <div
-              key={`left-${i}`}
-              style={{ top: `${top + 58}px` }}
-              className={clsx(`absolute h-full w-[311px]`, "left-0  bg-no-repeat", "bg-chainsLeft")}
-            />
-            <div
-              key={`right-${i}`}
-              style={{ top: `${top + 58}px` }}
-              className={clsx(`absolute h-full w-[311px]`, "right-0  bg-no-repeat", "bg-chainsRight")}
-            />
-          </React.Fragment>,
-        )
-        break
-      } else {
-        elements.push(
-          <React.Fragment key={i}>
-            <div
-              key={`left-${i}`}
-              style={{ top: `${top}px` }}
-              className={clsx(`absolute h-full w-[311px]`, "left-0  bg-no-repeat", "bg-chainsLeftPartial")}
-            />
-            <div
-              key={`right-${i}`}
-              style={{ top: `${top}px` }}
-              className={clsx(`absolute h-full w-[311px]`, "right-0  bg-no-repeat", "bg-chainsRightPartial")}
-            />
-          </React.Fragment>,
-        )
+    if (j === 0) {
+      console.log("THIS")
+      elements.push(
+        <React.Fragment key={1}>
+          <div
+            key={`left-${1}`}
+            style={{ top: `${-36}px` }}
+            className={clsx(
+              `absolute h-full w-[311px] pointer-events-none`,
+              "left-0  bg-no-repeat",
+              "bg-chainsLeftBottom",
+            )}
+          />
+          <div
+            key={`right-${1}`}
+            style={{ top: `${-36}px` }}
+            className={clsx(
+              `absolute h-full w-[311px] pointer-events-none`,
+              "right-0  bg-no-repeat",
+              "bg-chainsRightBottom",
+            )}
+          />
+        </React.Fragment>,
+      )
+    } else {
+      for (let i = 0; i < j || j === 0; i++) {
+        const top = 246 + i * 365 // px to gap plus card height
+
+        if (j === 0) {
+          console.log("THIS")
+          elements.push(
+            <React.Fragment key={i}>
+              <div
+                key={`left-${i}`}
+                style={{ top: `${-36}px` }}
+                className={clsx(
+                  `absolute h-full w-[311px] pointer-events-none`,
+                  "left-0  bg-no-repeat",
+                  "bg-chainsLeftBottom",
+                )}
+              />
+              <div
+                key={`right-${i}`}
+                style={{ top: `${-36}px` }}
+                className={clsx(
+                  `absolute h-full w-[311px] pointer-events-none`,
+                  "right-0  bg-no-repeat",
+                  "bg-chainsRightBottom",
+                )}
+              />
+            </React.Fragment>,
+          )
+          break
+        }
+
+        const drawFullMask = i === j - 2
+        if (drawFullMask) {
+          elements.push(
+            <React.Fragment key={i}>
+              <div
+                key={`left-${i}`}
+                style={{ top: `${top + 58}px` }}
+                className={clsx(
+                  `absolute h-full w-[311px] pointer-events-none`,
+                  "left-0  bg-no-repeat",
+                  "bg-chainsLeft",
+                )}
+              />
+              <div
+                key={`right-${i}`}
+                style={{ top: `${top + 58}px` }}
+                className={clsx(
+                  `absolute h-full w-[311px] pointer-events-none`,
+                  "right-0  bg-no-repeat",
+                  "bg-chainsRight",
+                )}
+              />
+            </React.Fragment>,
+          )
+          break
+        } else {
+          elements.push(
+            <React.Fragment key={i}>
+              <div
+                key={`left-${i}`}
+                style={{ top: `${top}px` }}
+                className={clsx(
+                  `absolute h-full w-[311px] pointer-events-none`,
+                  "left-0  bg-no-repeat",
+                  "bg-chainsLeftPartial ",
+                )}
+              />
+              <div
+                key={`right-${i}`}
+                style={{ top: `${top}px` }}
+                className={clsx(
+                  `absolute h-full w-[311px] pointer-events-none`,
+                  "right-0  bg-no-repeat",
+                  "bg-chainsRightPartial ",
+                )}
+              />
+            </React.Fragment>,
+          )
+        }
       }
     }
 
@@ -174,8 +243,9 @@ export default function PanelIndex() {
         // Pseudo element background
         "before:absolute before:w-full before:h-full before:bg-gradient-to-r before:from-amber-950 before:to-amber-800 before:top-0 before:right-10 before:scale-[1.5] before:md:scale-[1.45] before:aspect-square before:rounded-full before:blur-3xl before:-z-10 before:pointer-events-none",
 
-        "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 md:mb-3 lg:my-0 transition-[padding] duration-300 ",
+        "flex flex-col relative lg:basis-3/5 radius rounded-b-xl mx-2 lg:mx-3 md:mb-3 lg:my-0 duration-300",
         !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
+        oneLineMaskVisible ? "transition-none" : "transition-[padding]",
       )}>
       {isMobile ? (
         renderMobileChains()
@@ -184,7 +254,7 @@ export default function PanelIndex() {
           <div
             style={{ top: `${maskClasses?.top}px` }}
             className={clsx(
-              `absolute hidden md:block h-[150%] w-[311px]`,
+              `absolute hidden md:block h-[150%] w-[311px] pointer-events-none`,
               "left-16  bg-no-repeat",
               maskClasses && maskClasses.chainImg[0],
             )}
@@ -192,7 +262,7 @@ export default function PanelIndex() {
           <div
             style={{ top: `${maskClasses?.top}px` }}
             className={clsx(
-              `absolute hidden md:block h-[150%] w-[311px]`,
+              `absolute hidden md:block h-[150%] w-[311px] pointer-events-none`,
               "right-16  bg-no-repeat",
               maskClasses && maskClasses.chainImg[1],
             )}

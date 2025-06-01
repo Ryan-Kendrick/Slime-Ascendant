@@ -3,7 +3,8 @@ import { unlockAchievement } from "../statsSlice"
 import { increaseAchievementModifier } from "../playerSlice"
 import { type Achievement } from "../../gameconfig/achievements"
 import { createSelector } from "@reduxjs/toolkit"
-import { playerCalc } from "../../gameconfig/upgrades"
+import { playerCalc, UPGRADE_CONFIG } from "../../gameconfig/upgrades"
+import { heroNames } from "./maps"
 
 interface AchievementCheck {
   unlockedAchievements: string[]
@@ -25,5 +26,14 @@ export const checkAchievementUnlock = (dispatch: AppDispatch, check: Achievement
         dispatch(increaseAchievementModifier(nextAchievement.modifier))
       }
     }
+  })
+}
+
+export const constructOTPPosArr = (): { x: number; y: number | true }[][] => {
+  return heroNames.map((thisHero) => {
+    return Array.from({ length: UPGRADE_CONFIG[thisHero].OneTimePurchases.OTPCosts.length }, () => ({
+      x: 0,
+      y: 0 as number | true,
+    }))
   })
 }

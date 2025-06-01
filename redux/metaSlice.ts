@@ -5,18 +5,15 @@ import { UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { HeroName } from "../models/upgrades"
 import { heroIndexMap, heroNames } from "./shared/maps"
 import { StatementSync } from "node:sqlite"
+import { prestigeReset } from "./shared/actions"
+import { constructOTPPosArr } from "./shared/helpers"
 
 const initialState = {
   gameVersion: METADATA_CONFIG.version,
   lastPlayed: Date.now(),
   lastSaveCatchUp: null as number | null,
   loading: false,
-  OTPPos: heroNames.map((thisHero) => {
-    return Array.from({ length: UPGRADE_CONFIG[thisHero].OneTimePurchases.OTPCosts.length }, () => ({
-      x: 0,
-      y: 0 as number | true,
-    }))
-  }),
+  OTPPos: constructOTPPosArr(),
 
   breakpoint: 0 as Breakpoint, // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
 }
@@ -52,6 +49,11 @@ export const metaSlice = createSlice({
     setBreakpoint: (state, action: PayloadAction<Breakpoint>) => {
       state.breakpoint = action.payload
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(prestigeReset, (state) => {
+      state.OTPPos = initialState.OTPPos
+    })
   },
 })
 
