@@ -18,6 +18,7 @@ import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../redux/shared/maps"
 import { cardProps } from "../../../redux/shared/maps"
 import { selectBreakpoint, selectOTPPos, setOTPPos } from "../../../redux/metaSlice"
+import { useOTPPositions } from "../../../gameconfig/customHooks"
 
 interface HeroCardProps {
   config: Upgrade
@@ -59,10 +60,12 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const breakpoint = useAppSelector(selectBreakpoint)
   const isMobile = breakpoint === 768
 
-  const OTPContainerRef = useRef<HTMLDivElement>(null)
-  const stateOTPPositions = useAppSelector(selectOTPPos(thisHeroName))
-  const loadedOTPPosititions = useRef<({ x: number; y: number | true } | true)[]>([...stateOTPPositions])
-  const updateOTPPosTimeout = useRef<NodeJS.Timeout | null>(null)
+  const OTPContainerRef = useOTPPositions({
+    heroName: thisHeroName,
+    OTPUpgradeCount,
+    iconsLength: OTPIcons.length,
+    shouldMount,
+  })
 
   const isNotAdventurer = upgradeName !== "adventurer"
   const isWarriorVisible = currentZoneNumber >= UPGRADE_CONFIG.warrior.visibleAtZone
@@ -72,107 +75,6 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const heroInitState = useAppSelector(thisSelector ?? (() => undefined))
   const hasInitialised = isNotAdventurer ? thisSelector && heroInitState : true
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
-
-  const updateOTPIconPositions = () => {
-    if (!OTPContainerRef.current) return
-
-    const container = OTPContainerRef.current
-    const items = container.getElementsByClassName("upgrade-item")
-    const containerWidth = container.offsetWidth
-    const containerHeight = container.offsetHeight
-    const itemWidth = 36
-    const itemGap = 8
-
-    const newPositions = [] as { x: number; y: number | true }[]
-
-    Array.from(items).forEach((item, index) => {
-      const element = item as HTMLElement
-
-      let restingPosition = { x: 0, y: 0 as number | true }
-
-      if (element.classList.contains("purchased") && isMobile) {
-        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + 4
-
-        const oldX = Number(element.style.left.replace("px", ""))
-        const xTravelDistance = rightEdgePosition - oldX
-
-        element.style.transform = `translateX(${xTravelDistance}px)`
-        restingPosition = { x: rightEdgePosition, y: true }
-      } else if (element.classList.contains("purchased")) {
-        // console.log(`Transforming OTP icon for ${thisHeroName} `)
-        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
-        const bottomEdgePosition = containerHeight - itemWidth
-
-        const oldY = Number(element.style.top.replace("px", ""))
-        const oldX = Number(element.style.left.replace("px", ""))
-        const yTravelDistance = bottomEdgePosition - oldY
-        const xTravelDistance = rightEdgePosition - oldX
-        console.log("Right:", rightEdgePosition, "Left adjustment:", oldX, "Total translation", xTravelDistance)
-
-        element.style.transform = `translate(${xTravelDistance}px,${yTravelDistance}px)`
-        restingPosition = { x: rightEdgePosition, y: bottomEdgePosition }
-      } else {
-        element.style.transform = ""
-      }
-      newPositions.push(restingPosition)
-    })
-
-    if (updateOTPPosTimeout.current) {
-      clearTimeout(updateOTPPosTimeout.current)
-    }
-
-    updateOTPPosTimeout.current = setTimeout(() => {
-      newPositions.forEach((position, index) => {
-        dispatch(
-          setOTPPos({
-            hero: thisHeroName,
-            otpIndex: index,
-            position,
-          }),
-        )
-      })
-      console.log("Dispatching OTP positions for", thisHeroName, newPositions)
-    }, 5000)
-  }
-
-  useEffect(() => {
-    if (!OTPContainerRef.current) return
-
-    if (loadedOTPPosititions.current) {
-      const container = OTPContainerRef.current
-      const items = container.getElementsByClassName("upgrade-item")
-
-      Array.from(items).forEach((item, index) => {
-        const loadedPos = loadedOTPPosititions.current[index]
-        if (loadedPos === true) return
-        const element = item as HTMLElement
-
-        if (loadedPos && (loadedPos.x !== 0 || loadedPos.y !== 0)) {
-          console.log(
-            `Restoring position for ${thisHeroName} OTP icon ${index + 1}: x=${loadedPos.x}, y=${loadedPos.y}`,
-          )
-          if (loadedPos.y === 0 || loadedPos.y === true || isMobile) {
-            element.style.left = `${loadedPos.x}px`
-          } else {
-            element.style.left = `${loadedPos.x}px`
-            element.style.top = `${loadedPos.y}px`
-          }
-          loadedOTPPosititions.current[index] = true
-        }
-      })
-    } else {
-      requestAnimationFrame(updateOTPIconPositions)
-    }
-    const resizeObserver = new ResizeObserver(() => requestAnimationFrame(updateOTPIconPositions))
-    resizeObserver.observe(OTPContainerRef.current)
-
-    return () => {
-      if (updateOTPPosTimeout.current) {
-        clearTimeout(updateOTPPosTimeout.current)
-      }
-      resizeObserver.disconnect()
-    }
-  }, [OTPUpgradeCount, OTPIcons.length, isMobile, shouldMount])
 
   useEffect(() => {
     if (isNotAdventurer) {

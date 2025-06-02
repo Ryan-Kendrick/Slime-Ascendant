@@ -49,6 +49,7 @@ export default function UpgradeIndex() {
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
   const isHealerVisible = currentZone >= UPGRADE_CONFIG.healer.visibleAtZone
   const isWarriorVisible = currentZone >= UPGRADE_CONFIG.warrior.visibleAtZone
+  const isMageVisible = currentZone >= UPGRADE_CONFIG.mage.visibleAtZone
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
 
   const LevelUp = {
@@ -118,7 +119,13 @@ export default function UpgradeIndex() {
         <div
           className={clsx(
             "relative grid gap-1 -mt-1 md:mt-0 z-50",
-            isWarriorVisible ? "grid-cols-1 md:grid-cols-2 -mt-1 md:mt-0 mb-0" : "grid-cols-1 -mt-3 md:mt-0 mb-8",
+            isWarriorVisible
+              ? isHealerVisible
+                ? isMageVisible
+                  ? "grid-cols-1 md:grid-cols-2 -mt-0 md:mt-0 mb-0"
+                  : "grid-cols-1 md:grid-cols-2 -mt-0 md:mt-0 mb-0"
+                : "grid-cols-1 md:grid-cols-2 -mt-1 md:mt-0 mb-0"
+              : "grid-cols-1 md:grid-cols-2 -mt-1 md:mt-0 mb-8",
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}

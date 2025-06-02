@@ -11,6 +11,7 @@ import {
   setTabInView,
   incrementUIProgression,
   selectOneLineMaskVisible,
+  selectDotDamage,
 } from "../../redux/playerSlice"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
@@ -33,6 +34,7 @@ export default function PanelIndex() {
   const isMobile = breakpoint === 768
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
+  const dotDamage = useAppSelector(selectDotDamage)
 
   interface MaskConfig {
     top: number
@@ -48,17 +50,17 @@ export default function PanelIndex() {
     if (!isWarriorVisible) {
       if (prestigeTabVisible) {
         chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
-        top -= 315 - 32 // Minus px to gap + card height + 32px for mb-8 on card container
+        top -= 347 // Minus px to gap + card height + 32px for mb-8 on adventurer card container
       }
       mask = "mask-postPrestige"
     } else if (!isMobile) {
       if (!isMageVisible && !isHealerVisible) {
-        if (!oneLineMaskVisible) {
-          // Wait for the cue from heroCard.tsx that the animations are in the right state
+        if (!oneLineMaskVisible || (!dotDamage && !prestigeTabVisible)) {
+          // Wait for the cue from heroCard.tsx that the animations are in the right state & damageTotals component visible
           return null
         } else {
           chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
-          top -= 315 // Minus px to gap + card height
+          top -= 347 // Minus px to gap + card height
           mask = "mask-single"
         }
       } else if (isHealerVisible) {
@@ -67,7 +69,7 @@ export default function PanelIndex() {
       }
     } else {
       if (!isMageVisible && !isHealerVisible) {
-        if (!oneLineMaskVisible) {
+        if (!oneLineMaskVisible || (!dotDamage && !prestigeTabVisible)) {
           return null
         } else {
           chainImg.push("bg-chainsLeft", "bg-chainsRight")
@@ -123,15 +125,15 @@ export default function PanelIndex() {
       )
     } else {
       for (let i = 0; i < j || j === 0; i++) {
-        const top = 246 + i * 365 // px to gap plus card height
+        let top = 246 + i * 365 // px to gap plus card height
+        if (!prestigeTabVisible) top -= 48
 
         if (j === 0) {
-          console.log("THIS")
           elements.push(
             <React.Fragment key={i}>
               <div
                 key={`left-${i}`}
-                style={{ top: `${-36}px` }}
+                style={{ top: `(${-36}px` }}
                 className={clsx(
                   `absolute h-full w-[311px] pointer-events-none`,
                   "left-0  bg-no-repeat",

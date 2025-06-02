@@ -32,20 +32,20 @@ body {
 
 @media (max-width: 767px) {
   #panel-content {
-    --mask-line1-start: 449px;
+    --mask-line1-start: 453px;
     /* --mask-line1-startPostPrestige: 493px; */
     --mask-line1-startPostPrestige: 485px;
-    --mask-line1-end: 453px;
+    --mask-line1-end: 457px;
     /* --mask-line1-endPostPrestige: 543px; */
     --mask-line1-endPostPrestige: 535px;
-    --mask-line2-start: 818px;
-    --mask-line2-end: 822px;
+    --mask-line2-start: 822px;
+    --mask-line2-end: 826px;
     --mask-line2-endThick: 872px;
-    --mask-line3-start: 1187px;
-    --mask-line3-end: 1191px;
-    --mask-line3-endThick: 1237px;
-    --mask-line4-start: 1556px;
-    --mask-line4-end: 1606px;
+    --mask-line3-start: 1191px;
+    --mask-line3-end: 1195px;
+    --mask-line3-endThick: 1241px;
+    --mask-line4-start: 1560px;
+    --mask-line4-end: 1610px;
   }
 }
 
