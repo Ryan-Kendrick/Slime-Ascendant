@@ -100,7 +100,6 @@ export default function PanelIndex() {
     }
 
     if (j === 0) {
-      console.log("THIS")
       elements.push(
         <React.Fragment key={1}>
           <div
