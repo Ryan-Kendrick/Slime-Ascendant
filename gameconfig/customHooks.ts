@@ -231,8 +231,40 @@ export function useOTPPositions({
 
   const OTPContainerRef = useRef<HTMLDivElement>(null)
   const stateOTPPositions = useAppSelector(selectOTPPos(heroName))
-  const loadedOTPPosititions = useRef<({ x: number; y: number | true } | true)[]>([...stateOTPPositions])
+  const hasRestoredPositions = useRef(false)
   const updateOTPPosTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  const calculatePurchasedPosition = (index: number, containerWidth: number, containerHeight: number) => {
+    const itemWidth = 36
+    const itemGap = 8
+    const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
+
+    if (isMobile) {
+      return { x: rightEdgePosition + 4, y: 0 }
+    } else {
+      const bottomEdgePosition = containerHeight - itemWidth
+      return { x: rightEdgePosition, y: bottomEdgePosition }
+    }
+  }
+
+  const restoreOTPPositions = () => {
+    if (!OTPContainerRef.current) return
+
+    const container = OTPContainerRef.current
+    const items = container.getElementsByClassName("upgrade-item")
+
+    Array.from(items).forEach((item, index) => {
+      const savedPos = stateOTPPositions[index]
+      if (!savedPos || (savedPos.x === 0 && savedPos.y === 0)) return
+
+      const element = item as HTMLElement
+
+      element.style.left = `${savedPos.x}px`
+      element.style.top = `${typeof savedPos.y === "number" ? savedPos.y : 0}px`
+    })
+
+    hasRestoredPositions.current = true
+  }
 
   const updateOTPIconPositions = () => {
     if (!OTPContainerRef.current) return
@@ -241,38 +273,26 @@ export function useOTPPositions({
     const items = container.getElementsByClassName("upgrade-item")
     const containerWidth = container.offsetWidth
     const containerHeight = container.offsetHeight
-    const itemWidth = 36
-    const itemGap = 8
 
-    const newPositions = [] as { x: number; y: number | true }[]
+    const newPositions: { x: number; y: number }[] = []
 
     Array.from(items).forEach((item, index) => {
       const element = item as HTMLElement
+      let restingPosition = { x: 0, y: 0 }
 
-      let restingPosition = { x: 0, y: 0 as number | true }
+      if (element.classList.contains("purchased")) {
+        restingPosition = calculatePurchasedPosition(index, containerWidth, containerHeight)
 
-      if (element.classList.contains("purchased") && isMobile) {
-        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap) + 4
+        const oldX = Number(element.style.left.replace("px", "")) || 0
+        const oldY = Number(element.style.top.replace("px", "")) || 0
+        const xDistance = restingPosition.x - oldX
+        const yDistance = restingPosition.y - oldY
 
-        const oldX = Number(element.style.left.replace("px", ""))
-        const xTravelDistance = rightEdgePosition - oldX
-
-        element.style.transform = `translateX(${xTravelDistance}px)`
-        restingPosition = { x: rightEdgePosition, y: true }
-      } else if (element.classList.contains("purchased")) {
-        const rightEdgePosition = containerWidth - itemWidth - index * (itemWidth + itemGap)
-        const bottomEdgePosition = containerHeight - itemWidth
-
-        const oldY = Number(element.style.top.replace("px", ""))
-        const oldX = Number(element.style.left.replace("px", ""))
-        const yTravelDistance = bottomEdgePosition - oldY
-        const xTravelDistance = rightEdgePosition - oldX
-
-        element.style.transform = `translate(${xTravelDistance}px,${yTravelDistance}px)`
-        restingPosition = { x: rightEdgePosition, y: bottomEdgePosition }
+        element.style.transform = `translate(${xDistance}px, ${yDistance}px)`
       } else {
         element.style.transform = ""
       }
+
       newPositions.push(restingPosition)
     })
 
@@ -293,33 +313,11 @@ export function useOTPPositions({
     }, 5000)
   }
 
-  const restoreOTPPositions = () => {
-    if (!OTPContainerRef.current || !loadedOTPPosititions.current) return
-
-    const container = OTPContainerRef.current
-    const items = container.getElementsByClassName("upgrade-item")
-
-    Array.from(items).forEach((item, index) => {
-      const loadedPos = loadedOTPPosititions.current[index]
-      if (loadedPos === true) return
-      const element = item as HTMLElement
-
-      if (loadedPos && (loadedPos.x !== 0 || loadedPos.y !== 0)) {
-        if (loadedPos.y === 0 || loadedPos.y === true || isMobile) {
-          element.style.left = `${loadedPos.x}px`
-        } else {
-          element.style.left = `${loadedPos.x}px`
-          element.style.top = `${loadedPos.y}px`
-        }
-        loadedOTPPosititions.current[index] = true
-      }
-    })
-  }
-
   useEffect(() => {
     if (!OTPContainerRef.current) return
 
-    if (loadedOTPPosititions.current.some((pos) => pos !== true)) {
+    if (!hasRestoredPositions.current) {
+      console.log("Restoring OTP positions for", heroName)
       restoreOTPPositions()
     } else {
       requestAnimationFrame(updateOTPIconPositions)

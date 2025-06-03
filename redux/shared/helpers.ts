@@ -33,7 +33,7 @@ export const constructOTPPosArr = (): { x: number; y: number | true }[][] => {
   return heroNames.map((thisHero) => {
     return Array.from({ length: UPGRADE_CONFIG[thisHero].OneTimePurchases.OTPCosts.length }, () => ({
       x: 0,
-      y: 0 as number | true,
+      y: 0,
     }))
   })
 }

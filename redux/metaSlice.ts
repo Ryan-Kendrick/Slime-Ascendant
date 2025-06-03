@@ -38,7 +38,7 @@ export const metaSlice = createSlice({
       action: PayloadAction<{
         hero: HeroName
         otpIndex: number
-        position: { x: number; y: number | true }
+        position: { x: number; y: number }
       }>,
     ) => {
       const { hero, otpIndex, position } = action.payload
