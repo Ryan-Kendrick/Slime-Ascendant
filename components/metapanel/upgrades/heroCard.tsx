@@ -42,7 +42,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const totalDamageContribution = useAppSelector(thisHero.totalDamageContribution)
 
   const canAffordLevelUp = useAppSelector(selectGCanAfford(levelUpCost))
-  const nextOTPCost = UPGRADE_CONFIG.calcOTPCost(config.elementId, OTPUpgradeCount)
+  const nextOTPCost = UPGRADE_CONFIG.calcOTPPrice(config.elementId, OTPUpgradeCount)
   const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
 
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)

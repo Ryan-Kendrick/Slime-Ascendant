@@ -15,17 +15,18 @@ export interface UpgradeElement {
   purchasedUpgradeLevel: string
 }
 
-export type PrestigeUpgradeName = "damage" //| "health"
+export type PrestigeUpgradeName = "damage" | "crit-chance" | "multistrike" | "beat" //| "health"
 
 export interface PrestigeUpgradeConfig {
   id: PrestigeUpgradeName
   title: string
   modDescription: string
   modSuffix: string
-  basePrice: number
-  additiveInc: number
+  baseValue: number
   modifier: number
-  unlocked: boolean
+  priceBase: number
+  priceIncrease: number
+  visibleAtZone: number
   tooltip: string
 }
 
@@ -56,8 +57,11 @@ export interface UpgradeConfig {
   healer: Upgrade
   mage: Upgrade
   prestige: PrestigeUpgradeConfig[]
-  calcOTPCost: (upgradeName: UpgradeId, upgradeCount: number) => number
-  calcAdditiveCost: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+  calcOTPPrice: (upgradeName: UpgradeId, upgradeCount: number) => number
+  calcAdditivePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+  calcMultiplicativePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+  calcAdditiveMod: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+  calcReduction: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
 }
 
 export interface PlayerCalc {

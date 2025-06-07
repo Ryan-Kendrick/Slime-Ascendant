@@ -18,7 +18,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
   const upgradeCount = useAppSelector(prestigeUpgradeMap[thisUpgradeName])
 
   const [toPurchase, setToPurchase] = useState(0)
-  const [purchasePrice, setPurchasePrice] = useState(UPGRADE_CONFIG.calcAdditiveCost(upgradeCount + 1, config))
+  const [purchasePrice, setPurchasePrice] = useState(UPGRADE_CONFIG.calcAdditivePrice(upgradeCount + 1, config))
   const [totalCost, setTotalCost] = useState(0)
 
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
@@ -36,7 +36,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
     const newTotalCost = purchasePrice + totalCost
 
     onUpdatePurchase(e, newTotalCost, toPurchase + 1)
-    setPurchasePrice(UPGRADE_CONFIG.calcAdditiveCost(tempUpgradeCount + 1, config))
+    setPurchasePrice(UPGRADE_CONFIG.calcAdditivePrice(tempUpgradeCount + 1, config))
     setToPurchase(toPurchase + 1)
     setTotalCost(newTotalCost)
   }

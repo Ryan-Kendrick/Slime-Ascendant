@@ -97,7 +97,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       return Math.floor(base * (1 + Math.log10(currentLevel + 1)) * Math.pow(growthRate, currentLevel))
     },
   },
-  calcOTPCost: function (upgradeName, upgradeCount) {
+  calcOTPPrice: function (upgradeName, upgradeCount) {
     const costs = {
       "adventurer-otp": this.adventurer.OneTimePurchases.OTPCosts,
       "warrior-otp": this.warrior.OneTimePurchases.OTPCosts,
@@ -112,19 +112,63 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       title: "Damage",
       modDescription: "Increase",
       modSuffix: "%",
-      basePrice: 2,
-      additiveInc: 1,
+      priceBase: 2,
+      priceIncrease: 1,
+      baseValue: 0.05,
       modifier: 0.05,
-      unlocked: true,
+      visibleAtZone: 10,
       tooltip: "Increase damage by 5%",
     },
+    {
+      id: "crit-chance",
+      title: "Crit Chance",
+      modDescription: "Increase",
+      modSuffix: "%",
+      priceBase: 50,
+      priceIncrease: 25,
+      baseValue: 0.05,
+      modifier: 0.01,
+      visibleAtZone: 20,
+      tooltip: "Increase crit chance by 1%",
+    },
+    {
+      id: "multistrike",
+      title: "Multistrike",
+      modDescription: "Cooldown",
+      modSuffix: "s",
+      priceBase: 80,
+      priceIncrease: 10,
+      baseValue: 40,
+      modifier: 0.02,
+      visibleAtZone: 25,
+      tooltip: "Reduce multistrike cooldown by 2%",
+    },
+    {
+      id: "beat",
+      title: "Stalactide",
+      modDescription: "Click Damage",
+      modSuffix: "%",
+      priceBase: 100,
+      priceIncrease: 20,
+      baseValue: 3,
+      modifier: 0.2,
+      visibleAtZone: 30,
+      tooltip: "Increase Stalactide damage by 20%",
+    },
+
     // { id: "health", title: "Health", basePrice: 2, additiveInc: 1, modifier: 0.05, unlocked: true, tooltip: "" },
   ],
-  calcAdditiveCost(atLevel, prestigeUpgrade): number {
-    // Cumulative cost formula
-    // return (((atLevel - 1) * atLevel) / 2) * prestigeUpgrade.additiveInc + prestigeUpgrade.basePrice * atLevel
-
-    return prestigeUpgrade.basePrice + (atLevel - 1) * prestigeUpgrade.additiveInc
+  calcAdditivePrice(atLevel, upgrade): number {
+    return upgrade.priceBase + (atLevel - 1) * upgrade.priceIncrease
+  },
+  calcMultiplicativePrice(atLevel, upgrade): number {
+    return upgrade.priceBase * Math.pow(1 + upgrade.priceIncrease, atLevel - 1)
+  },
+  calcAdditiveMod(atLevel, upgrade): number {
+    return upgrade.baseValue + (atLevel - 1) * upgrade.modifier
+  },
+  calcReduction(atLevel, upgrade): number {
+    return upgrade.baseValue * Math.pow(1 - upgrade.modifier, atLevel)
   },
 } as const
 
