@@ -22,6 +22,7 @@ export interface PrestigeUpgradeConfig {
   title: string
   modDescription: string
   modSuffix: string
+  changePrefix: string
   baseValue: number
   modifier: number
   priceBase: number
@@ -61,7 +62,9 @@ export interface UpgradeConfig {
   calcAdditivePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
   calcMultiplicativePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
   calcAdditiveMod: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+  calcAdditiveModIncrease: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
   calcReduction: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+  critMultiplier: number
 }
 
 export interface PlayerCalc {

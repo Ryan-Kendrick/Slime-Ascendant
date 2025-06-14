@@ -1,16 +1,18 @@
 import { PropsWithChildren, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { selectClickDamage, selectDotDamage } from "../../redux/playerSlice"
+import { selectClickDamage, selectCritChance, selectDotDamage } from "../../redux/playerSlice"
 import { selectMonsterState } from "../../redux/monsterSlice"
 import { updateMonsterClicked } from "../../redux/statsSlice"
 import { selectLastSaveCatchUp, selectLoading } from "../../redux/metaSlice"
 import { useGameEngine } from "../../gameconfig/customHooks"
+import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 
 export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
 
   const clickDamage = useAppSelector(selectClickDamage)
   const dotDamage = useAppSelector(selectDotDamage)
+  const critChance = useAppSelector(selectCritChance)
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
   const loading = useAppSelector(selectLoading)
 
@@ -26,7 +28,9 @@ export default function Monster({ children }: PropsWithChildren) {
   useGameEngine({ dotDamage, loading, lastSaveCatchUp })
 
   function handleClick() {
-    dispatch(updateMonsterClicked(clickDamage))
+    const isCrit = Math.random() < critChance
+    const damageDealt = isCrit ? clickDamage * UPGRADE_CONFIG.critMultiplier : clickDamage
+    dispatch(updateMonsterClicked({ damage: damageDealt, isCrit }))
   }
 
   return (

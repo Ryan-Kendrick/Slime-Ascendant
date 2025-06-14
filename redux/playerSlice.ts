@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { AppDispatch, type RootState } from "./store"
-import { PlayerState, Tab } from "../models/player"
+import { Tab } from "../models/player"
 import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { setInitElementMap } from "./shared/maps"
 import { PrestigeState, PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
@@ -10,7 +10,7 @@ import { ACHIEVEMENT_CONFIG, AchievementCategory, ACHIEVEMENTS } from "../gameco
 import { checkAchievementUnlock } from "./shared/helpers"
 import { selectAchievementDamage, selectAdventurerLevel, selectHeroState, selectPMod } from "./shared/heroSelectors"
 
-const debugState: PlayerState = {
+const debugState = {
   adventurerLevel: 500,
   adventurerOTPUpgradeCount: 3,
   warriorLevel: 500,
@@ -23,7 +23,7 @@ const debugState: PlayerState = {
   gold: 1000000,
   achievementModifier: 0,
 
-  activeHeroes: ["warrior"],
+  activeHeroes: ["warrior"] as HeroName[],
   plasmaReserved: 0,
   UIProgression: 99,
   hasInitAdventurerOTP: 99,
@@ -37,12 +37,17 @@ const debugState: PlayerState = {
 
   startDate: performance.timeOrigin,
   pDamageUpgradeCount: 300,
+  pCritUpgradeCount: 300,
+  pMultistrikeUpgradeCount: 300,
+  pBeatUpgradeCount: 300,
   // pHealthUpgradeCount: 300,
   plasma: 1000000,
   plasmaSpent: 50000,
+
+  pendingPPurchases: {} as Record<PrestigeUpgradeName, { cost: number; purchaseCount: number }>,
 }
 
-export const initialState: PlayerState = {
+export const initialState = {
   adventurerLevel: 1,
   adventurerOTPUpgradeCount: 0,
   warriorLevel: 0,
@@ -55,7 +60,7 @@ export const initialState: PlayerState = {
   gold: 0,
   achievementModifier: 0,
 
-  activeHeroes: [],
+  activeHeroes: [] as HeroName[],
   plasmaReserved: 0,
   // Prevents animation triggering again on mount
   UIProgression: 0,
@@ -71,9 +76,14 @@ export const initialState: PlayerState = {
   // Preserved between runs
   startDate: performance.timeOrigin,
   pDamageUpgradeCount: 0,
+  pCritUpgradeCount: 0,
+  pMultistrikeUpgradeCount: 0,
+  pBeatUpgradeCount: 0,
   // pHealthUpgradeCount: 0,
   plasma: 0,
   plasmaSpent: 0,
+
+  pendingPPurchases: {} as Record<PrestigeUpgradeName, PrestigeState>,
 }
 
 export const playerSlice = createSlice({
@@ -113,14 +123,23 @@ export const playerSlice = createSlice({
     increasePlasma(state, action: PayloadAction<number>) {
       state.plasma += action.payload
     },
-    reservePlasma(state, action: PayloadAction<number>) {
-      const diff = action.payload - state.plasmaReserved
-      state.plasmaReserved += diff
-      state.plasma -= diff
+    reservePlasma: (state) => {
+      const cost = Object.values(state.pendingPPurchases).reduce((acc, thisUpgrade) => acc + thisUpgrade.cost, 0)
+      const diff = cost - state.plasmaReserved
+      state.plasmaReserved = Math.round(state.plasmaReserved + diff)
+      state.plasma = Math.round(state.plasma - diff)
+    },
+    setPrestigeUpgradesPending: (
+      state,
+      action: PayloadAction<{ upgradeId: PrestigeUpgradeName; cost: number; purchaseCount: number }>,
+    ) => {
+      const { upgradeId, cost, purchaseCount: count } = action.payload
+      state.pendingPPurchases[upgradeId] = { cost, purchaseCount: count }
     },
     resetPlasmaReserved: (state) => {
-      state.plasma += state.plasmaReserved
+      state.plasma = Math.round(state.plasma + state.plasmaReserved)
       state.plasmaReserved = 0
+      state.pendingPPurchases = {} as Record<PrestigeUpgradeName, PrestigeState>
     },
     incrementPDamageUpgradeCount: (state) => {
       state.pDamageUpgradeCount++
@@ -129,11 +148,15 @@ export const playerSlice = createSlice({
       //   state.pHealthUpgradeCount++
     },
     prestigeRespec: (state) => {
+      // Not implemented yet
       state.plasma += state.plasmaReserved
       state.plasma += state.plasmaSpent
       state.plasmaReserved = 0
       state.plasmaSpent = 0
       state.pDamageUpgradeCount = 0
+      state.pCritUpgradeCount = 0
+      state.pMultistrikeUpgradeCount = 0
+      state.pBeatUpgradeCount = 0
       // state.pHealthUpgradeCount = 0
     },
     increaseAchievementModifier(state, action: PayloadAction<number>) {
@@ -197,7 +220,14 @@ export const playerSlice = createSlice({
 
       state.tabInView = "upgrade"
 
-      state.pDamageUpgradeCount += action.payload.damage.purchaseCount
+      if (action.payload.damage) state.pDamageUpgradeCount += action.payload.damage.purchaseCount
+      if (action.payload["crit-chance"]) state.pCritUpgradeCount += action.payload["crit-chance"].purchaseCount
+      if (action.payload.multistrike) state.pMultistrikeUpgradeCount += action.payload.multistrike.purchaseCount
+      if (action.payload.beat) state.pBeatUpgradeCount += action.payload.beat.purchaseCount
+      state.pDamageUpgradeCount = 0
+      state.pCritUpgradeCount = 0
+      state.pMultistrikeUpgradeCount = 0
+      state.pBeatUpgradeCount = 0
       // state.pHealthUpgradeCount += action.payload.health.purchaseCount
     })
     // builder.addCase("stats/zoneTenCompleted", (state) => {})
@@ -217,6 +247,7 @@ export const {
   decreaseGold,
   increasePlasma,
   reservePlasma,
+  setPrestigeUpgradesPending,
   resetPlasmaReserved,
   incrementPDamageUpgradeCount,
   incrementPHealthUpgradeCount,
@@ -235,8 +266,28 @@ export const selectPrestigeState = createSelector([(state: RootState) => state.p
   plasma: player.plasma,
   plasmaSpent: player.plasmaSpent,
   pDamageUpgradeCount: player.pDamageUpgradeCount,
+  pCritChanceUpgradeCount: player.pCritUpgradeCount,
+  pMultistrikeUpgradeCount: player.pMultistrikeUpgradeCount,
+  pBeatUpgradeCount: player.pBeatUpgradeCount,
   // pHealthUpgradeCount: player.pHealthUpgradeCount,
 }))
+export const selectCritChance = (state: RootState) =>
+  UPGRADE_CONFIG.calcAdditiveMod(
+    state.player.pCritUpgradeCount,
+    UPGRADE_CONFIG.prestige.find((pUpgrade) => pUpgrade.id === "crit-chance")!,
+  )
+
+export const createPendingPPurchaseSelector = (upgradeId: PrestigeUpgradeName) =>
+  createSelector([(state: RootState) => state.player.pendingPPurchases], (pendingPPurchases) => {
+    const purchase = pendingPPurchases[upgradeId]
+    return purchase ? { cost: purchase.cost, purchaseCount: purchase.purchaseCount } : null
+  })
+
+export const selectPendingPDamage = createPendingPPurchaseSelector("damage")
+export const selectPendingPCritChance = createPendingPPurchaseSelector("crit-chance")
+export const selectPendingPMultistrike = createPendingPPurchaseSelector("multistrike")
+export const selectPendingPBeat = createPendingPPurchaseSelector("beat")
+// export const selectPendingPHealth = createPendingPPurchaseSelector("health")
 
 export const selectGold = (state: RootState) => state.player.gold
 export const selectGCanAfford = (cost: number) => createSelector([selectGold], (gold) => gold >= cost)
@@ -328,28 +379,27 @@ export const updateDotDamage = (whatChanged: string) => (dispatch: AppDispatch, 
   ])
 }
 
-export const updatePrestige =
-  (prestigePurchase: Record<PrestigeUpgradeName, PrestigeState>) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
-    dispatch(prestigeReset(prestigePurchase))
+export const updatePrestige = () => (dispatch: AppDispatch, getState: () => RootState) => {
+  const purchases = getState().player.pendingPPurchases
+  dispatch(prestigeReset(purchases))
 
-    const countAchievements = ACHIEVEMENTS.prestige.count as AchievementCategory
-    const spentAchievements = ACHIEVEMENTS.prestige.plasmaSpent as AchievementCategory
-    const state = getState()
+  const countAchievements = ACHIEVEMENTS.prestige.count as AchievementCategory
+  const spentAchievements = ACHIEVEMENTS.prestige.plasmaSpent as AchievementCategory
+  const state = getState()
 
-    checkAchievementUnlock(dispatch, [
-      {
-        unlockedAchievements: state.stats.achievementsUnlocked,
-        achievements: countAchievements.achievements,
-        value: state.stats.prestigeCount,
-      },
-      {
-        unlockedAchievements: state.stats.achievementsUnlocked,
-        achievements: spentAchievements.achievements,
-        value: state.player.plasmaSpent,
-      },
-    ])
-  }
+  checkAchievementUnlock(dispatch, [
+    {
+      unlockedAchievements: state.stats.achievementsUnlocked,
+      achievements: countAchievements.achievements,
+      value: state.stats.prestigeCount,
+    },
+    {
+      unlockedAchievements: state.stats.achievementsUnlocked,
+      achievements: spentAchievements.achievements,
+      value: state.player.plasmaSpent,
+    },
+  ])
+}
 
 export const recalculateAchievementMod = () => (dispatch: AppDispatch, getState: () => RootState) => {
   const config = ACHIEVEMENT_CONFIG

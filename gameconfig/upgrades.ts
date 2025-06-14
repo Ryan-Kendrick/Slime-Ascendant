@@ -112,6 +112,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       title: "Damage",
       modDescription: "Increase",
       modSuffix: "%",
+      changePrefix: "+",
       priceBase: 2,
       priceIncrease: 1,
       baseValue: 0.05,
@@ -121,21 +122,23 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
     {
       id: "crit-chance",
-      title: "Crit Chance",
-      modDescription: "Increase",
+      title: "Critical Hit",
+      modDescription: "Chance",
       modSuffix: "%",
+      changePrefix: "+",
       priceBase: 50,
       priceIncrease: 25,
       baseValue: 0.05,
       modifier: 0.01,
       visibleAtZone: 20,
-      tooltip: "Increase crit chance by 1%",
+      tooltip: "Increase critical hit chance by 1%",
     },
     {
       id: "multistrike",
       title: "Multistrike",
       modDescription: "Cooldown",
       modSuffix: "s",
+      changePrefix: "-",
       priceBase: 80,
       priceIncrease: 10,
       baseValue: 40,
@@ -148,6 +151,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       title: "Stalactide",
       modDescription: "Click Damage",
       modSuffix: "%",
+      changePrefix: "+",
       priceBase: 100,
       priceIncrease: 20,
       baseValue: 3,
@@ -167,9 +171,15 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
   calcAdditiveMod(atLevel, upgrade): number {
     return upgrade.baseValue + (atLevel - 1) * upgrade.modifier
   },
+  calcAdditiveModIncrease(atLevel, upgrade): number {
+    return atLevel * upgrade.modifier
+  },
   calcReduction(atLevel, upgrade): number {
     return upgrade.baseValue * Math.pow(1 - upgrade.modifier, atLevel)
   },
+
+  // Extended balance config
+  critMultiplier: 2.5,
 } as const
 
 export const playerCalc: PlayerCalc = {

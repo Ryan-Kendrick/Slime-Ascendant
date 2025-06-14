@@ -317,7 +317,6 @@ export function useOTPPositions({
     if (!OTPContainerRef.current) return
 
     if (!hasRestoredPositions.current) {
-      console.log("Restoring OTP positions for", heroName)
       restoreOTPPositions()
     } else {
       requestAnimationFrame(updateOTPIconPositions)

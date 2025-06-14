@@ -3,7 +3,6 @@ import { useState } from "react"
 import { PrestigeUpgradeConfig } from "../../models/upgrades"
 import { prestigeUpgradeMap } from "../../redux/shared/maps"
 import { useAppSelector } from "../../redux/hooks"
-import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { selectPCanAfford } from "../../redux/playerSlice"
 import { MinPlasmaIcon } from "../svgIcons/resourceIcons"
 
@@ -15,54 +14,92 @@ interface PrestigeBtnProps {
 
 export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidden }: PrestigeBtnProps) {
   const thisUpgradeName = config.id
-  const upgradeCount = useAppSelector(prestigeUpgradeMap[thisUpgradeName])
+  const thisUpgrade = prestigeUpgradeMap[thisUpgradeName]
+  const upgradeCount = useAppSelector(thisUpgrade.selector)
+  const pendingPurchases = useAppSelector(thisUpgrade.pendingPurchases || (() => ({ cost: 0, purchaseCount: 0 })))
+  const { cost: totalCost, purchaseCount } = pendingPurchases || { cost: 0, purchaseCount: 0 }
+  const costCalc = thisUpgrade.cost
 
-  const [toPurchase, setToPurchase] = useState(0)
-  const [purchasePrice, setPurchasePrice] = useState(UPGRADE_CONFIG.calcAdditivePrice(upgradeCount + 1, config))
-  const [totalCost, setTotalCost] = useState(0)
-
+  const [purchasePrice, setPurchasePrice] = useState(costCalc(upgradeCount + purchaseCount + 1, config))
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
 
   if (hidden) return null
+
+  const formatCurrentValue = (): string => {
+    if (upgradeCount === 1) return (config.baseValue * 100).toFixed(0)
+    if (upgradeCount > 1) return (thisUpgrade.calcModifier(upgradeCount, config) * 100).toFixed(0)
+    return "0"
+  }
+
+  const formatPendingIncrease = (): string => {
+    let pendingInc: number
+
+    if (purchaseCount === 1 && upgradeCount === 0) {
+      pendingInc = Math.round(config.baseValue * 100)
+    } else if (upgradeCount === 0 && purchaseCount > 1) {
+      pendingInc = Math.round(thisUpgrade.calcModifier(purchaseCount, config) * 100)
+    } else {
+      pendingInc = Math.round(thisUpgrade.calcModifierIncrease(purchaseCount, config) * 100)
+    }
+
+    if (thisUpgradeName === "multistrike")
+      return upgradeCount === 0
+        ? (pendingInc / 100).toFixed(2)
+        : `${config.changePrefix}${(config.baseValue - pendingInc / 100).toFixed(2)}`
+
+    return pendingInc.toFixed(0)
+  }
 
   function onSelectPrestigeUpgrade(
     e: React.MouseEvent<HTMLButtonElement>,
     upgradeCount: number,
     purchasePrice: number,
     toPurchase: number,
-    isAffordable: boolean,
   ) {
     const tempUpgradeCount = upgradeCount + toPurchase + 1
     const newTotalCost = purchasePrice + totalCost
 
     onUpdatePurchase(e, newTotalCost, toPurchase + 1)
-    setPurchasePrice(UPGRADE_CONFIG.calcAdditivePrice(tempUpgradeCount + 1, config))
-    setToPurchase(toPurchase + 1)
-    setTotalCost(newTotalCost)
+    setPurchasePrice(thisUpgrade.cost(tempUpgradeCount + 1, config))
   }
   return (
     <button
-      key={config.id}
-      id={config.id}
+      key={thisUpgradeName}
+      id={thisUpgradeName}
       onClick={(e) => {
-        onSelectPrestigeUpgrade(e, upgradeCount, purchasePrice, toPurchase, isAffordable)
+        onSelectPrestigeUpgrade(e, upgradeCount, purchasePrice, purchaseCount)
       }}
-      disabled={!isAffordable}
+      disabled={!isAffordable || hidden}
       className={clsx(
-        "w-56 cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
+        "w-72 cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-2 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
         "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:bg-cyan-800/50 disabled:shadow-none disabled:text-gray-300/80 disabled:border-black",
       )}>
+      {hidden && (
+        <div className={clsx("absolute flex w-full h-full items-center justify-center bg-black z-10")}>
+          <p className="text-red-600 font-bold">Reach Zone {config.visibleAtZone}</p>
+        </div>
+      )}
       <div className="relative flex flex-col items-center">
         <h3 className="mb-1 text-2xl font-extrabold"> {config.title}</h3>
         <p>
-          Level: {upgradeCount} {toPurchase > 0 && `(+${toPurchase})`}
+          Level: {upgradeCount} {purchaseCount > 0 && `(+${purchaseCount})`}
         </p>
-        {(toPurchase > 0 || upgradeCount > 0) && (
-          <p className="">
-            {config.modDescription}: {Math.round(config.modifier * 100) * upgradeCount}
-            {config.modSuffix} {`(+${Math.round(config.modifier * 100) * toPurchase}${config.modSuffix})`}
-          </p>
-        )}
+        <div className="flex">
+          {upgradeCount > 0 && (
+            <p className="">
+              {config.modDescription}: {formatCurrentValue()}
+              {config.modSuffix}
+            </p>
+          )}
+          {purchaseCount > 0 && (
+            <p className="pl-1">
+              {upgradeCount === 0 && `${config.modDescription}: 0 `}
+              {thisUpgradeName === "multistrike"
+                ? `(${formatPendingIncrease()}${config.modSuffix})`
+                : `(${config.changePrefix}${formatPendingIncrease()}${config.modSuffix})`}
+            </p>
+          )}
+        </div>
         <p className="flex">
           Price:{" "}
           <span className={clsx("flex font-bold", isAffordable ? "text-blue-200" : "text-red-500")}>

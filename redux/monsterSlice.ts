@@ -1,4 +1,4 @@
-import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
+import { createSelector, createSlice, isAllOf, isAnyOf } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { type RootState } from "./store"
 import { getMonster } from "../gameconfig/monster"
@@ -27,7 +27,12 @@ export const monsterSlice = createSlice({
     builder.addCase(prestigeReset, () => {
       return initialState
     })
-    builder.addMatcher(isAnyOf(monsterClicked, increaseTotalDotDamageDealt), (state, action) => {
+    builder.addMatcher(isAllOf(monsterClicked), (state, action) => {
+      const newHealth = state.health - action.payload.damage
+      state.health = newHealth
+      state.alive = newHealth >= 1
+    })
+    builder.addMatcher(isAllOf(increaseTotalDotDamageDealt), (state, action) => {
       const newHealth = state.health - action.payload
       state.health = newHealth
       state.alive = newHealth >= 1

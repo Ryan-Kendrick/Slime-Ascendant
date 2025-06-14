@@ -1,6 +1,15 @@
 import { PlayerState } from "../../models/player"
-import { HeroName, PrestigeUpgradeName, UpgradeId, UpgradeProps } from "../../models/upgrades"
-import { selectClickDamage, selectDotDamage, selectInitState, selectPrestigeState } from "../playerSlice"
+import { HeroName, PrestigeUpgradeConfig, PrestigeUpgradeName, UpgradeId, UpgradeProps } from "../../models/upgrades"
+import {
+  selectClickDamage,
+  selectDotDamage,
+  selectInitState,
+  selectPendingPBeat,
+  selectPendingPCritChance,
+  selectPendingPDamage,
+  selectPendingPMultistrike,
+  selectPrestigeState,
+} from "../playerSlice"
 import { selectMageContribution } from "./heroSelectors"
 import { selectHealerContribution } from "./heroSelectors"
 import { selectWarriorContribution } from "./heroSelectors"
@@ -13,6 +22,8 @@ import {
 } from "./heroSelectors"
 import { selectStatsState } from "../statsSlice"
 import type { RootState } from "../store"
+import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
+import { config } from "dotenv"
 
 export const heroNames: HeroName[] = ["adventurer", "warrior", "healer", "mage"] as const
 const constructIndexMap = () => {
@@ -159,7 +170,45 @@ export const initSelectorMap: Record<UpgradeId | HeroName, (state: RootState) =>
   mage: (state: RootState) => selectInitState(state).hasInitMagePane,
 } as const
 
-export const prestigeUpgradeMap: Record<PrestigeUpgradeName, (state: RootState) => number> = {
-  damage: (state) => selectPrestigeState(state).pDamageUpgradeCount,
-  //   health: (state) => selectPrestigeState(state).pHealthUpgradeCount,
+type PrestigeUpgradeMap = {
+  [upgradeName in PrestigeUpgradeName]: {
+    selector: (state: RootState) => number
+    cost: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+    calcModifier: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+    calcModifierIncrease: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
+    pendingPurchases: (state: RootState) => { cost: number; purchaseCount: number } | null
+  }
+}
+
+export const prestigeUpgradeMap: PrestigeUpgradeMap = {
+  damage: {
+    selector: (state: RootState) => selectPrestigeState(state).pDamageUpgradeCount,
+    cost: UPGRADE_CONFIG.calcAdditivePrice,
+    calcModifier: UPGRADE_CONFIG.calcAdditiveMod,
+    calcModifierIncrease: UPGRADE_CONFIG.calcAdditiveModIncrease,
+    pendingPurchases: (state: RootState) => selectPendingPDamage(state),
+  },
+  "crit-chance": {
+    selector: (state) => selectPrestigeState(state).pCritChanceUpgradeCount,
+    cost: UPGRADE_CONFIG.calcMultiplicativePrice,
+    calcModifier: UPGRADE_CONFIG.calcAdditiveMod,
+    calcModifierIncrease: UPGRADE_CONFIG.calcAdditiveModIncrease,
+
+    pendingPurchases: (state) => selectPendingPCritChance(state),
+  },
+  multistrike: {
+    selector: (state) => selectPrestigeState(state).pMultistrikeUpgradeCount,
+    cost: UPGRADE_CONFIG.calcMultiplicativePrice,
+    calcModifier: UPGRADE_CONFIG.calcReduction,
+    calcModifierIncrease: (atLevel, upgrade) => upgrade.baseValue - UPGRADE_CONFIG.calcReduction(atLevel, upgrade),
+    pendingPurchases: (state) => selectPendingPMultistrike(state),
+  },
+  beat: {
+    selector: (state) => selectPrestigeState(state).pBeatUpgradeCount,
+    cost: UPGRADE_CONFIG.calcMultiplicativePrice,
+    calcModifier: UPGRADE_CONFIG.calcAdditiveMod,
+    calcModifierIncrease: UPGRADE_CONFIG.calcAdditiveModIncrease,
+
+    pendingPurchases: (state) => selectPendingPBeat(state),
+  },
 } as const

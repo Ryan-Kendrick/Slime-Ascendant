@@ -11,62 +11,42 @@ import {
   selectPlasmaReserved,
   reservePlasma,
   updatePrestige,
+  setPrestigeUpgradesPending,
 } from "../../redux/playerSlice"
-import { PrestigeState, PrestigeUpgradeName } from "../../models/upgrades"
+import { PrestigeUpgradeName } from "../../models/upgrades"
 import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
-import { selectZoneTenComplete } from "../../redux/statsSlice"
+import { selectHighestZone, selectHighestZoneEver } from "../../redux/statsSlice"
 import handURL from "/assets/icons/hand-dark.webp"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
   const plasmaSelector = selectPlasma
   const plasmaReserved = useAppSelector(selectPlasmaReserved)
-  const zoneTenComplete = useAppSelector(selectZoneTenComplete)
+  const highZoneEver = useAppSelector(selectHighestZoneEver)
+  const highestZone = useAppSelector(selectHighestZone)
+  const zoneTenComplete = highestZone > 10
 
   const [confirmPrestige, setConfirmPrestige] = useState(false)
-  const [prestigePurchase, setPrestigePurchase] = useState(
-    Object.fromEntries(
-      UPGRADE_CONFIG.prestige.map((upgrade) => [
-        upgrade.id,
-        {
-          cost: 0,
-          purchaseCount: 0,
-        },
-      ]),
-    ) as Record<PrestigeUpgradeName, PrestigeState>,
-  )
-  // TODO: Sync prestige shopping cart with redux so this useEffect is not necessary
-  useEffect(() => {
+  const [resetCounter, setResetCounter] = useState(0) // Force remount of prestige buttons to destroy state
+
+  const onReset = () => {
+    setResetCounter((prev) => prev + 1)
     dispatch(resetPlasmaReserved())
-  }, [])
+  }
 
   function onUpdatePurchase(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
-    const purchasedUpgrade = e.currentTarget.id
+    const upgradeId = e.currentTarget.id as PrestigeUpgradeName
 
-    setPrestigePurchase((previousCosts) => ({
-      ...previousCosts,
-      [purchasedUpgrade]: {
-        cost: cost,
-        purchaseCount: purchaseCount,
-      },
-    }))
-
-    const newTotalCost = {
-      ...prestigePurchase,
-      [purchasedUpgrade]: {
-        cost: cost,
-        purchaseCount: purchaseCount,
-      },
-    }
-    const plasmaToReserve = Object.values(newTotalCost).reduce((acc, upgrade) => acc + upgrade.cost, 0)
-    dispatch(reservePlasma(plasmaToReserve))
+    dispatch(setPrestigeUpgradesPending({ upgradeId, cost, purchaseCount }))
+    dispatch(reservePlasma())
   }
 
   return (
     <div className="flex flex-col h-full">
       <Currency
+        key={resetCounter}
         image={PlasmaIcon()}
         fontStyle="text-cyan-300 font-paytone"
         currencySelector={plasmaSelector}
@@ -74,7 +54,12 @@ export default function Prestige() {
       />
       <div className="flex mx-2 font-sans gap-2">
         {UPGRADE_CONFIG.prestige.map((prestigeUpgrade) => (
-          <PrestigeButton key={prestigeUpgrade.id} config={prestigeUpgrade} onClick={onUpdatePurchase} hidden={false} />
+          <PrestigeButton
+            key={prestigeUpgrade.id + resetCounter}
+            config={prestigeUpgrade}
+            onClick={onUpdatePurchase}
+            hidden={!(highZoneEver >= prestigeUpgrade.visibleAtZone)}
+          />
         ))}
       </div>
       <div className="relative flex grow gap-4 h-full w-full items-end justify-center">
@@ -88,7 +73,7 @@ export default function Prestige() {
           Prestige
         </button>
         <button
-          onClick={() => dispatch(resetPlasmaReserved())}
+          onClick={onReset}
           disabled={!zoneTenComplete}
           className={clsx(
             "w-40 h-16 my-4 cursor-active rounded-lg border-2 border-black bg-gray-700 text-white font-sans font-extrabold text-2xl",
@@ -134,7 +119,7 @@ export default function Prestige() {
           </div>
           <div className="mt-auto">
             <button
-              onClick={() => dispatch(updatePrestige(prestigePurchase))}
+              onClick={() => dispatch(updatePrestige())}
               className="w-40 h-16 my-4 self-start cursor-active disabled:cursor-inactive rounded-lg border-2 border-white bg-red-600 text-white font-sans font-bold text-2xl">
               Confirm
             </button>

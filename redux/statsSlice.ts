@@ -6,21 +6,7 @@ import { prestigeReset } from "./shared/actions"
 import { AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
 
-interface StatsState {
-  clickCount: number
-  totalClickDamage: number
-  totalDotDamage: number
-  killCount: number
-  farmZonesCompleted: number
-  totalZonesCompleted: number
-  highestZoneEver: number
-  prestigeCount: number
-  achievementsUnlocked: string[]
-  highestZone: number
-  zoneTenCompleted: boolean
-}
-
-const initialState: StatsState = {
+const initialState = {
   clickCount: 0,
   totalClickDamage: 0,
   totalDotDamage: 0,
@@ -29,9 +15,10 @@ const initialState: StatsState = {
   totalZonesCompleted: 0,
   highestZoneEver: 1,
   prestigeCount: 0,
-  achievementsUnlocked: [],
+  achievementsUnlocked: [] as string[],
 
   // This run data
+  critRecently: false,
   highestZone: 1,
 
   // Persisted data
@@ -46,9 +33,13 @@ export const statsSlice = createSlice({
       state.achievementsUnlocked.push(action.payload)
       console.log("Achievement unlocked", action.payload)
     },
-    monsterClicked(state, action: PayloadAction<number>) {
+    monsterClicked(state, action: PayloadAction<{ damage: number; isCrit: boolean }>) {
       state.clickCount++
-      state.totalClickDamage += action.payload
+      state.totalClickDamage += action.payload.damage
+      if (action.payload.isCrit) console.log("CRITICAL HIT!")
+      if (action.payload.isCrit && !state.critRecently) {
+        state.critRecently = true
+      }
     },
     increaseTotalDotDamageDealt(state, action: PayloadAction<number>) {
       state.totalDotDamage += action.payload
@@ -102,32 +93,31 @@ export const selectStatsState = createSelector([(state: RootState) => state.stat
 }))
 export const selectUnlockedAchievements = (state: RootState) => state.stats.achievementsUnlocked
 
+export const selectHighestZone = (state: RootState) => state.stats.highestZone
 export const selectHighestZoneEver = (state: RootState) => state.stats.highestZoneEver
-export const selectZoneTenComplete = createSelector(
-  [(state: RootState) => state.stats.highestZone],
-  (highestZone) => highestZone > 10,
-)
 
-export const updateMonsterClicked = (damage: number) => (dispatch: AppDispatch, getState: () => RootState) => {
-  dispatch(monsterClicked(damage))
+export const updateMonsterClicked =
+  (click: { damage: number; isCrit: boolean }) => (dispatch: AppDispatch, getState: () => RootState) => {
+    const { damage, isCrit } = click
+    dispatch(monsterClicked({ damage, isCrit }))
 
-  const countAchievements = ACHIEVEMENTS.click.count as AchievementCategory
-  const damageAchievements = ACHIEVEMENTS.click.damage as AchievementCategory
-  const state = getState()
+    const countAchievements = ACHIEVEMENTS.click.count as AchievementCategory
+    const damageAchievements = ACHIEVEMENTS.click.damage as AchievementCategory
+    const state = getState()
 
-  checkAchievementUnlock(dispatch, [
-    {
-      unlockedAchievements: state.stats.achievementsUnlocked,
-      achievements: countAchievements.achievements,
-      value: state.stats.clickCount,
-    },
-    {
-      unlockedAchievements: state.stats.achievementsUnlocked,
-      achievements: damageAchievements.achievements,
-      value: state.stats.totalClickDamage,
-    },
-  ])
-}
+    checkAchievementUnlock(dispatch, [
+      {
+        unlockedAchievements: state.stats.achievementsUnlocked,
+        achievements: countAchievements.achievements,
+        value: state.stats.clickCount,
+      },
+      {
+        unlockedAchievements: state.stats.achievementsUnlocked,
+        achievements: damageAchievements.achievements,
+        value: state.stats.totalClickDamage,
+      },
+    ])
+  }
 
 export const updateDotDamageDealt = (damage: number) => (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(increaseTotalDotDamageDealt(damage))
