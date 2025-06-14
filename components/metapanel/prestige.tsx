@@ -74,10 +74,10 @@ export default function Prestige() {
         </button>
         <button
           onClick={onReset}
-          disabled={!zoneTenComplete}
+          disabled={!plasmaReserved}
           className={clsx(
             "w-40 h-16 my-4 cursor-active rounded-lg border-2 border-black bg-gray-700 text-white font-sans font-extrabold text-2xl",
-            !zoneTenComplete && "opacity-50 bg-gray-800",
+            !plasmaReserved && "opacity-50 bg-gray-800",
           )}>
           Reset
         </button>
