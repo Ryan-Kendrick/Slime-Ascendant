@@ -17,7 +17,7 @@ import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../redux/shared/maps"
 import { cardProps } from "../../../redux/shared/maps"
-import { selectBreakpoint, selectOTPPos, setOTPPos } from "../../../redux/metaSlice"
+import { selectAnimationPref, selectBreakpoint, selectOTPPos, setOTPPos } from "../../../redux/metaSlice"
 import { useOTPPositions } from "../../../gameconfig/customHooks"
 
 interface HeroCardProps {
@@ -59,6 +59,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const [animationComplete, setAnimationComplete] = useState(false)
   const breakpoint = useAppSelector(selectBreakpoint)
   const isMobile = breakpoint === 768
+  const animationPref = useAppSelector(selectAnimationPref)
+  const animationsEnabled = animationPref > 0
 
   const OTPContainerRef = useOTPPositions({
     heroName: thisHeroName,
@@ -125,9 +127,13 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
       clearTimeout(delayedAnimationRef.current)
     }
 
-    delayedAnimationRef.current = setTimeout(() => {
+    if (animationsEnabled) {
+      delayedAnimationRef.current = setTimeout(() => {
+        setBeginDelayedAnimation(true)
+      }, animationDuration / 2)
+    } else {
       setBeginDelayedAnimation(true)
-    }, animationDuration / 2)
+    }
   }
 
   const onCardTouch = (e: React.TouchEvent) => {
@@ -233,20 +239,25 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         {/* Title section */}
         <div
           className={clsx(
-            `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 transition-all relative ${thisHero.cardBackground}`,
-            "before:absolute before:inset-0 before:transition-opacity before:duration-500 before:z-0",
+            `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 relative ${thisHero.cardBackground}`,
+            "before:absolute before:inset-0 before:duration-500 before:z-0",
+            animationsEnabled
+              ? "transition-all before:transition-opacity before:duration-500"
+              : "transition-none before:transition-none",
             isHovering && `${thisHero.backgroundImage}`,
             isHovering ? "before:opacity-100" : "before:opacity-0",
           )}>
           <div
             className={clsx(
-              "transition-transform h-full",
+              "h-full",
+              animationsEnabled ? "transition-transform" : "transition-none",
               hoverAnimationDuration,
               isHovering ? "translate-y-0" : "translate-y-[calc(100%-2rem)]",
             )}>
             <h2
               className={clsx(
-                "text-2xl bg-black transition-colors",
+                "text-2xl bg-black",
+                animationsEnabled ? "transition-colors" : "transition-none",
                 hoverAnimationDuration,
                 beginDelayedAnimation ? "bg-opacity-60" : "bg-opacity-0",
               )}>
@@ -255,7 +266,9 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
           </div>
           <div
             className={clsx(
-              `transition-transform ${hoverAnimationDuration} font-paytone text-lg h-full`,
+              `${hoverAnimationDuration} font-paytone text-lg h-full`,
+              animationsEnabled ? "transition-transform" : "transition-none",
+
               isHovering ? "translate-y-[calc(98%)]" : "translate-y-0",
             )}>
             <h3 className="inline">{config.displayStat}:</h3> {Math.round(damage)}
@@ -264,14 +277,15 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
           {/* OTP info on hover */}
           <div
             className={clsx(
-              "absolute h-full w-full transition-opacity ease-in",
-
+              "absolute h-full w-full",
+              animationsEnabled ? "transition-opacity ease-in" : "transition-none",
               isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
             )}>
             <div className={clsx("flex mt-8 pb-8 h-full items-center relative")}>
               <div
                 className={clsx(
-                  "absolute inset-0 w-full flex flex-col mt-2 transition-opacity duration-200",
+                  "absolute inset-0 w-full flex flex-col mt-2",
+                  animationsEnabled ? "transition-opacity duration-200" : "transition-none",
                   hoveredOTPUpgrade ? "opacity-100" : "opacity-0",
                   hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-none",
                 )}>
@@ -293,7 +307,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
               {/*Damage calculation table  */}
               <div
                 className={clsx(
-                  "w-full font-passion text-xl transition-opacity duration-300",
+                  "w-full font-passion text-xl",
+                  animationsEnabled ? "transition-opacity duration-300" : "transition-none",
                   hoveredOTPUpgrade ? "opacity-0" : "opacity-100",
                   hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
                 )}>
@@ -340,7 +355,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         {/* Upgrades & Levelup section */}
         <div
           className={clsx(
-            "flex flex-col md:flex-row items-center py-2 px-2 md:px-4 gap-2 transition-all",
+            "flex flex-col md:flex-row items-center py-2 px-2 md:px-4 gap-2",
+            animationsEnabled ? "transition-all" : "transition-none",
             hoverAnimationDuration,
             isHovering && "mt-4",
           )}>

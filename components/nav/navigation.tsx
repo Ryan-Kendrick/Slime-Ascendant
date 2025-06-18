@@ -31,17 +31,6 @@ export const Navigation = memo(function Navigation() {
         </button>
       </ReactModal>
       <div className="self-start lg:self-end text-sm opacity-50">{METADATA_CONFIG.version}</div>
-      {/* <ReactModal
-        isOpen={viewOptions}
-        onRequestClose={() => setViewOptions(false)}
-        contentLabel="Prestige confirmation prompt"
-        style={optionsStyle}>
-        <button
-          className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-active"
-          onClick={() => setViewOptions(false)}>
-          {CancelIcon()}
-        </button>
-      </ReactModal> */}
     </div>
   )
 })

@@ -19,6 +19,7 @@ const initialState = {
 
   // This run data
   critRecently: false,
+  lastCritDamage: 0,
   highestZone: 1,
 
   // Persisted data
@@ -39,6 +40,7 @@ export const statsSlice = createSlice({
       if (action.payload.isCrit) console.log("CRITICAL HIT!")
       if (action.payload.isCrit && !state.critRecently) {
         state.critRecently = true
+        state.lastCritDamage = action.payload.damage
       }
     },
     increaseTotalDotDamageDealt(state, action: PayloadAction<number>) {
@@ -49,6 +51,9 @@ export const statsSlice = createSlice({
     },
     incrementFarmZonesCompleted: (state) => {
       state.farmZonesCompleted++
+    },
+    critProcessed: (state) => {
+      state.critRecently = false
     },
     zoneTenCompleted: (state) => {
       state.zoneTenCompleted = true
@@ -75,6 +80,7 @@ export const {
   increaseTotalDotDamageDealt,
   incrementKillCount,
   incrementFarmZonesCompleted,
+  critProcessed,
   zoneTenCompleted,
 } = statsSlice.actions
 
@@ -95,6 +101,10 @@ export const selectUnlockedAchievements = (state: RootState) => state.stats.achi
 
 export const selectHighestZone = (state: RootState) => state.stats.highestZone
 export const selectHighestZoneEver = (state: RootState) => state.stats.highestZoneEver
+
+export const selectCritState = (state: RootState) => {
+  return { critRecently: state.stats.critRecently, lastCritDamage: state.stats.lastCritDamage }
+}
 
 export const updateMonsterClicked =
   (click: { damage: number; isCrit: boolean }) => (dispatch: AppDispatch, getState: () => RootState) => {

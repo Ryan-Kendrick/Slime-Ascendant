@@ -15,6 +15,23 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        "bounce-fade": "bounceFade 1.5s ease-out forwards",
+        "float-up": "floatUp 2s ease-out forwards",
+      },
+      keyframes: {
+        bounceFade: {
+          "0%": { transform: "scale(0.3) translateY(0)", opacity: "0" },
+          "30%": { transform: "scale(1.2) translateY(10px)", opacity: "1" },
+          "60%": { transform: "scale(0.9) translateY(5px)", opacity: "1" },
+          "100%": { transform: "scale(1) translateY(0)", opacity: "0" },
+        },
+        floatUp: {
+          "0%": { transform: "translateY(0) scale(0.7)", opacity: "0" },
+          "10%": { transform: "translateY(-20px) scale(1.2)", opacity: "1" },
+          "100%": { transform: "translateY(-80px) scale(0.6)", opacity: "0" },
+        },
+      },
       colors: {
         purpleOrange: "#631E54",
         electricBlue: "#7DF9FF",

@@ -1,10 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store"
 import { METADATA_CONFIG } from "../gameconfig/meta"
-import { UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { HeroName } from "../models/upgrades"
 import { heroIndexMap, heroNames } from "./shared/maps"
-import { StatementSync } from "node:sqlite"
 import { prestigeReset } from "./shared/actions"
 import { constructOTPPosArr } from "./shared/helpers"
 
@@ -14,6 +12,7 @@ const initialState = {
   lastSaveCatchUp: null as number | null,
   loading: false,
   OTPPos: constructOTPPosArr(),
+  animationPref: 2, // Low: 0, Medium: 1, High: 2
 
   breakpoint: 0 as Breakpoint, // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
 }
@@ -29,6 +28,9 @@ export const metaSlice = createSlice({
     },
     clearCatchUpTime: (state) => {
       state.lastSaveCatchUp = null
+    },
+    setAnimationPref: (state, action: PayloadAction<number>) => {
+      state.animationPref = action.payload
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
@@ -66,6 +68,7 @@ export const selectOTPPos = (hero: HeroName) =>
   createSelector([(state: RootState) => state.meta.OTPPos, () => heroIndexMap[hero]], (otpPos, heroIndex) => {
     return otpPos[heroIndex]
   })
+export const selectAnimationPref = (state: RootState) => state.meta.animationPref
 // export const selectOTPPos = (hero: HeroName) => (state: RootState) => state.meta.OTPPos[heroIndexMap[hero]]
 
 export default metaSlice.reducer

@@ -23,7 +23,6 @@ import {
 import { selectStatsState } from "../statsSlice"
 import type { RootState } from "../store"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
-import { config } from "dotenv"
 
 export const heroNames: HeroName[] = ["adventurer", "warrior", "healer", "mage"] as const
 const constructIndexMap = () => {
