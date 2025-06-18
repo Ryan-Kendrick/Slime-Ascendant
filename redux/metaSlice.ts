@@ -51,6 +51,13 @@ export const metaSlice = createSlice({
     setBreakpoint: (state, action: PayloadAction<Breakpoint>) => {
       state.breakpoint = action.payload
     },
+    toggleAnimationPref: (state, action: PayloadAction<number>) => {
+      if (state.animationPref !== 2) {
+        state.animationPref++
+      } else {
+        state.animationPref = 0
+      }
+    },
   },
   extraReducers(builder) {
     builder.addCase(prestigeReset, (state) => {
@@ -59,7 +66,8 @@ export const metaSlice = createSlice({
   },
 })
 
-export const { saveGame, clearCatchUpTime, setLoading, setOTPPos, setBreakpoint } = metaSlice.actions
+export const { saveGame, clearCatchUpTime, setLoading, setOTPPos, setBreakpoint, toggleAnimationPref } =
+  metaSlice.actions
 
 export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCatchUp
 export const selectLoading = (state: RootState) => state.meta.loading

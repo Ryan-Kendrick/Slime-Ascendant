@@ -10,7 +10,6 @@ import { store } from "../../redux/store"
 
 export default function Achievements() {
   const dispatch = useAppDispatch()
-  const state = store.getState()
 
   const unlockedAchievements = useAppSelector(selectUnlockedAchievements)
   const achievementModifier = useAppSelector(selectAchievementModifier)

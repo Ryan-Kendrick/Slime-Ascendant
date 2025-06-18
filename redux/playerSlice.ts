@@ -33,7 +33,7 @@ const debugState = {
   hasInitHealerOTP: 99,
   hasInitMagePane: true,
   hasInitMageOTP: 99,
-  tabInView: "upgrade",
+  tabInView: "upgrade" as Tab,
 
   startDate: performance.timeOrigin,
   pDamageUpgradeCount: 300,
@@ -71,7 +71,7 @@ export const initialState = {
   hasInitHealerOTP: 0,
   hasInitMagePane: false,
   hasInitMageOTP: 0,
-  tabInView: "upgrade",
+  tabInView: "upgrade" as Tab,
 
   // Preserved between runs
   startDate: performance.timeOrigin,

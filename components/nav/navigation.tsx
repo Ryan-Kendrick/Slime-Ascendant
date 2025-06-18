@@ -5,10 +5,11 @@ import { CancelIcon } from "../svgIcons/metaIcons"
 import Achievements from "./achievements"
 import handURL from "/assets/icons/hand-dark.webp"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks"
+import { selectAnimationPref, toggleAnimationPref } from "../../redux/metaSlice"
 
 export const Navigation = memo(function Navigation() {
   const [viewAchievements, setViewAchievements] = useState(false)
-  const [viewOptions, setViewOptions] = useState(false)
 
   return (
     <div className="flex relative flex-wrap justify-between items-center text-white h-full px-3 py-2 md:pb-0 lg:pb-2">
@@ -30,7 +31,10 @@ export const Navigation = memo(function Navigation() {
           {CancelIcon()}
         </button>
       </ReactModal>
-      <div className="self-start lg:self-end text-sm opacity-50">{METADATA_CONFIG.version}</div>
+      <div className="flex flex-col">
+        <AnimationQualityButton />
+        <div className="self-start lg:self-end text-sm opacity-50">{METADATA_CONFIG.version}</div>
+      </div>
     </div>
   )
 })
@@ -38,6 +42,26 @@ export const Navigation = memo(function Navigation() {
 type NavigationLinkButtonProps = {
   text: string
   onClick: () => void
+}
+
+export function AnimationQualityButton() {
+  const dispatch = useAppDispatch()
+  const animationPref = useAppSelector(selectAnimationPref)
+
+  const animationPrefMap = {
+    0: "low",
+    1: "medium",
+    2: "high",
+  }
+  const animationQuality = animationPrefMap[animationPref as keyof typeof animationPrefMap]
+
+  return (
+    <button
+      className="cursor-active border border-yellow-300 -mt-0.5 bg-blue-600 p-0.5 rounded"
+      onClick={() => dispatch(toggleAnimationPref(animationPref))}>
+      Quality: {animationQuality}
+    </button>
+  )
 }
 
 export function NavigationLinkButton({ text, onClick }: NavigationLinkButtonProps) {
