@@ -40,8 +40,6 @@ export const statsSlice = createSlice({
       state.clickCount++
       state.totalClickDamage += action.payload.damage
 
-      console.log("Monster clicked", action.payload.damage, "isCrit:", action.payload.isCrit)
-
       if (action.payload.isCrit) {
         if (action.payload.animationPref < 2 && !state.displayCrit) {
           state.displayCrit = true
@@ -77,7 +75,6 @@ export const statsSlice = createSlice({
       state.recentCrits = state.recentCrits.filter((crit) => crit.id !== action.payload)
     },
     cleanupOldCrits: (state) => {
-      console.log("Cleaning up old crits")
       const now = Date.now()
       state.recentCrits = state.recentCrits.filter((crit) => now - crit.timestamp < 2000)
     },

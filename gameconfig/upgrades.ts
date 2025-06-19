@@ -163,19 +163,19 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     // { id: "health", title: "Health", basePrice: 2, additiveInc: 1, modifier: 0.05, unlocked: true, tooltip: "" },
   ],
   calcAdditivePrice(atLevel, upgrade): number {
-    return upgrade.priceBase + (atLevel - 1) * upgrade.priceIncrease
+    return atLevel !== 0 ? upgrade.priceBase + (atLevel - 1) * upgrade.priceIncrease : 0
   },
   calcMultiplicativePrice(atLevel, upgrade): number {
-    return upgrade.priceBase * Math.pow(1 + upgrade.priceIncrease, atLevel - 1)
+    return atLevel !== 0 ? upgrade.priceBase * Math.pow(1 + upgrade.priceIncrease, atLevel - 1) : 0
   },
   calcAdditiveMod(atLevel, upgrade): number {
-    return upgrade.baseValue + (atLevel - 1) * upgrade.modifier
+    return atLevel !== 0 ? upgrade.baseValue + (atLevel - 1) * upgrade.modifier : 0
   },
   calcAdditiveModIncrease(atLevel, upgrade): number {
-    return atLevel * upgrade.modifier
+    return atLevel !== 0 ? atLevel * upgrade.modifier : 0
   },
   calcReduction(atLevel, upgrade): number {
-    return upgrade.baseValue * Math.pow(1 - upgrade.modifier, atLevel)
+    return atLevel !== 0 ? upgrade.baseValue * Math.pow(1 - upgrade.modifier, atLevel) : 0
   },
 
   // Extended balance config
