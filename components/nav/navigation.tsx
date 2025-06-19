@@ -49,9 +49,9 @@ export function AnimationQualityButton() {
   const animationPref = useAppSelector(selectAnimationPref)
 
   const animationPrefMap = {
-    0: "low",
-    1: "medium",
-    2: "high",
+    0: "Low",
+    1: "Medium",
+    2: "High",
   }
   const animationQuality = animationPrefMap[animationPref as keyof typeof animationPrefMap]
 

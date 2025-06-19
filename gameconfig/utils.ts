@@ -101,7 +101,10 @@ We managed to salvage your achievements, but the time has come to start a new ad
     return {
       ...gameState,
       player: { ...gameState.player, tabInView: "upgrade" },
-      meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version },
+      meta: {
+        ...gameState.meta,
+        gameVersion: METADATA_CONFIG.version,
+      },
     }
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)

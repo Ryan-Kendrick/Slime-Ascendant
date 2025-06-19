@@ -9,7 +9,7 @@ import {
   setLoading,
   setOTPPos,
 } from "../redux/metaSlice"
-import { updateDotDamageDealt } from "../redux/statsSlice"
+import { removeCrit, toggleDisplayCrit, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName } from "../models/upgrades"
 
 export function useForcedDPI(): number {
@@ -334,4 +334,36 @@ export function useOTPPositions({
   }, [OTPUpgradeCount, iconsLength, isMobile, shouldMount])
 
   return OTPContainerRef
+}
+
+type AnimationProps = {
+  animationPref: number
+  recentCrits: Array<{ id: string; damage: number; timestamp: number }>
+  critRecently: boolean
+}
+
+export const useAnimationCleanup = (animationState: AnimationProps) => {
+  const { animationPref, recentCrits, critRecently } = animationState
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if (animationPref < 2) {
+      if (critRecently) {
+        const timeout = setTimeout(() => {
+          dispatch(toggleDisplayCrit())
+        }, 2000)
+      }
+    } else {
+      if (critRecently) dispatch(toggleDisplayCrit())
+      if (recentCrits.length === 0) return
+
+      const timeouts = recentCrits.map((crit) =>
+        setTimeout(() => {
+          dispatch(removeCrit(crit.id))
+        }, 2000),
+      )
+
+      return () => timeouts.forEach(clearTimeout)
+    }
+  }, [animationPref, recentCrits, critRecently])
 }
