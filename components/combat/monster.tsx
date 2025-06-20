@@ -52,8 +52,7 @@ export default function Monster({ children }: PropsWithChildren) {
   useGameEngine({ dotDamage, loading, lastSaveCatchUp })
 
   function handleClick() {
-    // const isCrit = Math.random() < critChance
-    const isCrit = true
+    const isCrit = Math.random() < critChance
     const damageDealt = isCrit
       ? clickDamage *
         (UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
