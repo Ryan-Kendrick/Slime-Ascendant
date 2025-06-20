@@ -46,7 +46,7 @@ export function formatSmallNumber(num: number): string {
 
 export const getNextCritPosition = (
   existingCrits: Array<{ id: string; damage: number; timestamp: number; position: { x: number; y: number } }> | [],
-) => {
+): { x: number; y: number } => {
   const basePositions = [
     { x: 0, y: 0 },
     { x: -40, y: -30 },
