@@ -79,6 +79,7 @@ export default {
       boxShadow: {
         upgrade:
           "inset 5px 5px 13px #fb923c, inset -5px -5px 13px #2e1065, -5px -5px 5px rgb(251 146 60), 3px 5px 25px #2e1065",
+        panel: "inset 5px 5px 13px #fb923c, inset -5px -3px 13px #2e1065",
         "panel-t-1":
           "inset 0 2px 6px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(139, 69, 19, 0.3), inset 0 0 8px rgba(184, 134, 11, 0.15)",
         "panel-main": `inset 1px -2px 9px #fa7305, 
