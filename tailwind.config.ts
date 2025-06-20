@@ -45,7 +45,7 @@ export default {
         darkgold: "#cca533",
       },
       fontFamily: {
-        arialBlack: ["Arial Black", "Arial", "sans-serif"],
+        arial: ["Arial", "sans-serif"],
         sans: [...defaultTheme.fontFamily.sans],
         sigmar: ["Sigmar", "system-ui", "sans-serif"],
         paytone: ["Paytone", "system-ui", "sans-serif"],
