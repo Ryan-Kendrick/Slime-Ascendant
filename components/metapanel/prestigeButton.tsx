@@ -1,13 +1,13 @@
 import clsx from "clsx/lite"
 import { useState } from "react"
-import { PrestigeUpgradeConfig } from "../../models/upgrades"
+import { PrestigeUpgrade } from "../../models/upgrades"
 import { prestigeUpgradeMap } from "../../redux/shared/maps"
 import { useAppSelector } from "../../redux/hooks"
 import { selectPCanAfford } from "../../redux/playerSlice"
 import { MinPlasmaIcon } from "../svgIcons/resourceIcons"
 
 interface PrestigeBtnProps {
-  config: PrestigeUpgradeConfig
+  config: PrestigeUpgrade
   onClick: (e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) => void
   hidden: boolean
 }

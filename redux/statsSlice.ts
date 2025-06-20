@@ -6,6 +6,7 @@ import { prestigeReset } from "./shared/actions"
 import { AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
 import { PERFORMANCE_CONFIG } from "../gameconfig/meta"
+import { getNextCritPosition } from "../gameconfig/utils"
 
 const initialState = {
   clickCount: 0,
@@ -139,29 +140,6 @@ export const selectEmptyCritState = createSelector([], () => ({
   critRecently: false,
   lastCritDamage: 0,
 }))
-const getNextCritPosition = (existingCrits: Array<any>) => {
-  const basePositions = [
-    { x: 0, y: 0 },
-    { x: -30, y: -20 },
-    { x: 30, y: -20 },
-    { x: -15, y: 10 },
-    { x: 15, y: 10 },
-  ]
-
-  const index = existingCrits.length
-
-  if (index < basePositions.length) {
-    return basePositions[index]
-  }
-
-  // For more than 5 crits, use circular positioning
-  const angle = ((index * 360) / (existingCrits.length + 1)) * (Math.PI / 180)
-  const radius = 40
-  return {
-    x: Math.cos(angle) * radius,
-    y: Math.sin(angle) * radius,
-  }
-}
 
 export const updateMonsterClicked =
   (click: { damage: number; isCrit: boolean; animationPref: number }) =>

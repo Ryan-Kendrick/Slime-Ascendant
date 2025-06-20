@@ -15,15 +15,16 @@ export default function DamageTotals() {
   return (
     <div className="relative">
       <div className="mb-2 h-28 flex">
-        <div className="flex flex-col mt-auto text-white items-center justify-end w-full">
-          <h2 className="text-3xl font-outline z-10">Total</h2>
-          <div className="flex text-lg w-full z-10 justify-evenly font-outline">
-            <h3>Click Damage: {displayClickDamage}</h3>
-            <h3>Passive Damage: {displayDotDamage}</h3>
+        <div className="flex flex-col mt-auto font-arialBlack text-[#2c1810] items-center justify-end w-full">
+          <h2 className="text-2xl z-10 text-shadow tracking-widest">TOTAL</h2>
+          <div className="flex text-lg w-full z-10 justify-center gap-6">
+            <h3>Click: {displayClickDamage}</h3>
+            <span className="text-base mt-0.5 opacity-80">|</span>
+            <h3>Passive: {displayDotDamage}</h3>
           </div>
         </div>
       </div>
-      <div className="absolute shadow-panel-main inset-0 z-0 bg-gradient-to-r from-cyan-300 via-cyan-400 to-emerald-500" />
+      <div className="absolute shadow-panel-main inset-0 z-0 bg-gold" />
     </div>
   )
 }

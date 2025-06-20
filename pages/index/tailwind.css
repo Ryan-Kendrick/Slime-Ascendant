@@ -39,4 +39,9 @@
   .font-outline-none {
     -webkit-text-stroke: initial;
   }
+  .text-shadow {
+    text-shadow:
+      0 1px 2px rgba(255, 255, 255, 0.4),
+      0 -1px 1px rgba(139, 69, 19, 0.3);
+  }
 }

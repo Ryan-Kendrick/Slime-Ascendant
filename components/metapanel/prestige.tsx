@@ -53,7 +53,7 @@ export default function Prestige() {
         suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
       />
       <div className="flex mx-2 font-sans gap-2">
-        {UPGRADE_CONFIG.prestige.map((prestigeUpgrade) => (
+        {UPGRADE_CONFIG.prestigeUpgrades.map((prestigeUpgrade) => (
           <PrestigeButton
             key={prestigeUpgrade.id + resetCounter}
             config={prestigeUpgrade}

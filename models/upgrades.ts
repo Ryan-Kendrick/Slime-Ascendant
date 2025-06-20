@@ -17,7 +17,7 @@ export interface UpgradeElement {
 
 export type PrestigeUpgradeName = "damage" | "crit-chance" | "multistrike" | "beat" //| "health"
 
-export interface PrestigeUpgradeConfig {
+export interface PrestigeUpgrade {
   id: PrestigeUpgradeName
   title: string
   modDescription: string
@@ -57,14 +57,17 @@ export interface UpgradeConfig {
   warrior: Upgrade
   healer: Upgrade
   mage: Upgrade
-  prestige: PrestigeUpgradeConfig[]
+  prestigeUpgrades: PrestigeUpgrade[]
   calcOTPPrice: (upgradeName: UpgradeId, upgradeCount: number) => number
-  calcAdditivePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
-  calcMultiplicativePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
-  calcAdditiveMod: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
-  calcAdditiveModIncrease: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
-  calcReduction: (atLevel: number, prestigeUpgrade: PrestigeUpgradeConfig) => number
-  critMultiplier: number
+  calcAdditivePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+  calcMultiplicativePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+  calcAdditiveMod: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+  calcAdditiveModIncrease: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+  calcReduction: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+  prestigeUpgradeConfig: {
+    critMultiplier: number
+    critVariance: number
+  }
 }
 
 export interface PlayerCalc {

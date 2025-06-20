@@ -44,6 +44,31 @@ export function formatSmallNumber(num: number): string {
   return num.toString()
 }
 
+export const getNextCritPosition = (
+  existingCrits: Array<{ id: string; damage: number; timestamp: number; position: { x: number; y: number } }> | [],
+) => {
+  const basePositions = [
+    { x: 0, y: 0 },
+    { x: -40, y: -30 },
+    { x: 40, y: -30 },
+    { x: -20, y: 15 },
+    { x: 20, y: 15 },
+  ]
+
+  const index = existingCrits.length
+
+  if (index < basePositions.length) return basePositions[index]
+
+  const spiralIndex = index - 5
+  const angle = spiralIndex * 0.8
+  const radius = 50 + spiralIndex * 6
+
+  return {
+    x: Math.cos(angle) * radius,
+    y: Math.sin(angle) * radius,
+  }
+}
+
 export function saveToLocalStorage(state: RootState): void {
   try {
     const base64GameState = LZString.compressToBase64(JSON.stringify(state))

@@ -106,7 +106,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     }
     return costs[upgradeName][upgradeCount]
   },
-  prestige: [
+  prestigeUpgrades: [
     {
       id: "damage",
       title: "Damage",
@@ -179,7 +179,10 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
   },
 
   // Extended balance config
-  critMultiplier: 2.5,
+  prestigeUpgradeConfig: {
+    critMultiplier: 2.5,
+    critVariance: 0.3,
+  },
 } as const
 
 export const playerCalc: PlayerCalc = {

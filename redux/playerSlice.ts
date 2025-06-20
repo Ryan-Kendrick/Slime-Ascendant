@@ -261,7 +261,7 @@ export const {
   toggleDebugState,
 } = playerSlice.actions
 
-export const prestigeDamageMod = UPGRADE_CONFIG.prestige.find((pUpgrade) => pUpgrade.id === "damage")!.modifier
+export const prestigeDamageMod = UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "damage")!.modifier
 export const selectPrestigeState = createSelector([(state: RootState) => state.player], (player) => ({
   plasma: player.plasma,
   plasmaSpent: player.plasmaSpent,
@@ -274,7 +274,7 @@ export const selectPrestigeState = createSelector([(state: RootState) => state.p
 export const selectCritChance = (state: RootState) =>
   UPGRADE_CONFIG.calcAdditiveMod(
     state.player.pCritUpgradeCount,
-    UPGRADE_CONFIG.prestige.find((pUpgrade) => pUpgrade.id === "crit-chance")!,
+    UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "crit-chance")!,
   )
 
 export const createPendingPPurchaseSelector = (upgradeId: PrestigeUpgradeName) =>
