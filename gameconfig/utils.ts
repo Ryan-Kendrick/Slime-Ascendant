@@ -107,7 +107,7 @@ Your save from ${saveVersion} doesn't quite fit into the ${currentVersion} world
 The time has come to start a brand new adventure.`)
       }, 100)
       return undefined
-    } else if (Number(saveMinorVersion) === 4) {
+    } else if (Number(saveMinorVersion) === 5) {
       setTimeout(() => {
         alert(`
 Attention Slime Slayer!
