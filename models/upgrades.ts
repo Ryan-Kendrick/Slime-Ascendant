@@ -64,9 +64,11 @@ export interface UpgradeConfig {
   calcAdditiveMod: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
   calcAdditiveModIncrease: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
   calcReduction: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+  calcMultistrikeCount: () => number
   prestigeUpgradeConfig: {
     critMultiplier: number
     critVariance: number
+    multistrikeDelay: number
   }
 }
 

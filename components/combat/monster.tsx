@@ -1,6 +1,11 @@
-import { PropsWithChildren, useCallback, useEffect, useMemo, useRef } from "react"
+import { PropsWithChildren, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { selectClickDamage, selectCritChance, selectDotDamage } from "../../redux/playerSlice"
+import {
+  selectClickDamage,
+  selectCritChance,
+  selectDotDamage,
+  selectMultistrikeCooldown,
+} from "../../redux/playerSlice"
 import { selectMonsterState } from "../../redux/monsterSlice"
 import {
   selectCritState,
@@ -9,9 +14,12 @@ import {
   cleanupOldCrits,
   selectEmptyArray,
   selectEmptyCritState,
+  updateMultistrikeDamageDealt,
+  selectMultistrikeState,
+  toggleDisplayMultistrike,
 } from "../../redux/statsSlice"
 import { selectAnimationPref, selectLastSaveCatchUp, selectLoading } from "../../redux/metaSlice"
-import { useAnimationCleanup, useGameEngine } from "../../gameconfig/customHooks"
+import { useCritCleanup, useGameEngine } from "../../gameconfig/customHooks"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { formatSmallNumber } from "../../gameconfig/utils"
 
@@ -24,10 +32,13 @@ export default function Monster({ children }: PropsWithChildren) {
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
   const loading = useAppSelector(selectLoading)
 
-  const animationPref = useAppSelector(selectAnimationPref)
+  // const animationPref = useAppSelector(selectAnimationPref)
+  const animationPref = 0
+  const usingHighQualityAnimations = animationPref > 1
   const recentCrits = useAppSelector(animationPref > 1 ? selectRecentCrits : selectEmptyArray)
-  const { critRecently, lastCritDamage } = useAppSelector(animationPref <= 1 ? selectCritState : selectEmptyCritState)
-
+  const { displayCrit, lastCritDamage } = useAppSelector(animationPref <= 1 ? selectCritState : selectEmptyCritState)
+  const multistrikeCooldown = (useAppSelector(selectMultistrikeCooldown) * 1000) / 40
+  const { lastMultistrikeTime, displayMultistrike } = useAppSelector(selectMultistrikeState)
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
 
   // Interface between requestAnimationFrame and React to prevent infinite catchup loops
@@ -35,7 +46,7 @@ export default function Monster({ children }: PropsWithChildren) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  useAnimationCleanup({ animationPref, recentCrits, critRecently })
+  useCritCleanup({ animationPref, recentCrits, displayCrit })
 
   useEffect(() => {
     if (animationPref <= 1) return
@@ -51,6 +62,15 @@ export default function Monster({ children }: PropsWithChildren) {
 
   useGameEngine({ dotDamage, loading, lastSaveCatchUp })
 
+  useEffect(() => {
+    if (displayMultistrike) {
+      console.log("Multistrike display active")
+      const timeout = setTimeout(() => {
+        dispatch(toggleDisplayMultistrike())
+      }, 2000)
+    }
+  }, [displayMultistrike])
+
   function handleClick() {
     const isCrit = Math.random() < critChance
     const damageDealt = isCrit
@@ -58,10 +78,37 @@ export default function Monster({ children }: PropsWithChildren) {
         (UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
           Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10))
       : clickDamage
-    dispatch(updateMonsterClicked({ damage: damageDealt, isCrit, animationPref }))
-  }
 
-  const showCritAnimation = animationPref > 1
+    if (multistrikeCooldown !== 0) {
+      const delta = Date.now() - lastMultistrikeTime
+      const isMultiStrike = delta > multistrikeCooldown
+
+      if (isMultiStrike) {
+        for (let i = 0; i < UPGRADE_CONFIG.calcMultistrikeCount(); i++) {
+          const isMSCrit = Math.random() < critChance
+          const multiStrikeDamage = isMSCrit
+            ? clickDamage *
+              (UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
+                Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10))
+            : clickDamage
+
+          setTimeout(() => {
+            console.log(`Multistrike hit ${i + 1} with damage: ${multiStrikeDamage}, crit: ${isMSCrit}`)
+            dispatch(
+              updateMultistrikeDamageDealt({
+                damage: damageDealt,
+                isCrit: isMSCrit,
+                isMultiStrike: true,
+                animationPref,
+              }),
+            )
+          }, i * UPGRADE_CONFIG.prestigeUpgradeConfig.multistrikeDelay)
+        }
+      }
+    }
+
+    dispatch(updateMonsterClicked({ damage: damageDealt, isCrit, isMultiStrike: false, animationPref }))
+  }
 
   return (
     <>
@@ -80,7 +127,7 @@ export default function Monster({ children }: PropsWithChildren) {
           src={monsterImage}
           alt={monsterName}
         />
-        {showCritAnimation &&
+        {usingHighQualityAnimations &&
           recentCrits.map((crit) => {
             if (!crit.id) return null
             return (
@@ -99,12 +146,27 @@ export default function Monster({ children }: PropsWithChildren) {
               </div>
             )
           })}
-        {!showCritAnimation && (
+        {!usingHighQualityAnimations && displayCrit && (
           <div className="absolute inset-0 text-yellow-400 text-6xl font-bold top-0">
             <div className="flex flex-col gap-1">
               <p>{formatSmallNumber(lastCritDamage)}</p>
               <p className="text-white text-4xl">⚡CRITICAL HIT⚡</p>
             </div>
+          </div>
+        )}
+        {usingHighQualityAnimations && displayMultistrike && (
+          <div className="absolute top-16 left-16 pointer-events-none">
+            <div className="absolute animate-multistrike-ring">
+              <div className="w-12 h-12 border-4 border-white rounded-full" />
+            </div>
+          </div>
+        )}
+
+        {!usingHighQualityAnimations && displayMultistrike && (
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div className="bg-dagger absolute left-[20%] translate-x-1/2 translate-y-1/2 opacity-0 w-[64px] h-[49px] animate-multistrike-simple-1 rotate-[120deg]" />
+            <div className="bg-dagger absolute left-[30%] top-20 translate-x-1/2 translate-y-1/2 opacity-0 w-[64px] h-[49px] animate-multistrike-simple-2 rotate-180" />
+            <div className="bg-dagger absolute left-[60%] top-24 translate-x-1/2 translate-y-1/2 opacity-0 w-[64px] h-[49px] animate-multistrike-simple-3 -rotate-90" />
           </div>
         )}
       </button>

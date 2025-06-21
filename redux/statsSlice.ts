@@ -17,12 +17,15 @@ const initialState = {
   totalZonesCompleted: 0,
   highestZoneEver: 1,
   prestigeCount: 0,
+  totalMultistrikeDamage: 0,
   achievementsUnlocked: [] as string[],
 
   // This run data
   recentCrits: [] as Array<{ id: string; damage: number; timestamp: number; position: { x: number; y: number } }>, // High animation quality
   displayCrit: false, // Medium animation quality
   lastCritDamage: 0, // Medium animation quality
+  lastMultistrikeTime: 0,
+  displayMultistrike: false,
   highestZone: 1,
 
   // Persisted data
@@ -37,9 +40,19 @@ export const statsSlice = createSlice({
       state.achievementsUnlocked.push(action.payload)
       console.log("Achievement unlocked", action.payload)
     },
-    monsterClicked(state, action: PayloadAction<{ damage: number; isCrit: boolean; animationPref: number }>) {
-      state.clickCount++
-      state.totalClickDamage += action.payload.damage
+    monsterClicked(
+      state,
+      action: PayloadAction<{ damage: number; isCrit: boolean; isMultiStrike: boolean; animationPref: number }>,
+    ) {
+      if (!state.lastMultistrikeTime) state.lastMultistrikeTime = 1
+      if (!action.payload.isMultiStrike) {
+        state.clickCount++
+        state.totalClickDamage += action.payload.damage
+      } else {
+        state.lastMultistrikeTime = Date.now()
+        state.displayMultistrike = true
+        state.totalMultistrikeDamage += action.payload.damage
+      }
 
       if (action.payload.isCrit) {
         if (action.payload.animationPref < 2 && !state.displayCrit) {
@@ -82,6 +95,9 @@ export const statsSlice = createSlice({
     toggleDisplayCrit: (state) => {
       state.displayCrit = false
     },
+    toggleDisplayMultistrike: (state) => {
+      state.displayMultistrike = false
+    },
     zoneTenCompleted: (state) => {
       state.zoneTenCompleted = true
     },
@@ -96,6 +112,10 @@ export const statsSlice = createSlice({
     })
     builder.addCase(prestigeReset, (state) => {
       state.prestigeCount++
+      state.recentCrits = []
+      state.displayCrit = false
+      state.lastCritDamage = 0
+      state.lastMultistrikeTime = 0
       state.highestZone = 1
     })
   },
@@ -110,6 +130,7 @@ export const {
   removeCrit,
   cleanupOldCrits,
   toggleDisplayCrit,
+  toggleDisplayMultistrike,
   zoneTenCompleted,
 } = statsSlice.actions
 
@@ -132,20 +153,25 @@ export const selectHighestZone = (state: RootState) => state.stats.highestZone
 export const selectHighestZoneEver = (state: RootState) => state.stats.highestZoneEver
 
 export const selectRecentCrits = (state: RootState) => state.stats.recentCrits
-export const selectCritState = (state: RootState) => {
-  return { critRecently: state.stats.displayCrit, lastCritDamage: state.stats.lastCritDamage }
-}
+export const selectCritState = createSelector([(state: RootState) => state.stats], (stats) => ({
+  displayCrit: stats.displayCrit,
+  lastCritDamage: stats.lastCritDamage,
+}))
 export const selectEmptyArray = createSelector([], () => [])
 export const selectEmptyCritState = createSelector([], () => ({
-  critRecently: false,
+  displayCrit: false,
   lastCritDamage: 0,
+}))
+export const selectMultistrikeState = createSelector([(state: RootState) => state.stats], (stats) => ({
+  lastMultistrikeTime: stats.lastMultistrikeTime,
+  displayMultistrike: stats.displayMultistrike,
 }))
 
 export const updateMonsterClicked =
-  (click: { damage: number; isCrit: boolean; animationPref: number }) =>
+  (click: { damage: number; isCrit: boolean; isMultiStrike: boolean; animationPref: number }) =>
   (dispatch: AppDispatch, getState: () => RootState) => {
-    const { damage, isCrit, animationPref } = click
-    dispatch(monsterClicked({ damage, isCrit, animationPref }))
+    const { damage, isCrit, isMultiStrike, animationPref } = click
+    dispatch(monsterClicked({ damage, isCrit, isMultiStrike, animationPref }))
 
     const countAchievements = ACHIEVEMENTS.click.count as AchievementCategory
     const damageAchievements = ACHIEVEMENTS.click.damage as AchievementCategory
@@ -179,5 +205,14 @@ export const updateDotDamageDealt = (damage: number) => (dispatch: AppDispatch, 
     },
   ])
 }
+
+export const updateMultistrikeDamageDealt =
+  (click: { damage: number; isCrit: boolean; isMultiStrike: true; animationPref: number }) =>
+  (dispatch: AppDispatch, getState: () => RootState) => {
+    const { damage, isCrit, isMultiStrike, animationPref } = click
+    dispatch(monsterClicked({ damage, isCrit, isMultiStrike, animationPref }))
+
+    // Possible future achievement implementation
+  }
 
 export default statsSlice.reducer

@@ -18,18 +18,47 @@ export default {
       animation: {
         "bounce-fade": "bounceFade 1.5s ease-out forwards",
         "float-up": "floatUp 2s ease-out forwards",
+        "multistrike-slash": "slash 0.8s ease-out",
+        "multistrike-ring": "multistrike-ring 1s cubic-bezier(.63,-1.02,0,.85) forwards",
+        "multistrike-simple-1": "daggerAppear .800s ease-out forwards",
+        "multistrike-simple-2": "daggerAppear .533s ease-out .266s forwards",
+        "multistrike-simple-3": "daggerAppear .266s ease-out .533s forwards",
       },
       keyframes: {
-        bounceFade: {
-          "0%": { transform: "scale(0.3) translateY(0)", opacity: "0" },
-          "30%": { transform: "scale(1.2) translateY(10px)", opacity: "1" },
-          "60%": { transform: "scale(0.9) translateY(5px)", opacity: "1" },
-          "100%": { transform: "scale(1) translateY(0)", opacity: "0" },
-        },
         floatUp: {
           "0%": { transform: "translateY(0) scale(0.7)", opacity: "0" },
           "10%": { transform: "translateY(-20px) scale(1.2)", opacity: "1" },
           "100%": { transform: "translateY(-80px) scale(0.6)", opacity: "0" },
+        },
+        "multistrike-ring": {
+          "0%": { transform: "translate(-50%, -50%) scale(0)", opacity: "1" },
+          "8%": { opacity: "0.8" },
+          "15%": { transform: "translate(-50%, -50%) scale(2)", opacity: "0.8" },
+          "30%": { transform: "translate(-50%, -50%) scale(4)", opacity: "0" },
+
+          "30.1%": { transform: "translate(-50%, -50%) scale(2)", opacity: "0.8" },
+          "38%": { opacity: "0.8" },
+          "50%": { transform: "translate(-50%, -50%) scale(4)", opacity: "0" },
+
+          "50.1%": { transform: "translate(-50%, -50%) scale(2)", opacity: "0.8" },
+          "58%": { opacity: "0.8" },
+          "70%": { transform: "translate(-50%, -50%) scale(4)", opacity: "0" },
+
+          "100%": { transform: "translate(-50%, -50%) scale(3)", opacity: "0" },
+        },
+        daggerAppear: {
+          "0%": {
+            opacity: "0",
+          },
+          "20%": {
+            opacity: "1",
+          },
+          "60%": {
+            opacity: "1",
+          },
+          "100%": {
+            opacity: "0",
+          },
         },
       },
       colors: {
@@ -67,6 +96,7 @@ export default {
         cogColor: "#DFDBE5",
       },
       backgroundImage: {
+        dagger: "url('/assets/icons/dagger.png')",
         gold: "linear-gradient(135deg, #b8860b, #daa520, #cd853f)",
         meadow: "url('/assets/icons/meadow.jpg')",
         chainsLeft: "url('/assets/icons/chains-left.webp')",

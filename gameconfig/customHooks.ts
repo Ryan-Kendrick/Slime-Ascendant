@@ -339,22 +339,22 @@ export function useOTPPositions({
 type AnimationProps = {
   animationPref: number
   recentCrits: Array<{ id: string; damage: number; timestamp: number }>
-  critRecently: boolean
+  displayCrit: boolean
 }
 
-export const useAnimationCleanup = (animationState: AnimationProps) => {
-  const { animationPref, recentCrits, critRecently } = animationState
+export const useCritCleanup = (animationState: AnimationProps) => {
+  const { animationPref, recentCrits, displayCrit } = animationState
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (animationPref < 2) {
-      if (critRecently) {
+      if (displayCrit) {
         const timeout = setTimeout(() => {
           dispatch(toggleDisplayCrit())
         }, 2000)
       }
     } else {
-      if (critRecently) dispatch(toggleDisplayCrit())
+      if (displayCrit) dispatch(toggleDisplayCrit())
       if (recentCrits.length === 0) return
 
       const timeouts = recentCrits.map((crit) =>
@@ -365,5 +365,5 @@ export const useAnimationCleanup = (animationState: AnimationProps) => {
 
       return () => timeouts.forEach(clearTimeout)
     }
-  }, [animationPref, recentCrits, critRecently])
+  }, [animationPref, recentCrits, displayCrit])
 }

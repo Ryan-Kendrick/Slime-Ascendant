@@ -175,13 +175,17 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     return atLevel !== 0 ? atLevel * upgrade.modifier : 0
   },
   calcReduction(atLevel, upgrade): number {
-    return atLevel !== 0 ? upgrade.baseValue * Math.pow(1 - upgrade.modifier, atLevel) : 0
+    return atLevel !== 0 ? upgrade.baseValue * Math.pow(1 - upgrade.modifier, atLevel - 1) : 0
+  },
+  calcMultistrikeCount(): number {
+    return 4
   },
 
   // Extended balance config
   prestigeUpgradeConfig: {
     critMultiplier: 2.5,
     critVariance: 0.3,
+    multistrikeDelay: 100,
   },
 } as const
 

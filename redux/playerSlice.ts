@@ -62,7 +62,6 @@ export const initialState = {
 
   activeHeroes: [] as HeroName[],
   plasmaReserved: 0,
-  // Prevents animation triggering again on mount
   UIProgression: 0,
   hasInitAdventurerOTP: 0,
   hasInitWarriorPane: false,
@@ -275,6 +274,11 @@ export const selectCritChance = (state: RootState) =>
   UPGRADE_CONFIG.calcAdditiveMod(
     state.player.pCritUpgradeCount,
     UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "crit-chance")!,
+  )
+export const selectMultistrikeCooldown = (state: RootState) =>
+  UPGRADE_CONFIG.calcReduction(
+    state.player.pMultistrikeUpgradeCount + 2,
+    UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "multistrike")!,
   )
 
 export const createPendingPPurchaseSelector = (upgradeId: PrestigeUpgradeName) =>
