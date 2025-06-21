@@ -2,11 +2,11 @@ import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store"
 import { METADATA_CONFIG } from "../gameconfig/meta"
 import { HeroName } from "../models/upgrades"
-import { heroIndexMap, heroNames } from "./shared/maps"
+import { heroIndexMap, heroNames } from "./shared/helpers"
 import { prestigeReset } from "./shared/actions"
 import { constructOTPPosArr } from "./shared/helpers"
 
-const initialState = {
+export const initialState = {
   gameVersion: METADATA_CONFIG.version,
   lastPlayed: Date.now(),
   lastSaveCatchUp: null as number | null,

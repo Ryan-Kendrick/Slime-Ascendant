@@ -8,7 +8,7 @@ import { checkAchievementUnlock } from "./shared/helpers"
 import { PERFORMANCE_CONFIG } from "../gameconfig/meta"
 import { getNextCritPosition } from "../gameconfig/utils"
 
-const initialState = {
+export const initialState = {
   clickCount: 0,
   totalClickDamage: 0,
   totalDotDamage: 0,

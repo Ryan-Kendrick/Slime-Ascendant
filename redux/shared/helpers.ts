@@ -2,9 +2,8 @@ import { type AppDispatch } from "../store"
 import { unlockAchievement } from "../statsSlice"
 import { increaseAchievementModifier } from "../playerSlice"
 import { type Achievement } from "../../gameconfig/achievements"
-import { createSelector } from "@reduxjs/toolkit"
-import { playerCalc, UPGRADE_CONFIG } from "../../gameconfig/upgrades"
-import { heroNames } from "./maps"
+import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
+import { HeroName } from "../../models/upgrades"
 
 interface AchievementCheck {
   unlockedAchievements: string[]
@@ -28,6 +27,17 @@ export const checkAchievementUnlock = (dispatch: AppDispatch, check: Achievement
     }
   })
 }
+
+export const heroNames: HeroName[] = ["adventurer", "warrior", "healer", "mage"] as const
+const constructIndexMap = () => {
+  const heroIndexMap = {} as Record<HeroName, number>
+  heroNames.map((heroName, index) => {
+    heroIndexMap[heroName] = index
+  })
+  return heroIndexMap
+}
+
+export const heroIndexMap = constructIndexMap()
 
 export const constructOTPPosArr = (): { x: number; y: number | true }[][] => {
   return heroNames.map((thisHero) => {

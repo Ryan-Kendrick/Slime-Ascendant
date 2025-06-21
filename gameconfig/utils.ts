@@ -1,8 +1,9 @@
 //@ts-nocheck
 
-import { UpgradeProps, HeroState } from "../models/upgrades"
 import { RootState } from "../redux/store"
-import { initialState } from "../redux/playerSlice"
+import { initialState as initPlayerState } from "../redux/playerSlice"
+import { initialState as initStatsState } from "../redux/statsSlice"
+import { initialState as initialMetaState } from "../redux/metaSlice"
 import * as LZString from "lz-string"
 import { METADATA_CONFIG } from "./meta"
 
@@ -117,9 +118,15 @@ Your save from ${saveVersion} doesn't quite fit into the ${currentVersion} world
 We managed to salvage your achievements, but the time has come to start a new adventure.`)
       }, 100)
       return {
-        player: { ...initialState, achievementModifier: gameState.player.achievementModifier },
-        stats: { ...initialState, ...gameState.stats, recentCrits: [], displayCrit: false, displayMultistrike: false },
-        meta: { ...initialState, ...gameState.meta, gameVersion: METADATA_CONFIG.version },
+        player: { ...initPlayerState, achievementModifier: gameState.player.achievementModifier },
+        stats: {
+          ...initStatsState,
+          ...gameState.stats,
+          recentCrits: [],
+          displayCrit: false,
+          displayMultistrike: false,
+        },
+        meta: { ...initialMetaState, ...gameState.meta, gameVersion: METADATA_CONFIG.version },
       }
     }
 
