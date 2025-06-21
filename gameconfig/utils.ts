@@ -95,7 +95,7 @@ export function loadFromLocalStorage(): RootState | undefined {
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
 
-    gameState.meta.breakpoint ??= 0
+    // gameState.meta.breakpoint ??= 0
 
     if (Number(saveMinorVersion) < 4) {
       setTimeout(() => {
@@ -118,8 +118,8 @@ We managed to salvage your achievements, but the time has come to start a new ad
       }, 100)
       return {
         player: { ...initialState, achievementModifier: gameState.player.achievementModifier },
-        stats: { ...gameState.stats, recentCrits: [], displayCrit: false, displayMultistrike: false },
-        meta: { ...gameState.meta, gameVersion: METADATA_CONFIG.version },
+        stats: { ...initialState, ...gameState.stats, recentCrits: [], displayCrit: false, displayMultistrike: false },
+        meta: { ...initialState, ...gameState.meta, gameVersion: METADATA_CONFIG.version },
       }
     }
 
