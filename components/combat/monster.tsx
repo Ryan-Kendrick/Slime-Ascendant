@@ -32,8 +32,7 @@ export default function Monster({ children }: PropsWithChildren) {
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
   const loading = useAppSelector(selectLoading)
 
-  // const animationPref = useAppSelector(selectAnimationPref)
-  const animationPref = 0
+  const animationPref = useAppSelector(selectAnimationPref)
   const usingHighQualityAnimations = animationPref > 1
   const recentCrits = useAppSelector(animationPref > 1 ? selectRecentCrits : selectEmptyArray)
   const { displayCrit, lastCritDamage } = useAppSelector(animationPref <= 1 ? selectCritState : selectEmptyCritState)
@@ -64,7 +63,6 @@ export default function Monster({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (displayMultistrike) {
-      console.log("Multistrike display active")
       const timeout = setTimeout(() => {
         dispatch(toggleDisplayMultistrike())
       }, 2000)
@@ -93,7 +91,6 @@ export default function Monster({ children }: PropsWithChildren) {
             : clickDamage
 
           setTimeout(() => {
-            console.log(`Multistrike hit ${i + 1} with damage: ${multiStrikeDamage}, crit: ${isMSCrit}`)
             dispatch(
               updateMultistrikeDamageDealt({
                 damage: damageDealt,
