@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import {
+  selectBeatDamage,
   selectClickDamage,
   selectCritChance,
   selectDotDamage,
@@ -27,8 +28,9 @@ export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
 
   const clickDamage = useAppSelector(selectClickDamage)
-  const critChance = useAppSelector(selectCritChance)
   const dotDamage = useAppSelector(selectDotDamage)
+  const critChance = useAppSelector(selectCritChance)
+  const beatDamage = useAppSelector(selectBeatDamage)
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
   const loading = useAppSelector(selectLoading)
 
@@ -36,7 +38,7 @@ export default function Monster({ children }: PropsWithChildren) {
   const usingHighQualityAnimations = animationPref > 1
   const recentCrits = useAppSelector(animationPref > 1 ? selectRecentCrits : selectEmptyArray)
   const { displayCrit, lastCritDamage } = useAppSelector(animationPref <= 1 ? selectCritState : selectEmptyCritState)
-  const multistrikeCooldown = (useAppSelector(selectMultistrikeCooldown) * 1000) / 40
+  const multistrikeCooldown = useAppSelector(selectMultistrikeCooldown) * 1000
   const { lastMultistrikeTime, displayMultistrike } = useAppSelector(selectMultistrikeState)
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
 
@@ -59,7 +61,7 @@ export default function Monster({ children }: PropsWithChildren) {
 
   const { monsterName, monsterImage } = useAppSelector(selectMonsterState)
 
-  useGameEngine({ dotDamage, loading, lastSaveCatchUp })
+  useGameEngine({ dotDamage, beatDamage, loading, lastSaveCatchUp })
 
   useEffect(() => {
     if (displayMultistrike) {
@@ -93,7 +95,7 @@ export default function Monster({ children }: PropsWithChildren) {
           setTimeout(() => {
             dispatch(
               updateMultistrikeDamageDealt({
-                damage: damageDealt,
+                damage: multiStrikeDamage,
                 isCrit: isMSCrit,
                 isMultiStrike: true,
                 animationPref,
@@ -136,7 +138,7 @@ export default function Monster({ children }: PropsWithChildren) {
                 }}>
                 <div className="animate-float-up text-yellow-300 text-6xl font-bold absolute top-12">
                   <div className="flex flex-col gap-1">
-                    <p>{formatSmallNumber(crit.damage)}</p>
+                    <p className="font-outline">{formatSmallNumber(crit.damage)}</p>
                     <p className="text-white text-4xl">⚡CRITICAL HIT⚡</p>
                   </div>
                 </div>

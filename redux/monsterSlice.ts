@@ -3,8 +3,9 @@ import type { PayloadAction } from "@reduxjs/toolkit"
 import { type RootState } from "./store"
 import { getMonster } from "../gameconfig/monster"
 import { EnemyState } from "../models/monsters"
-import { monsterClicked, increaseTotalDotDamageDealt } from "./statsSlice"
+import { monsterClicked, increaseTotalDotDamageDealt, monsterBeaten } from "./statsSlice"
 import { prestigeReset } from "./shared/actions"
+import { build } from "vite"
 
 interface EnemyThatDies extends EnemyState {
   alive: boolean
@@ -33,6 +34,11 @@ export const monsterSlice = createSlice({
       state.alive = newHealth >= 1
     })
     builder.addMatcher(isAllOf(increaseTotalDotDamageDealt), (state, action) => {
+      const newHealth = state.health - action.payload
+      state.health = newHealth
+      state.alive = newHealth >= 1
+    })
+    builder.addMatcher(isAllOf(monsterBeaten), (state, action) => {
       const newHealth = state.health - action.payload
       state.health = newHealth
       state.alive = newHealth >= 1

@@ -71,10 +71,13 @@ export const statsSlice = createSlice({
           })
 
           if (state.recentCrits.length > PERFORMANCE_CONFIG.critDisplayLimit) {
-            state.recentCrits.unshift()
+            state.recentCrits.shift()
           }
         }
       }
+    },
+    monsterBeaten(state, action: PayloadAction<number>) {
+      // Stats relating to rhythm mechanic goes here
     },
     increaseTotalDotDamageDealt(state, action: PayloadAction<number>) {
       state.totalDotDamage += action.payload
@@ -124,6 +127,7 @@ export const statsSlice = createSlice({
 export const {
   unlockAchievement,
   monsterClicked,
+  monsterBeaten,
   increaseTotalDotDamageDealt,
   incrementKillCount,
   incrementFarmZonesCompleted,
@@ -215,4 +219,9 @@ export const updateMultistrikeDamageDealt =
     // Possible future achievement implementation
   }
 
+export const updateBeatDamageDealt = (damage: number) => (dispatch: AppDispatch, getState: () => RootState) => {
+  dispatch(monsterBeaten(damage))
+
+  // Possible future achievement implementation
+}
 export default statsSlice.reducer

@@ -5,7 +5,8 @@ import { initialState as initPlayerState } from "../redux/playerSlice"
 import { initialState as initStatsState } from "../redux/statsSlice"
 import { initialState as initialMetaState } from "../redux/metaSlice"
 import * as LZString from "lz-string"
-import { METADATA_CONFIG } from "./meta"
+import { METADATA_CONFIG, PERFORMANCE_CONFIG } from "./meta"
+import { UPGRADE_CONFIG } from "./upgrades"
 
 export function serialize(classInstance) {
   if (classInstance == null || typeof classInstance !== "object") return classInstance
@@ -58,6 +59,8 @@ export const getNextCritPosition = (
 
   const index = existingCrits.length
 
+  if (index >= PERFORMANCE_CONFIG.critDisplayLimit)
+    return basePositions[Math.floor(Math.random() * basePositions.length)]
   if (index < basePositions.length) return basePositions[index]
 
   const spiralIndex = index - 5
@@ -95,8 +98,6 @@ export function loadFromLocalStorage(): RootState | undefined {
     const saveMinorVersion = saveVersion.split(".")?.[1]
     const currentVersion = METADATA_CONFIG.version
     const currentMinorVersion = currentVersion.split(".")[1]
-
-    // gameState.meta.breakpoint ??= 0
 
     if (Number(saveMinorVersion) < 4) {
       setTimeout(() => {

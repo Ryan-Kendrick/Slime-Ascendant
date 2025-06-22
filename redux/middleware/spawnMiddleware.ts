@@ -11,7 +11,12 @@ import {
 import { ZONE_CONFIG } from "../../gameconfig/zone"
 import { EnemyState } from "../../models/monsters"
 import { increaseGold, increasePlasma, incrementPDamageUpgradeCount } from "../playerSlice"
-import { incrementFarmZonesCompleted, incrementKillCount, selectUnlockedAchievements } from "../statsSlice"
+import {
+  incrementFarmZonesCompleted,
+  incrementKillCount,
+  monsterBeaten,
+  selectUnlockedAchievements,
+} from "../statsSlice"
 import { RootState, store } from "../store"
 import { AchievementCategory, ACHIEVEMENTS } from "../../gameconfig/achievements"
 import { checkAchievementUnlock } from "../shared/helpers"
@@ -20,7 +25,7 @@ import { monsterClicked, increaseTotalDotDamageDealt } from "../statsSlice"
 export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
   const nextAction = next(action)
 
-  if (!isAnyOf(monsterClicked, increaseTotalDotDamageDealt, zoneSelected)(action)) return nextAction
+  if (!isAnyOf(monsterClicked, monsterBeaten, increaseTotalDotDamageDealt, zoneSelected)(action)) return nextAction
 
   const state: RootState = store.getState()
   const dispatch = store.dispatch

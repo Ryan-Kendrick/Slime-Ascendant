@@ -277,7 +277,7 @@ export const selectCritChance = (state: RootState) =>
   )
 export const selectMultistrikeCooldown = (state: RootState) =>
   UPGRADE_CONFIG.calcReduction(
-    state.player.pMultistrikeUpgradeCount + 2,
+    state.player.pMultistrikeUpgradeCount,
     UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "multistrike")!,
   )
 
@@ -307,6 +307,14 @@ export const selectClickDamage = createSelector(
   ],
   (adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage) =>
     playerCalc.clickDamage(adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage),
+)
+export const selectBeatDamage = createSelector(
+  [(state: RootState) => state.player.pBeatUpgradeCount, selectClickDamage],
+  (pBeatUpgradeCount, clickDamage) =>
+    UPGRADE_CONFIG.calcAdditiveMod(
+      pBeatUpgradeCount,
+      UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "beat")!,
+    ) * clickDamage,
 )
 export const selectDotDamage = createSelector(
   [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],

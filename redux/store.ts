@@ -27,7 +27,6 @@ export const store = configureStore({
   preloadedState: loadFromLocalStorage(),
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveMiddleware, spawnMiddleware),
 })
-console.log(store.getState())
 
 export type RootState = StoreState
 export type AppDispatch = typeof store.dispatch

@@ -9,8 +9,9 @@ import {
   setLoading,
   setOTPPos,
 } from "../redux/metaSlice"
-import { removeCrit, toggleDisplayCrit, updateDotDamageDealt } from "../redux/statsSlice"
+import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName } from "../models/upgrades"
+import { PERFORMANCE_CONFIG } from "./meta"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -61,19 +62,24 @@ export function useBreakpointTracker(storedBreakpoint: number) {
 
 interface EngineProps {
   dotDamage: number
+  beatDamage: number
   loading: boolean
   lastSaveCatchUp: number | null
 }
 
 export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
-  const { dotDamage, loading, lastSaveCatchUp } = props
+  const { dotDamage, beatDamage, loading, lastSaveCatchUp } = props
 
   const tickCount = useRef(0)
-  const lastFrameTime = useRef(performance.now())
+  const lastLoopTime = useRef(Date.now())
   const frameRef = useRef<number>()
   const TICK_RATE = 20
   const TICK_TIME = 1000 / TICK_RATE
+
+  const lastBeatTime = useRef<number>(Date.now())
+  const bpm = PERFORMANCE_CONFIG.bpm
+  const BEAT_TIME = 60000 / bpm
 
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
   useEffect(() => {
@@ -94,7 +100,17 @@ export function useGameEngine(props: EngineProps) {
     }
   }
 
-  const handleProgress = (delta: number): number => {
+  const dealDamageOnBeat = () => {
+    dispatch(updateBeatDamageDealt(beatDamage))
+  }
+
+  const handleProgress = (delta: number, beatDelta: number): number[] => {
+    let processedDelta = 0
+    let processedBeats = 0
+
+    const useBeatCatchup = beatDamage > 0 && beatDelta >= BEAT_TIME * 2
+    if (useBeatCatchup) beatDelta = beatDelta % BEAT_TIME
+
     while (delta >= TICK_TIME) {
       tickCount.current++
 
@@ -106,27 +122,64 @@ export function useGameEngine(props: EngineProps) {
         runTasks()
       }
 
+      // Process beats in catchup mode;
+      if (useBeatCatchup) {
+        const beatToProcess = (processedDelta + TICK_TIME) / BEAT_TIME > processedBeats
+        console.log("Processing catchup beat; delta, processed:", processedDelta, processedBeats)
+        if (beatToProcess) {
+          dealDamageOnBeat()
+          processedBeats++
+        }
+      }
+
       if (lastSaveCatchUpRef.current && delta <= 100) {
         dispatch(clearCatchUpTime())
       }
       delta -= TICK_TIME
+      processedDelta += TICK_TIME
     }
-    return delta
+    return [delta, beatDelta]
   }
 
-  const handleOfflineProgress = async (delta: number, long?: boolean): Promise<number> => {
+  //   function processBeats(delta) {
+  //     let processedBeatDelta = 0
+  // let processedBeats = 0
+
+  //     // Add check for pBeatUpgradeCount, use a second while loop (while beatDelta > bpm)
+  //     while (delta >= 107) {
+  //         processedBeatDelta += 107
+  //         const expectedBeats = Math.floor(processedBeatDelta / 107)
+  //             if (expectedBeats >= processedBeats) {
+  //             console.log("beat")
+  //             processedBeats++
+  //             }
+  //         delta -= 107
+  //     }
+  //     return delta
+  // }
+
+  const handleOfflineProgress = async (props: {
+    delta: number
+    beatDelta: number
+    longCatchup: boolean
+  }): Promise<number[]> => {
     dispatch(setLoading(true))
     await new Promise((resolve) => setTimeout(resolve, 0))
+
+    let { delta, beatDelta } = props
+    const longCatchup = props.longCatchup
+
     try {
-      if (long) {
+      if (longCatchup) {
         // TODO: Fullscreen catchup with asynchronous break
         // Split into chunks, await new Promise(resolve => setTimeout(resolve, 0))
         console.warn("Reduced offline progression to 1 hour because long catchup is yet to be implemented")
         delta = 3600000
-        delta = handleProgress(delta)
+        beatDelta = 3600000
+        ;[delta, beatDelta] = handleProgress(delta, beatDelta)
       } else {
         // console.log("Processing offline ticks:", delta / TICK_RATE)
-        delta = handleProgress(delta)
+        ;[delta, beatDelta] = handleProgress(delta, beatDelta)
       }
     } catch (err) {
       console.error("Offline progress failed:", err)
@@ -134,26 +187,37 @@ export function useGameEngine(props: EngineProps) {
       dispatch(setLoading(false))
       dispatch(clearCatchUpTime())
     }
-    return delta
+    return [delta, beatDelta]
   }
 
   const gameLoop = (currentTime: number) => {
     let delta: number
+    let beatDelta: number
     if (lastSaveCatchUpRef.current) {
       delta = Date.now() - lastSaveCatchUpRef.current
+      beatDelta = delta
     } else {
-      delta = currentTime - lastFrameTime.current
+      delta = currentTime - lastLoopTime.current
+      beatDelta = currentTime - lastBeatTime.current
     }
+    const longCatchup = delta > 3600000 // 1 hour
 
     const handleCatchUp = async () => {
-      delta = delta > 3600000 ? await handleOfflineProgress(delta, true) : await handleOfflineProgress(delta)
-      lastFrameTime.current = currentTime - (delta % TICK_TIME)
+      ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
+      lastLoopTime.current = currentTime - (delta % TICK_TIME)
+      lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
       frameRef.current = requestAnimationFrame(gameLoop)
     }
 
     if (delta <= 600000) {
-      delta = handleProgress(delta)
-      lastFrameTime.current = currentTime - (delta % TICK_TIME)
+      if (beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2) {
+        console.log("Processing beat:", currentTime, "Delta:", delta, "Beat Delta:", beatDelta)
+        dealDamageOnBeat()
+        beatDelta -= BEAT_TIME
+      }
+      ;[delta, beatDelta] = handleProgress(delta, beatDelta)
+      lastLoopTime.current = currentTime - (delta % TICK_TIME)
+      lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
       frameRef.current = requestAnimationFrame(gameLoop)
       if (loading) dispatch(setLoading(false))
       return

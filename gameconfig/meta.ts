@@ -5,5 +5,6 @@ export const METADATA_CONFIG = {
 }
 
 export const PERFORMANCE_CONFIG = {
-  critDisplayLimit: 5,
+  critDisplayLimit: 10,
+  bpm: 89,
 }
