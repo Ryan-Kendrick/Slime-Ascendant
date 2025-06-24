@@ -12,6 +12,8 @@ export const initialState = {
   clickCount: 0,
   totalClickDamage: 0,
   totalDotDamage: 0,
+  beatCount: 0,
+  totalBeatDamage: 0,
   killCount: 0,
   farmZonesCompleted: 0,
   totalZonesCompleted: 0,
@@ -77,7 +79,8 @@ export const statsSlice = createSlice({
       }
     },
     monsterBeaten(state, action: PayloadAction<number>) {
-      // Stats relating to rhythm mechanic goes here
+      state.beatCount++
+      state.totalBeatDamage += action.payload
     },
     increaseTotalDotDamageDealt(state, action: PayloadAction<number>) {
       state.totalDotDamage += action.payload
@@ -139,9 +142,12 @@ export const {
 } = statsSlice.actions
 
 export const selectPrestigeCount = (state: RootState) => state.stats.prestigeCount
+export const selectBeatCount = (state: RootState) => state.stats.beatCount
 
 export const selectStatsState = createSelector([(state: RootState) => state.stats], (stats) => ({
   clickCount: stats.clickCount,
+  beatCount: selectBeatCount,
+  totalBeatDamageDealt: stats.totalBeatDamage,
   totalClickDamageDealt: stats.totalClickDamage,
   totalDotDamageDealt: stats.totalDotDamage,
   killCount: stats.killCount,

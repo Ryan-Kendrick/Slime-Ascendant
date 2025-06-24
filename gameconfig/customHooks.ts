@@ -110,7 +110,6 @@ export function useGameEngine(props: EngineProps) {
 
     const useBeatCatchup = beatDamage > 0 && beatDelta >= BEAT_TIME * 2
     if (useBeatCatchup) beatDelta = beatDelta % BEAT_TIME
-
     while (delta >= TICK_TIME) {
       tickCount.current++
 
@@ -140,23 +139,6 @@ export function useGameEngine(props: EngineProps) {
     }
     return [delta, beatDelta]
   }
-
-  //   function processBeats(delta) {
-  //     let processedBeatDelta = 0
-  // let processedBeats = 0
-
-  //     // Add check for pBeatUpgradeCount, use a second while loop (while beatDelta > bpm)
-  //     while (delta >= 107) {
-  //         processedBeatDelta += 107
-  //         const expectedBeats = Math.floor(processedBeatDelta / 107)
-  //             if (expectedBeats >= processedBeats) {
-  //             console.log("beat")
-  //             processedBeats++
-  //             }
-  //         delta -= 107
-  //     }
-  //     return delta
-  // }
 
   const handleOfflineProgress = async (props: {
     delta: number
@@ -211,7 +193,7 @@ export function useGameEngine(props: EngineProps) {
 
     if (delta <= 600000) {
       if (beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2) {
-        console.log("Processing beat:", currentTime, "Delta:", delta, "Beat Delta:", beatDelta)
+        console.log("Beat Delta:", beatDelta)
         dealDamageOnBeat()
         beatDelta -= BEAT_TIME
       }

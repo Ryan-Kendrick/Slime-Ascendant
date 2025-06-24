@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef } from "react"
+import { PropsWithChildren, useCallback, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import {
   selectBeatDamage,
@@ -71,7 +71,7 @@ export default function Monster({ children }: PropsWithChildren) {
     }
   }, [displayMultistrike])
 
-  function handleClick() {
+  const handleClick = useCallback(() => {
     const isCrit = Math.random() < critChance
     const damageDealt = isCrit
       ? clickDamage *
@@ -107,7 +107,7 @@ export default function Monster({ children }: PropsWithChildren) {
     }
 
     dispatch(updateMonsterClicked({ damage: damageDealt, isCrit, isMultiStrike: false, animationPref }))
-  }
+  }, [clickDamage, critChance, dispatch, multistrikeCooldown, lastMultistrikeTime, animationPref])
 
   return (
     <>

@@ -16,6 +16,7 @@ export default {
   theme: {
     extend: {
       animation: {
+        "shadow-inset": "shadow-inset 0.7s forwards",
         "bounce-fade": "bounceFade 1.5s ease-out forwards",
         "float-up": "floatUp 2s ease-out forwards",
         "multistrike-slash": "slash 0.8s ease-out",
@@ -58,6 +59,22 @@ export default {
           },
           "100%": {
             opacity: "0",
+          },
+        },
+        "shadow-inset": {
+          "0%, 40%": {
+            boxShadow: "inset -2px 2px 4px 4px oklch(0.905 0.182 98.111)", // Subtle start, white for brightness
+            opacity: "0.8",
+          },
+          "60%": {
+            boxShadow: "inset -2px 2px 4px 3px oklch(0.905 0.182 98.111 / 0.8)", // Big, bright, spread out
+            opacity: "1",
+          },
+          "80%": {
+            boxShadow: "inset -2px 2px 4px 2px oklch(0.905 0.182 98.111 / 0.6)", // Slightly recedes and fades
+          },
+          "100%": {
+            boxShadow: "inset -2px 2px 4px 0px oklch(0.905 0.182 98.111 / 0)", // Completely fades out
           },
         },
       },

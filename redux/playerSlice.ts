@@ -223,13 +223,8 @@ export const playerSlice = createSlice({
       if (action.payload["crit-chance"]) state.pCritUpgradeCount += action.payload["crit-chance"].purchaseCount
       if (action.payload.multistrike) state.pMultistrikeUpgradeCount += action.payload.multistrike.purchaseCount
       if (action.payload.beat) state.pBeatUpgradeCount += action.payload.beat.purchaseCount
-      state.pDamageUpgradeCount = 0
-      state.pCritUpgradeCount = 0
-      state.pMultistrikeUpgradeCount = 0
-      state.pBeatUpgradeCount = 0
-      // state.pHealthUpgradeCount += action.payload.health.purchaseCount
+      // if (action.payload.health) state.pHealthUpgradeCount += action.payload.health.purchaseCount
     })
-    // builder.addCase("stats/zoneTenCompleted", (state) => {})
   },
 })
 
