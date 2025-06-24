@@ -5,6 +5,7 @@ import { selectMonsterHealth, selectMonsterMaxHealth } from "../../redux/monster
 import { formatSmallNumber } from "../../gameconfig/utils"
 import { PERFORMANCE_CONFIG } from "../../gameconfig/meta"
 import { selectBeatCount } from "../../redux/statsSlice"
+import { selectAnimationPref } from "../../redux/metaSlice"
 
 export default function Healthbar() {
   const monsterHealth = useAppSelector(selectMonsterHealth)
@@ -12,6 +13,7 @@ export default function Healthbar() {
 
   const healthRef = useRef<HTMLDivElement>(null)
   const beatCount = useAppSelector(selectBeatCount)
+  const animationPref = useAppSelector(selectAnimationPref)
 
   const targetHealth = useRef((monsterHealth / monsterMaxHealth) * 100)
   const interpRate = 5
@@ -42,13 +44,21 @@ export default function Healthbar() {
   }, [monsterHealth, monsterMaxHealth])
 
   useEffect(() => {
-    if (healthRef.current) {
+    if (healthRef.current && animationPref > 0) {
       healthRef.current.classList.add("animate-shadow-inset")
       setTimeout(
         () => {
           healthRef.current?.classList.remove("animate-shadow-inset")
         },
         (60000 / PERFORMANCE_CONFIG.bpm) * 0.85,
+      )
+    } else if (healthRef.current && animationPref === 0) {
+      healthRef.current.classList.add("border-r-2", "border-yellow-300")
+      setTimeout(
+        () => {
+          healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
+        },
+        (60000 / PERFORMANCE_CONFIG.bpm) * 0.6,
       )
     }
   }, [beatCount])
