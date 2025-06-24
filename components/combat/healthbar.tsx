@@ -61,7 +61,7 @@ export default function Healthbar() {
         (60000 / PERFORMANCE_CONFIG.bpm) * 0.6,
       )
     }
-  }, [beatCount])
+  }, [beatCount, animationPref])
 
   const formattedHealth = formatSmallNumber(monsterHealth)
 
