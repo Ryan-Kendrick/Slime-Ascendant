@@ -77,7 +77,7 @@ export function useGameEngine(props: EngineProps) {
   const TICK_RATE = 20
   const TICK_TIME = 1000 / TICK_RATE
 
-  const lastBeatTime = useRef<number>(Date.now())
+  const lastBeatTime = useRef<number | null>(beatDamage ? performance.now() : null)
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
 
@@ -109,7 +109,6 @@ export function useGameEngine(props: EngineProps) {
     let processedBeats = 0
 
     const useBeatCatchup = beatDamage > 0 && beatDelta >= BEAT_TIME * 2
-    if (useBeatCatchup) beatDelta = beatDelta % BEAT_TIME
     while (delta >= TICK_TIME) {
       tickCount.current++
 
@@ -124,7 +123,6 @@ export function useGameEngine(props: EngineProps) {
       // Process beats in catchup mode;
       if (useBeatCatchup) {
         const beatToProcess = (processedDelta + TICK_TIME) / BEAT_TIME > processedBeats
-        console.log("Processing catchup beat; delta, processed:", processedDelta, processedBeats)
         if (beatToProcess) {
           dealDamageOnBeat()
           processedBeats++
@@ -174,32 +172,31 @@ export function useGameEngine(props: EngineProps) {
 
   const gameLoop = (currentTime: number) => {
     let delta: number
-    let beatDelta: number
+    let beatDelta = 0
     if (lastSaveCatchUpRef.current) {
-      delta = Date.now() - lastSaveCatchUpRef.current
+      delta = Date.now() - lastSaveCatchUpRef.current // Use unix time
       beatDelta = delta
     } else {
-      delta = currentTime - lastLoopTime.current
-      beatDelta = currentTime - lastBeatTime.current
+      delta = currentTime - lastLoopTime.current // Use application time
+      if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
     }
     const longCatchup = delta > 3600000 // 1 hour
 
     const handleCatchUp = async () => {
       ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
-      lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+      if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
       frameRef.current = requestAnimationFrame(gameLoop)
     }
 
     if (delta <= 600000) {
       if (beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2) {
-        console.log("Beat Delta:", beatDelta)
         dealDamageOnBeat()
         beatDelta -= BEAT_TIME
       }
       ;[delta, beatDelta] = handleProgress(delta, beatDelta)
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
-      lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+      if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
       frameRef.current = requestAnimationFrame(gameLoop)
       if (loading) dispatch(setLoading(false))
       return

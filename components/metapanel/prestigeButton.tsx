@@ -71,7 +71,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable || hidden}
       className={clsx(
-        "w-72 cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-2 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
+        "w-56 cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-2 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
         "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:bg-cyan-800/50 disabled:shadow-none disabled:text-gray-300/80 disabled:border-black",
       )}>
       {hidden && (
