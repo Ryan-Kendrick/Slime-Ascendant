@@ -47,7 +47,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
 
     return pendingInc.toFixed(0)
   }
-  console.log(hidden, config.visibleAtZone)
+
   function onSelectPrestigeUpgrade(
     e: React.MouseEvent<HTMLButtonElement>,
     upgradeCount: number,
