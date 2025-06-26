@@ -23,8 +23,6 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
   const [purchasePrice, setPurchasePrice] = useState(costCalc(upgradeCount + purchaseCount + 1, config))
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
 
-  if (hidden) return null
-
   const formatCurrentValue = (): string => {
     if (upgradeCount === 1) return (config.baseValue * 100).toFixed(0)
     if (upgradeCount > 1) return (thisUpgrade.calcModifier(upgradeCount, config) * 100).toFixed(0)
@@ -49,7 +47,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
 
     return pendingInc.toFixed(0)
   }
-
+  console.log(hidden, config.visibleAtZone)
   function onSelectPrestigeUpgrade(
     e: React.MouseEvent<HTMLButtonElement>,
     upgradeCount: number,
@@ -71,12 +69,12 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable || hidden}
       className={clsx(
-        "w-56 cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-2 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
+        "w-56 relative cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-2 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
         "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:bg-cyan-800/50 disabled:shadow-none disabled:text-gray-300/80 disabled:border-black",
       )}>
       {hidden && (
-        <div className={clsx("absolute flex w-full h-full items-center justify-center bg-black z-10")}>
-          <p className="text-red-600 font-bold">Reach Zone {config.visibleAtZone}</p>
+        <div className={clsx("absolute flex w-full h-full items-center justify-center rounded-lg bg-black z-10")}>
+          <p className="text-red-500 font-bold">Reach Zone {config.visibleAtZone}</p>
         </div>
       )}
       <div className="relative flex flex-col items-center">

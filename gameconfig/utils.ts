@@ -134,7 +134,12 @@ We managed to salvage your achievements, but the time has come to start a new ad
     return {
       ...gameState,
       player: { ...gameState.player, tabInView: "upgrade" },
-      stats: { ...gameState.stats, recentCrits: [], displayCrit: false, displayMultistrike: false },
+      stats: {
+        ...gameState.stats,
+        recentCrits: [],
+        displayCrit: false,
+        displayMultistrike: false,
+      },
       meta: {
         ...gameState.meta,
         gameVersion: METADATA_CONFIG.version,

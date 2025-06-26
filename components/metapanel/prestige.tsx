@@ -58,7 +58,7 @@ export default function Prestige() {
             key={prestigeUpgrade.id + resetCounter}
             config={prestigeUpgrade}
             onClick={onUpdatePurchase}
-            hidden={!(highZoneEver >= prestigeUpgrade.visibleAtZone)}
+            hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
           />
         ))}
       </div>

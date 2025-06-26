@@ -44,8 +44,12 @@ export default function Healthbar() {
   }, [monsterHealth, monsterMaxHealth])
 
   useEffect(() => {
+    if (beatCount === 0) return
+
     if (healthRef.current && animationPref > 0) {
-      healthRef.current.classList.add("animate-shadow-inset")
+      setTimeout(() => {
+        healthRef.current?.classList.add("animate-shadow-inset")
+      }, 60000 / PERFORMANCE_CONFIG.bpm)
       setTimeout(
         () => {
           healthRef.current?.classList.remove("animate-shadow-inset")
