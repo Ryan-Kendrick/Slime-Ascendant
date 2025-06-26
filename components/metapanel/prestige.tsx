@@ -53,14 +53,18 @@ export default function Prestige() {
         suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
       />
       <div className="flex flex-wrap justify-center mx-2 font-sans gap-2">
-        {UPGRADE_CONFIG.prestigeUpgrades.map((prestigeUpgrade) => (
-          <PrestigeButton
-            key={prestigeUpgrade.id + resetCounter}
-            config={prestigeUpgrade}
-            onClick={onUpdatePurchase}
-            hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
-          />
-        ))}
+        {UPGRADE_CONFIG.prestigeUpgrades.map((prestigeUpgrade, i) => {
+          if (i > 0 && UPGRADE_CONFIG.prestigeUpgrades[i - 1].visibleAtZone > highZoneEver) return null
+
+          return (
+            <PrestigeButton
+              key={prestigeUpgrade.id + resetCounter}
+              config={prestigeUpgrade}
+              onClick={onUpdatePurchase}
+              hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
+            />
+          )
+        })}
       </div>
       <div className="relative flex grow gap-4 h-full w-full items-end justify-center">
         <button
