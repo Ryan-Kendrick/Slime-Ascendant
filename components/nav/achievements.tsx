@@ -128,10 +128,11 @@ export default function Achievements() {
                       className={clsx(
                         "h-[72px] w-32 text-[2px] transition-[scale] duration-300 rounded-sm border-2 border-violet-300 bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]",
                       )}
+                      style={{ scale: "1.0" }}
                       onPointerEnter={(e) => {
                         const el = e.currentTarget
                         eggTimer.current = window.setInterval(() => {
-                          console.log(el.style)
+                          console.log(el.style.scale)
                           el.style.scale = (Number(el.style.scale) * 1.05).toString()
                         }, 200)
                       }}
