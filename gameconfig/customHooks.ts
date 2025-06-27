@@ -410,3 +410,64 @@ export const useCritCleanup = (animationState: AnimationProps) => {
     }
   }, [animationPref, recentCrits, displayCrit])
 }
+
+export const useConfetti = () => {
+  const [jsConfetti, setJSConfetti] = useState(null as any)
+  const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false)
+
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"
+    script.async = true
+
+    script.onload = () => {
+      // @ts-ignore
+      const confettiInstance = new window.JSConfetti()
+      setJSConfetti(confettiInstance)
+    }
+
+    document.head.appendChild(script)
+    return () => {
+      document.head.removeChild(script)
+    }
+  }, [])
+
+  const triggerConfetti = () => {
+    if (jsConfetti) {
+      jsConfetti.addConfetti()
+      setHasTriggeredConfetti(true)
+    }
+  }
+
+  return { triggerConfetti, hasTriggeredConfetti }
+}
+
+export const useKeypressEasterEgg = () => {
+  const [shouldConfetti, setShouldConfetti] = useState(false)
+  useEffect(() => {
+    const phrase = ["i", " ", "a", "m", " ", "m", "u", "m"]
+    const keys = [] as string[]
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      keys.push(event.key.toLowerCase())
+      if (keys.length > phrase.length) keys.shift()
+
+      if (keys.length === phrase.length) {
+        for (let i = 0; i < keys.length; i++) {
+          console.log(shouldConfetti, keys[i], phrase[i])
+          if (keys[i] !== phrase[i]) return false
+          if (i === 7 && keys[i] === phrase[i]) {
+            setShouldConfetti(true)
+            setTimeout(() => setShouldConfetti(false), 100)
+          }
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [])
+  return shouldConfetti
+}

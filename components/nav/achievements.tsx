@@ -2,17 +2,18 @@ import clsx from "clsx/lite"
 import { Achievement, ACHIEVEMENT_CONFIG, AchievementCategory } from "../../gameconfig/achievements"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { selectUnlockedAchievements } from "../../redux/statsSlice"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { achievementSelectorMap } from "../../redux/shared/maps"
 import { recalculateAchievementMod } from "../../redux/playerSlice"
 import { selectAchievementModifier } from "../../redux/shared/heroSelectors"
-import { store } from "../../redux/store"
+import { useConfetti, useKeypressEasterEgg } from "../../gameconfig/customHooks"
 
 export default function Achievements() {
   const dispatch = useAppDispatch()
 
   const unlockedAchievements = useAppSelector(selectUnlockedAchievements)
   const achievementModifier = useAppSelector(selectAchievementModifier)
+  const eggTimer = useRef<number | null>(null)
 
   const [selectedAchievement, setSelectedAchievement] = useState<false | Achievement>(false)
 
@@ -24,6 +25,18 @@ export default function Achievements() {
     if (!selectedAchievement) return 0
     return achievementSelectorMap[selectedAchievement.id.split(".")[0]](state)
   })
+
+  const { triggerConfetti, hasTriggeredConfetti } = useConfetti()
+  const shouldTrigger = useKeypressEasterEgg()
+
+  useEffect(() => {
+    if (shouldTrigger) {
+      triggerConfetti()
+    }
+    return () => {
+      if (eggTimer.current) clearInterval(eggTimer.current)
+    }
+  }, [shouldTrigger, triggerConfetti])
 
   const isAchievementUnlocked = (id: string) => unlockedAchievements.includes(id)
 
@@ -99,6 +112,41 @@ export default function Achievements() {
             </div>
           </div>
         ))}
+        {hasTriggeredConfetti && (
+          <div id="achievement-cont" key={`mum-container`} className="flex flex-col pb-2">
+            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] xl:grid-cols-[200px_1fr] gap-4 border-b border-lightgold font-paytone text-violet-200">
+              <h2 className="place-self-center font-bold text-center text-2xl md:text-4xl">Mum</h2>
+              <div id="category-achievement-cont" className="flex flex-col gap-2 ml-2 mb-2">
+                <div
+                  key={`mum-being`}
+                  className="grid grid-row md:grid-cols-[120px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr] gap-4">
+                  <h3 className="text-center md:text-left">Is mum</h3>
+                  <div id="achievements-for-category" className="flex flex-wrap gap-2">
+                    {" "}
+                    <div
+                      key="being-1"
+                      className={clsx(
+                        "h-[72px] w-32 text-[2px] transition-[scale] duration-300 rounded-sm border-2 border-violet-300 bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]",
+                      )}
+                      onPointerEnter={(e) => {
+                        const el = e.currentTarget
+                        eggTimer.current = window.setInterval(() => {
+                          console.log(el.style)
+                          el.style.scale = (Number(el.style.scale) * 1.05).toString()
+                        }, 200)
+                      }}
+                      onPointerLeave={(e) => {
+                        e.currentTarget.style.scale = "1.0"
+                        if (eggTimer.current) clearInterval(eggTimer.current)
+                      }}>
+                      <div className="absolute top-4 right-14">🥳</div>
+                    </div>
+                  </div>{" "}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       {selectedAchievement && ( // Achievement details overlay
         <div
