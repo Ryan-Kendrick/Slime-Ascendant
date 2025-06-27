@@ -132,7 +132,6 @@ export default function Achievements() {
                       onPointerEnter={(e) => {
                         const el = e.currentTarget
                         eggTimer.current = window.setInterval(() => {
-                          console.log(el.style.scale)
                           el.style.scale = (Number(el.style.scale) * 1.05).toString()
                         }, 200)
                       }}
