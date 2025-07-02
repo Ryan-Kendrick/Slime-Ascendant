@@ -8,7 +8,7 @@ import { initSelectorMap } from "../../../redux/shared/maps"
 interface OneTimePurchaseProps {
   id: UpgradeIdWithLevel
   icon: JSX.Element
-  onClick: (id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) => void
+  onClick: (id: UpgradeIdWithLevel, hidden: boolean, cost: number, isAffordable: boolean) => void
   setHoveredOTPUpgrade: (selectedUpgrade: number | null) => void
   touchHandler: (e: React.TouchEvent<HTMLDivElement>) => void
   cost: number
@@ -41,10 +41,10 @@ export default function OneTimePurchaseUpgrade({
     if (e.pointerType === "touch") {
       const isNotMobile = window.matchMedia("(min-width: 1024px)").matches
       if (isNotMobile) {
-        onUpgrade(heroId, hidden, cost, isAffordable)
+        onUpgrade(id, hidden, cost, isAffordable)
       }
     } else {
-      onUpgrade(heroId, hidden, cost, isAffordable)
+      onUpgrade(id, hidden, cost, isAffordable)
     }
   }
 

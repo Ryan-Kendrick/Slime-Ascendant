@@ -30,7 +30,7 @@ import {
   WarriorOTPIcon4,
 } from "../../svgIcons/OTPIcons"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
-import { HeroName, UpgradeId } from "../../../models/upgrades"
+import { HeroName, UpgradeId, UpgradeIdWithLevel } from "../../../models/upgrades"
 import HeroCard from "./heroCard"
 import Currency from "../currency"
 import { GoldIcon } from "../../svgIcons/resourceIcons"
@@ -38,6 +38,7 @@ import clsx from "clsx/lite"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { useTouchObserver } from "../../../gameconfig/customHooks"
 import DamageTotals from "./damageTotals"
+import { cardProps } from "../../../redux/shared/maps"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
@@ -54,21 +55,25 @@ export default function UpgradeIndex() {
 
   const LevelUp = {
     adventurer: {
+      OTPCount: useAppSelector(cardProps["adventurer"].upgradeCount),
       cost: adventurerLevelUpCost,
       canAfford: useAppSelector(selectGCanAfford(adventurerLevelUpCost)),
       action: updateClickDamage("adventurer-levelup"),
     },
     warrior: {
+      OTPCount: useAppSelector(cardProps["warrior"].upgradeCount),
       cost: warriorLevelUpCost,
       canAfford: useAppSelector(selectGCanAfford(warriorLevelUpCost)),
       action: updateDotDamage("warrior-levelup"),
     },
     healer: {
+      OTPCount: useAppSelector(cardProps["healer"].upgradeCount),
       cost: healerLevelUpCost,
       canAfford: useAppSelector(selectGCanAfford(healerLevelUpCost)),
       action: updateDotDamage("healer-levelup"),
     },
     mage: {
+      OTPCount: useAppSelector(cardProps["mage"].upgradeCount),
       cost: mageLevelUpCost,
       canAfford: useAppSelector(selectGCanAfford(mageLevelUpCost)),
       action: updateDotDamage("mage-levelup"),
@@ -88,18 +93,32 @@ export default function UpgradeIndex() {
     }
   }
 
-  function onUpgrade(id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) {
+  function onUpgrade(id: UpgradeIdWithLevel, hidden: boolean, cost: number, isAffordable: boolean) {
     if (!isAffordable || hidden) return
-    let upgradeAction
 
-    if (id === "adventurer-otp") {
-      upgradeAction = updateClickDamage(id)
+    let upgradeAction
+    const [heroId, OTPstr] = id.split(".") as [UpgradeId, string]
+    const thisHeroName = heroId.split("-")[0] as HeroName
+    const thisHeroOTPCount = LevelUp[thisHeroName].OTPCount
+
+    if (heroId === "adventurer-otp") {
+      upgradeAction = updateClickDamage(heroId)
     } else {
-      upgradeAction = updateDotDamage(id)
+      if (thisHeroOTPCount === Number(OTPstr) - 1) {
+        upgradeAction = updateDotDamage(heroId)
+      } else {
+        console.warn(
+          `The selected upgrade number ${OTPstr} is not the next upgrade for ${thisHeroName}, expected upgrade ${thisHeroOTPCount + 1}`,
+        )
+      }
     }
 
-    dispatch(upgradeAction)
-    dispatch(decreaseGold(cost))
+    if (upgradeAction) {
+      dispatch(upgradeAction)
+      dispatch(decreaseGold(cost))
+    } else {
+      console.warn("Upgrade handler called and no action was dispatched")
+    }
   }
 
   const touchedHero = useTouchObserver()

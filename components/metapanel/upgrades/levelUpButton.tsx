@@ -56,7 +56,7 @@ export default function LevelUpButton({
             isAffordable ? "bg-blue-600 hover:bg-blue-700 active:bg-blue-950" : "bg-blue-950 border-amber-950",
           )}
           onPointerUp={displayOTPCost ? purchaseOTPUpgrade : onLevelUp}>
-          {/* If there is a hovered OTP upgrade, display cost on mobile */}
+          {/* If there is a hovered OTP upgrade, display cost when on mobile */}
           {displayOTPCost ? (
             <>
               <span className="z-30 block lg:hidden">Upgrade</span>

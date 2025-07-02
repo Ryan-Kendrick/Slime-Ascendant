@@ -3,14 +3,23 @@ import { HeroName, PrestigeUpgrade, PrestigeUpgradeName, UpgradeId, UpgradeProps
 import {
   selectClickDamage,
   selectDotDamage,
+  selectGCanAfford,
   selectInitState,
   selectPendingPBeat,
   selectPendingPCritChance,
   selectPendingPDamage,
   selectPendingPMultistrike,
   selectPrestigeState,
+  updateClickDamage,
+  updateDotDamage,
 } from "../playerSlice"
-import { selectMageContribution } from "./heroSelectors"
+import {
+  selectAdventurerLevelUpCost,
+  selectHealerLevelUpCost,
+  selectMageContribution,
+  selectMageLevelUpCost,
+  selectWarriorLevelUpCost,
+} from "./heroSelectors"
 import { selectHealerContribution } from "./heroSelectors"
 import { selectWarriorContribution } from "./heroSelectors"
 import { selectAdventurerContribution } from "./heroSelectors"

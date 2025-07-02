@@ -412,6 +412,7 @@ export const useCritCleanup = (animationState: AnimationProps) => {
 }
 
 export const useConfetti = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [jsConfetti, setJSConfetti] = useState(null as any)
   const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false)
 

@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import {
   initialiseElement,
@@ -23,7 +23,7 @@ import { useOTPPositions } from "../../../gameconfig/customHooks"
 interface HeroCardProps {
   config: Upgrade
   OTPIcons: JSX.Element[]
-  onUpgrade: (id: UpgradeId, hidden: boolean, cost: number, isAffordable: boolean) => void
+  onUpgrade: (id: UpgradeIdWithLevel, hidden: boolean, cost: number, isAffordable: boolean) => void
   onLevelUp: (e: React.MouseEvent<HTMLButtonElement>) => void
   touchedHero: HeroName | undefined
 }
@@ -115,6 +115,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const [isHovering, setIsHovering] = useState(touchHoverActive ? true : false)
   const [beginDelayedAnimation, setBeginDelayedAnimation] = useState(false)
   const [hoveredOTPUpgrade, setHoveredOTPUpgrade] = useState<number | null>(null)
+  const [touchedOTPUpgrade, setTouchedOTPUpgrade] = useState<UpgradeIdWithLevel | null>(null)
   const hoverAnimationDuration = "duration-500"
   const delayedAnimationRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -139,7 +140,10 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const onCardTouch = (e: React.TouchEvent) => {
     // Prevent on mouse leave event from firing
     e.preventDefault()
+
     const isOTPUpgrade = e.currentTarget.id.split("-")[1].substring(0, 3) === "otp"
+
+    if (isOTPUpgrade) setTouchedOTPUpgrade(e.currentTarget.id as UpgradeIdWithLevel)
 
     if (hoveredOTPUpgrade && !isOTPUpgrade) {
       setHoveredOTPUpgrade(null)
@@ -159,7 +163,9 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   }
 
   const purchaseUpgradeFromLevelUpBtn = () => {
-    onUpgrade(config.elementId, false, nextOTPCost, canAffordNextOTPUpgrade)
+    if (!touchedOTPUpgrade) return
+
+    onUpgrade(touchedOTPUpgrade, false, nextOTPCost, canAffordNextOTPUpgrade)
   }
 
   useEffect(() => {
