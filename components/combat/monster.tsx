@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback, useEffect, useRef } from "react"
+import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import {
   selectBeatDamage,
@@ -40,6 +40,7 @@ export default function Monster({ children }: PropsWithChildren) {
   const { displayCrit, lastCritDamage } = useAppSelector(animationPref <= 1 ? selectCritState : selectEmptyCritState)
   const multistrikeCooldown = useAppSelector(selectMultistrikeCooldown) * 1000
   const { lastMultistrikeTime, displayMultistrike } = useAppSelector(selectMultistrikeState)
+  const [multistrikePos, setMultistrikePos] = useState({ x: 0, y: 0 })
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
 
   // Interface between requestAnimationFrame and React to prevent infinite catchup loops
@@ -71,43 +72,55 @@ export default function Monster({ children }: PropsWithChildren) {
     }
   }, [displayMultistrike])
 
-  const handleClick = useCallback(() => {
-    const isCrit = Math.random() < critChance
-    const damageDealt = isCrit
-      ? clickDamage *
-        (UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
-          Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10))
-      : clickDamage
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const isCrit = Math.random() < critChance
+      const damageDealt = isCrit
+        ? clickDamage *
+          (UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
+            Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10))
+        : clickDamage
 
-    if (multistrikeCooldown !== 0) {
-      const delta = Date.now() - lastMultistrikeTime
-      const isMultiStrike = delta > multistrikeCooldown
+      if (multistrikeCooldown !== 0) {
+        const delta = Date.now() - lastMultistrikeTime
+        const isMultiStrike = delta > multistrikeCooldown
 
-      if (isMultiStrike) {
-        for (let i = 0; i < UPGRADE_CONFIG.calcMultistrikeCount(); i++) {
-          const isMSCrit = Math.random() < critChance
-          let multiStrikeDamage = clickDamage
-          if (isMSCrit)
-            multiStrikeDamage *=
-              UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
-              Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10)
+        if (isMultiStrike) {
+          if (animationPref > 1) {
+            const rect = e.currentTarget.getBoundingClientRect()
+            setMultistrikePos({
+              x: e.clientX - rect.left,
+              y: e.clientY - rect.top,
+            })
+          }
 
-          setTimeout(() => {
-            dispatch(
-              updateMultistrikeDamageDealt({
-                damage: multiStrikeDamage,
-                isCrit: isMSCrit,
-                isMultiStrike: true,
-                animationPref,
-              }),
-            )
-          }, i * UPGRADE_CONFIG.prestigeUpgradeConfig.multistrikeDelay)
+          for (let i = 0; i < UPGRADE_CONFIG.calcMultistrikeCount(); i++) {
+            let multiStrikeDamage = clickDamage
+            const isMSCrit = Math.random() < critChance
+
+            if (isMSCrit)
+              multiStrikeDamage *=
+                UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
+                Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10)
+
+            setTimeout(() => {
+              dispatch(
+                updateMultistrikeDamageDealt({
+                  damage: multiStrikeDamage,
+                  isCrit: isMSCrit,
+                  isMultiStrike: true,
+                  animationPref,
+                }),
+              )
+            }, i * UPGRADE_CONFIG.prestigeUpgradeConfig.multistrikeDelay)
+          }
         }
       }
-    }
 
-    dispatch(updateMonsterClicked({ damage: damageDealt, isCrit, isMultiStrike: false, animationPref }))
-  }, [clickDamage, critChance, dispatch, multistrikeCooldown, lastMultistrikeTime, animationPref])
+      dispatch(updateMonsterClicked({ damage: damageDealt, isCrit, isMultiStrike: false, animationPref }))
+    },
+    [clickDamage, critChance, dispatch, multistrikeCooldown, lastMultistrikeTime, animationPref],
+  )
 
   return (
     <>
@@ -120,7 +133,7 @@ export default function Monster({ children }: PropsWithChildren) {
 
       <button
         className="relative flex flex-grow items-end h-[27rem] max-h-[34rem] hover:cursor-dagger"
-        onClick={handleClick}>
+        onClick={(e) => handleClick(e)}>
         <img
           className="max-h-full h-full w-full object-cover lg:object-contain pointer-events-none"
           src={monsterImage}
@@ -154,7 +167,7 @@ export default function Monster({ children }: PropsWithChildren) {
           </div>
         )}
         {usingHighQualityAnimations && displayMultistrike && (
-          <div className="absolute top-16 left-16 pointer-events-none">
+          <div style={{ top: multistrikePos.y, left: multistrikePos.x }} className="absolute pointer-events-none">
             <div className="absolute animate-multistrike-ring">
               <div className="w-12 h-12 border-4 border-white rounded-full" />
             </div>
