@@ -22,10 +22,10 @@ body {
 
 #panel-content {
   --mask-line1-start: 403px;
-  --mask-line1-startPostPrestige: 439px;
+  --mask-line1-startPostPrestige: 435px;
   --mask-line1-end: 407px;
   --mask-line1-endThick: 453px;
-  --mask-line1-endPostPrestige: 489px;
+  --mask-line1-endPostPrestige: 485px;
   --mask-line2-start: 722px;
   --mask-line2-end: 772px;
 }

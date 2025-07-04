@@ -50,7 +50,7 @@ export default function PanelIndex() {
     if (!isWarriorVisible) {
       if (prestigeTabVisible) {
         chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
-        top -= 347 // Minus px to gap + card height + 32px for mb-8 on adventurer card container
+        top -= 285
       }
       mask = "mask-postPrestige"
     } else if (!isMobile) {
@@ -60,7 +60,7 @@ export default function PanelIndex() {
           return null
         } else {
           chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
-          top -= 347 // Minus px to gap + card height
+          top -= 315
           mask = "mask-single"
         }
       } else if (isHealerVisible) {

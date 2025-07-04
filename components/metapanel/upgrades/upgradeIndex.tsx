@@ -144,7 +144,7 @@ export default function UpgradeIndex() {
                   ? "grid-cols-1 md:grid-cols-2 -mt-0 md:mt-0 mb-0"
                   : "grid-cols-1 md:grid-cols-2 -mt-0 md:mt-0 mb-0"
                 : "grid-cols-1 md:grid-cols-2 -mt-1 md:mt-0 mb-0"
-              : "grid-cols-1 -mt-1 md:mt-0 mb-8",
+              : "grid-cols-1 -mt-3 md:mt-0 mb-8",
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
