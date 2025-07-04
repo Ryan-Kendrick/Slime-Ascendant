@@ -141,7 +141,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       changePrefix: "-",
       priceBase: 80,
       priceIncrease: 10,
-      baseValue: 40,
+      baseValue: 1,
       modifier: 0.02,
       visibleAtZone: 25,
       tooltip: "Reduce multistrike cooldown by 2%",

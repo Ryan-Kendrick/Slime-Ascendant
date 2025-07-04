@@ -86,11 +86,11 @@ export default function Monster({ children }: PropsWithChildren) {
       if (isMultiStrike) {
         for (let i = 0; i < UPGRADE_CONFIG.calcMultistrikeCount(); i++) {
           const isMSCrit = Math.random() < critChance
-          const multiStrikeDamage = isMSCrit
-            ? clickDamage *
-              (UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
-                Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10))
-            : clickDamage
+          let multiStrikeDamage = clickDamage
+          if (isMSCrit)
+            multiStrikeDamage *=
+              UPGRADE_CONFIG.prestigeUpgradeConfig.critMultiplier +
+              Math.random() / (UPGRADE_CONFIG.prestigeUpgradeConfig.critVariance * 10)
 
           setTimeout(() => {
             dispatch(
