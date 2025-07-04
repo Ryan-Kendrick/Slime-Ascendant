@@ -20,10 +20,11 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
   const { cost: totalCost, purchaseCount } = pendingPurchases || { cost: 0, purchaseCount: 0 }
   const costCalc = thisUpgrade.cost
 
-  const [purchasePrice, setPurchasePrice] = useState(costCalc(upgradeCount + purchaseCount + 1, config))
+  const [purchasePrice, setPurchasePrice] = useState(Math.ceil(costCalc(upgradeCount + purchaseCount + 1, config)))
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
 
   const formatCurrentValue = (): string => {
+    if (thisUpgradeName === "multistrike") return thisUpgrade.calcModifier(upgradeCount, config).toFixed(2)
     if (upgradeCount === 1) return (config.baseValue * 100).toFixed(0)
     if (upgradeCount > 1) return (thisUpgrade.calcModifier(upgradeCount, config) * 100).toFixed(0)
     return "0"
@@ -32,7 +33,12 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
   const formatPendingIncrease = (): string => {
     let pendingInc: number
 
-    if (purchaseCount === 1 && upgradeCount === 0) {
+    if (thisUpgradeName === "multistrike") {
+      const current = thisUpgrade.calcModifier(upgradeCount, config)
+      const after = thisUpgrade.calcModifier(purchaseCount + upgradeCount, config)
+
+      pendingInc = Math.round(current * 100 - after * 100) / 100
+    } else if (purchaseCount === 1 && upgradeCount === 0) {
       pendingInc = Math.round(config.baseValue * 100)
     } else if (upgradeCount === 0 && purchaseCount > 1) {
       pendingInc = Math.round(thisUpgrade.calcModifier(purchaseCount, config) * 100)
@@ -40,12 +46,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       pendingInc = Math.round(thisUpgrade.calcModifierIncrease(purchaseCount, config) * 100)
     }
 
-    if (thisUpgradeName === "multistrike")
-      return upgradeCount === 0
-        ? (pendingInc / 100).toFixed(2)
-        : `${config.changePrefix}${(config.baseValue - pendingInc / 100).toFixed(2)}`
-
-    return pendingInc.toFixed(0)
+    return pendingInc.toFixed(2)
   }
 
   function onSelectPrestigeUpgrade(
@@ -58,7 +59,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
     const newTotalCost = purchasePrice + totalCost
 
     onUpdatePurchase(e, newTotalCost, toPurchase + 1)
-    setPurchasePrice(thisUpgrade.cost(tempUpgradeCount + 1, config))
+    setPurchasePrice(Math.ceil(thisUpgrade.cost(tempUpgradeCount + 1, config)))
   }
   return (
     <button
@@ -93,7 +94,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
             <p className="pl-1">
               {upgradeCount === 0 && `${config.modDescription}: 0 `}
               {thisUpgradeName === "multistrike"
-                ? `(${formatPendingIncrease()}${config.modSuffix})`
+                ? `(-${formatPendingIncrease()}${config.modSuffix})`
                 : `(${config.changePrefix}${formatPendingIncrease()}${config.modSuffix})`}
             </p>
           )}
