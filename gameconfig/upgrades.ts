@@ -139,7 +139,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       modDescription: "Cooldown",
       modSuffix: "s",
       changePrefix: "-",
-      priceBase: 80,
+      priceBase: 8,
       priceIncrease: 0.4,
       baseValue: 40,
       modifier: 0.02,

@@ -5,6 +5,7 @@ import { prestigeUpgradeMap } from "../../redux/shared/maps"
 import { useAppSelector } from "../../redux/hooks"
 import { selectPCanAfford } from "../../redux/playerSlice"
 import { MinPlasmaIcon } from "../svgIcons/resourceIcons"
+import e from "express"
 
 interface PrestigeBtnProps {
   config: PrestigeUpgrade
@@ -34,10 +35,14 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
     let pendingInc: number
 
     if (thisUpgradeName === "multistrike") {
-      const current = thisUpgrade.calcModifier(upgradeCount, config)
-      const after = thisUpgrade.calcModifier(purchaseCount + upgradeCount, config)
+      if (upgradeCount === 0 && purchaseCount === 1) {
+        pendingInc = config.baseValue
+      } else {
+        const current = thisUpgrade.calcModifier(upgradeCount, config)
+        const after = thisUpgrade.calcModifier(purchaseCount + upgradeCount, config)
 
-      pendingInc = Math.round(current * 100 - after * 100) / 100
+        pendingInc = Math.round(current * 100 - after * 100) / 100
+      }
     } else if (purchaseCount === 1 && upgradeCount === 0) {
       pendingInc = Math.round(config.baseValue * 100)
     } else if (upgradeCount === 0 && purchaseCount > 1) {
@@ -93,8 +98,8 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
           {purchaseCount > 0 && (
             <p className="pl-1">
               {upgradeCount === 0 && `${config.modDescription}: 0 `}
-              {thisUpgradeName === "multistrike"
-                ? `(-${formatPendingIncrease()}${config.modSuffix})`
+              {thisUpgradeName === "multistrike" && upgradeCount === 0
+                ? `(+${Math.abs(Number(formatPendingIncrease()))}${config.modSuffix})` // Hack to display cooldown as a gain at level 0
                 : `(${config.changePrefix}${formatPendingIncrease()}${config.modSuffix})`}
             </p>
           )}
