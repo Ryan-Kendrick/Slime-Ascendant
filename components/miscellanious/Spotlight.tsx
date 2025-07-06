@@ -1,4 +1,11 @@
+import { useAppSelector } from "../../redux/hooks"
+import { selectMonsterKind } from "../../redux/monsterSlice"
+import clsx from "clsx/lite"
+
 export default function Spotlight() {
+  const kind = useAppSelector(selectMonsterKind)
+  const isBoss = kind === "boss"
+
   return (
     <svg
       className="absolute -top-12 lg:top-0 left-1/2 -translate-x-1/2 h-full w-[490px] md:w-[550px] lg:w-full lg:w-[110%] blur-sm"
@@ -6,7 +13,7 @@ export default function Spotlight() {
       preserveAspectRatio="none">
       <defs>
         <linearGradient id="ray-gradient-1" x1="50%" y1="100%" x2="50%" y2="0%">
-          <stop offset="10%" className="text-white/80" stopColor="currentColor" />
+          <stop offset="10%" className={clsx(isBoss ? "text-red-200/80" : "text-white/80")} stopColor="currentColor" />
           <stop offset="80%" className="text-transparent" stopColor="currentColor" />
         </linearGradient>
       </defs>

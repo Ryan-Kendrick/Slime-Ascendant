@@ -1,11 +1,10 @@
-import { createSelector, createSlice, isAllOf, isAnyOf } from "@reduxjs/toolkit"
+import { createSelector, createSlice, isAllOf } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { type RootState } from "./store"
 import { getMonster } from "../gameconfig/monster"
 import { EnemyState } from "../models/monsters"
 import { monsterClicked, increaseTotalDotDamageDealt, monsterBeaten } from "./statsSlice"
 import { prestigeReset } from "./shared/actions"
-import { build } from "vite"
 
 interface EnemyThatDies extends EnemyState {
   alive: boolean
@@ -59,6 +58,7 @@ export const selectMonsterState = createSelector([(state) => state.monster], (mo
 
 export const selectMonsterHealth = (state: RootState) => state.monster.health
 export const selectMonsterMaxHealth = (state: RootState) => state.monster.maxHealth
+export const selectMonsterKind = (state: RootState) => state.monster.kind
 export const selectMonsterAlive = (state: RootState) => state.monster.alive
 
 export default monsterSlice.reducer

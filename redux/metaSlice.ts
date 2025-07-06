@@ -61,6 +61,7 @@ export const metaSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(prestigeReset, (state) => {
+      console.log(initialState.OTPPos)
       state.OTPPos = initialState.OTPPos
     })
   },
