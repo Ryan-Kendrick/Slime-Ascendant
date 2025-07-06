@@ -10,7 +10,13 @@ import pollenRuntURL from "../assets/monsters/pollen-runt.webp"
 import wailShroomURL from "../assets/monsters/wail-shroom.webp"
 import slimeURL from "../assets/monsters/slime.webp"
 import jungleProwlerURL from "../assets/monsters/jungle-prowler.webp"
-import toothURL from "../assets/monsters/tooth.webp"
+import toothURL from "../assets/monsters/boss-tooth.webp"
+import dripShroomURL from "../assets/monsters/boss-drip-shroom.webp"
+import everhaunchURL from "../assets/monsters/boss-everhaunch.webp"
+import ribeyeURL from "../assets/monsters/boss-ribeye.webp"
+import tankURL from "../assets/monsters/boss-tank.webp"
+import unityOfTheShoreURL from "../assets/monsters/boss-unity-of-the-shore.webp"
+import wardSquidURL from "../assets/monsters/boss-ward-squid.webp"
 
 const MONSTER_CONFIG: BaseMonsterConfig = {
   health: {
@@ -46,7 +52,16 @@ const MONSTER_VARIATIONS: MonsterType[] = [
   { name: "Jungle Prowler", kind: "regular", healthMulti: 1.4, imagePath: `${jungleProwlerURL}` },
 ]
 
-const BOSS_VARIATIONS: MonsterType[] = [{ name: "Tooth", kind: "boss", healthMulti: 2, imagePath: `${toothURL}` }]
+const BOSS_VARIATIONS: MonsterType[] = [
+  { name: "Tooth", kind: "boss", healthMulti: 2, imagePath: `${toothURL}` },
+  { name: "Drip Shroom", kind: "boss", healthMulti: 2, imagePath: `${dripShroomURL}` },
+  { name: "Everhaunch", kind: "boss", healthMulti: 2, imagePath: `${everhaunchURL}` },
+  { name: "Ribeye", kind: "boss", healthMulti: 1.5, imagePath: `${ribeyeURL}` },
+  { name: "Tank", kind: "boss", healthMulti: 3, imagePath: `${tankURL}` },
+  { name: "Unity of the Shore", kind: "boss", healthMulti: 1.75, imagePath: `${unityOfTheShoreURL}` },
+  { name: "Ward Squid", kind: "boss", healthMulti: 2.25, imagePath: `${wardSquidURL}` },
+]
+
 const RARE_VARIATIONS: MonsterType[] = [
   {
     name: "Gem Crab",
