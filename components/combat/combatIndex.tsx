@@ -31,7 +31,7 @@ export default function CombatIndex({ children }: PropsWithChildren) {
     <div className="relative flex flex-col lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
       {/* Background */}
 
-      <div className="absolute inset-0 -z-10 pointer-events-none">
+      <div className="absolute inset-0 -z-20 pointer-events-none">
         <div className="absolute h-full w-full lg:w-auto -translate-x-[15%] lg:-translate-x-[10%] xl:-translate-x-[20%] translate-y-[20%] scale-[1.5] lg:scale-[1.55] xl:scale-[1.6] 2xl:scale-[1.7] aspect-square lg:aspect-[4/5] rounded-full bg-gradient-to-b from-yellow-400 to-orange-600 blur-3xl" />
         <div className="absolute h-full w-full lg:w-auto bg-gradient-to-r from-purple-700 to-violet-900 aspect-square lg:aspect-[4/5] rounded-full blur-3xl scale-[1.5] lg:scale-[1.45] xl:scale-[1.5] 2xl:scale-[1.6]" />
 

@@ -6,6 +6,8 @@ export interface TabData {
   id: Tab
   title: string
   component: JSX.Element
+  activeStyle: string
+  inactiveStyle: string
 }
 
 export interface PlayerState {

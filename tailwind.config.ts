@@ -83,6 +83,7 @@ export default {
         electricBlue: "#7DF9FF",
         electricGreenLight: "#deffdb",
         electricGreen: "#21fc0d",
+        frost: "#EAF6F9",
         islam: "#009000",
         hpgreen: "#00BB27",
         darkgreen: "#11772D",
