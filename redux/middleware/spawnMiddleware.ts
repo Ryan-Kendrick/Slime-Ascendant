@@ -63,7 +63,7 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
     // When highest zone
     if (isProgressing) {
       updateZonesCompleted(dispatch)
-      if (currentZoneNumber > 9) dispatch(increasePlasma(monsterPlasmaValue))
+      if (currentZoneNumber > 9 && monsterPlasmaValue) dispatch(increasePlasma(monsterPlasmaValue))
 
       // Highest zone & farming toggled; zone transition in place
       if (isFarming) {

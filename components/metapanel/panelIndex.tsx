@@ -15,7 +15,7 @@ import {
 } from "../../redux/playerSlice"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
-import { selectBreakpoint } from "../../redux/metaSlice"
+import { selectAnimationPref, selectBreakpoint } from "../../redux/metaSlice"
 
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
@@ -35,6 +35,7 @@ export default function PanelIndex() {
   const tabRef = useRef<HTMLDivElement>(null)
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
   const dotDamage = useAppSelector(selectDotDamage)
+  const animationPref = useAppSelector(selectAnimationPref)
 
   interface MaskConfig {
     top: number
@@ -226,10 +227,10 @@ export default function PanelIndex() {
         id: "prestige",
         title: "Prestige",
         component: <Prestige />,
-        activeStyle: `before:bg-slate-500 before:absolute before:left-0 before:top-0 before:h-20 before:w-44 before:blur before:rotate-45 
-          
+        activeStyle: `before:bg-slate-600 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
+
           bg-gradient-to-tr bg-frost border-[3px] border-amber-800 text-frost font-outline-electricBlue cursor-inactive`,
-        inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:left-0 before:top-0 before:h-20 before:w-44 before:blur before:rotate-45 
+        inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
 
         after:bg-frost after:absolute after:inset-0 after:-z-10 
 
@@ -295,7 +296,9 @@ export default function PanelIndex() {
                   "relative flex w-full items-center overflow-hidden rounded-t-lg px-4 py-1.5 shadow-panel-t-1",
                   activeTab === tab.id ? tab.activeStyle : tab.inactiveStyle,
                 )}>
-                <h2 className="z-10 text-xl">{tab.title}</h2>
+                <h2 className={clsx("z-10 text-xl", animationPref > 0 && "transition-color, duration-500")}>
+                  {tab.title}
+                </h2>
               </button>
             ))}
           </div>

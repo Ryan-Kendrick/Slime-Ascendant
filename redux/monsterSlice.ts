@@ -47,7 +47,7 @@ export const monsterSlice = createSlice({
 
 export const { spawnMonster, monsterDied } = monsterSlice.actions
 
-export const selectMonsterState = createSelector([(state) => state.monster], (monster) => ({
+export const selectMonsterState = createSelector([(state: RootState) => state.monster], (monster) => ({
   monsterName: monster.name,
   monsterLevel: monster.level,
   monsterGoldValue: monster.goldValue,
