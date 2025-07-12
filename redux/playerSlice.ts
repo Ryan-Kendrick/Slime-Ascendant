@@ -219,6 +219,8 @@ export const playerSlice = createSlice({
 
       state.tabInView = "upgrade"
 
+      state.pendingPPurchases = {} as Record<PrestigeUpgradeName, PrestigeState>
+
       if (action.payload.damage) state.pDamageUpgradeCount += action.payload.damage.purchaseCount
       if (action.payload["crit-chance"]) state.pCritUpgradeCount += action.payload["crit-chance"].purchaseCount
       if (action.payload.multistrike) state.pMultistrikeUpgradeCount += action.payload.multistrike.purchaseCount
@@ -314,7 +316,7 @@ export const selectBeatDamage = createSelector(
 export const selectDotDamage = createSelector(
   [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],
   (activeHeroes, heroState, pDamage, achievementDamage) => {
-    if (activeHeroes.length < 1) return 0
+    if (activeHeroes.length < 2) return 0
     const dotHeroes = activeHeroes.slice(1)
     const heroStats = dotHeroes.map((hero) => heroState[hero])
 

@@ -44,7 +44,7 @@ export default function Prestige() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-[722px]">
       <Currency
         key={resetCounter}
         image={PlasmaIcon()}

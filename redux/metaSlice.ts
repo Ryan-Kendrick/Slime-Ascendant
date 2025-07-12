@@ -51,7 +51,7 @@ export const metaSlice = createSlice({
     setBreakpoint: (state, action: PayloadAction<Breakpoint>) => {
       state.breakpoint = action.payload
     },
-    toggleAnimationPref: (state, action: PayloadAction<number>) => {
+    toggleAnimationPref(state) {
       if (state.animationPref !== 2) {
         state.animationPref++
       } else {
