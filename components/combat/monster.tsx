@@ -124,7 +124,7 @@ export default function Monster({ children }: PropsWithChildren) {
 
   return (
     <>
-      <div className="flex flex-col w-full items-center">
+      <div className="flex w-full flex-col items-center">
         <div className="relative flex w-full justify-center text-2xl">
           <div className="text-center">{monsterName}</div>
         </div>
@@ -132,10 +132,10 @@ export default function Monster({ children }: PropsWithChildren) {
       </div>
 
       <button
-        className="relative flex flex-grow items-end h-[27rem] max-h-[34rem] hover:cursor-dagger"
+        className="relative flex h-[27rem] max-h-[34rem] flex-grow items-end hover:cursor-dagger"
         onClick={(e) => handleClick(e)}>
         <img
-          className="max-h-full h-full w-full object-cover lg:object-contain pointer-events-none"
+          className="pointer-events-none h-full max-h-full w-full object-cover lg:object-contain"
           src={monsterImage}
           alt={monsterName}
         />
@@ -145,40 +145,40 @@ export default function Monster({ children }: PropsWithChildren) {
             return (
               <div
                 key={crit.id}
-                className="absolute inset-0 pointer-events-none flex items-center justify-center"
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
                 style={{
                   transform: `translate(${crit.position.x}px, ${crit.position.y}px)`,
                 }}>
-                <div className="animate-float-up text-yellow-300 text-6xl font-bold absolute top-12">
+                <div className="absolute top-12 animate-float-up text-6xl font-bold text-yellow-300">
                   <div className="flex flex-col gap-1">
                     <p className="font-outline">{formatSmallNumber(crit.damage)}</p>
-                    <p className="text-white text-4xl">⚡CRITICAL HIT⚡</p>
+                    <p className="text-4xl text-white">⚡CRITICAL HIT⚡</p>
                   </div>
                 </div>
               </div>
             )
           })}
         {!usingHighQualityAnimations && displayCrit && (
-          <div className="absolute inset-0 text-yellow-400 text-6xl font-bold top-0">
+          <div className="absolute inset-0 top-0 text-6xl font-bold text-yellow-400">
             <div className="flex flex-col gap-1">
               <p>{formatSmallNumber(lastCritDamage)}</p>
-              <p className="text-white text-4xl">⚡CRITICAL HIT⚡</p>
+              <p className="text-4xl text-white">⚡CRITICAL HIT⚡</p>
             </div>
           </div>
         )}
         {usingHighQualityAnimations && displayMultistrike && (
-          <div style={{ top: multistrikePos.y, left: multistrikePos.x }} className="absolute pointer-events-none">
+          <div style={{ top: multistrikePos.y, left: multistrikePos.x }} className="pointer-events-none absolute">
             <div className="absolute animate-multistrike-ring">
-              <div className="w-12 h-12 border-4 border-white rounded-full" />
+              <div className="h-12 w-12 rounded-full border-4 border-white" />
             </div>
           </div>
         )}
 
         {!usingHighQualityAnimations && displayMultistrike && (
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <div className="bg-dagger absolute left-[20%] translate-x-1/2 translate-y-1/2 opacity-0 w-[64px] h-[49px] animate-multistrike-simple-1 rotate-[120deg]" />
-            <div className="bg-dagger absolute left-[30%] top-20 translate-x-1/2 translate-y-1/2 opacity-0 w-[64px] h-[49px] animate-multistrike-simple-2 rotate-180" />
-            <div className="bg-dagger absolute left-[60%] top-24 translate-x-1/2 translate-y-1/2 opacity-0 w-[64px] h-[49px] animate-multistrike-simple-3 -rotate-90" />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="absolute left-[20%] h-[49px] w-[64px] translate-x-1/2 translate-y-1/2 rotate-[120deg] animate-multistrike-simple-1 bg-dagger opacity-0" />
+            <div className="absolute left-[30%] top-20 h-[49px] w-[64px] translate-x-1/2 translate-y-1/2 rotate-180 animate-multistrike-simple-2 bg-dagger opacity-0" />
+            <div className="absolute left-[60%] top-24 h-[49px] w-[64px] translate-x-1/2 translate-y-1/2 -rotate-90 animate-multistrike-simple-3 bg-dagger opacity-0" />
           </div>
         )}
       </button>

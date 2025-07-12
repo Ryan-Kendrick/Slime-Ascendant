@@ -22,10 +22,10 @@ export default function Currency({
   const currency = formatSmallNumber(useAppSelector(currencySelector))
 
   return (
-    <div className={`relative flex flex-none flex-col h-[5.5rem] items-center ${containerStyle}`}>
-      <div className="flex absolute items-center gap-3 top-1/2 left-[60%] md:left-[72%] -translate-x-[60%] md:-translate-x-[72%] -translate-y-1/2">
-        <div className="w-20 h-20">{image}</div>
-        <span className={`text-4xl min-w-[10ch] md:w-[15ch] text-left ${fontStyle}`}>
+    <div className={`relative flex h-[5.5rem] flex-none flex-col items-center ${containerStyle}`}>
+      <div className="absolute left-[60%] top-1/2 flex -translate-x-[60%] -translate-y-1/2 items-center gap-3 md:left-[72%] md:-translate-x-[72%]">
+        <div className="h-20 w-20">{image}</div>
+        <span className={`min-w-[10ch] text-left text-4xl md:w-[15ch] ${fontStyle}`}>
           {currency}
           {suffix}
         </span>

@@ -75,12 +75,12 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable || hidden}
       className={clsx(
-        "w-56 relative cursor-active disabled:cursor-inactive text-lg bg-cyan-800/50 text-cyan-300 py-2 px-2 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
-        "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:bg-cyan-800/50 disabled:shadow-none disabled:text-gray-300/80 disabled:border-black",
+        "relative flex w-56 cursor-active items-center justify-center gap-2 rounded-lg border border-cyan-500 bg-cyan-800/50 px-2 py-2 text-lg text-cyan-300 shadow-lg shadow-cyan-500/20 transition-all duration-300 disabled:cursor-inactive",
+        "hover:bg-cyan-700/80 hover:shadow-cyan-500/40 disabled:border-black disabled:bg-cyan-800/50 disabled:text-gray-300/80 disabled:shadow-none",
       )}>
       {hidden && (
-        <div className={clsx("absolute flex w-full h-full items-center justify-center rounded-lg bg-black z-10")}>
-          <p className="text-red-500 font-bold">Reach Zone {config.visibleAtZone}</p>
+        <div className={clsx("absolute z-10 flex h-full w-full items-center justify-center rounded-lg bg-black")}>
+          <p className="font-bold text-red-500">Reach Zone {config.visibleAtZone}</p>
         </div>
       )}
       <div className="relative flex flex-col items-center">
@@ -107,7 +107,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
         <p className="flex">
           Price:{" "}
           <span className={clsx("flex font-bold", isAffordable ? "text-blue-200" : "text-red-500")}>
-            {<span className="self-center -mr-[0.18rem]">{MinPlasmaIcon()}</span>}
+            {<span className="-mr-[0.18rem] self-center">{MinPlasmaIcon()}</span>}
             {purchasePrice}
           </span>
         </p>

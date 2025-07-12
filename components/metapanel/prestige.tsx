@@ -44,7 +44,7 @@ export default function Prestige() {
   }
 
   return (
-    <div className="flex flex-col h-full min-h-[722px]">
+    <div className="flex h-full min-h-[722px] flex-col">
       <Currency
         key={resetCounter}
         image={PlasmaIcon()}
@@ -52,7 +52,7 @@ export default function Prestige() {
         currencySelector={plasmaSelector}
         suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
       />
-      <div className="flex flex-wrap justify-center mx-2 font-sans gap-2">
+      <div className="mx-2 flex flex-wrap justify-center gap-2 font-sans">
         {UPGRADE_CONFIG.prestigeUpgrades.map((prestigeUpgrade, i) => {
           if (i > 0 && UPGRADE_CONFIG.prestigeUpgrades[i - 1].visibleAtZone > highZoneEver) return null
 
@@ -66,13 +66,13 @@ export default function Prestige() {
           )
         })}
       </div>
-      <div className="relative flex grow gap-4 h-full w-full items-end justify-center">
+      <div className="relative flex h-full w-full grow items-end justify-center gap-4">
         <button
           onClick={() => setConfirmPrestige(true)}
           disabled={!zoneTenComplete}
           className={clsx(
-            "w-40 h-16 my-4 cursor-active rounded-lg border-2 border-white bg-red-600 text-white font-sans font-extrabold text-2xl",
-            !zoneTenComplete && "opacity-50 bg-red-800",
+            "my-4 h-16 w-40 cursor-active rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-extrabold text-white",
+            !zoneTenComplete && "bg-red-800 opacity-50",
           )}>
           Prestige
         </button>
@@ -80,8 +80,8 @@ export default function Prestige() {
           onClick={onReset}
           disabled={!plasmaReserved}
           className={clsx(
-            "w-40 h-16 my-4 cursor-active rounded-lg border-2 border-black bg-gray-700 text-white font-sans font-extrabold text-2xl",
-            !plasmaReserved && "opacity-50 bg-gray-800",
+            "my-4 h-16 w-40 cursor-active rounded-lg border-2 border-black bg-gray-700 font-sans text-2xl font-extrabold text-white",
+            !plasmaReserved && "bg-gray-800 opacity-50",
           )}>
           Reset
         </button>
@@ -93,15 +93,15 @@ export default function Prestige() {
         style={confirmPrestigeStyle}>
         <div className="flex h-full flex-col">
           <button
-            className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-active disabled:cursor-inactive"
+            className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
             onClick={() => setConfirmPrestige(false)}>
             {CancelIcon()}
           </button>
-          <h2 className="self-center text-2xl font-bold mb-4">Go backwards to go forwards</h2>
-          <div className="flex gap-4 justify-around">
+          <h2 className="mb-4 self-center text-2xl font-bold">Go backwards to go forwards</h2>
+          <div className="flex justify-around gap-4">
             <div className="flex flex-col">
               <ul className="text-red-600">
-                <h3 className="text-xl font-bold mb-1"> You will lose</h3>
+                <h3 className="mb-1 text-xl font-bold"> You will lose</h3>
                 <li>Gold</li>
                 <li>Upgrades</li>
                 <li>Zone progress</li>
@@ -109,14 +109,14 @@ export default function Prestige() {
             </div>
             <div className="flex flex-col">
               <ul className="text-amber-700">
-                <h3 className="text-xl font-bold mb-1"> You will keep</h3>
+                <h3 className="mb-1 text-xl font-bold"> You will keep</h3>
                 <li>Unspent plasma</li>
                 <li>Achievements</li>
               </ul>
             </div>
             <div className="flex flex-col">
               <ul className="text-islam">
-                <h3 className="text-xl font-bold mb-1"> You will gain </h3>
+                <h3 className="mb-1 text-xl font-bold"> You will gain </h3>
                 <p>Prestige upgrades</p>
               </ul>
             </div>
@@ -124,7 +124,7 @@ export default function Prestige() {
           <div className="mt-auto">
             <button
               onClick={() => dispatch(updatePrestige())}
-              className="w-40 h-16 my-4 self-start cursor-active disabled:cursor-inactive rounded-lg border-2 border-white bg-red-600 text-white font-sans font-bold text-2xl">
+              className="my-4 h-16 w-40 cursor-active self-start rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-bold text-white disabled:cursor-inactive">
               Confirm
             </button>
           </div>

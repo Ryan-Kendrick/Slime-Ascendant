@@ -134,17 +134,17 @@ export default function UpgradeIndex() {
         innerStyle="currency-gold-inner"
         currencySelector={selectGold}
       />
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-1 flex-col">
         <div
           className={clsx(
-            "relative grid gap-1 -mt-1 md:mt-0 z-50",
+            "relative z-50 -mt-1 grid gap-1 md:mt-0",
             isWarriorVisible
               ? isHealerVisible
                 ? isMageVisible
-                  ? "grid-cols-1 md:grid-cols-2 mt-0 md:mt-0 mb-0"
-                  : "grid-cols-1 md:grid-cols-2 mt-0 md:mt-0 mb-0"
-                : "grid-cols-1 md:grid-cols-2 -mt-1 md:mt-0 mb-0"
-              : "grid-cols-1 -mt-3 md:mt-0 mb-8",
+                  ? "mb-0 mt-0 grid-cols-1 md:mt-0 md:grid-cols-2"
+                  : "mb-0 mt-0 grid-cols-1 md:mt-0 md:grid-cols-2"
+                : "-mt-1 mb-0 grid-cols-1 md:mt-0 md:grid-cols-2"
+              : "-mt-3 mb-8 grid-cols-1 md:mt-0",
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}
@@ -177,7 +177,7 @@ export default function UpgradeIndex() {
           {/* Vertical mask to go with the horizonal mask in panelIndex on large screens*/}
           <div
             className={clsx(
-              "hidden md:block left-[calc(50%-0.125rem)] h-full w-1 z-10 bg-[#723209]",
+              "left-[calc(50%-0.125rem)] z-10 hidden h-full w-1 bg-[#723209] md:block",
               (oneLineMaskVisible && !hasPrestiged) || (hasPrestiged && isWarriorVisible) ? "md:absolute" : "md:hidden",
               isHealerVisible && "md:absolute",
             )}

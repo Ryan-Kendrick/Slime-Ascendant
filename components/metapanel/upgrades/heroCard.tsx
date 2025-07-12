@@ -214,10 +214,10 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
       {/* Card rounded corners mask */}
       {(isNotAdventurer || isWarriorVisible) && oneLineMaskVisible && (
         <>
-          <div className="absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -left-0.5 -z-10 bg-[#532105] md:bg-[#532105]" />
+          <div className="absolute -bottom-0.5 -left-0.5 -z-10 h-[6px] w-[6px] rounded-full bg-[#532105] md:bg-[#532105]" />
           <div
             className={clsx(
-              "absolute rounded-full w-[6px] h-[6px] -bottom-0.5 -right-0.5 -z-10 bg-[#532105]",
+              "absolute -bottom-0.5 -right-0.5 -z-10 h-[6px] w-[6px] rounded-full bg-[#532105]",
               thisHeroName === "warrior" || thisHeroName === "mage" ? "md:bg-[#7D29B9]" : "md:bg-[#532105]",
             )}
           />
@@ -226,7 +226,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
       <div
         id={`${thisHeroName}-card`}
         className={clsx(
-          "hero-card relative flex flex-col shadow-panel border-2 rounded-b text-white h-[365px] md:h-[315px]",
+          "hero-card relative flex h-[365px] flex-col rounded-b border-2 text-white shadow-panel md:h-[315px]",
           beginningState,
           touchHoverActive
             ? "border-white"
@@ -234,8 +234,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
               ? "border-gold"
               : "border-yellow-700",
           !animationComplete && !isVisible && isNotAdventurer && "opacity-0",
-          isVisible && isNotAdventurer && "opacity-100 transform-none",
-          animationComplete && isNotAdventurer && "opacity-100 transition-none pointer-events-auto",
+          isVisible && isNotAdventurer && "transform-none opacity-100",
+          animationComplete && isNotAdventurer && "pointer-events-auto opacity-100 transition-none",
           // Negative margin to cancel gap-1 from unrendered Mage card
           isFirstCard ? "-mt-1 md:mt-0" : "mt-0",
         )}
@@ -245,8 +245,8 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         {/* Title section */}
         <div
           className={clsx(
-            `flex flex-col place-content-center grow text-center font-outline border-b border-amber-950 relative ${thisHero.cardBackground}`,
-            "before:absolute before:inset-0 before:duration-500 before:z-0",
+            `font-outline relative flex grow flex-col place-content-center border-b border-amber-950 text-center ${thisHero.cardBackground}`,
+            "before:absolute before:inset-0 before:z-0 before:duration-500",
             animationsEnabled
               ? "transition-all before:transition-opacity before:duration-500"
               : "transition-none before:transition-none",
@@ -262,7 +262,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
             )}>
             <h2
               className={clsx(
-                "text-2xl bg-black",
+                "bg-black text-2xl",
                 animationsEnabled ? "transition-colors" : "transition-none",
                 hoverAnimationDuration,
                 beginDelayedAnimation ? "bg-opacity-60" : "bg-opacity-0",
@@ -272,7 +272,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
           </div>
           <div
             className={clsx(
-              `${hoverAnimationDuration} font-paytone text-lg h-full`,
+              `${hoverAnimationDuration} h-full font-paytone text-lg`,
               animationsEnabled ? "transition-transform" : "transition-none",
 
               isHovering ? "translate-y-[calc(98%)]" : "translate-y-0",
@@ -287,10 +287,10 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
               animationsEnabled ? "transition-opacity ease-in" : "transition-none",
               isHovering ? `opacity-100 ${hoverAnimationDuration}` : "opacity-0 duration-150",
             )}>
-            <div className={clsx("flex mt-8 pb-8 h-full items-center relative")}>
+            <div className={clsx("relative mt-8 flex h-full items-center pb-8")}>
               <div
                 className={clsx(
-                  "absolute inset-0 w-full flex flex-col mt-2",
+                  "absolute inset-0 mt-2 flex w-full flex-col",
                   animationsEnabled ? "transition-opacity duration-200" : "transition-none",
                   hoveredOTPUpgrade ? "opacity-100" : "opacity-0",
                   hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-none",
@@ -319,20 +319,20 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
                   hoveredOTPUpgrade ? "pointer-events-none" : "pointer-events-auto",
                 )}>
                 <div className="border-b-2 border-amber-900">
-                  <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
+                  <div className="flex translate-y-0.5 justify-between px-1 md:px-0.5">
                     <h4>Base Damage</h4>
                     <p>{Math.round(damageAtLevel)}</p>
                   </div>
                 </div>
                 <div className="border-b-2 border-amber-900">
-                  <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
+                  <div className="flex translate-y-0.5 justify-between px-1 md:px-0.5">
                     <h4>Upgrade Multiplier</h4>
                     <p>x{upgradeMod ? upgradeMod.toFixed(2) : "1.00"}</p>
                   </div>
                 </div>
                 {prestigeMod > 1 && (
                   <div className="border-b-2 border-amber-900">
-                    <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
+                    <div className="flex translate-y-0.5 justify-between px-1 md:px-0.5">
                       <h4>Prestige</h4>
                       <p className="font-outline-electricblue">x{prestigeMod.toFixed(2)}</p>
                     </div>
@@ -340,7 +340,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
                 )}
                 {achievementMod > 0 && (
                   <div className="border-b-2 border-amber-900">
-                    <div className="flex justify-between px-1 md:px-0.5 translate-y-0.5">
+                    <div className="flex translate-y-0.5 justify-between px-1 md:px-0.5">
                       <h4>Achievements</h4>
                       <p className="font-outline-gold text-black">+{Math.round(achievementMod * 100)}%</p>
                     </div>
@@ -348,7 +348,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
                 )}
 
                 <div>
-                  <div className="flex text-3xl justify-between px-1 md:px-0.5 translate-y-1">
+                  <div className="flex translate-y-1 justify-between px-1 text-3xl md:px-0.5">
                     <h4>Total</h4>
                     <p className="">{Math.round(totalDamageContribution)}</p>
                   </div>
@@ -361,14 +361,14 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
         {/* Upgrades & Levelup section */}
         <div
           className={clsx(
-            "flex flex-col md:flex-row items-center py-2 px-2 md:px-4 gap-2",
+            "flex flex-col items-center gap-2 px-2 py-2 md:flex-row md:px-4",
             animationsEnabled ? "transition-all" : "transition-none",
             hoverAnimationDuration,
             isHovering && "mt-4",
           )}>
           <div
             ref={OTPContainerRef}
-            className="upgrade-container relative grow h-full w-full min-h-10 flex self-start md:w-64 2xl:w-72 text-white font-outline">
+            className="upgrade-container font-outline relative flex h-full min-h-10 w-full grow self-start text-white md:w-64 2xl:w-72">
             {OTPIcons.map((icon, i) => {
               const isPurchased = OTPUpgradeCount > i
               const isHidden = i === 0 ? level < 10 : OTPUpgradeCount < i

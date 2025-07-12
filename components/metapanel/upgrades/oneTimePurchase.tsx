@@ -75,7 +75,7 @@ export default function OneTimePurchaseUpgrade({
         "before:transition-[background-position] before:duration-[2000ms]",
         "before:z-30",
         shimmer && "before:bg-[position:150%_0]",
-        hidden && "-z-10 pointer-events-none",
+        hidden && "pointer-events-none -z-10",
         !hidden && "pointer-events-auto z-auto",
         !hidden && isAffordable && !isPurchased ? "cursor-active" : "cursor-inactive",
       )}
@@ -90,24 +90,24 @@ export default function OneTimePurchaseUpgrade({
         className={clsx(
           // Base
           "relative rounded-lg",
-          "ring-2 ring-offset-2 ring-amber-800",
+          "ring-2 ring-amber-800 ring-offset-2",
           "opacity-0 transition-all duration-1000",
 
           // Conditionals
           hidden && "invisible",
           !hidden && "opacity-100",
-          !isPurchased && !isAffordable && "ring-offset-yellow-600 opacity-60",
+          !isPurchased && !isAffordable && "opacity-60 ring-offset-yellow-600",
           isPurchased || !isAffordable ? "ring-offset-yellow-700" : "ring-offset-yellow-300",
         )}>
         <div
           className={clsx(
-            "absolute inset-0 rounded-lg z-10",
+            "absolute inset-0 z-10 rounded-lg",
             "bg-gradient-to-br from-amber-600 to-amber-800",
             isAffordable && !isPurchased ? "opacity-100" : "opacity-30",
           )}
         />
-        {isPurchased && <div className="absolute inset-[2px] bg-amber-950/60 rounded-md z-10" />}
-        <div className="relative z-20 w-8 h-8 flex items-center justify-center p-1 text-amber-400">{icon}</div>
+        {isPurchased && <div className="absolute inset-[2px] z-10 rounded-md bg-amber-950/60" />}
+        <div className="relative z-20 flex h-8 w-8 items-center justify-center p-1 text-amber-400">{icon}</div>
       </div>
     </div>
   )

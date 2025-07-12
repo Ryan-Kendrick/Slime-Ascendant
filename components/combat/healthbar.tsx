@@ -76,9 +76,9 @@ export default function Healthbar() {
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
           <div
             ref={healthRef}
-            className={clsx("h-full bg-gradient-to-b from-hpgreen to-darkgreen rounded-sm transform-gpu")}
+            className={clsx("h-full transform-gpu rounded-sm bg-gradient-to-b from-hpgreen to-darkgreen")}
           />
-          <div className="absolute h-3/4 bottom-0 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20 z-10" />
+          <div className="absolute bottom-0 z-10 h-3/4 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20" />
         </div>
       </div>
     </>

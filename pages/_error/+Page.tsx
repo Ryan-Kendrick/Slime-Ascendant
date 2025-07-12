@@ -8,7 +8,7 @@ export default function Page() {
     return (
       <div className="flex flex-col place-items-center text-red-500">
         <h1 className="text-4xl font-bold">404 Page Not Found</h1>
-        <p className="text-3xl mb-2">This page could not be found.</p>
+        <p className="mb-2 text-3xl">This page could not be found.</p>
         <img src={faviconURL} alt="Slime Ascend logo" className="h-1/2 w-1/2" />
       </div>
     )
@@ -16,7 +16,7 @@ export default function Page() {
   return (
     <div className="flex flex-col place-items-center text-red-500">
       <h1 className="text-4xl font-bold">500 Internal Server Error</h1>
-      <p className="text-3xl mb-2">Something went wrong.</p>
+      <p className="mb-2 text-3xl">Something went wrong.</p>
       <img src={faviconURL} alt="Slime Ascend logo" className="h-1/2 w-1/2" />
     </div>
   )

@@ -28,28 +28,28 @@ export default function CombatIndex({ children }: PropsWithChildren) {
   }, [currentZoneNumber])
 
   return (
-    <div className="relative flex flex-col lg:min-h-[822px] xl:min-h-[753px] lg:basis-2/5 text-white">
+    <div className="relative flex flex-col text-white lg:min-h-[822px] lg:basis-2/5 xl:min-h-[753px]">
       {/* Background */}
 
-      <div className="absolute inset-0 -z-20 pointer-events-none">
-        <div className="absolute h-full w-full lg:w-auto -translate-x-[15%] lg:-translate-x-[10%] xl:-translate-x-[20%] translate-y-[20%] scale-[1.5] lg:scale-[1.55] xl:scale-[1.6] 2xl:scale-[1.7] aspect-square lg:aspect-[4/5] rounded-full bg-gradient-to-b from-yellow-400 to-orange-600 blur-3xl" />
-        <div className="absolute h-full w-full lg:w-auto bg-gradient-to-r from-purple-700 to-violet-900 aspect-square lg:aspect-[4/5] rounded-full blur-3xl scale-[1.5] lg:scale-[1.45] xl:scale-[1.5] 2xl:scale-[1.6]" />
+      <div className="pointer-events-none absolute inset-0 -z-20">
+        <div className="absolute aspect-square h-full w-full -translate-x-[15%] translate-y-[20%] scale-[1.5] rounded-full bg-gradient-to-b from-yellow-400 to-orange-600 blur-3xl lg:aspect-[4/5] lg:w-auto lg:-translate-x-[10%] lg:scale-[1.55] xl:-translate-x-[20%] xl:scale-[1.6] 2xl:scale-[1.7]" />
+        <div className="absolute aspect-square h-full w-full scale-[1.5] rounded-full bg-gradient-to-r from-purple-700 to-violet-900 blur-3xl lg:aspect-[4/5] lg:w-auto lg:scale-[1.45] xl:scale-[1.5] 2xl:scale-[1.6]" />
 
         <Spotlight />
       </div>
 
       <div
         className={clsx(
-          "flex flex-col h-full w-full items-center relative overflow-hidden z-0",
+          "relative z-0 flex h-full w-full flex-col items-center overflow-hidden",
           currentZoneNumber > 4 ? "justify-normal" : "justify-evenly",
         )}>
         {/* Absolutely positioned content container to ignore bg overflow */}
-        <div className="static lg:absolute inset-0">
-          <div className="flex flex-col h-full w-full items-center">
+        <div className="static inset-0 lg:absolute">
+          <div className="flex h-full w-full flex-col items-center">
             {currentZoneNumber > 4 && (
               <div
                 className={clsx(
-                  "flex w-full xl:px-2 justify-center opacity-0 duration-1000",
+                  "flex w-full justify-center opacity-0 duration-1000 xl:px-2",
                   shouldMount ? "transition-opacity" : "transition-none",
                   fadeIn && "opacity-100",
                   hasFadedIn && "opacity-100 transition-none",
@@ -76,7 +76,7 @@ export default function CombatIndex({ children }: PropsWithChildren) {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block items-between">{children}</div>
+      <div className="items-between hidden lg:block">{children}</div>
     </div>
   )
 }

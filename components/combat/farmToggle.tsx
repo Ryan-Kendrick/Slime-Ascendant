@@ -14,17 +14,17 @@ export default function FarmToggle() {
   return (
     <div
       className={clsx(
-        "absolute flex items-center justify-center right-3 top-24 rounded-full w-11 h-11 z-10 bg-gradient-to-tr cursor-active",
+        "absolute right-3 top-24 z-10 flex h-11 w-11 cursor-active items-center justify-center rounded-full bg-gradient-to-tr",
         isFarming ? "from-yellow-500/30 via-orange-500/30 to-white/80" : "from-yellow-500 via-orange-500 to-white/80",
       )}>
       <div
         className={clsx(
-          "flex items-center justify-center w-9 h-9 bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-gold via-lightgold to-white/50 rounded-full overflow-hidden",
+          "flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-gold via-lightgold to-white/50",
         )}>
         <div
           className={clsx(
-            "w-[1.8rem] h-[1.8rem]",
-            isFarming ? "fill-gray-700 border-gray-700 opacity-60" : "fill-islam border-gray-100",
+            "h-[1.8rem] w-[1.8rem]",
+            isFarming ? "border-gray-700 fill-gray-700 opacity-60" : "border-gray-100 fill-islam",
           )}
           onClick={handleFarmToggle}>
           {FarmToggleIcon()}

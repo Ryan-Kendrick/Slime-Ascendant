@@ -319,7 +319,7 @@ export const selectDotDamage = createSelector(
     if (activeHeroes.length < 2) return 0
     const dotHeroes = activeHeroes.slice(1)
     const heroStats = dotHeroes.map((hero) => heroState[hero])
-
+    console.log(playerCalc.heroDamage(dotHeroes, heroStats, pDamage, achievementDamage))
     return playerCalc.heroDamage(dotHeroes, heroStats, pDamage, achievementDamage)
   },
 )

@@ -56,14 +56,14 @@ export default function ZoneMap() {
 
   return (
     <div className="flex items-end opacity-100">
-      <div className="flex w-[20rem] border-2 md:w-[32rem] md:border-0 lg:w-[20rem] lg:border-2 xl:w-[32rem] xl:border-0 2xl:w-[40rem] 2xl:border-2 mb-2 flex-wrap-reverse content-start border-gray-300 box-content z-10">
+      <div className="z-10 mb-2 box-content flex w-[20rem] flex-wrap-reverse content-start border-2 border-gray-300 md:w-[32rem] md:border-0 lg:w-[20rem] lg:border-2 xl:w-[32rem] xl:border-0 2xl:w-[40rem] 2xl:border-2">
         {stages.map((stage) => {
           const { thisStageNumber, isCurrentStage, isCompleted, isSpecial, iconVisible } = stage
           return (
             <div
               key={thisStageNumber}
               className={clsx(
-                "flex relative h-8 w-16 border-2 border-gray-300 items-center justify-center",
+                "relative flex h-8 w-16 items-center justify-center border-2 border-gray-300",
                 isCompleted && "bg-islam",
                 isCurrentStage && thisStageNumber !== zoneLength && "bg-yellow-500",
 
@@ -73,8 +73,8 @@ export default function ZoneMap() {
                 isFarmZone && farmZoneMonsters && thisStageNumber === zoneLength && "bg-gray-800",
                 isFarmZone && farmZoneMonsters && isCurrentStage && thisStageNumber === zoneLength && "bg-yellow-500",
               )}>
-              <div className="flex bg-gradient-to-tr from-white/30 to-blue-700/20 w-full h-full items-center justify-center">
-                <div className={clsx("w-8 h-7", isSpecial && !iconVisible && "hidden")}>
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-tr from-white/30 to-blue-700/20">
+                <div className={clsx("h-7 w-8", isSpecial && !iconVisible && "hidden")}>
                   {getIcon(thisStageNumber - 1)}
                 </div>
               </div>

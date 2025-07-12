@@ -14,17 +14,17 @@ export default function DamageTotals() {
 
   return (
     <div className="relative">
-      <div className="mb-2 h-28 flex">
-        <div className="flex flex-col mt-auto font-arial text-[#2c1810] items-center justify-end w-full">
-          <h2 className="text-2xl z-10 font-extrabold text-shadow tracking-widest">TOTAL</h2>
-          <div className="flex text-lg w-full z-10 font-extrabold justify-center gap-6">
+      <div className="mb-2 flex h-28">
+        <div className="mt-auto flex w-full flex-col items-center justify-end font-arial text-[#2c1810]">
+          <h2 className="text-shadow z-10 text-2xl font-extrabold tracking-widest">TOTAL</h2>
+          <div className="z-10 flex w-full justify-center gap-6 text-lg font-extrabold">
             <h3>Click: {displayClickDamage}</h3>
-            <span className="text-base mt-0.5 opacity-80">|</span>
+            <span className="mt-0.5 text-base opacity-80">|</span>
             <h3>Passive: {displayDotDamage}</h3>
           </div>
         </div>
       </div>
-      <div className="absolute shadow-panel-main inset-0 z-0 bg-gold" />
+      <div className="absolute inset-0 z-0 bg-gold shadow-panel-main" />
     </div>
   )
 }

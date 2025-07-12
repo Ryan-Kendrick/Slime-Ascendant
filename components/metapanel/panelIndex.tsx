@@ -106,8 +106,8 @@ export default function PanelIndex() {
             key={`left-${1}`}
             style={{ top: `${-36}px` }}
             className={clsx(
-              `absolute h-full w-[311px] pointer-events-none`,
-              "left-0  bg-no-repeat",
+              `pointer-events-none absolute h-full w-[311px]`,
+              "left-0 bg-no-repeat",
               "bg-chainsLeftBottom",
             )}
           />
@@ -115,8 +115,8 @@ export default function PanelIndex() {
             key={`right-${1}`}
             style={{ top: `${-36}px` }}
             className={clsx(
-              `absolute h-full w-[311px] pointer-events-none`,
-              "right-0  bg-no-repeat",
+              `pointer-events-none absolute h-full w-[311px]`,
+              "right-0 bg-no-repeat",
               "bg-chainsRightBottom",
             )}
           />
@@ -134,8 +134,8 @@ export default function PanelIndex() {
                 key={`left-${i}`}
                 style={{ top: `(${-36}px` }}
                 className={clsx(
-                  `absolute h-full w-[311px] pointer-events-none`,
-                  "left-0  bg-no-repeat",
+                  `pointer-events-none absolute h-full w-[311px]`,
+                  "left-0 bg-no-repeat",
                   "bg-chainsLeftBottom",
                 )}
               />
@@ -143,8 +143,8 @@ export default function PanelIndex() {
                 key={`right-${i}`}
                 style={{ top: `${-36}px` }}
                 className={clsx(
-                  `absolute h-full w-[311px] pointer-events-none`,
-                  "right-0  bg-no-repeat",
+                  `pointer-events-none absolute h-full w-[311px]`,
+                  "right-0 bg-no-repeat",
                   "bg-chainsRightBottom",
                 )}
               />
@@ -161,8 +161,8 @@ export default function PanelIndex() {
                 key={`left-${i}`}
                 style={{ top: `${top + 58}px` }}
                 className={clsx(
-                  `absolute h-full w-[311px] pointer-events-none`,
-                  "left-0  bg-no-repeat",
+                  `pointer-events-none absolute h-full w-[311px]`,
+                  "left-0 bg-no-repeat",
                   "bg-chainsLeft",
                 )}
               />
@@ -170,8 +170,8 @@ export default function PanelIndex() {
                 key={`right-${i}`}
                 style={{ top: `${top + 58}px` }}
                 className={clsx(
-                  `absolute h-full w-[311px] pointer-events-none`,
-                  "right-0  bg-no-repeat",
+                  `pointer-events-none absolute h-full w-[311px]`,
+                  "right-0 bg-no-repeat",
                   "bg-chainsRight",
                 )}
               />
@@ -185,18 +185,18 @@ export default function PanelIndex() {
                 key={`left-${i}`}
                 style={{ top: `${top}px` }}
                 className={clsx(
-                  `absolute h-full w-[311px] pointer-events-none`,
-                  "left-0  bg-no-repeat",
-                  "bg-chainsLeftPartial ",
+                  `pointer-events-none absolute h-full w-[311px]`,
+                  "left-0 bg-no-repeat",
+                  "bg-chainsLeftPartial",
                 )}
               />
               <div
                 key={`right-${i}`}
                 style={{ top: `${top}px` }}
                 className={clsx(
-                  `absolute h-full w-[311px] pointer-events-none`,
-                  "right-0  bg-no-repeat",
-                  "bg-chainsRightPartial ",
+                  `pointer-events-none absolute h-full w-[311px]`,
+                  "right-0 bg-no-repeat",
+                  "bg-chainsRightPartial",
                 )}
               />
             </React.Fragment>,
@@ -254,9 +254,9 @@ export default function PanelIndex() {
     <div
       className={clsx(
         // Pseudo element background
-        "before:absolute before:w-full before:h-full before:bg-gradient-to-r before:from-amber-950 before:to-amber-800 before:top-0 before:right-10 before:scale-[1.5] before:md:scale-[1.45] before:aspect-square before:rounded-full before:blur-3xl before:-z-20 before:pointer-events-none",
+        "before:pointer-events-none before:absolute before:right-10 before:top-0 before:-z-20 before:aspect-square before:h-full before:w-full before:scale-[1.5] before:rounded-full before:bg-gradient-to-r before:from-amber-950 before:to-amber-800 before:blur-3xl before:md:scale-[1.45]",
 
-        "flex flex-col relative lg:basis-3/5 lg:max-w-[59%] radius rounded-b-xl mx-2 lg:mx-3 md:mb-3 lg:my-0 duration-300",
+        "radius relative mx-2 flex flex-col rounded-b-xl duration-300 md:mb-3 lg:mx-3 lg:my-0 lg:max-w-[59%] lg:basis-3/5",
         !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
         oneLineMaskVisible ? "transition-none" : "transition-[padding]",
       )}>
@@ -267,16 +267,16 @@ export default function PanelIndex() {
           <div
             style={{ top: `${maskClasses?.top}px` }}
             className={clsx(
-              `absolute hidden md:block h-[150%] w-[311px] pointer-events-none`,
-              "left-16  bg-no-repeat",
+              `pointer-events-none absolute hidden h-[150%] w-[311px] md:block`,
+              "left-16 bg-no-repeat",
               maskClasses && maskClasses.chainImg[0],
             )}
           />
           <div
             style={{ top: `${maskClasses?.top}px` }}
             className={clsx(
-              `absolute hidden md:block h-[150%] w-[311px] pointer-events-none`,
-              "right-16  bg-no-repeat",
+              `pointer-events-none absolute hidden h-[150%] w-[311px] md:block`,
+              "right-16 bg-no-repeat",
               maskClasses && maskClasses.chainImg[1],
             )}
           />
@@ -286,16 +286,16 @@ export default function PanelIndex() {
         style={{ height: `${tabHeight}px` }}
         className={clsx(tabAnimationComplete ? "transition-none" : "transition-[height] duration-1000")}>
         {prestigeTabVisible && (
-          <div ref={tabRef} className="flex z-10 gap-1 h-12 w-full">
+          <div ref={tabRef} className="z-10 flex h-12 w-full gap-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => dispatch(setTabInView(tab.id))}
                 className={clsx(
-                  "flex relative items-center shadow-panel-t-1 w-full px-4 py-1.5 rounded-t-lg overflow-hidden",
+                  "relative flex w-full items-center overflow-hidden rounded-t-lg px-4 py-1.5 shadow-panel-t-1",
                   activeTab === tab.id ? tab.activeStyle : tab.inactiveStyle,
                 )}>
-                <h2 className="text-xl z-10">{tab.title}</h2>
+                <h2 className="z-10 text-xl">{tab.title}</h2>
               </button>
             ))}
           </div>
@@ -304,7 +304,7 @@ export default function PanelIndex() {
       <div
         id="panel-content"
         className={clsx(
-          "relative flex flex-col lg:min-w-[627px] shadow-panel-main rounded-t rounded-b-xl",
+          "relative flex flex-col rounded-b-xl rounded-t shadow-panel-main lg:min-w-[627px]",
           "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
           "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
           maskClasses && maskClasses.mask,

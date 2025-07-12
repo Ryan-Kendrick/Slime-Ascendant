@@ -8,7 +8,7 @@ export default function Spotlight() {
 
   return (
     <svg
-      className="absolute -top-12 lg:top-0 left-1/2 -translate-x-1/2 h-full w-[490px] md:w-[550px] lg:w-full lg:w-[110%] blur-sm"
+      className="absolute -top-12 left-1/2 h-full w-[490px] -translate-x-1/2 blur-sm md:w-[550px] lg:top-0 lg:w-[110%] lg:w-full"
       viewBox="0 0 100 100"
       preserveAspectRatio="none">
       <defs>

@@ -24,7 +24,7 @@ export default function ZoneSelector() {
   const scaleSteps = ["scale-100", "scale-95", "scale-90", "scale-85", "scale-80"]
 
   return (
-    <div className="flex justify-around flex-row-reverse h-20 mt-1 lg:mb-2 border-2 rounded-xl border-white bg-black bg-opacity-30 w-full gap-1.5 p-1.5">
+    <div className="mt-1 flex h-20 w-full flex-row-reverse justify-around gap-1.5 rounded-xl border-2 border-white bg-black bg-opacity-30 p-1.5 lg:mb-2">
       {selectedZones.map((zoneIndex) => {
         const thisZoneNumber = currentZoneNumber - zoneIndex + 1
 
@@ -35,13 +35,13 @@ export default function ZoneSelector() {
             className={clsx(
               "flex h-16 w-[7.111rem] border-4",
               scaleSteps[zoneIndex - 1],
-              zoneInView === thisZoneNumber ? "border-yellow-500 cursor-inactive" : "border-gray-800 cursor-active",
+              zoneInView === thisZoneNumber ? "cursor-inactive border-yellow-500" : "cursor-active border-gray-800",
             )}
             onClick={handleZoneChange}>
             <div
               key={`inner.${zoneIndex}`}
               className={clsx(
-                "flex justify-center h-full w-full bg-meadow bg-no-repeat bg-cover text-black text-xl",
+                "flex h-full w-full justify-center bg-meadow bg-cover bg-no-repeat text-xl text-black",
                 opacitySteps[zoneIndex - 1],
               )}>
               {`${thisZoneNumber}`}

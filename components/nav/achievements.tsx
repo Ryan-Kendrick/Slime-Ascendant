@@ -41,25 +41,25 @@ export default function Achievements() {
   const isAchievementUnlocked = (id: string) => unlockedAchievements.includes(id)
 
   return (
-    <div className="flex flex-col h-full text-lg relative">
+    <div className="relative flex h-full flex-col text-lg">
       {unlockedAchievements.length > 0 && (
-        <div className="w-full text-center mb-6 text-xl text-white flex-none">
+        <div className="mb-6 w-full flex-none text-center text-xl text-white">
           {" "}
           Your <span className="font-bold text-gold">{unlockedAchievements.length}</span> Achievements increase your
           damage dealt by <span className="font-bold text-green-500">{Math.round(achievementModifier * 100)}%</span>
         </div>
       )}
 
-      <div id="achievements-cont" className="flex-1 min-h-0 overflow-y-auto border-t border-lightgold pt-2">
+      <div id="achievements-cont" className="min-h-0 flex-1 overflow-y-auto border-t border-lightgold pt-2">
         {Object.entries(ACHIEVEMENT_CONFIG).map(([feature, featureData]) => (
           // Achievement pane
 
           <div id="achievement-cont" key={`${feature}-container`} className="flex flex-col pb-2">
-            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] xl:grid-cols-[200px_1fr] gap-4 border-b border-lightgold font-paytone text-white">
-              <h2 className="place-self-center font-bold text-center text-2xl md:text-4xl">
+            <div className="grid grid-cols-[120px_1fr] gap-4 border-b border-lightgold font-paytone text-white md:grid-cols-[160px_1fr] xl:grid-cols-[200px_1fr]">
+              <h2 className="place-self-center text-center text-2xl font-bold md:text-4xl">
                 {featureData.displayName}
               </h2>
-              <div id="category-achievement-cont" className="flex flex-col gap-2 ml-2 mb-2">
+              <div id="category-achievement-cont" className="mb-2 ml-2 flex flex-col gap-2">
                 {Object.entries(featureData).map(([categoryKey, categoryData]) => {
                   if (categoryKey === "displayName") return null
                   categoryData = categoryData as AchievementCategory
@@ -67,7 +67,7 @@ export default function Achievements() {
                   return (
                     <div
                       key={`${feature}-${categoryKey}`}
-                      className="grid grid-row md:grid-cols-[120px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr] gap-4">
+                      className="grid-row grid gap-4 md:grid-cols-[120px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr]">
                       <h3 className="text-center md:text-left">{categoryData.displayName}</h3>
                       <div id="achievements-for-category" className="flex flex-wrap gap-2">
                         {categoryData.achievements.map((achievement) => {
@@ -78,7 +78,7 @@ export default function Achievements() {
                             <div
                               key={achievement.id}
                               className={clsx(
-                                "h-9 w-16 ",
+                                "h-9 w-16",
                                 unlocked
                                   ? "rounded-sm border-gold bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]"
                                   : "border-2 border-white/60 bg-black/60",
@@ -94,7 +94,7 @@ export default function Achievements() {
                             <div
                               key={achievement.id}
                               className={clsx(
-                                "h-9 w-16 ",
+                                "h-9 w-16",
                                 unlocked
                                   ? "rounded-sm border-gold bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]"
                                   : "border-2 border-white/60 bg-black/60",
@@ -114,19 +114,19 @@ export default function Achievements() {
         ))}
         {hasTriggeredConfetti && (
           <div id="achievement-cont" key={`mum-container`} className="flex flex-col pb-2">
-            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] xl:grid-cols-[200px_1fr] gap-4 border-b border-lightgold font-paytone text-violet-200">
-              <h2 className="place-self-center font-bold text-center text-2xl md:text-4xl">Mum</h2>
-              <div id="category-achievement-cont" className="flex flex-col gap-2 ml-2 mb-2">
+            <div className="grid grid-cols-[120px_1fr] gap-4 border-b border-lightgold font-paytone text-violet-200 md:grid-cols-[160px_1fr] xl:grid-cols-[200px_1fr]">
+              <h2 className="place-self-center text-center text-2xl font-bold md:text-4xl">Mum</h2>
+              <div id="category-achievement-cont" className="mb-2 ml-2 flex flex-col gap-2">
                 <div
                   key={`mum-being`}
-                  className="grid grid-row md:grid-cols-[120px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr] gap-4">
+                  className="grid-row grid gap-4 md:grid-cols-[120px_1fr] lg:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr]">
                   <h3 className="text-center md:text-left">Is mum</h3>
                   <div id="achievements-for-category" className="flex flex-wrap gap-2">
                     {" "}
                     <div
                       key="being-1"
                       className={clsx(
-                        "h-[72px] w-32 text-[2px] transition-[scale] duration-300 rounded-sm border-2 border-violet-300 bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)]",
+                        "h-[72px] w-32 rounded-sm border-2 border-violet-300 bg-[linear-gradient(117deg,_rgba(191,149,63,1)_0%,_rgba(170,119,28,1)_18%,_rgba(227,168,18,1)_64%,_rgba(252,246,186,1)_100%)] text-[2px] transition-[scale] duration-300",
                       )}
                       style={{ scale: "1.0" }}
                       onPointerEnter={(e) => {
@@ -139,7 +139,7 @@ export default function Achievements() {
                         e.currentTarget.style.scale = "1.0"
                         if (eggTimer.current) clearInterval(eggTimer.current)
                       }}>
-                      <div className="absolute top-4 right-14">🥳</div>
+                      <div className="absolute right-14 top-4">🥳</div>
                     </div>
                   </div>{" "}
                 </div>
@@ -151,21 +151,21 @@ export default function Achievements() {
       {selectedAchievement && ( // Achievement details overlay
         <div
           id="achievement-tooltip-overlay"
-          className="min-h-[25%] md:h-[15%] absolute pointer-events-none bottom-0 left-0 right-0 bg-[radial-gradient(circle,_rgba(189,189,189,1)_0%,_rgba(179,179,179,1)_81%,_rgba(219,217,217,1)_100%)] rounded-b-[8px] border-t-4 border-darkgold -m-5">
-          <div className="relative flex justify-center items-center">
-            <h2 className="px-2 text-3xl font-passion">{selectedAchievement.title}</h2>
+          className="pointer-events-none absolute bottom-0 left-0 right-0 -m-5 min-h-[25%] rounded-b-[8px] border-t-4 border-darkgold bg-[radial-gradient(circle,_rgba(189,189,189,1)_0%,_rgba(179,179,179,1)_81%,_rgba(219,217,217,1)_100%)] md:h-[15%]">
+          <div className="relative flex items-center justify-center">
+            <h2 className="px-2 font-passion text-3xl">{selectedAchievement.title}</h2>
             {isAchievementUnlocked(selectedAchievement.id) && ( // Unlocked text top-right if desktop
-              <p className="hidden md:block absolute right-2 font-extrabold text-xl bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 inline-block bg-clip-text text-transparent">
+              <p className="absolute right-2 inline-block hidden bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 bg-clip-text text-xl font-extrabold text-transparent md:block">
                 UNLOCKED
               </p>
             )}
           </div>
 
           {/* Description & current progress */}
-          <div className="flex flex-col gap-2 mt-1 mx-2">
+          <div className="mx-2 mt-1 flex flex-col gap-2">
             <div className="relative flex justify-between">
-              <p className="text-2xl text-center font-passion">{selectedAchievement.description}</p>
-              <p className="text-lg font-paytone">
+              <p className="text-center font-passion text-2xl">{selectedAchievement.description}</p>
+              <p className="font-paytone text-lg">
                 <span className={clsx(isAchievementUnlocked(selectedAchievement.id) && "text-islam")}>
                   {achievementProgress.toLocaleString()}/{selectedAchievement.condition.toLocaleString()}
                 </span>
@@ -173,16 +173,16 @@ export default function Achievements() {
             </div>
 
             {/* Reward & UNLOCKED text if mobile */}
-            <div className="relative flex justify-between items-center">
+            <div className="relative flex items-center justify-between">
               <div>
                 {isAchievementUnlocked(selectedAchievement.id) && (
-                  <p className="block md:hidden font-extrabold text-xl bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 inline-block bg-clip-text text-transparent">
+                  <p className="block inline-block bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 bg-clip-text text-xl font-extrabold text-transparent md:hidden">
                     UNLOCKED
                   </p>
                 )}
               </div>
               <div>
-                <p className="text-lg text-right text-islam">+{selectedAchievement.modifier * 100}%</p>
+                <p className="text-right text-lg text-islam">+{selectedAchievement.modifier * 100}%</p>
               </div>
             </div>
           </div>

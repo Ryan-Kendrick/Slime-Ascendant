@@ -12,11 +12,11 @@ export const Navigation = memo(function Navigation() {
   const [viewAchievements, setViewAchievements] = useState(false)
 
   return (
-    <div className="flex relative flex-wrap justify-between items-center text-white h-full px-3 py-2 md:pb-0 lg:pb-2">
-      <div className="flex flex-wrap gap-3 items-center">
+    <div className="relative flex h-full flex-wrap items-center justify-between px-3 py-2 text-white md:pb-0 lg:pb-2">
+      <div className="flex flex-wrap items-center gap-3">
         <NavigationLinkButton text="Achievements" onClick={() => setViewAchievements(true)} />
       </div>
-      <div className="flex flex-wrap gap-3 items-center">
+      <div className="flex flex-wrap items-center gap-3">
         {/* <NavigationLinkButton text="Options" onClick={() => setViewOptions(true)} /> */}
       </div>
       <ReactModal
@@ -26,14 +26,14 @@ export const Navigation = memo(function Navigation() {
         style={achievementsStyle}>
         <Achievements />
         <button
-          className="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white ring-amber-800 ring-2 ring-inset shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] stroke-white z-[1000000] cursor-active"
+          className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800"
           onClick={() => setViewAchievements(false)}>
           {CancelIcon()}
         </button>
       </ReactModal>
       <div className="flex flex-col">
         <AnimationQualityButton />
-        <div className="self-start lg:self-end text-sm opacity-50">{METADATA_CONFIG.version}</div>
+        <div className="self-start text-sm opacity-50 lg:self-end">{METADATA_CONFIG.version}</div>
       </div>
     </div>
   )
@@ -57,8 +57,8 @@ export function AnimationQualityButton() {
 
   return (
     <button
-      className="cursor-active border border-yellow-300 -mt-0.5 bg-blue-600 p-0.5 rounded"
-      onClick={() => dispatch(toggleAnimationPref(animationPref))}>
+      className="-mt-0.5 cursor-active rounded border border-yellow-300 bg-blue-600 p-0.5"
+      onClick={() => dispatch(toggleAnimationPref())}>
       Quality: {animationQuality}
     </button>
   )
@@ -73,7 +73,7 @@ export function NavigationLinkButton({ text, onClick }: NavigationLinkButtonProp
         WebkitTextFillColor: "white",
         WebkitTextStrokeWidth: "1px",
       }}
-      className="py-3 px-6 cursor-active tracking-wider text-center uppercase transition duration-200 bg-gradient-to-tr from-red-500 via-orange-400 to-amber-500 text-white rounded-lg block border-0 shadow-lg select-none hover:bg-right-center active:transform active:scale-95 hover:scale-105"
+      className="hover:bg-right-center block cursor-active select-none rounded-lg border-0 bg-gradient-to-tr from-red-500 via-orange-400 to-amber-500 px-6 py-3 text-center uppercase tracking-wider text-white shadow-lg transition duration-200 hover:scale-105 active:scale-95 active:transform"
       role="dialog">
       {text}
     </button>
