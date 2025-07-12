@@ -6,7 +6,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "adventurer-otp",
     displayName: "Adventurer",
     displayStat: "Click Damage",
-    baseDamage: 1,
+    baseDamage: 9999999,
     levelUpDamageMod: 1,
     OneTimePurchases: {
       OTPCosts: [100, 400, 1000],
@@ -30,7 +30,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "warrior-otp",
     displayName: "Warrior",
     displayStat: "Passive Damage",
-    baseDamage: 5,
+    baseDamage: 9999999999,
     levelUpDamageMod: 4,
     OneTimePurchases: {
       OTPCosts: [8000, 15000, 25000],

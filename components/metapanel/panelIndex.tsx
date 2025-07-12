@@ -227,7 +227,7 @@ export default function PanelIndex() {
         id: "prestige",
         title: "Prestige",
         component: <Prestige />,
-        activeStyle: `before:bg-slate-600 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
+        activeStyle: `before:bg-slate-500 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
 
           bg-gradient-to-tr bg-frost border-[3px] border-amber-800 text-frost font-outline-electricBlue cursor-inactive`,
         inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
