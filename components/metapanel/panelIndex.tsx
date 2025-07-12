@@ -304,7 +304,7 @@ export default function PanelIndex() {
       <div
         id="panel-content"
         className={clsx(
-          "relative flex flex-col rounded-b-xl rounded-t shadow-panel-main lg:min-w-[627px]",
+          "relative z-20 flex flex-col rounded-b-xl rounded-t shadow-panel-main lg:min-w-[627px]",
           "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
           "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
           maskClasses && maskClasses.mask,
