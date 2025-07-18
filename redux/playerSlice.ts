@@ -321,7 +321,6 @@ export const selectDotDamage = createSelector(
     const heroStats = dotHeroes.map((hero) => heroState[hero])
 
     const damage = playerCalc.heroDamage(dotHeroes, heroStats, pDamage, achievementDamage)
-    console.log(damage)
 
     return damage
   },

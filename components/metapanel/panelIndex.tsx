@@ -215,16 +215,14 @@ export default function PanelIndex() {
         id: "upgrade",
         title: "Upgrade",
         component: <UpgradeIndex />,
-        activeStyle: `before:bg-orange-700 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
-        
-          bg-gradient-to-b from-amber-400 to-orange-500 border-[3px] border-amber-800 text-white cursor-inactive`,
-        inactiveStyle: `before:bg-slate-500 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
+        activeStyle: `before:bg-slate-500 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
           
-          bg-gradient-to-b from-amber-600 to-orange-700 border-[3px] border-black/60 hover:from-amber-400/90 hover:to-orange-500/90 text-orange-900 cursor-active`,
-        // activeStyle:
-        //   "bg-gradient-to-b from-amber-400 to-orange-500 border-[3px] border-amber-800 text-white cursor-inactive",
-        // inactiveStyle:
-        //   "bg-gradient-to-b from-amber-600 to-orange-700 border-[3px] border-black/60 hover:from-amber-400/90 hover:to-orange-500/90 text-orange-900 cursor-active",
+          pb-[9px] bg-frost border-t-[3px] border-l-[3px] border-r-[3px] border-amber-700 text-white cursor-inactive`,
+        inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
+
+        after:bg-frost after:absolute after:inset-0 after:-z-10
+
+          bg-gradient-to-b from-amber-700/40 to-orange-800/40 border-[3px] border-black/60 hover:from-amber-600/10 hover:to-orange-700/10 hover:text-orange-800 text-orange-900 cursor-active`,
       },
     ]
 
@@ -233,14 +231,14 @@ export default function PanelIndex() {
         id: "prestige",
         title: "Prestige",
         component: <Prestige />,
-        activeStyle: `before:bg-slate-500 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
+        activeStyle: `before:bg-slate-500 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45
 
-          bg-gradient-to-tr bg-frost border-[3px] border-amber-800 text-frost font-outline-electricBlue cursor-inactive`,
+          pb-[9px] bg-frost border-t-[3px] border-l-[3px] border-r-[3px] border-amber-700 text-frost font-outline-electricBlue cursor-inactive`,
         inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
 
         after:bg-frost after:absolute after:inset-0 after:-z-10 
 
-          bg-gradient-to-b from-amber-600/40 to-orange-700/40 border-[3px] border-black/60 hover:from-amber-600/10 hover:to-orange-700/10 text-orange-900 cursor-active`,
+          bg-gradient-to-b from-amber-700/40 to-orange-800/40 border-[3px] border-black/60 hover:from-amber-600/10 hover:to-orange-700/10 hover:text-orange-800 text-orange-900 cursor-active`,
       })
     }
 
@@ -258,67 +256,67 @@ export default function PanelIndex() {
   }, [prestigeTabVisible])
 
   return (
-    <div
-      className={clsx(
-        // Pseudo element background
-        "before:pointer-events-none before:absolute before:right-10 before:top-0 before:-z-20 before:aspect-square before:h-full before:w-full before:scale-[1.5] before:rounded-full before:bg-gradient-to-r before:from-amber-950 before:to-amber-800 before:blur-3xl before:md:scale-[1.45]",
-
-        "radius relative mx-2 flex flex-col rounded-b-xl duration-300 md:mb-3 lg:mx-3 lg:my-0 lg:max-w-[59%] lg:basis-3/5",
-        !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
-        oneLineMaskVisible ? "transition-none" : "transition-[padding]",
-      )}>
-      {isMobile ? (
-        renderMobileChains()
-      ) : (
-        <>
-          <div
-            style={{ top: `${maskClasses?.top}px` }}
-            className={clsx(
-              `pointer-events-none absolute hidden h-[150%] w-[311px] md:block`,
-              "left-16 bg-no-repeat",
-              maskClasses && maskClasses.chainImg[0],
-            )}
-          />
-          <div
-            style={{ top: `${maskClasses?.top}px` }}
-            className={clsx(
-              `pointer-events-none absolute hidden h-[150%] w-[311px] md:block`,
-              "right-16 bg-no-repeat",
-              maskClasses && maskClasses.chainImg[1],
-            )}
-          />
-        </>
-      )}
+    <div className="relative mx-2 duration-300 md:mb-3 lg:mx-3 lg:my-0 lg:max-w-[59%] lg:basis-3/5">
+      <div className="pointer-events-none absolute right-10 top-0 -z-20 aspect-square h-full w-full scale-[1.5] overflow-clip rounded-full bg-gradient-to-r from-amber-950 to-amber-800 blur-3xl md:scale-[1.45]" />
       <div
-        style={{ height: `${tabHeight}px` }}
-        className={clsx(tabAnimationComplete ? "transition-none" : "transition-[height] duration-1000")}>
-        {prestigeTabVisible && (
-          <div ref={tabRef} className="z-10 flex h-12 w-full gap-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => dispatch(setTabInView(tab.id))}
-                className={clsx(
-                  "relative flex w-full items-center overflow-hidden rounded-t-lg px-4 py-1.5 shadow-panel-t-1",
-                  activeTab === tab.id ? tab.activeStyle : tab.inactiveStyle,
-                )}>
-                <h2 className={clsx("z-10 text-xl", animationPref > 0 && "transition-color, duration-500")}>
-                  {tab.title}
-                </h2>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-      <div
-        id="panel-content"
         className={clsx(
-          "relative z-20 flex flex-col rounded-b-xl rounded-t shadow-panel-main lg:min-w-[627px]",
-          "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
-          "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
-          maskClasses && maskClasses.mask,
+          "flex flex-col rounded-b-xl",
+          !isWarriorVisible && "px-2 sm:px-4 md:px-8 xl:pr-14 2xl:pr-24",
+          oneLineMaskVisible ? "transition-none" : "transition-[padding]",
         )}>
-        {tabs.find((tab) => tab.id === activeTab)?.component}
+        {isMobile ? (
+          renderMobileChains()
+        ) : (
+          <>
+            <div
+              style={{ top: `${maskClasses?.top}px` }}
+              className={clsx(
+                `pointer-events-none absolute hidden h-[150%] w-[311px] md:block`,
+                "left-16 bg-no-repeat",
+                maskClasses && maskClasses.chainImg[0],
+              )}
+            />
+            <div
+              style={{ top: `${maskClasses?.top}px` }}
+              className={clsx(
+                `pointer-events-none absolute hidden h-[150%] w-[311px] md:block`,
+                "right-16 bg-no-repeat",
+                maskClasses && maskClasses.chainImg[1],
+              )}
+            />
+          </>
+        )}
+        <div
+          style={{ height: `${tabHeight}px` }}
+          className={clsx(tabAnimationComplete ? "transition-none" : "transition-[height] duration-1000")}>
+          {prestigeTabVisible && (
+            <div ref={tabRef} className="z-10 flex h-12 w-full gap-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => dispatch(setTabInView(tab.id))}
+                  className={clsx(
+                    "relative flex w-full items-center overflow-hidden rounded-t-lg px-4 py-1.5 shadow-panel-t-1",
+                    activeTab === tab.id ? tab.activeStyle : tab.inactiveStyle,
+                  )}>
+                  <h2 className={clsx("z-10 text-xl", animationPref > 0 && "transition-color, duration-500")}>
+                    {tab.title}
+                  </h2>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div
+          id="panel-content"
+          className={clsx(
+            "relative z-20 flex flex-col rounded-b-xl rounded-t shadow-panel-main lg:min-w-[627px]",
+            "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
+            "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
+            maskClasses && maskClasses.mask,
+          )}>
+          {tabs.find((tab) => tab.id === activeTab)?.component}
+        </div>
       </div>
     </div>
   )

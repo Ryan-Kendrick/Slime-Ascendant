@@ -84,7 +84,10 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
         </div>
       )}
       <div className="relative flex flex-col items-center">
-        <h3 className="mb-1 text-2xl font-extrabold"> {config.title}</h3>
+        <h3 className="font-outline-electricBlue mb-1 text-3xl font-extrabold tracking-wide text-blue-200">
+          {" "}
+          {config.title}
+        </h3>
         <p>
           Level: {upgradeCount} {purchaseCount > 0 && `(+${purchaseCount})`}
         </p>

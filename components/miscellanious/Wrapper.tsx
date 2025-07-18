@@ -33,7 +33,7 @@ export default function Wrapper({ children }: PropsWithChildren) {
     <div
       key={`prestige-${prestigeCount}`}
       style={appScale}
-      className="min-h-screen w-screen cursor-inactive select-none overflow-hidden font-sigmar lg:h-screen">
+      className="lg:[@media(max-height:898px)]:max-h-auto min-h-screen w-screen cursor-inactive select-none overflow-hidden font-sigmar lg:h-screen lg:max-h-screen lg:[@media(max-height:898px)]:h-auto lg:[@media(max-height:898px)]:overflow-y-auto lg:[@media(max-height:898px)]:overflow-x-hidden">
       {children}
     </div>
   )

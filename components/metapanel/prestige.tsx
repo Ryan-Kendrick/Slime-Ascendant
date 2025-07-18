@@ -44,7 +44,7 @@ export default function Prestige() {
   }
 
   return (
-    <div className="flex h-full min-h-[722px] flex-col">
+    <div className="m-2 flex h-full min-h-[722px] flex-col rounded-lg border-2 border-cyan-500/50 bg-cyan-900/60 p-3 before:bg-blue-200">
       <Currency
         key={resetCounter}
         image={PlasmaIcon()}
@@ -86,51 +86,64 @@ export default function Prestige() {
           Reset
         </button>
       </div>
-      <ReactModal
-        isOpen={confirmPrestige}
-        onRequestClose={() => setConfirmPrestige(false)}
-        contentLabel="Prestige confirmation prompt"
-        style={confirmPrestigeStyle}>
-        <div className="flex h-full flex-col">
-          <button
-            className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
-            onClick={() => setConfirmPrestige(false)}>
-            {CancelIcon()}
-          </button>
-          <h2 className="mb-4 self-center text-2xl font-bold">Go backwards to go forwards</h2>
-          <div className="flex justify-around gap-4">
-            <div className="flex flex-col">
-              <ul className="text-red-600">
-                <h3 className="mb-1 text-xl font-bold"> You will lose</h3>
-                <li>Gold</li>
-                <li>Upgrades</li>
-                <li>Zone progress</li>
-              </ul>
-            </div>
-            <div className="flex flex-col">
-              <ul className="text-amber-700">
-                <h3 className="mb-1 text-xl font-bold"> You will keep</h3>
-                <li>Unspent plasma</li>
-                <li>Achievements</li>
-              </ul>
-            </div>
-            <div className="flex flex-col">
-              <ul className="text-islam">
-                <h3 className="mb-1 text-xl font-bold"> You will gain </h3>
-                <p>Prestige upgrades</p>
-              </ul>
-            </div>
+      <PrestigeModal confirmPrestige={confirmPrestige} setConfirmPrestige={setConfirmPrestige} />
+    </div>
+  )
+}
+
+interface ModalProps {
+  confirmPrestige: boolean
+  setConfirmPrestige: (isOpen: boolean) => void
+}
+
+function PrestigeModal({ confirmPrestige, setConfirmPrestige }: ModalProps) {
+  const dispatch = useAppDispatch()
+
+  return (
+    <ReactModal
+      isOpen={confirmPrestige}
+      onRequestClose={() => setConfirmPrestige(false)}
+      contentLabel="Prestige confirmation prompt"
+      style={confirmPrestigeStyle}>
+      <div className="flex h-full flex-col">
+        <button
+          className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
+          onClick={() => setConfirmPrestige(false)}>
+          {CancelIcon()}
+        </button>
+        <h2 className="mb-4 self-center text-2xl font-bold">Go backwards to go forwards</h2>
+        <div className="flex justify-around gap-4">
+          <div className="flex flex-col">
+            <ul className="text-red-600">
+              <h3 className="mb-1 text-xl font-bold"> You will lose</h3>
+              <li>Gold</li>
+              <li>Upgrades</li>
+              <li>Zone progress</li>
+            </ul>
           </div>
-          <div className="mt-auto">
-            <button
-              onClick={() => dispatch(updatePrestige())}
-              className="my-4 h-16 w-40 cursor-active self-start rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-bold text-white disabled:cursor-inactive">
-              Confirm
-            </button>
+          <div className="flex flex-col">
+            <ul className="text-amber-700">
+              <h3 className="mb-1 text-xl font-bold"> You will keep</h3>
+              <li>Unspent plasma</li>
+              <li>Achievements</li>
+            </ul>
+          </div>
+          <div className="flex flex-col">
+            <ul className="text-islam">
+              <h3 className="mb-1 text-xl font-bold"> You will gain </h3>
+              <p>Prestige upgrades</p>
+            </ul>
           </div>
         </div>
-      </ReactModal>
-    </div>
+        <div className="mt-auto">
+          <button
+            onClick={() => dispatch(updatePrestige())}
+            className="my-4 h-16 w-40 cursor-active self-start rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-bold text-white disabled:cursor-inactive">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </ReactModal>
   )
 }
 

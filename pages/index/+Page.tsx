@@ -17,7 +17,7 @@ export default function Page() {
     <React.StrictMode>
       <Provider store={store}>
         <Wrapper>
-          <div className="relative z-0 flex h-full w-full flex-col-reverse bg-amber-200 md:flex-col lg:mt-1">
+          <div className="relative z-0 flex h-full w-full flex-col-reverse overflow-hidden bg-amber-200 md:flex-col lg:pt-1 lg:[@media(max-height:898px)]:pb-3">
             <div className="flex-none lg:hidden">
               <Navigation />
             </div>
