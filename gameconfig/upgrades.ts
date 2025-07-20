@@ -6,7 +6,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "adventurer-otp",
     displayName: "Adventurer",
     displayStat: "Click Damage",
-    baseDamage: 1,
+    baseDamage: 999999991,
     levelUpDamageMod: 1,
     OneTimePurchases: {
       OTPCosts: [100, 400, 1000],
@@ -30,7 +30,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "warrior-otp",
     displayName: "Warrior",
     displayStat: "Passive Damage",
-    baseDamage: 5,
+    baseDamage: 999999995,
     levelUpDamageMod: 4,
     OneTimePurchases: {
       OTPCosts: [8000, 15000, 25000],
@@ -191,7 +191,9 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
 
 export const playerCalc: PlayerCalc = {
   clickDamage: (clickLevel, clickOTPUpgradeCount, pDamage, achievementModifier): number =>
-    clickLevel * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
+    UPGRADE_CONFIG.adventurer.baseDamage +
+    clickLevel -
+    1 * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
   heroDamage: (heroName, heroState, pDamage?, achievementModifier?, displayHeroContribution?): number => {
     let damage = 0
 

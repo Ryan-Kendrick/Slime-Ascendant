@@ -3,6 +3,9 @@ import { useBreakpointTracker, useForcedDPI } from "../../gameconfig/customHooks
 import { useAppSelector } from "../../redux/hooks"
 import { selectBreakpoint } from "../../redux/metaSlice"
 import { selectPrestigeCount } from "../../redux/statsSlice"
+import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
+import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
+import clsx from "clsx/lite"
 
 export default function Wrapper({ children }: PropsWithChildren) {
   // Reverse OS DPI scaling so the game looks as intended on high resolution displays
@@ -29,11 +32,17 @@ export default function Wrapper({ children }: PropsWithChildren) {
   // Force component remount on prestige
   const prestigeCount = useAppSelector(selectPrestigeCount)
 
+  const isHealerVisible = useAppSelector(selectCurrentZoneNumber) > UPGRADE_CONFIG.healer.visibleAtZone
+
   return (
     <div
       key={`prestige-${prestigeCount}`}
       style={appScale}
-      className="lg:[@media(max-height:898px)]:max-h-auto min-h-screen w-screen cursor-inactive select-none overflow-hidden font-sigmar lg:h-screen lg:max-h-screen lg:[@media(max-height:898px)]:h-auto lg:[@media(max-height:898px)]:overflow-y-auto lg:[@media(max-height:898px)]:overflow-x-hidden">
+      className={clsx(
+        "min-h-screen w-screen cursor-inactive select-none overflow-hidden font-sigmar lg:h-screen lg:max-h-screen",
+        isHealerVisible &&
+          "lg:[@media(max-height:898px)]:max-h-auto lg:[@media(max-height:898px)]:h-auto lg:[@media(max-height:898px)]:overflow-y-auto lg:[@media(max-height:898px)]:overflow-x-hidden",
+      )}>
       {children}
     </div>
   )
