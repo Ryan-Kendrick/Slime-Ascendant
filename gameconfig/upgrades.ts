@@ -192,8 +192,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
 export const playerCalc: PlayerCalc = {
   clickDamage: (clickLevel, clickOTPUpgradeCount, pDamage, achievementModifier): number =>
     UPGRADE_CONFIG.adventurer.baseDamage +
-    clickLevel -
-    1 * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
+    (clickLevel - 1) * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
   heroDamage: (heroName, heroState, pDamage?, achievementModifier?, displayHeroContribution?): number => {
     let damage = 0
 

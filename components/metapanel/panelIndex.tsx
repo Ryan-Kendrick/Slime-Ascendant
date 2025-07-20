@@ -61,7 +61,7 @@ export default function PanelIndex() {
           return null
         } else {
           chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
-          top -= 315
+          top -= 369
           mask = "mask-single"
         }
       } else if (isHealerVisible) {
