@@ -3,21 +3,23 @@
 @tailwind utilities;
 
 @font-face {
-  font-display: swap;
   font-family: "Sigmar";
-  src: url("../../assets/fonts/Sigmar.woff2") format("woff2");
+  src: url("/fonts/Sigmar.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-  font-display: swap;
   font-family: "Paytone";
-  src: url("../../assets/fonts/paytone-one.woff2") format("woff2");
+  src: url("/fonts/paytone-one.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
   font-display: swap;
   font-family: "Passion";
-  src: url("../../assets/fonts/passion-one.woff2") format("woff2");
+  src: url("/fonts/passion-one.woff2") format("woff2");
 }
 
 @layer base {
