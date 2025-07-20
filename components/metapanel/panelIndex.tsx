@@ -310,9 +310,13 @@ export default function PanelIndex() {
         <div
           id="panel-content"
           className={clsx(
-            "relative z-20 flex flex-col rounded-b-xl rounded-t shadow-panel-main lg:min-w-[627px]",
+            "relative z-20 flex flex-col rounded-b-xl rounded-t lg:min-w-[627px]",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
+            activeTab === "upgrade" && "shadow-panel-main",
+            activeTab === "prestige" && "lg:shadow-panel-prestige",
+            activeTab === "prestige" && "xl:shadow-panel-prestige-2",
+            activeTab === "prestige" && "2xl:shadow-panel-prestige-3",
             maskClasses && maskClasses.mask,
           )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}

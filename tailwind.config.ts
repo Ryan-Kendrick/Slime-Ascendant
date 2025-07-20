@@ -63,18 +63,18 @@ export default {
         },
         "shadow-inset": {
           "0%, 40%": {
-            boxShadow: "inset -2px 2px 4px 4px oklch(0.905 0.182 98.111)", // Subtle start, white for brightness
+            boxShadow: "inset -2px 2px 4px 4px oklch(0.905 0.182 98.111)",
             opacity: "0.8",
           },
           "60%": {
-            boxShadow: "inset -2px 2px 4px 3px oklch(0.905 0.182 98.111 / 0.8)", // Big, bright, spread out
+            boxShadow: "inset -2px 2px 4px 3px oklch(0.905 0.182 98.111 / 0.8)",
             opacity: "1",
           },
           "80%": {
-            boxShadow: "inset -2px 2px 4px 2px oklch(0.905 0.182 98.111 / 0.6)", // Slightly recedes and fades
+            boxShadow: "inset -2px 2px 4px 2px oklch(0.905 0.182 98.111 / 0.6)",
           },
           "100%": {
-            boxShadow: "inset -2px 2px 4px 0px oklch(0.905 0.182 98.111 / 0)", // Completely fades out
+            boxShadow: "inset -2px 2px 4px 0px oklch(0.905 0.182 98.111 / 0)",
           },
         },
       },
@@ -133,6 +133,9 @@ export default {
         "panel-main": `inset 1px -2px 9px #fa7305, 
         inset 2px -2px 9px #800000, 
         inset 2px -3px 9px #2e1065`,
+        "panel-prestige": "inset 1px -2px 9px #7DF9FF, inset 2px -2px 9px #0891b2, inset 2px -3px 9px #164e63",
+        "panel-prestige-2": "inset 5px 5px 13px #7DF9FF, inset -5px -3px 13px #164e63",
+        "panel-prestige-3": "inset 5px 5px 13px #7DF9FF, inset -5px -3px 13px #077692, inset -2px -5px 10px #164e63",
       },
       borderRadius: {
         m: "61px",

@@ -6,7 +6,7 @@ export default function Loading() {
   if (!loading) return null
 
   return (
-    <div className="fixed z-50 flex h-full w-full items-center justify-center bg-black/30 backdrop-blur-sm">
+    <div className="fixed z-50 -mt-1 flex h-full w-full items-center justify-center bg-black/30 backdrop-blur-sm">
       <div className="pl-[3ch] text-6xl text-white">LOADING...</div>
     </div>
   )
