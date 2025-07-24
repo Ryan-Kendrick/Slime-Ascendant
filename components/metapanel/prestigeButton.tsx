@@ -91,19 +91,19 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
         <p>
           Level: {upgradeCount} {purchaseCount > 0 && `(+${purchaseCount})`}
         </p>
-        <div className="flex">
+        <div>
           {upgradeCount > 0 && (
-            <p className="">
+            <p>
               {config.modDescription}: {formatCurrentValue()}
               {config.modSuffix}
-            </p>
-          )}
-          {purchaseCount > 0 && (
-            <p className="pl-1">
-              {upgradeCount === 0 && `${config.modDescription}: 0 `}
-              {thisUpgradeName === "multistrike" && upgradeCount === 0
-                ? `(+${Math.abs(Number(formatPendingIncrease()))}${config.modSuffix})` // Hack to display cooldown as a gain at level 0
-                : `(${config.changePrefix}${formatPendingIncrease()}${config.modSuffix})`}
+              {purchaseCount > 0 && (
+                <span className="pl-1">
+                  {upgradeCount === 0 && `${config.modDescription}: 0 `}
+                  {thisUpgradeName === "multistrike" && upgradeCount === 0
+                    ? `(+${Math.abs(Number(formatPendingIncrease()))}${config.modSuffix})` // Hack to display cooldown as a gain at level 0
+                    : `(${config.changePrefix}${formatPendingIncrease()}${config.modSuffix})`}
+                </span>
+              )}
             </p>
           )}
         </div>

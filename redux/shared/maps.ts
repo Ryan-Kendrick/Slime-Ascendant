@@ -108,7 +108,7 @@ export const cardProps: UpgradeProps = {
   },
   mage: {
     ...populateHeroState("mage"),
-    cardBackground: "bg-electricblue/50",
+    cardBackground: "bg-electricBlue/50",
     backgroundImage: "before:bg-[url('/assets/icons/mageBg.svg')]",
   },
 }

@@ -7,7 +7,7 @@ export default {
     "bg-orange-200/50",
     "bg-red-300/50",
     "bg-green-300/50",
-    "bg-electricblue/50",
+    "bg-electricBlue/50",
     "before:bg-[url('/assets/icons/adventurerBg.svg')]",
     "before:bg-[url('/assets/icons/warriorBg.svg')]",
     "before:bg-[url('/assets/icons/healerBg.svg')]",
@@ -112,6 +112,7 @@ export default {
       },
       backgroundColor: {
         cogColor: "#DFDBE5",
+        electricBlue: "#7DF9FF",
       },
       backgroundImage: {
         dagger: "url('/assets/icons/dagger.png')",

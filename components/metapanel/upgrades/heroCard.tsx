@@ -334,7 +334,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
                   <div className="border-b-2 border-amber-900">
                     <div className="flex translate-y-0.5 justify-between px-1 md:px-0.5">
                       <h4>Prestige</h4>
-                      <p className="font-outline-electricblue">x{prestigeMod.toFixed(2)}</p>
+                      <p className="font-outline-electricBlue">x{prestigeMod.toFixed(2)}</p>
                     </div>
                   </div>
                 )}
