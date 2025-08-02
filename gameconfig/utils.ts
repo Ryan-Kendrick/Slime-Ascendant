@@ -143,6 +143,7 @@ We managed to salvage your achievements, but the time has come to start a new ad
       meta: {
         ...gameState.meta,
         gameVersion: METADATA_CONFIG.version,
+        fading: false,
       },
     }
   } catch (err) {

@@ -19,7 +19,8 @@ import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
 import { selectHighestZone, selectHighestZoneEver } from "../../redux/statsSlice"
 import handURL from "/assets/icons/hand-dark.webp"
-import { selectAnimationPref } from "../../redux/metaSlice"
+import { selectAnimationPref, setFading } from "../../redux/metaSlice"
+import { PERFORMANCE_CONFIG } from "../../gameconfig/meta"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
@@ -28,6 +29,7 @@ export default function Prestige() {
   const highZoneEver = useAppSelector(selectHighestZoneEver)
   const highestZone = useAppSelector(selectHighestZone)
   const animationPref = useAppSelector(selectAnimationPref)
+  const fullAnimations = animationPref > 1
   const zoneTenComplete = highestZone > 10
 
   const [prestigeDialogue, setPrestigeDialogue] = useState(false)
@@ -42,8 +44,11 @@ export default function Prestige() {
   const initiatePrestige = () => {
     setPrestigeIntent(true)
     setTimeout(() => {
-      dispatch(updatePrestige())
-    }, 5000)
+      dispatch(setFading(true))
+      setTimeout(() => {
+        dispatch(updatePrestige())
+      }, PERFORMANCE_CONFIG.fadeoutDuration)
+    }, 4000)
   }
 
   function onUpdatePurchase(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
@@ -77,27 +82,26 @@ export default function Prestige() {
         })}
       </div>
       <div className="relative flex h-full w-full grow items-end justify-center gap-4">
-        <div className={clsx(prestigeIntent && "prestige-intent z-10")}>
-          <button
-            onClick={() => setPrestigeDialogue(true)}
-            disabled={!zoneTenComplete}
-            className={clsx(
-              "portal-btn cursor-active disabled:cursor-inactive",
-              animationPref > 1 ? "portal-btn-animated" : "portal-btn-simple",
-              !zoneTenComplete && "portal-btn-disabled",
-            )}>
-            <span className="portal-btn-text">Prestige</span>
-            {animationPref > 1 && (
-              <>
-                <div className="portal-rings">
-                  <div className="portal-ring portal-ring-1" />
-                  <div className="portal-ring portal-ring-2" />
-                  <div className="portal-ring portal-ring-3" />
-                </div>
-              </>
-            )}
-          </button>
-        </div>
+        <button
+          onClick={() => setPrestigeDialogue(true)}
+          disabled={!zoneTenComplete}
+          className={clsx(
+            "portal-btn cursor-active disabled:cursor-inactive",
+            fullAnimations ? "portal-btn-animated" : "portal-btn-simple",
+            prestigeIntent && fullAnimations && "portal-btn-prestige z-10",
+            !zoneTenComplete && "portal-btn-disabled",
+          )}>
+          <span className="portal-btn-text">Prestige</span>
+          {fullAnimations && (
+            <>
+              <div className="portal-rings">
+                <div className="portal-ring portal-ring-1" />
+                <div className="portal-ring portal-ring-2" />
+                <div className="portal-ring portal-ring-3" />
+              </div>
+            </>
+          )}
+        </button>
         <button
           onClick={onReset}
           disabled={!plasmaReserved}
@@ -110,6 +114,7 @@ export default function Prestige() {
       </div>
       <PrestigeModal
         prestigeDialogue={prestigeDialogue}
+        prestigeIntent={prestigeIntent}
         setPrestigeDialogue={setPrestigeDialogue}
         initiatePrestige={initiatePrestige}
       />
@@ -119,16 +124,15 @@ export default function Prestige() {
 
 interface ModalProps {
   prestigeDialogue: boolean
+  prestigeIntent: boolean
   setPrestigeDialogue: (isOpen: boolean) => void
   initiatePrestige: () => void
 }
 
-function PrestigeModal({ prestigeDialogue, setPrestigeDialogue, initiatePrestige }: ModalProps) {
-  const dispatch = useAppDispatch()
-
+function PrestigeModal({ prestigeDialogue, prestigeIntent, setPrestigeDialogue, initiatePrestige }: ModalProps) {
   return (
     <ReactModal
-      isOpen={prestigeDialogue}
+      isOpen={prestigeDialogue && !prestigeIntent}
       onRequestClose={() => setPrestigeDialogue(false)}
       contentLabel="Prestige confirmation prompt"
       style={confirmPrestigeStyle}>

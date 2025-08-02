@@ -9,6 +9,7 @@ import Navigation from "../../components/nav/navigation"
 import ReactModal from "react-modal"
 import Loading from "../../components/miscellanious/Loading"
 import Wrapper from "../../components/miscellanious/Wrapper"
+import Fading from "../../components/miscellanious/Fading"
 
 export default function Page() {
   ReactModal.setAppElement("#root")
@@ -30,6 +31,7 @@ export default function Page() {
               </div>
             </main>
             <Loading />
+            <Fading />
           </div>
         </Wrapper>
       </Provider>

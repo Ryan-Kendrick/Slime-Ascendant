@@ -11,6 +11,7 @@ export const initialState = {
   lastPlayed: Date.now(),
   lastSaveCatchUp: null as number | null,
   loading: false,
+  fading: false,
   OTPPos: constructOTPPosArr(),
   animationPref: 2, // Low: 0, Medium: 1, High: 2
 
@@ -34,6 +35,9 @@ export const metaSlice = createSlice({
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
+    },
+    setFading: (state, action: PayloadAction<boolean>) => {
+      state.fading = action.payload
     },
     setOTPPos: (
       state,
@@ -62,15 +66,17 @@ export const metaSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(prestigeReset, (state) => {
       state.OTPPos = initialState.OTPPos
+      state.fading = false
     })
   },
 })
 
-export const { saveGame, clearCatchUpTime, setLoading, setOTPPos, setBreakpoint, toggleAnimationPref } =
+export const { saveGame, clearCatchUpTime, setLoading, setFading, setOTPPos, setBreakpoint, toggleAnimationPref } =
   metaSlice.actions
 
 export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCatchUp
 export const selectLoading = (state: RootState) => state.meta.loading
+export const selectFading = (state: RootState) => state.meta.fading
 export const selectBreakpoint = (state: RootState) => state.meta.breakpoint
 export const selectOTPPos = (hero: HeroName) =>
   createSelector([(state: RootState) => state.meta.OTPPos, () => heroIndexMap[hero]], (otpPos, heroIndex) => {

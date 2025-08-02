@@ -171,7 +171,8 @@ body {
   }
 }
 
-.portal-btn-animated:hover {
+.portal-btn-animated:hover,
+.portal-btn-prestige {
   box-shadow:
     0 0 50px rgba(0, 212, 255, 0.7),
     inset 0 0 50px rgba(0, 212, 255, 0.2),
@@ -180,11 +181,13 @@ body {
   background: linear-gradient(45deg, var(--portal-dark-2), var(--portal-dark-3), var(--portal-dark-1));
 }
 
-.portal-btn-animated:hover .portal-rings {
+.portal-btn-animated:hover .portal-rings,
+.portal-btn-prestige .portal-rings {
   opacity: 1;
 }
 
-.portal-btn-animated:hover .portal-btn-text {
+.portal-btn-animated:hover .portal-btn-text,
+.portal-btn-prestige {
   color: var(--portal-white);
   text-shadow:
     0 0 15px var(--portal-cyan),
@@ -218,7 +221,8 @@ body {
   z-index: 1;
 }
 
-.portal-btn-animated:hover::before {
+.portal-btn-animated:hover::before,
+.portal-btn-prestige::before {
   width: 300px;
   height: 300px;
   opacity: 0.3;
@@ -262,7 +266,8 @@ body {
   animation: portal-particles-infinite 8s linear infinite;
 }
 
-.portal-btn-animated:hover::after {
+.portal-btn-animated:hover::after,
+.portal-btn-prestige::after {
   opacity: 0.8;
 }
 
@@ -360,18 +365,19 @@ body {
 
 .portal-btn-prestige {
   opacity: 1;
-  animation: prestige-intent 5s ease-in-out forwards;
+  transition: none !important;
+  animation: prestige-intent 6s ease-in-out forwards;
 }
 
 @keyframes prestige-intent {
   0% {
     transform: translateY(-2px) scale(0.98);
   }
-  25% {
+  10% {
     transform: translateY(-10px) scale(0.95);
   }
   100% {
-    transform: translateY(-80px) translateX(75px) scale(2);
+    transform: translateY(-90px) translateX(75px) scale(2.1);
   }
 }
 #panel-content {
