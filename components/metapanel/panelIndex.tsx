@@ -215,14 +215,8 @@ export default function PanelIndex() {
         id: "upgrade",
         title: "Upgrade",
         component: <UpgradeIndex />,
-        activeStyle: `before:bg-slate-500 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45 
-          
-          pb-[9px] bg-frost border-t-[3px] border-l-[3px] border-r-[3px] border-amber-700 text-white cursor-inactive`,
-        inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
-
-        after:bg-frost after:absolute after:inset-0 after:-z-10
-
-          bg-gradient-to-b from-amber-700/40 to-orange-800/40 border-[3px] border-black/60 hover:from-amber-600/10 hover:to-orange-700/10 hover:text-orange-800 text-orange-900 cursor-active`,
+        activeStyle: "text-white",
+        inactiveStyle: "",
       },
     ]
 
@@ -231,14 +225,8 @@ export default function PanelIndex() {
         id: "prestige",
         title: "Prestige",
         component: <Prestige />,
-        activeStyle: `before:bg-slate-500 before:absolute before:-left-2 before:-top-4 before:h-24 before:w-44 before:blur before:rotate-45
-
-          pb-[9px] bg-frost border-t-[3px] border-l-[3px] border-r-[3px] border-amber-700 text-frost font-outline-electricBlue cursor-inactive`,
-        inactiveStyle: `before:bg-slate-300 before:hover:bg-slate-400 before:absolute before:-left-4 before:-top-4 before:h-28 before:w-52 before:blur-lg before:rotate-45
-
-        after:bg-frost after:absolute after:inset-0 after:-z-10 
-
-          bg-gradient-to-b from-amber-700/40 to-orange-800/40 border-[3px] border-black/60 hover:from-amber-600/10 hover:to-orange-700/10 hover:text-orange-800 text-orange-900 cursor-active`,
+        activeStyle: "text-frost font-outline-electricBlue",
+        inactiveStyle: "",
       })
     }
 
@@ -297,9 +285,15 @@ export default function PanelIndex() {
                   onClick={() => dispatch(setTabInView(tab.id))}
                   className={clsx(
                     "relative flex w-full items-center overflow-hidden rounded-t-lg px-4 py-1.5 shadow-panel-t-1",
-                    activeTab === tab.id ? tab.activeStyle : tab.inactiveStyle,
+                    animationPref > 0 && "before:transition-all",
+                    activeTab === tab.id
+                      ? "cursor-inactive rounded-t-xl border-b-0 border-l-[3px] border-r-[3px] border-t-[3px] border-amber-700 border-orange-200 bg-frost bg-gradient-to-b from-orange-300 via-orange-400 to-orange-600 pb-[9px] before:absolute before:-left-6 before:-top-4 before:h-24 before:w-48 before:rotate-[55deg] before:bg-amber-950/50 before:blur " +
+                          tab.activeStyle
+                      : "cursor-active rounded-t-xl border-[3px] border-black/60 border-stone-400 bg-gradient-to-b from-stone-400 via-stone-500 to-stone-600 text-orange-900 shadow-md before:absolute before:-left-4 before:-top-4 before:h-36 before:w-72 before:rotate-45 before:bg-slate-300 before:blur-lg after:absolute after:inset-0 after:-z-10 after:bg-frost hover:border-stone-300 hover:from-orange-400/70 hover:via-stone-400 hover:to-orange-600/70 hover:shadow-lg before:hover:bg-slate-400 " +
+                          tab.inactiveStyle,
                   )}>
-                  <h2 className={clsx("z-10 text-xl", animationPref > 0 && "transition-color, duration-500")}>
+                  <h2
+                    className={clsx("z-10 text-xl drop-shadow", animationPref > 0 && "transition-color, duration-500")}>
                     {tab.title}
                   </h2>
                 </button>

@@ -119,16 +119,6 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
   )
 }
 
-// <button
-//   onClick={onPrestige}
-//   className={clsx(
-//     "w-56 cursor-active disabled:cursor-inactive bg-cyan-800/50 font-extrabold text-cyan-300 py-4 px-6 rounded-lg flex items-center justify-center gap-2 border border-cyan-500 shadow-lg shadow-cyan-500/20 transition-all duration-300",
-//     "hover:bg-cyan-700/80 hover:shadow-cyan-500/40",
-//   )}>
-//   <div className="relative flex items-center gap-2">
-//     <span className="text-xl">Damage</span>
-//   </div>
-
 {
   /* alt style
 <button

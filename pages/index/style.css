@@ -20,6 +20,360 @@ body {
   box-sizing: border-box;
 }
 
+.portal-btn {
+  --portal-pink: #ec4899;
+  --portal-purple: #a855f7;
+  --portal-pink-light: #f472b6;
+  --portal-purple-light: #c084fc;
+
+  --portal-dark-1: #1a1a2e;
+  --portal-dark-2: #16213e;
+  --portal-dark-3: #0f3460;
+
+  --portal-cyan: #00d4ff;
+  --portal-red: #ff6b6b;
+  --portal-teal: #4ecdc4;
+
+  --portal-white: #ffffff;
+  --portal-black: #000000;
+
+  --portal-disabled-opacity: 0.5;
+
+  position: relative;
+  margin: 16px 0;
+  height: 64px;
+  width: 224px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid;
+  background: var(--portal-black);
+  padding: 16px 24px;
+  font-family: "Paytone One", cursive;
+  font-size: 24px;
+  color: var(--portal-white);
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.2);
+  transition: all 0.3s ease;
+}
+
+.portal-btn-text {
+  position: relative;
+  z-index: 10;
+  transition: all 0.4s ease;
+}
+
+.portal-btn-disabled {
+  opacity: var(--portal-disabled-opacity);
+}
+
+.portal-btn-simple {
+  background: linear-gradient(290deg, var(--portal-dark-3), var(--portal-dark-2));
+  border-color: var(--portal-cyan);
+  color: var(--portal-white);
+}
+
+.portal-btn-simple:hover {
+  background: linear-gradient(330deg, var(--portal-cyan), var(--portal-dark-2), var(--portal-teal));
+  border-color: var(--portal-cyan);
+  box-shadow:
+    0 0 20px rgba(0, 212, 255, 0.5),
+    inset 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.portal-btn-animated {
+  background: linear-gradient(45deg, var(--portal-dark-1), var(--portal-dark-2), var(--portal-dark-3));
+  border-color: var(--portal-dark-3);
+  color: var(--portal-cyan);
+  box-shadow:
+    0 0 30px rgba(0, 212, 255, 0.4),
+    inset 0 0 30px rgba(0, 212, 255, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.portal-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.portal-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 3px solid;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.portal-ring-1 {
+  width: 80px;
+  height: 80px;
+  border-color: var(--portal-cyan);
+  animation: portal-ring-movement 4s linear infinite;
+  box-shadow:
+    0 0 20px var(--portal-cyan),
+    inset 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.portal-ring-2 {
+  width: 55px;
+  height: 55px;
+  border-color: var(--portal-red);
+  animation: portal-ring-movement 3s linear infinite reverse;
+  box-shadow:
+    0 0 15px var(--portal-red),
+    inset 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+.portal-ring-3 {
+  width: 30px;
+  height: 30px;
+  border-color: var(--portal-teal);
+  animation: portal-ring-movement 2.5s linear infinite;
+  box-shadow:
+    0 0 10px var(--portal-teal),
+    inset 0 0 10px rgba(78, 205, 196, 0.3);
+}
+
+@keyframes portal-ring-movement {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    opacity: 1;
+    border-width: 2px;
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(90deg) scale(1.1);
+    opacity: 0.8;
+    border-width: 3px;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+    opacity: 0.6;
+    border-width: 4px;
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(270deg) scale(1.1);
+    opacity: 0.8;
+    border-width: 3px;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    opacity: 1;
+    border-width: 2px;
+  }
+}
+
+.portal-btn-animated:hover {
+  box-shadow:
+    0 0 50px rgba(0, 212, 255, 0.7),
+    inset 0 0 50px rgba(0, 212, 255, 0.2),
+    0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: var(--portal-cyan);
+  background: linear-gradient(45deg, var(--portal-dark-2), var(--portal-dark-3), var(--portal-dark-1));
+}
+
+.portal-btn-animated:hover .portal-rings {
+  opacity: 1;
+}
+
+.portal-btn-animated:hover .portal-btn-text {
+  color: var(--portal-white);
+  text-shadow:
+    0 0 15px var(--portal-cyan),
+    0 0 30px var(--portal-cyan),
+    0 0 45px var(--portal-cyan);
+  transform: scale(1.05);
+}
+
+.portal-btn-animated:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* Portal Core Effect */
+.portal-btn-animated::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(
+    circle,
+    rgba(0, 212, 255, 0.8) 0%,
+    rgba(78, 205, 196, 0.6) 30%,
+    rgba(255, 107, 107, 0.4) 60%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.6s ease;
+  z-index: 1;
+}
+
+.portal-btn-animated:hover::before {
+  width: 300px;
+  height: 300px;
+  opacity: 0.3;
+  animation: portal-pulse 2s ease-in-out infinite;
+}
+
+@keyframes portal-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.1;
+  }
+}
+
+/* Particle effects */
+.portal-btn-animated::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(2px 2px at 15% 25%, var(--portal-cyan), transparent),
+    radial-gradient(1px 1px at 35% 65%, var(--portal-red), transparent),
+    radial-gradient(2px 2px at 55% 15%, var(--portal-teal), transparent),
+    radial-gradient(1px 1px at 75% 75%, var(--portal-cyan), transparent),
+    radial-gradient(2px 2px at 85% 35%, var(--portal-red), transparent),
+    radial-gradient(1px 1px at 12% 85%, var(--portal-teal), transparent),
+    radial-gradient(1px 1px at 45% 45%, var(--portal-cyan), transparent),
+    radial-gradient(2px 2px at 25% 80%, var(--portal-red), transparent),
+    radial-gradient(1px 1px at 65% 25%, var(--portal-teal), transparent),
+    radial-gradient(2px 2px at 90% 60%, var(--portal-cyan), transparent),
+    radial-gradient(1px 1px at 5% 50%, var(--portal-red), transparent),
+    radial-gradient(2px 2px at 70% 90%, var(--portal-teal), transparent);
+  border-radius: 12px;
+  opacity: 0;
+  animation: portal-particles-infinite 8s linear infinite;
+}
+
+.portal-btn-animated:hover::after {
+  opacity: 0.8;
+}
+
+/* Particle rotation */
+@keyframes portal-particles-infinite {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.portal-btn-disabled:hover,
+.portal-btn-disabled.portal-btn-simple:hover,
+.portal-btn-disabled.portal-btn-animated:hover {
+  transform: none !important;
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.2) !important;
+  border-color: var(--portal-pink) !important;
+  background: var(--portal-black) !important;
+}
+
+.portal-btn-disabled.portal-btn-simple:hover {
+  background: linear-gradient(290deg, var(--portal-dark-3), var(--portal-dark-2)) !important;
+  border-color: var(--portal-cyan) !important;
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.2) !important;
+}
+
+.portal-btn-disabled.portal-btn-animated:hover {
+  background: linear-gradient(45deg, var(--portal-dark-1), var(--portal-dark-2), var(--portal-dark-3)) !important;
+  border-color: var(--portal-dark-3) !important;
+  box-shadow:
+    0 0 30px rgba(0, 212, 255, 0.4),
+    inset 0 0 30px rgba(0, 212, 255, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.portal-btn-disabled:hover .portal-rings,
+.portal-btn-disabled.portal-btn-animated:hover .portal-rings {
+  opacity: 0 !important;
+}
+
+.portal-btn-disabled:hover .portal-btn-text,
+.portal-btn-disabled.portal-btn-animated:hover .portal-btn-text {
+  transform: none !important;
+  text-shadow: none !important;
+  color: var(--portal-cyan) !important;
+}
+
+.portal-btn-disabled.portal-btn-animated .portal-btn-text {
+  color: var(--portal-cyan) !important;
+}
+
+.portal-btn-disabled.portal-btn-simple:hover .portal-btn-text {
+  color: var(--portal-white) !important;
+}
+
+.portal-btn-disabled:hover::before,
+.portal-btn-disabled.portal-btn-animated:hover::before {
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+.portal-btn-disabled:hover::after,
+.portal-btn-disabled.portal-btn-animated:hover::after {
+  opacity: 0 !important;
+}
+
+.portal-btn-disabled:active,
+.portal-btn-disabled.portal-btn-animated:active {
+  transform: none !important;
+}
+
+.portal-btn-disabled .portal-ring-1,
+.portal-btn-disabled .portal-ring-2,
+.portal-btn-disabled .portal-ring-3 {
+  animation: none !important;
+}
+
+.portal-btn-disabled::after {
+  animation: none !important;
+}
+
+.portal-btn-disabled::before {
+  animation: none !important;
+}
+
+.portal-btn-prestige {
+  opacity: 1;
+  animation: prestige-intent 5s ease-in-out forwards;
+}
+
+@keyframes prestige-intent {
+  0% {
+    transform: translateY(-2px) scale(0.98);
+  }
+  25% {
+    transform: translateY(-10px) scale(0.95);
+  }
+  100% {
+    transform: translateY(-80px) translateX(75px) scale(2);
+  }
+}
 #panel-content {
   --mask-line1-start: 403px;
   --mask-line1-startPostPrestige: 435px;
@@ -48,7 +402,6 @@ body {
     --mask-line4-end: 1610px;
   }
 }
-
 /* Mask once Warrior is visible */
 #panel-content.mask-single {
   mask-image: linear-gradient(

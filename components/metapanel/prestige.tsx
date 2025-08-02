@@ -19,6 +19,7 @@ import { Styles as ModalStylesheet } from "react-modal"
 import { CancelIcon } from "../svgIcons/metaIcons"
 import { selectHighestZone, selectHighestZoneEver } from "../../redux/statsSlice"
 import handURL from "/assets/icons/hand-dark.webp"
+import { selectAnimationPref } from "../../redux/metaSlice"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
@@ -26,14 +27,23 @@ export default function Prestige() {
   const plasmaReserved = useAppSelector(selectPlasmaReserved)
   const highZoneEver = useAppSelector(selectHighestZoneEver)
   const highestZone = useAppSelector(selectHighestZone)
+  const animationPref = useAppSelector(selectAnimationPref)
   const zoneTenComplete = highestZone > 10
 
-  const [confirmPrestige, setConfirmPrestige] = useState(false)
-  const [resetCounter, setResetCounter] = useState(0) // Force remount of prestige buttons to destroy state
+  const [prestigeDialogue, setPrestigeDialogue] = useState(false)
+  const [prestigeIntent, setPrestigeIntent] = useState(false)
+  const [resetCounter, setResetCounter] = useState(0)
 
   const onReset = () => {
     setResetCounter((prev) => prev + 1)
     dispatch(resetPlasmaReserved())
+  }
+
+  const initiatePrestige = () => {
+    setPrestigeIntent(true)
+    setTimeout(() => {
+      dispatch(updatePrestige())
+    }, 5000)
   }
 
   function onUpdatePurchase(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
@@ -67,48 +77,65 @@ export default function Prestige() {
         })}
       </div>
       <div className="relative flex h-full w-full grow items-end justify-center gap-4">
-        <button
-          onClick={() => setConfirmPrestige(true)}
-          disabled={!zoneTenComplete}
-          className={clsx(
-            "my-4 h-16 w-40 cursor-active rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-extrabold text-white",
-            !zoneTenComplete && "bg-red-800 opacity-50",
-          )}>
-          Prestige
-        </button>
+        <div className={clsx(prestigeIntent && "prestige-intent z-10")}>
+          <button
+            onClick={() => setPrestigeDialogue(true)}
+            disabled={!zoneTenComplete}
+            className={clsx(
+              "portal-btn cursor-active disabled:cursor-inactive",
+              animationPref > 1 ? "portal-btn-animated" : "portal-btn-simple",
+              !zoneTenComplete && "portal-btn-disabled",
+            )}>
+            <span className="portal-btn-text">Prestige</span>
+            {animationPref > 1 && (
+              <>
+                <div className="portal-rings">
+                  <div className="portal-ring portal-ring-1" />
+                  <div className="portal-ring portal-ring-2" />
+                  <div className="portal-ring portal-ring-3" />
+                </div>
+              </>
+            )}
+          </button>
+        </div>
         <button
           onClick={onReset}
           disabled={!plasmaReserved}
           className={clsx(
-            "my-4 h-16 w-40 cursor-active rounded-lg border-2 border-black bg-gray-700 font-sans text-2xl font-extrabold text-white",
+            "my-4 h-16 w-40 cursor-active rounded-lg border-2 border-black bg-gray-700 font-paytone text-2xl text-white disabled:cursor-inactive",
             !plasmaReserved && "bg-gray-800 opacity-50",
           )}>
           Reset
         </button>
       </div>
-      <PrestigeModal confirmPrestige={confirmPrestige} setConfirmPrestige={setConfirmPrestige} />
+      <PrestigeModal
+        prestigeDialogue={prestigeDialogue}
+        setPrestigeDialogue={setPrestigeDialogue}
+        initiatePrestige={initiatePrestige}
+      />
     </div>
   )
 }
 
 interface ModalProps {
-  confirmPrestige: boolean
-  setConfirmPrestige: (isOpen: boolean) => void
+  prestigeDialogue: boolean
+  setPrestigeDialogue: (isOpen: boolean) => void
+  initiatePrestige: () => void
 }
 
-function PrestigeModal({ confirmPrestige, setConfirmPrestige }: ModalProps) {
+function PrestigeModal({ prestigeDialogue, setPrestigeDialogue, initiatePrestige }: ModalProps) {
   const dispatch = useAppDispatch()
 
   return (
     <ReactModal
-      isOpen={confirmPrestige}
-      onRequestClose={() => setConfirmPrestige(false)}
+      isOpen={prestigeDialogue}
+      onRequestClose={() => setPrestigeDialogue(false)}
       contentLabel="Prestige confirmation prompt"
       style={confirmPrestigeStyle}>
       <div className="flex h-full flex-col">
         <button
           className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
-          onClick={() => setConfirmPrestige(false)}>
+          onClick={() => setPrestigeDialogue(false)}>
           {CancelIcon()}
         </button>
         <h2 className="mb-4 self-center text-2xl font-bold">Go backwards to go forwards</h2>
@@ -137,7 +164,7 @@ function PrestigeModal({ confirmPrestige, setConfirmPrestige }: ModalProps) {
         </div>
         <div className="mt-auto">
           <button
-            onClick={() => dispatch(updatePrestige())}
+            onClick={() => initiatePrestige()}
             className="my-4 h-16 w-40 cursor-active self-start rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-bold text-white disabled:cursor-inactive">
             Confirm
           </button>
