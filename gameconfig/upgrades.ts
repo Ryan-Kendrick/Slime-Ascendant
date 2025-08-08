@@ -106,8 +106,8 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     }
     return costs[upgradeName][upgradeCount]
   },
-  prestigeUpgrades: [
-    {
+  prestigeUpgrades: {
+    damage: {
       id: "damage",
       title: "Damage",
       modDescription: "Increase",
@@ -120,7 +120,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       visibleAtZone: 10,
       tooltip: "Increase damage by 5%",
     },
-    {
+    "crit-chance": {
       id: "crit-chance",
       title: "Critical Hit",
       modDescription: "Chance",
@@ -133,7 +133,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       visibleAtZone: 20,
       tooltip: "Increase critical hit chance by 1%",
     },
-    {
+    multistrike: {
       id: "multistrike",
       title: "Multistrike",
       modDescription: "Cooldown",
@@ -146,7 +146,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       visibleAtZone: 25,
       tooltip: "Reduce multistrike cooldown by 2%",
     },
-    {
+    beat: {
       id: "beat",
       title: "Stalactide",
       modDescription: "Click Damage",
@@ -159,9 +159,9 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       visibleAtZone: 30,
       tooltip: "Increase Stalactide damage by 20%",
     },
+  },
 
-    // { id: "health", title: "Health", basePrice: 2, additiveInc: 1, modifier: 0.05, unlocked: true, tooltip: "" },
-  ],
+  // { id: "health", title: "Health", basePrice: 2, additiveInc: 1, modifier: 0.05, unlocked: true, tooltip: "" },
   calcAdditivePrice(atLevel, upgrade): number {
     return atLevel !== 0 ? upgrade.priceBase + (atLevel - 1) * upgrade.priceIncrease : 0
   },

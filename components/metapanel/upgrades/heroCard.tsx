@@ -12,16 +12,16 @@ import { selectAchievementModifier } from "../../../redux/shared/heroSelectors"
 import { selectPMod } from "../../../redux/shared/heroSelectors"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
-import { Upgrade, UpgradeIdWithLevel, HeroName, UpgradeId } from "../../../models/upgrades"
+import { HeroConfig, UpgradeIdWithLevel, HeroName } from "../../../models/upgrades"
 import LevelUpButton from "./levelUpButton"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { initSelectorMap } from "../../../redux/shared/maps"
 import { cardProps } from "../../../redux/shared/maps"
-import { selectAnimationPref, selectBreakpoint, selectOTPPos, setOTPPos } from "../../../redux/metaSlice"
+import { selectAnimationPref, selectBreakpoint } from "../../../redux/metaSlice"
 import { useOTPPositions } from "../../../gameconfig/customHooks"
 
 interface HeroCardProps {
-  config: Upgrade
+  config: HeroConfig
   OTPIcons: JSX.Element[]
   onUpgrade: (id: UpgradeIdWithLevel, hidden: boolean, cost: number, isAffordable: boolean) => void
   onLevelUp: (e: React.MouseEvent<HTMLButtonElement>) => void

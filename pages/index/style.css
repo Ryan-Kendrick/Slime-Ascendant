@@ -20,6 +20,7 @@ body {
   box-sizing: border-box;
 }
 
+/* Portal prestige button */
 .portal-btn {
   --portal-pink: #ec4899;
   --portal-purple: #a855f7;
@@ -380,6 +381,141 @@ body {
     transform: translateY(-90px) translateX(75px) scale(2.1);
   }
 }
+
+/* Prestige upgrade buttons */
+
+.prestige-upgrade-btn,
+.prestige-upgrade-btn-simple {
+  position: relative;
+  overflow: hidden;
+}
+
+.prestige-upgrade-btn::before,
+.prestige-upgrade-btn-simple::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  animation: portalRing 6s linear infinite;
+  animation-play-state: paused;
+  z-index: -1;
+}
+
+.prestige-upgrade-btn:hover::before,
+.prestige-upgrade-btn-simple:hover::before {
+  animation-play-state: running;
+}
+
+@keyframes portalRing {
+  0% {
+    transform: rotate(0deg) scale(0.95);
+    opacity: 0.4;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(360deg) scale(0.95);
+    opacity: 0.4;
+  }
+}
+
+.prestige-upgrade-btn.affordable::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(34, 211, 238, 0.3) 0%,
+    rgba(103, 232, 249, 0.4) 50%,
+    transparent 80%
+  );
+  animation: innerGlow 3s ease-in-out infinite;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+@keyframes innerGlow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+.prestige-upgrade-btn:not(:disabled):not(.button-hidden),
+.prestige-upgrade-btn-simple:not(:disabled):not(.button-hidden) {
+  animation: shadowPulse 3s ease-in-out infinite;
+}
+
+@keyframes shadowPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 16px rgba(212, 229, 231, 0.7),
+      0 4px 8px rgba(100, 113, 116, 0.5),
+      inset 0 1px 4px rgba(34, 211, 238, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 12px 24px rgba(34, 211, 238, 0.35),
+      0 6px 12px rgba(34, 211, 238, 0.25),
+      inset 0 2px 8px rgba(34, 211, 238, 0.2);
+  }
+}
+
+.prestige-upgrade-btn:hover:not(:disabled),
+.prestige-upgrade-btn-simple:hover:not(:disabled) {
+  animation-duration: 1.5s;
+}
+
+.prestige-upgrade-btn:disabled,
+.prestige-upgrade-btn-simple:disabled::before {
+  animation: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.75);
+}
+
+/* Hidden state - muted portal effects */
+.prestige-upgrade-btn.button-hidden::before,
+.prestige-upgrade-btn-simple.button-hidden::before {
+  opacity: 0.2;
+  animation-duration: 8s;
+}
+
+.prestige-upgrade-btn.button-hidden::after,
+.prestige-upgrade-btn-simple.button-hidden::after {
+  opacity: 0.1;
+  animation-duration: 6s;
+}
+
+.prestige-upgrade-btn.button-hidden,
+.prestige-upgrade-btn-simple.button-hidden {
+  animation: none;
+}
+
+/* Affordability states */
+.prestige-upgrade-btn.affordable::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(34, 211, 238, 0.4),
+    rgba(103, 232, 249, 0.6),
+    rgba(34, 211, 238, 0.4),
+    transparent
+  );
+}
+
+/* Upgrade panel mask */
 #panel-content {
   --mask-line1-start: 403px;
   --mask-line1-startPostPrestige: 435px;

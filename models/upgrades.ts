@@ -15,10 +15,10 @@ export interface UpgradeElement {
   purchasedUpgradeLevel: string
 }
 
-export type PrestigeUpgradeName = "damage" | "crit-chance" | "multistrike" | "beat" //| "health"
+export type PrestigeUpgradeId = "damage" | "crit-chance" | "multistrike" | "beat" //| "health"
 
 export interface PrestigeUpgrade {
-  id: PrestigeUpgradeName
+  id: PrestigeUpgradeId
   title: string
   modDescription: string
   modSuffix: string
@@ -29,6 +29,10 @@ export interface PrestigeUpgrade {
   priceIncrease: number
   visibleAtZone: number
   tooltip: string
+}
+
+export type PrestigeUpgrades = {
+  [id in PrestigeUpgradeId]: PrestigeUpgrade
 }
 
 export interface PrestigeState {
@@ -42,7 +46,7 @@ export interface OTPConfig {
   OTPTitles: string[]
   OTPDescriptions: string[]
 }
-export interface Upgrade {
+export interface HeroConfig {
   visibleAtZone: number
   elementId: UpgradeId
   displayName: string
@@ -53,11 +57,11 @@ export interface Upgrade {
   levelUpCost: (currentLevel: number) => number
 }
 export interface UpgradeConfig {
-  adventurer: Upgrade
-  warrior: Upgrade
-  healer: Upgrade
-  mage: Upgrade
-  prestigeUpgrades: PrestigeUpgrade[]
+  adventurer: HeroConfig
+  warrior: HeroConfig
+  healer: HeroConfig
+  mage: HeroConfig
+  prestigeUpgrades: PrestigeUpgrades
   calcOTPPrice: (upgradeName: UpgradeId, upgradeCount: number) => number
   calcAdditivePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
   calcMultiplicativePrice: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number

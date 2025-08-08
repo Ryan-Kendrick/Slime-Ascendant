@@ -1,4 +1,4 @@
-import { HeroName, PrestigeUpgradeName } from "./upgrades"
+import { HeroName, PrestigeUpgradeId } from "./upgrades"
 
 export type Tab = "upgrade" | "prestige"
 
@@ -44,5 +44,5 @@ export interface PlayerState {
   pBeatUpgradeCount: number
   // pHealthUpgradeCount: number]
 
-  pendingPPurchases: Record<PrestigeUpgradeName, { cost: number; purchaseCount: number }>
+  pendingPPurchases: Record<PrestigeUpgradeId, { cost: number; purchaseCount: number }>
 }

@@ -4,7 +4,7 @@ import { AppDispatch, type RootState } from "./store"
 import { Tab } from "../models/player"
 import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
 import { setInitElementMap } from "./shared/maps"
-import { PrestigeState, PrestigeUpgradeName, HeroName, UpgradeId } from "../models/upgrades"
+import { PrestigeState, PrestigeUpgradeId, HeroName, UpgradeId } from "../models/upgrades"
 import { prestigeReset } from "./shared/actions"
 import { ACHIEVEMENT_CONFIG, AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
@@ -44,7 +44,7 @@ const debugState = {
   plasma: 1000000,
   plasmaSpent: 50000,
 
-  pendingPPurchases: {} as Record<PrestigeUpgradeName, { cost: number; purchaseCount: number }>,
+  pendingPPurchases: {} as Record<PrestigeUpgradeId, { cost: number; purchaseCount: number }>,
 }
 
 export const initialState = {
@@ -82,7 +82,7 @@ export const initialState = {
   plasma: 0,
   plasmaSpent: 0,
 
-  pendingPPurchases: {} as Record<PrestigeUpgradeName, PrestigeState>,
+  pendingPPurchases: {} as Record<PrestigeUpgradeId, PrestigeState>,
 }
 
 export const playerSlice = createSlice({
@@ -130,7 +130,7 @@ export const playerSlice = createSlice({
     },
     setPrestigeUpgradesPending: (
       state,
-      action: PayloadAction<{ upgradeId: PrestigeUpgradeName; cost: number; purchaseCount: number }>,
+      action: PayloadAction<{ upgradeId: PrestigeUpgradeId; cost: number; purchaseCount: number }>,
     ) => {
       const { upgradeId, cost, purchaseCount: count } = action.payload
       state.pendingPPurchases[upgradeId] = { cost, purchaseCount: count }
@@ -138,7 +138,7 @@ export const playerSlice = createSlice({
     resetPlasmaReserved: (state) => {
       state.plasma = Math.round(state.plasma + state.plasmaReserved)
       state.plasmaReserved = 0
-      state.pendingPPurchases = {} as Record<PrestigeUpgradeName, PrestigeState>
+      state.pendingPPurchases = {} as Record<PrestigeUpgradeId, PrestigeState>
     },
     incrementPDamageUpgradeCount: (state) => {
       state.pDamageUpgradeCount++
@@ -195,7 +195,7 @@ export const playerSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(prestigeReset, (state, action: PayloadAction<Record<PrestigeUpgradeName, PrestigeState>>) => {
+    builder.addCase(prestigeReset, (state, action: PayloadAction<Record<PrestigeUpgradeId, PrestigeState>>) => {
       state.adventurerLevel = 1
       state.adventurerOTPUpgradeCount = 0
       state.warriorLevel = 0
@@ -219,7 +219,7 @@ export const playerSlice = createSlice({
 
       state.tabInView = "upgrade"
 
-      state.pendingPPurchases = {} as Record<PrestigeUpgradeName, PrestigeState>
+      state.pendingPPurchases = {} as Record<PrestigeUpgradeId, PrestigeState>
 
       if (action.payload.damage) state.pDamageUpgradeCount += action.payload.damage.purchaseCount
       if (action.payload["crit-chance"]) state.pCritUpgradeCount += action.payload["crit-chance"].purchaseCount
@@ -257,7 +257,7 @@ export const {
   toggleDebugState,
 } = playerSlice.actions
 
-export const prestigeDamageMod = UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "damage")!.modifier
+export const prestigeDamageMod = UPGRADE_CONFIG.prestigeUpgrades.damage.modifier
 export const selectPrestigeState = createSelector([(state: RootState) => state.player], (player) => ({
   plasma: player.plasma,
   plasmaSpent: player.plasmaSpent,
@@ -268,17 +268,12 @@ export const selectPrestigeState = createSelector([(state: RootState) => state.p
   // pHealthUpgradeCount: player.pHealthUpgradeCount,
 }))
 export const selectCritChance = (state: RootState) =>
-  UPGRADE_CONFIG.calcAdditiveMod(
-    state.player.pCritUpgradeCount,
-    UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "crit-chance")!,
-  )
-export const selectMultistrikeCooldown = (state: RootState) =>
-  UPGRADE_CONFIG.calcReduction(
-    state.player.pMultistrikeUpgradeCount,
-    UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "multistrike")!,
-  )
+  UPGRADE_CONFIG.calcAdditiveMod(state.player.pCritUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades["crit-chance"])
 
-export const createPendingPPurchaseSelector = (upgradeId: PrestigeUpgradeName) =>
+export const selectMultistrikeCooldown = (state: RootState) =>
+  UPGRADE_CONFIG.calcReduction(state.player.pMultistrikeUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades.multistrike)
+
+export const createPendingPPurchaseSelector = (upgradeId: PrestigeUpgradeId) =>
   createSelector([(state: RootState) => state.player.pendingPPurchases], (pendingPPurchases) => {
     const purchase = pendingPPurchases[upgradeId]
     return purchase ? { cost: purchase.cost, purchaseCount: purchase.purchaseCount } : null
@@ -288,7 +283,8 @@ export const selectPendingPDamage = createPendingPPurchaseSelector("damage")
 export const selectPendingPCritChance = createPendingPPurchaseSelector("crit-chance")
 export const selectPendingPMultistrike = createPendingPPurchaseSelector("multistrike")
 export const selectPendingPBeat = createPendingPPurchaseSelector("beat")
-// export const selectPendingPHealth = createPendingPPurchaseSelector("health")
+
+export const selectPendingPPurchases = (state: RootState) => state.player.pendingPPurchases
 
 export const selectGold = (state: RootState) => state.player.gold
 export const selectGCanAfford = (cost: number) => createSelector([selectGold], (gold) => gold >= cost)
@@ -308,10 +304,7 @@ export const selectClickDamage = createSelector(
 export const selectBeatDamage = createSelector(
   [(state: RootState) => state.player.pBeatUpgradeCount, selectClickDamage],
   (pBeatUpgradeCount, clickDamage) =>
-    UPGRADE_CONFIG.calcAdditiveMod(
-      pBeatUpgradeCount,
-      UPGRADE_CONFIG.prestigeUpgrades.find((pUpgrade) => pUpgrade.id === "beat")!,
-    ) * clickDamage,
+    UPGRADE_CONFIG.calcAdditiveMod(pBeatUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades.beat) * clickDamage,
 )
 export const selectDotDamage = createSelector(
   [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],

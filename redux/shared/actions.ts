@@ -1,4 +1,4 @@
 import { createAction } from "@reduxjs/toolkit"
-import { PrestigeState, PrestigeUpgradeName } from "../../models/upgrades"
+import { PrestigeState, PrestigeUpgradeId } from "../../models/upgrades"
 
-export const prestigeReset = createAction<Record<PrestigeUpgradeName, PrestigeState>>("prestige/reset")
+export const prestigeReset = createAction<Record<PrestigeUpgradeId, PrestigeState>>("prestige/reset")

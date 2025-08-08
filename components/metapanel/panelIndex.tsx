@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import UpgradeIndex from "./upgrades/upgradeIndex"
 import clsx from "clsx/lite"
-import Prestige from "./prestige"
+import Prestige from "./prestige/prestige"
 import { TabData } from "../../models/player"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import {

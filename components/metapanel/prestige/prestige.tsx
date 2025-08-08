@@ -1,10 +1,10 @@
 import clsx from "clsx/lite"
 import { useState } from "react"
 import PrestigeButton from "./prestigeButton"
-import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
-import Currency from "./currency"
-import { PlasmaIcon } from "../svgIcons/resourceIcons"
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
+import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
+import Currency from "../currency"
+import { PlasmaIcon } from "../../svgIcons/resourceIcons"
 import {
   resetPlasmaReserved,
   selectPlasma,
@@ -12,15 +12,16 @@ import {
   reservePlasma,
   updatePrestige,
   setPrestigeUpgradesPending,
-} from "../../redux/playerSlice"
-import { PrestigeUpgradeName } from "../../models/upgrades"
+} from "../../../redux/playerSlice"
+import { PrestigeUpgradeId } from "../../../models/upgrades"
 import ReactModal from "react-modal"
 import { Styles as ModalStylesheet } from "react-modal"
-import { CancelIcon } from "../svgIcons/metaIcons"
-import { selectHighestZone, selectHighestZoneEver } from "../../redux/statsSlice"
+import { CancelIcon } from "../../svgIcons/metaIcons"
+import { selectHighestZone, selectHighestZoneEver } from "../../../redux/statsSlice"
 import handURL from "/assets/icons/hand-dark.webp"
-import { selectAnimationPref, setFading } from "../../redux/metaSlice"
-import { PERFORMANCE_CONFIG } from "../../gameconfig/meta"
+import { selectAnimationPref, setFading } from "../../../redux/metaSlice"
+import { PERFORMANCE_CONFIG } from "../../../gameconfig/meta"
+import Confirmation from "./confirmation"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
@@ -52,7 +53,7 @@ export default function Prestige() {
   }
 
   function onUpdatePurchase(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
-    const upgradeId = e.currentTarget.id as PrestigeUpgradeName
+    const upgradeId = e.currentTarget.id as PrestigeUpgradeId
 
     dispatch(setPrestigeUpgradesPending({ upgradeId, cost, purchaseCount }))
     dispatch(reservePlasma())
@@ -67,9 +68,9 @@ export default function Prestige() {
         currencySelector={plasmaSelector}
         suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
       />
-      <div className="mx-2 flex flex-wrap justify-center gap-2 font-sans">
-        {UPGRADE_CONFIG.prestigeUpgrades.map((prestigeUpgrade, i) => {
-          if (i > 0 && UPGRADE_CONFIG.prestigeUpgrades[i - 1].visibleAtZone > highZoneEver) return null
+      <div className="mx-2 flex flex-wrap items-start justify-center gap-2 font-sans">
+        {Object.values(UPGRADE_CONFIG.prestigeUpgrades).map((prestigeUpgrade) => {
+          if (prestigeUpgrade.visibleAtZone > highZoneEver) return null
 
           return (
             <PrestigeButton
@@ -81,6 +82,7 @@ export default function Prestige() {
           )
         })}
       </div>
+
       <div className="relative flex h-full w-full grow items-end justify-center gap-4">
         <button
           onClick={() => setPrestigeDialogue(true)}
@@ -88,7 +90,7 @@ export default function Prestige() {
           className={clsx(
             "portal-btn cursor-active disabled:cursor-inactive",
             fullAnimations ? "portal-btn-animated" : "portal-btn-simple",
-            prestigeIntent && fullAnimations && "portal-btn-prestige z-10",
+            prestigeIntent && "portal-btn-prestige z-10",
             !zoneTenComplete && "portal-btn-disabled",
           )}>
           <span className="portal-btn-text">Prestige</span>
@@ -136,44 +138,12 @@ function PrestigeModal({ prestigeDialogue, prestigeIntent, setPrestigeDialogue, 
       onRequestClose={() => setPrestigeDialogue(false)}
       contentLabel="Prestige confirmation prompt"
       style={confirmPrestigeStyle}>
-      <div className="flex h-full flex-col">
-        <button
-          className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
-          onClick={() => setPrestigeDialogue(false)}>
-          {CancelIcon()}
-        </button>
-        <h2 className="mb-4 self-center text-2xl font-bold">Go backwards to go forwards</h2>
-        <div className="flex justify-around gap-4">
-          <div className="flex flex-col">
-            <ul className="text-red-600">
-              <h3 className="mb-1 text-xl font-bold"> You will lose</h3>
-              <li>Gold</li>
-              <li>Upgrades</li>
-              <li>Zone progress</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <ul className="text-amber-700">
-              <h3 className="mb-1 text-xl font-bold"> You will keep</h3>
-              <li>Unspent plasma</li>
-              <li>Achievements</li>
-            </ul>
-          </div>
-          <div className="flex flex-col">
-            <ul className="text-islam">
-              <h3 className="mb-1 text-xl font-bold"> You will gain </h3>
-              <p>Prestige upgrades</p>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-auto">
-          <button
-            onClick={() => initiatePrestige()}
-            className="my-4 h-16 w-40 cursor-active self-start rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-bold text-white disabled:cursor-inactive">
-            Confirm
-          </button>
-        </div>
-      </div>
+      <Confirmation initiatePrestige={initiatePrestige} />
+      <button
+        className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
+        onClick={() => setPrestigeDialogue(false)}>
+        {CancelIcon()}
+      </button>
     </ReactModal>
   )
 }
@@ -185,8 +155,9 @@ const confirmPrestigeStyle: ModalStylesheet = {
     right: "10%",
     bottom: "10%",
     left: "10%",
-    border: "1px solid #7DF9FF",
-    background: "#fff",
+    boxShadow: "0px 0px 21px 12px rgba(0,0,0,0.46) inset",
+    border: "2px solid #a5f3fc",
+    background: "radial-gradient(circle,rgba(14, 116, 144, 1) 25%, rgba(21, 94, 117, 1) 75%)",
     overflow: "visible",
     WebkitOverflowScrolling: "touch",
     borderRadius: "12px",
@@ -201,7 +172,7 @@ const confirmPrestigeStyle: ModalStylesheet = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(255, 255, 255, 0.75)",
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
     cursor: `url(${handURL}) 0 0, pointer`,
     zIndex: 1000,
   },

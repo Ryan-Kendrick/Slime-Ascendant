@@ -1,29 +1,20 @@
 import { PlayerState } from "../../models/player"
-import { HeroName, PrestigeUpgrade, PrestigeUpgradeName, UpgradeId, UpgradeProps } from "../../models/upgrades"
+import { HeroName, PrestigeUpgrade, PrestigeUpgradeId, UpgradeId, UpgradeProps } from "../../models/upgrades"
 import {
   selectClickDamage,
   selectDotDamage,
-  selectGCanAfford,
   selectInitState,
   selectPendingPBeat,
   selectPendingPCritChance,
   selectPendingPDamage,
   selectPendingPMultistrike,
   selectPrestigeState,
-  updateClickDamage,
-  updateDotDamage,
 } from "../playerSlice"
 import {
-  selectAdventurerLevelUpCost,
-  selectHealerLevelUpCost,
   selectMageContribution,
-  selectMageLevelUpCost,
-  selectWarriorLevelUpCost,
-} from "./heroSelectors"
-import { selectHealerContribution } from "./heroSelectors"
-import { selectWarriorContribution } from "./heroSelectors"
-import { selectAdventurerContribution } from "./heroSelectors"
-import {
+  selectHealerContribution,
+  selectWarriorContribution,
+  selectAdventurerContribution,
   selectAllAdventurerState,
   selectAllHealerState,
   selectAllMageState,
@@ -169,7 +160,7 @@ export const initSelectorMap: Record<UpgradeId | HeroName, (state: RootState) =>
 } as const
 
 type PrestigeUpgradeMap = {
-  [upgradeName in PrestigeUpgradeName]: {
+  [upgradeName in PrestigeUpgradeId]: {
     selector: (state: RootState) => number
     cost: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
     calcModifier: (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
