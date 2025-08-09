@@ -61,7 +61,6 @@ export default function Monster({ children }: PropsWithChildren) {
   }, [animationPref])
 
   const { monsterName, monsterImage } = useAppSelector(selectMonsterState)
-
   useGameEngine({ dotDamage, beatDamage, loading, lastSaveCatchUp })
 
   useEffect(() => {

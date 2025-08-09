@@ -19,7 +19,7 @@ export type PrestigeUpgradeId = "damage" | "crit-chance" | "multistrike" | "beat
 
 export interface PrestigeUpgrade {
   id: PrestigeUpgradeId
-  title: string
+  displayName: string
   modDescription: string
   modSuffix: string
   changePrefix: string

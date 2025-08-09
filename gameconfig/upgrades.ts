@@ -109,7 +109,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
   prestigeUpgrades: {
     damage: {
       id: "damage",
-      title: "Damage",
+      displayName: "Damage",
       modDescription: "Increase",
       modSuffix: "%",
       changePrefix: "+",
@@ -122,7 +122,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
     "crit-chance": {
       id: "crit-chance",
-      title: "Critical Hit",
+      displayName: "Critical Hit",
       modDescription: "Chance",
       modSuffix: "%",
       changePrefix: "+",
@@ -135,7 +135,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
     multistrike: {
       id: "multistrike",
-      title: "Multistrike",
+      displayName: "Multistrike",
       modDescription: "Cooldown",
       modSuffix: "s",
       changePrefix: "-",
@@ -148,7 +148,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
     beat: {
       id: "beat",
-      title: "Stalactide",
+      displayName: "Stalactide",
       modDescription: "Click Damage",
       modSuffix: "%",
       changePrefix: "+",

@@ -20,6 +20,14 @@ body {
   box-sizing: border-box;
 }
 
+/* Global variables */
+:root {
+  --line-draw-duration: 0.5s;
+  --line-delay-base: 250ms;
+  --line-color: #fff;
+  --line-color-prestige: #ec4899;
+}
+
 /* Portal prestige button */
 .portal-btn {
   --portal-pink: #ec4899;
@@ -474,11 +482,6 @@ body {
   }
 }
 
-.prestige-upgrade-btn:hover:not(:disabled),
-.prestige-upgrade-btn-simple:hover:not(:disabled) {
-  animation-duration: 1.5s;
-}
-
 .prestige-upgrade-btn:disabled,
 .prestige-upgrade-btn-simple:disabled::before {
   animation: none;
@@ -513,6 +516,312 @@ body {
     rgba(34, 211, 238, 0.4),
     transparent
   );
+}
+
+/* Top lines */
+/* You will lose */
+.loss li:nth-of-type(1)::before {
+  animation-delay: var(--line-delay-base);
+}
+/* You will keep */
+.keep li:nth-of-type(1)::before {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration));
+}
+/* You will gain */
+.gain li:nth-of-type(1)::before {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 2);
+}
+
+/* Gold */
+.loss li:nth-of-type(1)::after {
+  animation-delay: calc(var(--line-delay-base) * 2);
+}
+/* Unspent plasma */
+.keep li:nth-of-type(1)::after {
+  animation-delay: calc(var(--line-delay-base) * 2 + var(--line-draw-duration));
+}
+
+/* Upgrades */
+.loss li:nth-of-type(2)::after {
+  animation-delay: calc(var(--line-delay-base) * 3);
+}
+/* Achievement damage */
+.keep li:nth-of-type(2)::after {
+  animation-delay: calc(var(--line-delay-base) * 3 + var(--line-draw-duration));
+}
+/* Zone progress */
+.loss li:nth-of-type(3)::after {
+  animation-delay: calc(var(--line-delay-base) * 4);
+}
+/* Prestige upgrades */
+/* Vertical line to the right */
+.gain li:nth-of-type(1)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3);
+  animation-timing-function: ease-in-out;
+  animation-duration: calc(var(--line-draw-duration) * 3);
+  height: calc(calc(26.667vh - 14.67px) * 2);
+}
+/* Prestige upgrade title */
+.gain li h4.line-x-bottom-fromright::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 250ms);
+}
+
+/* Purchased upgrades */
+.gain li li:nth-child(2)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 500ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  height: 1px;
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(3)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 600ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(4)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 700ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(5)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 800ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(6)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 900ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(7)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 1000ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(8)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 1100ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(9)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 1200ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+.gain li li:nth-child(10)::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + 1300ms);
+  animation-duration: calc(var(--line-draw-duration) * 2);
+  animation-timing-function: ease-out;
+  background-color: var(--line-color-prestige);
+  width: calc(100%);
+  -webkit-transform-origin: right;
+  transform-origin: right;
+}
+
+/* Loss and gain vertical lines */
+.loss h3.line-y-bottomright::before {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration));
+  animation-timing-function: ease-in-out;
+  animation-duration: calc(var(--line-draw-duration) * 3);
+  height: calc(calc(26.667vh - 14.67px) * 2);
+}
+.keep h3.line-y-bottomright::before {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 2);
+  animation-timing-function: ease-in-out;
+  animation-duration: calc(var(--line-draw-duration) * 3);
+  height: calc(calc(26.667vh - 14.67px) * 2);
+}
+.loss h3.line-y-bottomleft::after {
+  animation-delay: calc(var(--line-delay-base));
+  animation-timing-function: ease-in-out;
+  animation-duration: calc(var(--line-draw-duration) * 3);
+  height: calc(calc(26.667vh - 14.67px) * 2);
+}
+
+/* Final line at the bottom */
+.gain h3.line-x-bottom-fromright::after {
+  animation-delay: calc(var(--line-delay-base) + var(--line-draw-duration) * 3 + calc(var(--line-draw-duration) * 3));
+  animation-timing-function: ease-in-out;
+  animation-duration: calc(var(--line-draw-duration) * 3);
+  top: calc(calc(26.667vh - 14.67px) * 2 + 40px); /* 40px for gain height + bottom margin */
+  left: calc((26.667vw - 14.67px) * -2); /* Move left by 2 column widths */
+  width: calc((26.667vw - 14.67px) * 3); /* Span all 3 columns */
+}
+
+.line-x-top {
+  position: relative;
+}
+
+.line-x-top:before {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: left;
+  transform-origin: left;
+  left: 0;
+  top: 0;
+  width: calc(26.667vw - 14.67px); /* 1/3 of modal width - padding*/
+  height: 1px;
+  z-index: 1;
+  animation: drawLine var(--line-draw-duration) linear backwards;
+}
+
+.line-x-bottom {
+  position: relative;
+}
+
+.line-x-bottom:after {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: left;
+  transform-origin: left;
+  left: 0;
+  bottom: 0;
+  width: calc(26.667vw - 14.67px); /* 1/3 of modal width - padding*/
+  height: 1px;
+  z-index: 1;
+  animation: drawLine var(--line-draw-duration) linear backwards;
+}
+
+.line-x-bottom-fromright {
+  position: relative;
+}
+
+.line-x-bottom-fromright:after {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: right;
+  transform-origin: right;
+  left: 0;
+  bottom: 0;
+  width: calc(26.667vw - 14.67px); /* 1/3 of modal width - padding*/
+  height: 1px;
+  z-index: 1;
+  animation: drawLine var(--line-draw-duration) linear backwards;
+}
+
+.line-y-left {
+  position: relative;
+}
+
+.line-y-left:before {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: top;
+  transform-origin: top;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: calc(26.667vh - 14.67px);
+  z-index: 1;
+  animation: drawLineVertical var(--line-draw-duration) linear backwards;
+}
+
+.line-y-right {
+  position: relative;
+}
+
+.line-y-right:after {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: top;
+  transform-origin: top;
+  right: 0;
+  top: 0;
+  width: 1px;
+  height: calc(26.667vh - 14.67px);
+  z-index: 1;
+  animation: drawLineVertical var(--line-draw-duration) linear backwards;
+}
+
+.line-y-bottomright {
+  position: relative;
+}
+
+.line-y-bottomright:before {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: top;
+  transform-origin: top;
+  right: 0;
+  top: calc(100% + 4px); /* 4px for bottom margin */
+  width: 1px;
+  height: calc(26.667vh - 14.67px);
+  z-index: 1;
+  animation: drawLineVertical var(--line-draw-duration) linear backwards;
+}
+
+.line-y-bottomleft {
+  position: relative;
+}
+
+.line-y-bottomleft:after {
+  position: absolute;
+  background-color: var(--line-color);
+  content: "";
+  -webkit-transform-origin: top;
+  transform-origin: top;
+  left: 0;
+  top: calc(100% + 4px); /* 4px for bottom margin */
+  width: 1px;
+  height: calc(26.667vh - 14.67px);
+  z-index: 1;
+  animation: drawLineVertical var(--line-draw-duration) linear backwards;
+}
+
+@keyframes drawLine {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drawLineVertical {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
 }
 
 /* Upgrade panel mask */

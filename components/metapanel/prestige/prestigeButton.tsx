@@ -78,7 +78,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       }}
       disabled={!isAffordable || hidden}
       className={clsx(
-        "relative flex w-56 cursor-active items-center justify-center gap-2 rounded-lg border border-cyan-500 bg-cyan-800/50 px-2 py-2 text-lg text-cyan-300 transition-all duration-300 disabled:cursor-inactive",
+        "relative flex w-56 cursor-active items-center justify-center gap-2 rounded-lg border border-cyan-500 bg-cyan-800/50 px-2 py-2 text-lg text-cyan-300 transition-[background-color,color,opacity] duration-300 disabled:cursor-inactive",
         "hover:border-frost disabled:border-black disabled:bg-cyan-800/50 disabled:text-gray-300/80",
         hidden && "button-hidden",
         isAffordable ? "affordable" : "unaffordable",
@@ -92,7 +92,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       <div className="relative z-10 flex flex-col items-center">
         <h3 className="font-outline-electricBlue mb-1 text-3xl font-extrabold tracking-wide text-blue-200">
           {" "}
-          {config.title}
+          {config.displayName}
         </h3>
         <p>
           Level: {upgradeCount} {purchaseCount > 0 && `(+${purchaseCount})`}

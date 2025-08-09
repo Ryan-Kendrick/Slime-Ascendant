@@ -203,6 +203,7 @@ export const updateMonsterClicked =
 
 export const updateDotDamageDealt = (damage: number) => (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(increaseTotalDotDamageDealt(damage))
+  console.log(damage)
 
   const state = getState()
   const dotAchievements = ACHIEVEMENTS.dot.damage as AchievementCategory
