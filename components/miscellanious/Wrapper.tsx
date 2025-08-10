@@ -43,7 +43,9 @@ export default function Wrapper({ children }: PropsWithChildren) {
         isHealerVisible &&
           "lg:[@media(max-height:898px)]:max-h-auto lg:[@media(max-height:898px)]:h-auto lg:[@media(max-height:898px)]:overflow-y-auto lg:[@media(max-height:898px)]:overflow-x-hidden",
       )}>
-      {children}
+      <div className="relative z-0 flex h-full w-full flex-col-reverse overflow-hidden bg-amber-200 md:flex-col lg:pt-1 lg:[@media(max-height:898px)]:min-h-[906px] lg:[@media(max-height:898px)]:pb-3">
+        {children}
+      </div>
     </div>
   )
 }
