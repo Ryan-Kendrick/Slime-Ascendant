@@ -62,6 +62,7 @@ export default function PanelIndex() {
         } else {
           chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
           top -= 369
+          if (prestigeTabVisible) top += 48
           mask = "mask-single"
         }
       } else if (isHealerVisible) {
