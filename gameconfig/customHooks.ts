@@ -12,6 +12,7 @@ import {
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName } from "../models/upgrades"
 import { PERFORMANCE_CONFIG } from "./meta"
+import { dot } from "node:test/reporters"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -71,6 +72,10 @@ export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
   const { dotDamage, beatDamage, loading, lastSaveCatchUp } = props
 
+  const dotDamageRef = useRef(dotDamage)
+  const beatDamageRef = useRef(beatDamage)
+  const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
+
   const tickCount = useRef(0)
   const lastLoopTime = useRef(Date.now())
   const frameRef = useRef<number>()
@@ -81,7 +86,12 @@ export function useGameEngine(props: EngineProps) {
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
 
-  const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
+  useEffect(() => {
+    dotDamageRef.current = dotDamage
+  }, [dotDamage])
+  useEffect(() => {
+    beatDamageRef.current = beatDamage
+  }, [beatDamage])
   useEffect(() => {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
@@ -94,8 +104,8 @@ export function useGameEngine(props: EngineProps) {
   }
 
   const dealDamageOverTime = () => {
-    if (dotDamage) {
-      const damageThisTick = dotDamage / 20
+    if (dotDamageRef.current > 0) {
+      const damageThisTick = dotDamageRef.current / 20
       dispatch(updateDotDamageDealt(damageThisTick))
     }
   }
