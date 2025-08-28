@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import PrestigeButton from "./prestigeButton"
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
@@ -12,6 +12,7 @@ import {
   reservePlasma,
   updatePrestige,
   setPrestigeUpgradesPending,
+  selectPendingPPurchases,
 } from "../../../redux/playerSlice"
 import { PrestigeUpgradeId } from "../../../models/upgrades"
 import ReactModal from "react-modal"
@@ -22,11 +23,13 @@ import handURL from "/assets/icons/hand-dark.webp"
 import { selectAnimationPref, setFading } from "../../../redux/metaSlice"
 import { PERFORMANCE_CONFIG } from "../../../gameconfig/meta"
 import Confirmation from "./confirmation"
+import topologyURL from "../../../assets/icons/topologyBg.svg"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
   const plasmaSelector = selectPlasma
   const plasmaReserved = useAppSelector(selectPlasmaReserved)
+  const pendingUpgrades = useAppSelector(selectPendingPPurchases)
   const highZoneEver = useAppSelector(selectHighestZoneEver)
   const highestZone = useAppSelector(selectHighestZone)
   const animationPref = useAppSelector(selectAnimationPref)
@@ -36,6 +39,20 @@ export default function Prestige() {
   const [prestigeDialogue, setPrestigeDialogue] = useState(false)
   const [prestigeIntent, setPrestigeIntent] = useState(false)
   const [resetCounter, setResetCounter] = useState(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    const hasPendingUpgrades = Object.entries(pendingUpgrades).length > 0
+
+    if (hasPendingUpgrades) {
+      const img = new Image()
+      img.src = topologyURL
+    }
+  }, [pendingUpgrades])
+
+  useEffect(() => {
+    setTimeout(() => setMounted(true), 200)
+  }, [])
 
   const onReset = () => {
     setResetCounter((prev) => prev + 1)
@@ -60,66 +77,80 @@ export default function Prestige() {
   }
 
   return (
-    <div className="m-2 flex h-full min-h-[722px] flex-col rounded-lg border-2 border-cyan-500/50 bg-cyan-900/60 p-3 before:bg-blue-200">
-      <Currency
-        key={resetCounter}
-        image={PlasmaIcon()}
-        fontStyle="text-cyan-300 font-paytone"
-        currencySelector={plasmaSelector}
-        suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
-      />
-      <div className="mx-2 flex flex-wrap items-start justify-center gap-2 font-sans">
-        {Object.values(UPGRADE_CONFIG.prestigeUpgrades).map((prestigeUpgrade) => {
-          if (prestigeUpgrade.visibleAtZone > highZoneEver) return null
+    <div className="p-2 md:p-4">
+      <div
+        className={clsx(
+          "relative flex h-full min-h-[722px] flex-col rounded-lg bg-cyan-900/60 p-3 transition-all",
 
-          return (
-            <PrestigeButton
-              key={prestigeUpgrade.id + resetCounter}
-              config={prestigeUpgrade}
-              onClick={onUpdatePurchase}
-              hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
-            />
-          )
-        })}
-      </div>
+          // Border animation
+          "before:pointer-events-none before:absolute before:rounded-lg before:transition-all before:duration-500 before:ease-out before:content-['']",
+          "before:border-2 before:border-cyan-500/50 before:shadow-panel-prestige-inner",
 
-      <div className="relative flex h-full w-full grow items-end justify-center gap-4">
-        <button
-          onClick={() => setPrestigeDialogue(true)}
-          disabled={!zoneTenComplete}
-          className={clsx(
-            "portal-btn cursor-active disabled:cursor-inactive",
-            fullAnimations ? "portal-btn-animated" : "portal-btn-simple",
-            prestigeIntent && "portal-btn-prestige z-10",
-            !zoneTenComplete && "portal-btn-disabled",
-          )}>
-          <span className="portal-btn-text">Prestige</span>
-          {fullAnimations && (
-            <>
-              <div className="portal-rings">
-                <div className="portal-ring portal-ring-1" />
-                <div className="portal-ring portal-ring-2" />
-                <div className="portal-ring portal-ring-3" />
-              </div>
-            </>
-          )}
-        </button>
-        <button
-          onClick={onReset}
-          disabled={!plasmaReserved}
-          className={clsx(
-            "my-4 h-16 w-40 cursor-active rounded-lg border-2 border-black bg-gray-700 font-paytone text-2xl text-white disabled:cursor-inactive",
-            !plasmaReserved && "bg-gray-800 opacity-50",
-          )}>
-          Reset
-        </button>
+          mounted || animationPref < 1 ? "before:inset-0" : "before:-inset-2 md:before:-inset-4",
+        )}>
+        <Currency
+          key={resetCounter}
+          image={PlasmaIcon()}
+          fontStyle="text-cyan-300 font-paytone"
+          currencySelector={plasmaSelector}
+          suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
+          animateOnMount={mounted}
+        />
+        <div className="mx-2 flex flex-wrap items-start justify-center gap-2 font-sans">
+          {Object.values(UPGRADE_CONFIG.prestigeUpgrades).map((prestigeUpgrade) => {
+            if (prestigeUpgrade.visibleAtZone > highZoneEver) return null
+
+            return (
+              <PrestigeButton
+                key={prestigeUpgrade.id + resetCounter}
+                config={prestigeUpgrade}
+                onClick={onUpdatePurchase}
+                hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
+              />
+            )
+          })}
+        </div>
+
+        <div className="relative flex h-full w-full grow items-end justify-center gap-4">
+          <button
+            onClick={() => setPrestigeDialogue(true)}
+            disabled={!zoneTenComplete}
+            className={clsx(
+              "portal-btn cursor-active disabled:cursor-inactive",
+              fullAnimations ? "portal-btn-animated" : "portal-btn-simple",
+              prestigeIntent && "portal-btn-prestige z-10",
+              !zoneTenComplete && "portal-btn-disabled",
+            )}>
+            <span className="portal-btn-text">Prestige</span>
+            {fullAnimations && (
+              <>
+                <div className="portal-rings">
+                  <div className="portal-ring portal-ring-1" />
+                  <div className="portal-ring portal-ring-2" />
+                  <div className="portal-ring portal-ring-3" />
+                </div>
+              </>
+            )}
+          </button>
+          <button
+            onClick={onReset}
+            disabled={!plasmaReserved}
+            className={clsx(
+              "my-4 h-16 w-44 cursor-active rounded-md border-2 font-arial text-xl font-bold tracking-widest shadow-2xl transition-all duration-200",
+              plasmaReserved
+                ? "text-shadow-dark border-red-900 bg-gradient-to-b from-red-900 to-red-950 text-red-100 hover:border-red-800 hover:from-red-800 hover:to-red-900 hover:text-red-50 hover:shadow-red-900/50"
+                : "cursor-inactive border-red-950 bg-gradient-to-b from-red-950 to-black text-red-200/50 opacity-60",
+            )}>
+            RESET
+          </button>
+        </div>
+        <PrestigeModal
+          prestigeDialogue={prestigeDialogue}
+          prestigeIntent={prestigeIntent}
+          setPrestigeDialogue={setPrestigeDialogue}
+          initiatePrestige={initiatePrestige}
+        />
       </div>
-      <PrestigeModal
-        prestigeDialogue={prestigeDialogue}
-        prestigeIntent={prestigeIntent}
-        setPrestigeDialogue={setPrestigeDialogue}
-        initiatePrestige={initiatePrestige}
-      />
     </div>
   )
 }

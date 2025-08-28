@@ -309,9 +309,7 @@ export default function PanelIndex() {
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
             activeTab === "upgrade" && "shadow-panel-main",
-            activeTab === "prestige" && "lg:shadow-panel-prestige",
-            activeTab === "prestige" && "xl:shadow-panel-prestige-2",
-            activeTab === "prestige" && "2xl:shadow-panel-prestige-3",
+            activeTab === "prestige" && "shadow-panel-prestige",
             maskClasses && maskClasses.mask,
           )}>
           {tabs.find((tab) => tab.id === activeTab)?.component}

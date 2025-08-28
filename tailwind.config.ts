@@ -134,9 +134,10 @@ export default {
         "panel-main": `inset 1px -2px 9px #fa7305, 
         inset 2px -2px 9px #800000, 
         inset 2px -3px 9px #2e1065`,
-        "panel-prestige": "inset 1px -2px 9px #7DF9FF, inset 2px -2px 9px #0891b2, inset 2px -3px 9px #164e63",
-        "panel-prestige-2": "inset 5px 5px 13px #7DF9FF, inset -5px -3px 13px #164e63",
-        "panel-prestige-3": "inset 5px 5px 13px #7DF9FF, inset -5px -3px 13px #077692, inset -2px -5px 10px #164e63",
+        "panel-prestige":
+          " inset 3px 3px 12px #ffffff,inset -3px -3px 12px #00d4ff,0 0 20px rgba(0, 212, 255, 0.4),inset 0 0 15px rgba(255, 255, 255, 0.2)",
+        "panel-prestige-inner":
+          "inset 2px 2px 8px #f0f8ff,inset -2px -2px 8px #1e40af,inset 0 0 16px rgba(0, 212, 255, 0.5),inset 0 0 30px rgba(255, 255, 255, 0.1),0 0 20px rgba(0, 212, 255, 0.4);",
       },
       borderRadius: {
         m: "61px",

@@ -953,6 +953,171 @@ body {
   }
 }
 
+.glitch-corruption {
+  width: 200px;
+  height: 60px;
+  background: linear-gradient(90deg, #1a1a1a, #2a1a2a, #1a1a1a);
+  border: 2px solid #aa2244;
+  border-radius: 2px;
+  color: #ff4466;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  font-family: "Courier New", monospace;
+}
+
+.glitch-corruption:hover {
+  color: #ff6688;
+  border-color: #ff6688;
+}
+
+.glitch-corruption:hover::before {
+  content: "CONFIRM";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  color: #7df9ff;
+  clip: rect(0, 900px, 0, 0);
+  animation: glitch-clip-1 2s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glitch-corruption:hover::after {
+  content: "CONFIRM";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  color: #ff0088;
+  clip: rect(0, 900px, 0, 0);
+  animation: glitch-clip-2 3s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes glitch-clip-1 {
+  0% {
+    clip: rect(64px, 9999px, 66px, 0);
+  }
+  5% {
+    clip: rect(30px, 9999px, 36px, 0);
+  }
+  10% {
+    clip: rect(90px, 9999px, 94px, 0);
+  }
+  15% {
+    clip: rect(10px, 9999px, 15px, 0);
+  }
+  20% {
+    clip: rect(40px, 9999px, 42px, 0);
+  }
+  25% {
+    clip: rect(65px, 9999px, 68px, 0);
+  }
+  30% {
+    clip: rect(15px, 9999px, 20px, 0);
+  }
+  35% {
+    clip: rect(80px, 9999px, 84px, 0);
+  }
+  40% {
+    clip: rect(5px, 9999px, 10px, 0);
+  }
+  45% {
+    clip: rect(50px, 9999px, 55px, 0);
+  }
+  50% {
+    clip: rect(25px, 9999px, 30px, 0);
+  }
+  100% {
+    clip: rect(25px, 9999px, 30px, 0);
+  }
+}
+
+@keyframes glitch-clip-2 {
+  0% {
+    clip: rect(80px, 9999px, 85px, 0);
+  }
+  10% {
+    clip: rect(20px, 9999px, 25px, 0);
+  }
+  20% {
+    clip: rect(60px, 9999px, 65px, 0);
+  }
+  30% {
+    clip: rect(35px, 9999px, 40px, 0);
+  }
+  40% {
+    clip: rect(75px, 9999px, 80px, 0);
+  }
+  50% {
+    clip: rect(45px, 9999px, 50px, 0);
+  }
+  60% {
+    clip: rect(15px, 9999px, 18px, 0);
+  }
+  70% {
+    clip: rect(85px, 9999px, 90px, 0);
+  }
+  80% {
+    clip: rect(55px, 9999px, 58px, 0);
+  }
+  90% {
+    clip: rect(70px, 9999px, 75px, 0);
+  }
+  100% {
+    clip: rect(70px, 9999px, 75px, 0);
+  }
+}
+
+/* Prestige component currency flash */
+@keyframes circularFlash {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+    filter: blur(0px);
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.8;
+    filter: blur(2px);
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+.white-flash {
+  position: relative;
+}
+
+.white-flash::before {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  z-index: -1;
+  animation: circularFlash 0.5s ease-out 0.5s forwards;
+  pointer-events: none;
+}
+
 /* Upgrade panel mask */
 #panel-content {
   --mask-line1-start: 403px;

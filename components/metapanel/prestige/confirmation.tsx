@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { PrestigeUpgradeId } from "../../../models/upgrades"
 import { useAppSelector } from "../../../redux/hooks"
 import { selectGold, selectPendingPPurchases, selectPlasma } from "../../../redux/playerSlice"
 import { selectAchievementModifier, selectHeroState } from "../../../redux/shared/heroSelectors"
 import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
+import topologyURL from "../../../assets/icons/topologyBg.svg"
 import clsx from "clsx/lite"
 
 interface Props {
@@ -27,7 +27,7 @@ export default function Confirmation({ initiatePrestige }: Props) {
   const actuallyPendingUpgrades = Object.entries(pendingUpgrades).length > 0
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col overflow-hidden">
       <h2 className="mb-4 self-center border-b-2 border-frost text-2xl font-bold text-frost">
         Go backward to go forward
       </h2>
@@ -126,9 +126,16 @@ export default function Confirmation({ initiatePrestige }: Props) {
       <div className="mt-auto">
         <button
           onClick={() => initiatePrestige()}
-          className="my-4 h-16 w-40 cursor-active self-start rounded-lg border-2 border-white bg-red-600 font-sans text-2xl font-bold text-white disabled:cursor-inactive">
+          className="glitch-corruption cursor-active self-start disabled:cursor-inactive">
           Confirm
         </button>
+      </div>
+      <div className="absolute -bottom-0 left-0 -z-10 h-96 w-96 -translate-x-1/4 translate-y-1/4">
+        <img
+          src={topologyURL}
+          alt="Topology Background"
+          className="h-full w-full animate-[pulse_4s_cubic-bezier(0.4,_0,_0.6,_1)_infinite] object-contain"
+        />
       </div>
     </div>
   )
