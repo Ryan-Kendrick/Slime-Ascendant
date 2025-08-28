@@ -953,9 +953,12 @@ body {
   }
 }
 
-.glitch-corruption {
+.confirm-btn {
+  position: relative;
   width: 200px;
   height: 60px;
+  margin-left: 20px;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, #1a1a1a, #2a1a2a, #1a1a1a);
   border: 2px solid #aa2244;
   border-radius: 2px;
@@ -964,16 +967,15 @@ body {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
-  position: relative;
   font-family: "Courier New", monospace;
 }
 
-.glitch-corruption:hover {
+.confirm-btn:hover {
   color: #ff6688;
   border-color: #ff6688;
 }
 
-.glitch-corruption:hover::before {
+.confirm-btn:hover::before {
   content: "CONFIRM";
   position: absolute;
   top: 0;
@@ -989,7 +991,7 @@ body {
   justify-content: center;
 }
 
-.glitch-corruption:hover::after {
+.confirm-btn:hover::after {
   content: "CONFIRM";
   position: absolute;
   top: 0;
