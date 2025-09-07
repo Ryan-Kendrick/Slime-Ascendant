@@ -513,7 +513,8 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
       let left = e.clientX + paddingX + offset.x
       let top = e.clientY - containerRect.top - tooltipRef.current.clientHeight - paddingY + offset.y
 
-      if (left + containerRect.left + tooltipRect.width > window.innerWidth - margin) {
+      if (left + containerRect.left + tooltipRect.width + paddingX > window.innerWidth - margin) {
+        console.log("TOO BIG")
         left = window.innerWidth - tooltipRect.width - containerRect.left - paddingX - margin
       }
 

@@ -84,7 +84,7 @@ export default function Prestige() {
       }, PERFORMANCE_CONFIG.fadeoutDuration)
     }, 4000)
   }
-  function onUpdatePurchase(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
+  function updateCart(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
     const upgradeId = e.currentTarget.id as PrestigeUpgradeId
 
     dispatch(setPrestigeUpgradesPending({ upgradeId, cost, purchaseCount }))
@@ -119,7 +119,7 @@ export default function Prestige() {
               <PrestigeButton
                 key={prestigeUpgrade.id + resetCounter}
                 config={prestigeUpgrade}
-                onClick={onUpdatePurchase}
+                updateCart={updateCart}
                 showToolTip={showToolTip}
                 hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
               />

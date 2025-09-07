@@ -9,12 +9,12 @@ import clsx from "clsx/lite"
 
 interface PrestigeBtnProps {
   config: PrestigeUpgrade
-  onClick: (e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) => void
+  updateCart: (e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) => void
   showToolTip: (id: PrestigeUpgradeId | null, e?: React.MouseEvent<HTMLButtonElement>) => void
   hidden: boolean
 }
 
-export default function PrestigeButton({ config, onClick: onUpdatePurchase, showToolTip, hidden }: PrestigeBtnProps) {
+export default function PrestigeButton({ config, updateCart, showToolTip, hidden }: PrestigeBtnProps) {
   const animationPref = useAppSelector(selectAnimationPref)
   const fullAnimations = animationPref > 1
 
@@ -27,6 +27,7 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, show
 
   const [purchasePrice, setPurchasePrice] = useState(Math.ceil(costCalc(upgradeCount + purchaseCount + 1, config)))
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
+  const canPurchase = isAffordable && !hidden
 
   const formatCurrentValue = (): string => {
     if (thisUpgradeName === "multistrike") return thisUpgrade.calcModifier(upgradeCount, config).toFixed(2)
@@ -64,10 +65,12 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, show
     purchasePrice: number,
     toPurchase: number,
   ) {
+    if (!canPurchase) return
+
     const tempUpgradeCount = upgradeCount + toPurchase + 1
     const newTotalCost = purchasePrice + totalCost
 
-    onUpdatePurchase(e, newTotalCost, toPurchase + 1)
+    updateCart(e, newTotalCost, toPurchase + 1)
     setPurchasePrice(Math.ceil(thisUpgrade.cost(tempUpgradeCount + 1, config)))
   }
   return (
@@ -79,10 +82,11 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, show
       }}
       onMouseEnter={(e) => showToolTip(thisUpgradeName, e)}
       onMouseLeave={() => showToolTip(null)}
-      disabled={!isAffordable || hidden}
       className={clsx(
-        "relative flex w-56 cursor-active items-center justify-center gap-2 rounded-lg border border-cyan-500 bg-cyan-800/50 px-2 py-2 text-lg text-cyan-300 transition-[background-color,color,opacity] duration-300 disabled:cursor-inactive",
-        "hover:border-frost disabled:border-black disabled:bg-cyan-800/50 disabled:text-gray-300/80",
+        "relative flex w-56 cursor-active items-center justify-center gap-2 rounded-lg border px-2 py-2 text-lg transition-[background-color,color,opacity] duration-300",
+        canPurchase
+          ? "border-cyan-500 bg-cyan-800/50 text-cyan-300 hover:border-frost"
+          : "cursor-inactive border-black bg-cyan-800/50 text-gray-300/80",
         hidden && "button-hidden",
         isAffordable ? "affordable" : "unaffordable",
         fullAnimations ? "prestige-upgrade-btn" : "prestige-upgrade-btn-simple",
