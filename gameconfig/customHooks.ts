@@ -523,8 +523,8 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
       }
 
       return {
-        x: left + window.scrollX,
-        y: top + window.scrollY,
+        x: left,
+        y: top,
       }
     },
     [containerRef, tooltipRef],
