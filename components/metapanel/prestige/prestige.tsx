@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import { useEffect, useState } from "react"
+import { MouseEvent, useEffect, useRef, useState } from "react"
 import PrestigeButton from "./prestigeButton"
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
@@ -24,6 +24,8 @@ import { selectAnimationPref, setFading } from "../../../redux/metaSlice"
 import { PERFORMANCE_CONFIG } from "../../../gameconfig/meta"
 import Confirmation from "./confirmation"
 import topologyURL from "../../../assets/icons/topologyBg.svg"
+import PrestigeTooltip from "./prestigeTooltip"
+import { useToolTip } from "../../../gameconfig/customHooks"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
@@ -40,9 +42,23 @@ export default function Prestige() {
   const [prestigeIntent, setPrestigeIntent] = useState(false)
   const [resetCounter, setResetCounter] = useState(0)
   const [mounted, setMounted] = useState(false)
+  const [hoveredUpgrade, setHoveredUpdate] = useState<PrestigeUpgradeId | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+
+  const { position, setIsVisible, isPositionReady } = useToolTip({
+    containerRef,
+    tooltipRef,
+  })
+
+  const showToolTip = (prestigeUpgrade: PrestigeUpgradeId | null, e?: MouseEvent<HTMLButtonElement>) => {
+    setHoveredUpdate(prestigeUpgrade)
+    //@ts-ignore - linter won't accept union between dom event and virtualdom event types :(
+    setIsVisible(!!prestigeUpgrade, e)
+  }
 
   useEffect(() => {
-    const hasPendingUpgrades = Object.entries(pendingUpgrades).length > 0
+    const hasPendingUpgrades = Object.entries(pendingUpgrades).length === 1
 
     if (hasPendingUpgrades) {
       const img = new Image()
@@ -68,7 +84,6 @@ export default function Prestige() {
       }, PERFORMANCE_CONFIG.fadeoutDuration)
     }, 4000)
   }
-
   function onUpdatePurchase(e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) {
     const upgradeId = e.currentTarget.id as PrestigeUpgradeId
 
@@ -77,7 +92,7 @@ export default function Prestige() {
   }
 
   return (
-    <div className="p-2 md:p-4">
+    <div ref={containerRef} className="p-2 md:p-4">
       <div
         className={clsx(
           "relative flex h-full min-h-[722px] flex-col rounded-lg bg-cyan-900/60 p-3 transition-all",
@@ -105,6 +120,7 @@ export default function Prestige() {
                 key={prestigeUpgrade.id + resetCounter}
                 config={prestigeUpgrade}
                 onClick={onUpdatePurchase}
+                showToolTip={showToolTip}
                 hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
               />
             )
@@ -149,6 +165,12 @@ export default function Prestige() {
           prestigeIntent={prestigeIntent}
           setPrestigeDialogue={setPrestigeDialogue}
           initiatePrestige={initiatePrestige}
+        />
+        <PrestigeTooltip
+          visible={!!hoveredUpgrade && isPositionReady}
+          position={position}
+          tooltipRef={tooltipRef}
+          hoveredUpgrade={hoveredUpgrade}
         />
       </div>
     </div>

@@ -118,7 +118,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 0.05,
       modifier: 0.05,
       visibleAtZone: 10,
-      tooltip: "Increase damage by 5%",
+      tooltip: "Increases damage by 5% per level",
     },
     "crit-chance": {
       id: "crit-chance",
@@ -131,7 +131,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 0.05,
       modifier: 0.01,
       visibleAtZone: 20,
-      tooltip: "Increase critical hit chance by 1%",
+      tooltip: "Increases critical hit chance by 1% per level",
     },
     multistrike: {
       id: "multistrike",
@@ -144,7 +144,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 40,
       modifier: 0.02,
       visibleAtZone: 25,
-      tooltip: "Reduce multistrike cooldown by 2%",
+      tooltip: "Reduces multistrike cooldown by 2% per level",
     },
     beat: {
       id: "beat",
@@ -157,7 +157,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 3,
       modifier: 0.2,
       visibleAtZone: 30,
-      tooltip: "Increase Stalactide damage by 20%",
+      tooltip: "Increase Stalactide damage by 20% per level",
     },
   },
 

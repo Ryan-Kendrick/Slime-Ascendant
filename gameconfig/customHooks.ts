@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
 import {
   clearCatchUpTime,
@@ -12,7 +12,6 @@ import {
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName } from "../models/upgrades"
 import { PERFORMANCE_CONFIG } from "./meta"
-import { dot } from "node:test/reporters"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -481,4 +480,96 @@ export const useKeypressEasterEgg = () => {
     }
   }, [])
   return shouldConfetti
+}
+
+interface ToolTipProps {
+  containerRef: React.RefObject<HTMLElement>
+  tooltipRef: React.RefObject<HTMLDivElement>
+}
+
+type Position = {
+  x: number
+  y: number
+}
+
+export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 })
+  const [isPositionReady, setPositionReady] = useState(false)
+  const animationFrame = useRef(0)
+
+  const calculatePosition = useCallback(
+    (e: MouseEvent): Position => {
+      if (!tooltipRef.current || !containerRef.current) return { x: 0, y: 0 }
+
+      const containerRect = containerRef.current.getBoundingClientRect()
+      const tooltipRect = tooltipRef.current.getBoundingClientRect()
+
+      const offset = { x: 24, y: -16 }
+      const margin = 4
+      const paddingY = 12
+      const paddingX = 16
+
+      let left = e.clientX + paddingX + offset.x
+      let top = e.clientY - containerRect.top - tooltipRef.current.clientHeight - paddingY + offset.y
+
+      if (left + containerRect.left + tooltipRect.width > window.innerWidth - margin) {
+        left = window.innerWidth - tooltipRect.width - containerRect.left - paddingX - margin
+      }
+
+      if (top + containerRect.top + paddingY < margin) {
+        top = -containerRect.top - paddingY + margin
+      }
+
+      return {
+        x: left + window.scrollX,
+        y: top + window.scrollY,
+      }
+    },
+    [containerRef, tooltipRef],
+  )
+
+  const setVisibility = useCallback(
+    (visible: boolean, e?: MouseEvent) => {
+      setIsVisible(visible)
+      if (visible && e) {
+        const newPosition = calculatePosition(e)
+        setPosition(newPosition)
+        setPositionReady(true)
+      } else if (!visible) {
+        setPositionReady(false)
+      }
+    },
+    [calculatePosition],
+  )
+
+  useEffect(() => {
+    if (!containerRef.current || !tooltipRef.current) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current)
+      }
+
+      if (!tooltipRef || !tooltipRef.current) return
+
+      if (isVisible) {
+        animationFrame.current = requestAnimationFrame(() => {
+          const newPosition = calculatePosition(e)
+          setPosition(newPosition)
+        })
+      }
+    }
+    const container = containerRef.current
+    container.addEventListener("mousemove", handleMouseMove, { passive: true })
+
+    return () => {
+      container.removeEventListener("mousemove", handleMouseMove)
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current)
+      }
+    }
+  }, [isVisible, isPositionReady, tooltipRef, containerRef, calculatePosition])
+
+  return { position, setIsVisible: setVisibility, isPositionReady }
 }

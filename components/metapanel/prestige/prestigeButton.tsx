@@ -1,19 +1,20 @@
-import clsx from "clsx/lite"
 import { useState } from "react"
-import { PrestigeUpgrade } from "../../../models/upgrades"
+import { PrestigeUpgrade, PrestigeUpgradeId } from "../../../models/upgrades"
 import { prestigeUpgradeMap } from "../../../redux/shared/maps"
 import { useAppSelector } from "../../../redux/hooks"
 import { selectPCanAfford } from "../../../redux/playerSlice"
 import { MinPlasmaIcon } from "../../svgIcons/resourceIcons"
 import { selectAnimationPref } from "../../../redux/metaSlice"
+import clsx from "clsx/lite"
 
 interface PrestigeBtnProps {
   config: PrestigeUpgrade
   onClick: (e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) => void
+  showToolTip: (id: PrestigeUpgradeId | null, e?: React.MouseEvent<HTMLButtonElement>) => void
   hidden: boolean
 }
 
-export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidden }: PrestigeBtnProps) {
+export default function PrestigeButton({ config, onClick: onUpdatePurchase, showToolTip, hidden }: PrestigeBtnProps) {
   const animationPref = useAppSelector(selectAnimationPref)
   const fullAnimations = animationPref > 1
 
@@ -76,6 +77,8 @@ export default function PrestigeButton({ config, onClick: onUpdatePurchase, hidd
       onClick={(e) => {
         onSelectPrestigeUpgrade(e, upgradeCount, purchasePrice, purchaseCount)
       }}
+      onMouseEnter={(e) => showToolTip(thisUpgradeName, e)}
+      onMouseLeave={() => showToolTip(null)}
       disabled={!isAffordable || hidden}
       className={clsx(
         "relative flex w-56 cursor-active items-center justify-center gap-2 rounded-lg border border-cyan-500 bg-cyan-800/50 px-2 py-2 text-lg text-cyan-300 transition-[background-color,color,opacity] duration-300 disabled:cursor-inactive",
