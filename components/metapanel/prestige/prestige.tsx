@@ -40,6 +40,7 @@ export default function Prestige() {
 
   const [prestigeDialogue, setPrestigeDialogue] = useState(false)
   const [prestigeIntent, setPrestigeIntent] = useState(false)
+  const [toucherCounter, setTouchCounter] = useState(0)
   const [resetCounter, setResetCounter] = useState(0)
   const [mounted, setMounted] = useState(false)
   const [hoveredUpgrade, setHoveredUpdate] = useState<PrestigeUpgradeId | null>(null)
@@ -52,10 +53,17 @@ export default function Prestige() {
   })
 
   const showToolTip = (prestigeUpgrade: PrestigeUpgradeId | null, e?: MouseEvent<HTMLButtonElement>) => {
+    if (hoveredUpgrade && prestigeUpgrade) setTouchCounter(0)
+
     setHoveredUpdate(prestigeUpgrade)
     //@ts-ignore - linter won't accept union between dom event and virtualdom event types :(
-    setIsVisible(!!prestigeUpgrade, e)
+    setIsVisible(prestigeUpgrade, e)
   }
+
+  useEffect(() => {
+    // Require two touches on mobile
+    if (toucherCounter > 0 && !isPositionReady) setTouchCounter(0)
+  }, [isPositionReady, toucherCounter])
 
   useEffect(() => {
     const hasPendingUpgrades = Object.entries(pendingUpgrades).length === 1
@@ -118,10 +126,11 @@ export default function Prestige() {
             return (
               <PrestigeButton
                 key={prestigeUpgrade.id + resetCounter}
+                hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
                 config={prestigeUpgrade}
                 updateCart={updateCart}
                 showToolTip={showToolTip}
-                hidden={highZoneEver < prestigeUpgrade.visibleAtZone}
+                touchState={{ counter: toucherCounter, setTouchCounter: setTouchCounter }}
               />
             )
           })}

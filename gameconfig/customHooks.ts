@@ -10,7 +10,7 @@ import {
   setOTPPos,
 } from "../redux/metaSlice"
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
-import { HeroName } from "../models/upgrades"
+import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
 import { PERFORMANCE_CONFIG } from "./meta"
 
 export function useForcedDPI(): number {
@@ -531,7 +531,8 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
   )
 
   const setVisibility = useCallback(
-    (visible: boolean, e?: MouseEvent) => {
+    (prestigeUpgradeId: PrestigeUpgradeId, e?: MouseEvent) => {
+      const visible = !!prestigeUpgradeId
       setIsVisible(visible)
       if (visible && e) {
         const newPosition = calculatePosition(e)

@@ -9,12 +9,13 @@ import clsx from "clsx/lite"
 
 interface PrestigeBtnProps {
   config: PrestigeUpgrade
+  hidden: boolean
   updateCart: (e: React.MouseEvent<HTMLButtonElement>, cost: number, purchaseCount: number) => void
   showToolTip: (id: PrestigeUpgradeId | null, e?: React.MouseEvent<HTMLButtonElement>) => void
-  hidden: boolean
+  touchState: { counter: number; setTouchCounter: (count: number) => void }
 }
 
-export default function PrestigeButton({ config, updateCart, showToolTip, hidden }: PrestigeBtnProps) {
+export default function PrestigeButton({ config, hidden, updateCart, showToolTip, touchState }: PrestigeBtnProps) {
   const animationPref = useAppSelector(selectAnimationPref)
   const fullAnimations = animationPref > 1
 
@@ -66,6 +67,12 @@ export default function PrestigeButton({ config, updateCart, showToolTip, hidden
     toPurchase: number,
   ) {
     if (!canPurchase) return
+    const pointer = (e.nativeEvent as PointerEvent).pointerType
+    if (pointer === "touch") {
+      const touchCount = touchState.counter + 1
+      touchState.setTouchCounter(touchCount)
+      if (touchCount < 2) return
+    }
 
     const tempUpgradeCount = upgradeCount + toPurchase + 1
     const newTotalCost = purchasePrice + totalCost
