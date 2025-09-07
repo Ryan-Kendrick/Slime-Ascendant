@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { PrestigeUpgrade, PrestigeUpgradeId } from "../../../models/upgrades"
 import { prestigeUpgradeMap } from "../../../redux/shared/maps"
 import { useAppSelector } from "../../../redux/hooks"
@@ -24,9 +24,13 @@ export default function PrestigeButton({ config, hidden, updateCart, showToolTip
   const upgradeCount = useAppSelector(thisUpgrade.selector)
   const pendingPurchases = useAppSelector(thisUpgrade.pendingPurchases || (() => ({ cost: 0, purchaseCount: 0 })))
   const { cost: totalCost, purchaseCount } = pendingPurchases || { cost: 0, purchaseCount: 0 }
-  const costCalc = thisUpgrade.cost
+  const calcCost = thisUpgrade.cost
+  const calcPurchasePrice = useMemo(
+    () => Math.ceil(calcCost(upgradeCount + purchaseCount + 1, config)),
+    [upgradeCount, purchaseCount, calcCost, config],
+  )
 
-  const [purchasePrice, setPurchasePrice] = useState(Math.ceil(costCalc(upgradeCount + purchaseCount + 1, config)))
+  const [purchasePrice, setPurchasePrice] = useState(calcPurchasePrice)
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
   const canPurchase = isAffordable && !hidden
 

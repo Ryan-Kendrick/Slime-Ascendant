@@ -504,34 +504,24 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
 
       const containerRect = containerRef.current.getBoundingClientRect()
       const tooltipRect = tooltipRef.current.getBoundingClientRect()
+      const { clientX, clientY } = e
 
-      const offset = { x: 24, y: -16 }
+      const offset = { x: 40, y: -28 }
       const margin = 4
-      const paddingY = 12
-      const paddingX = 16
 
-      let left = e.clientX + paddingX + offset.x
-      let top = e.clientY - containerRect.top - tooltipRef.current.clientHeight - paddingY + offset.y
+      let left = clientX + offset.x
+      let top = clientY - containerRect.top - tooltipRect.height + offset.y
 
-      if (left + containerRect.left + tooltipRect.width + paddingX > window.innerWidth - margin) {
-        console.log("TOO BIG")
-        left = window.innerWidth - tooltipRect.width - containerRect.left - paddingX - margin
-      }
+      left = Math.min(left, window.innerWidth - tooltipRect.width - containerRect.left - margin)
+      top = Math.max(top, -containerRect.top + margin)
 
-      if (top + containerRect.top + paddingY < margin) {
-        top = -containerRect.top - paddingY + margin
-      }
-
-      return {
-        x: left,
-        y: top,
-      }
+      return { x: left, y: top }
     },
     [containerRef, tooltipRef],
   )
 
   const setVisibility = useCallback(
-    (prestigeUpgradeId: PrestigeUpgradeId, e?: MouseEvent) => {
+    (prestigeUpgradeId: PrestigeUpgradeId | null, e?: MouseEvent) => {
       const visible = !!prestigeUpgradeId
       setIsVisible(visible)
       if (visible && e) {
@@ -571,7 +561,7 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
         cancelAnimationFrame(animationFrame.current)
       }
     }
-  }, [isVisible, isPositionReady, tooltipRef, containerRef, calculatePosition])
+  }, [isVisible, tooltipRef, containerRef, calculatePosition])
 
   return { position, setIsVisible: setVisibility, isPositionReady }
 }
