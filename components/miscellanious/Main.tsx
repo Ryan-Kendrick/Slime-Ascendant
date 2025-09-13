@@ -19,19 +19,10 @@ export default function Main() {
   const dispatch = useAppDispatch()
 
   const delta = useAppSelector(selectLongCatchupDelta)
-  const longCatchupProcessed = useAppSelector(selectLongCatchupProcessed)
   const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
   const dotDamage = useAppSelector(selectDotDamage)
   const beatDamage = useAppSelector(selectBeatDamage)
   const loading = useAppSelector(selectLoading)
-
-  const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
-
-  // Interface between requestAnimationFrame and React to prevent infinite catchup loops
-  useEffect(() => {
-    lastSaveCatchUpRef.current = lastSaveCatchUp
-  }, [lastSaveCatchUp])
-  console.log(delta)
 
   useGameEngine({ dotDamage, beatDamage, loading, lastSaveCatchUp })
 

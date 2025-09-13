@@ -97,14 +97,6 @@ export function useGameEngine(props: EngineProps) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  const runTasks = (saving: boolean) => {
-    // 30 seconds
-
-    if (saving && tickCount.current % 600 === 0) {
-      dispatch(saveGame())
-    }
-  }
-
   const dealDamageOverTime = () => {
     if (dotDamageRef.current > 0) {
       const damageThisTick = dotDamageRef.current / 20
@@ -121,12 +113,14 @@ export function useGameEngine(props: EngineProps) {
     let processedBeats = 0
 
     const useBeatCatchup = beatDamage > 0 && beatDelta >= BEAT_TIME * 2
+    console.log(delta)
     while (delta >= TICK_TIME) {
       tickCount.current++
 
       dealDamageOverTime()
-      // More than 30 seconds behind, use catchup flag to prevent save spam
-      runTasks(saving)
+
+      // Save every 30s during normal gameplay
+      if (saving && tickCount.current % 600 === 0) dispatch(saveGame())
 
       // Process beats in catchup mode;
       if (useBeatCatchup) {
