@@ -6,6 +6,7 @@ import { selectPCanAfford } from "../../../redux/playerSlice"
 import { MinPlasmaIcon } from "../../svgIcons/resourceIcons"
 import { selectAnimationPref } from "../../../redux/metaSlice"
 import clsx from "clsx/lite"
+import { formatCurrPValue, formatPendingPIncrease } from "../../../gameconfig/utils"
 
 interface PrestigeBtnProps {
   config: PrestigeUpgrade
@@ -34,35 +35,24 @@ export default function PrestigeButton({ config, hidden, updateCart, showToolTip
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
   const canPurchase = isAffordable && !hidden
 
-  const formatCurrentValue = (): string => {
-    if (thisUpgradeName === "multistrike") return thisUpgrade.calcModifier(upgradeCount, config).toFixed(2)
-    if (upgradeCount === 1) return (config.baseValue * 100).toFixed(0)
-    if (upgradeCount > 1) return (thisUpgrade.calcModifier(upgradeCount, config) * 100).toFixed(0)
-    return "0"
-  }
-
-  const formatPendingIncrease = (): string => {
-    let pendingInc: number
-
-    if (thisUpgradeName === "multistrike") {
-      if (upgradeCount === 0 && purchaseCount === 1) {
-        pendingInc = config.baseValue
-      } else {
-        const current = thisUpgrade.calcModifier(upgradeCount, config)
-        const after = thisUpgrade.calcModifier(purchaseCount + upgradeCount, config)
-
-        pendingInc = Math.round(current * 100 - after * 100) / 100
-      }
-    } else if (purchaseCount === 1 && upgradeCount === 0) {
-      pendingInc = Math.round(config.baseValue * 100)
-    } else if (upgradeCount === 0 && purchaseCount > 1) {
-      pendingInc = Math.round(thisUpgrade.calcModifier(purchaseCount, config) * 100)
-    } else {
-      pendingInc = Math.round(thisUpgrade.calcModifierIncrease(purchaseCount, config) * 100)
-    }
-
-    return pendingInc.toFixed(2)
-  }
+  const currentValue = useMemo(
+    () => formatCurrPValue(thisUpgradeName, upgradeCount, config, thisUpgrade.calcModifier),
+    [thisUpgradeName, upgradeCount, config, thisUpgrade],
+  )
+  const pendingIncrease = useMemo(
+    () =>
+      purchaseCount > 0
+        ? formatPendingPIncrease(
+            thisUpgradeName,
+            upgradeCount,
+            purchaseCount,
+            config,
+            thisUpgrade.calcModifier,
+            thisUpgrade.calcModifierIncrease,
+          )
+        : null,
+    [thisUpgradeName, upgradeCount, purchaseCount, config, thisUpgrade],
+  )
 
   function onSelectPrestigeUpgrade(
     e: React.MouseEvent<HTMLButtonElement>,
@@ -118,14 +108,14 @@ export default function PrestigeButton({ config, hidden, updateCart, showToolTip
         <div>
           {upgradeCount > 0 && (
             <p>
-              {config.modDescription}: {formatCurrentValue()}
+              {config.modDescription}: {currentValue}
               {config.modSuffix}
               {purchaseCount > 0 && (
                 <span className="pl-1">
                   {upgradeCount === 0 && `${config.modDescription}: 0 `}
                   {thisUpgradeName === "multistrike" && upgradeCount === 0
-                    ? `(+${Math.abs(Number(formatPendingIncrease()))}${config.modSuffix})` // Hack to display cooldown as a gain at level 0
-                    : `(${config.changePrefix}${formatPendingIncrease()}${config.modSuffix})`}
+                    ? `(+${Math.abs(Number(pendingIncrease))}${config.modSuffix})` // Hack to display cooldown as a gain at level 0
+                    : `(${config.changePrefix}${pendingIncrease}${config.modSuffix})`}
                 </span>
               )}
             </p>

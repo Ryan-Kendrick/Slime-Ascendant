@@ -7,6 +7,7 @@ import { initialState as initialMetaState } from "../redux/metaSlice"
 import * as LZString from "lz-string"
 import { METADATA_CONFIG, PERFORMANCE_CONFIG } from "./meta"
 import { UPGRADE_CONFIG } from "./upgrades"
+import { PrestigeUpgrade, PrestigeUpgradeId } from "../models/upgrades"
 
 export function serialize(classInstance) {
   if (classInstance == null || typeof classInstance !== "object") return classInstance
@@ -44,6 +45,50 @@ export function formatSmallNumber(num: number): string {
   }
 
   return num.toString()
+}
+
+type ModifierCalculation = (atLevel: number, prestigeUpgrade: PrestigeUpgrade) => number
+
+export const formatCurrPValue = (
+  upgradeName: PrestigeUpgradeId,
+  upgradeCount: number,
+  config: PrestigeUpgrade,
+  calcModifier: ModifierCalculation,
+): string => {
+  if (upgradeName === "multistrike") return calcModifier(upgradeCount, config).toFixed(2)
+  if (upgradeCount === 1) return (config.baseValue * 100).toFixed(0)
+  if (upgradeCount > 1) return (calcModifier(upgradeCount, config) * 100).toFixed(0)
+  return "0"
+}
+
+export const formatPendingPIncrease = (
+  upgradeName: string,
+  upgradeCount: number,
+  purchaseCount: number,
+  config: PrestigeUpgrade,
+  calcModifier: ModifierCalculation,
+  calcModifierIncrease: ModifierCalculation,
+): string => {
+  let pendingInc: number
+
+  if (upgradeName === "multistrike") {
+    if (upgradeCount === 0 && purchaseCount === 1) {
+      pendingInc = config.baseValue
+    } else {
+      const current = calcModifier(upgradeCount, config)
+      const after = calcModifier(purchaseCount + upgradeCount, config)
+
+      pendingInc = Math.round(current * 100 - after * 100) / 100
+    }
+  } else if (purchaseCount === 1 && upgradeCount === 0) {
+    pendingInc = Math.round(config.baseValue * 100)
+  } else if (upgradeCount === 0 && purchaseCount > 1) {
+    pendingInc = Math.round(calcModifier(purchaseCount, config) * 100)
+  } else {
+    pendingInc = Math.round(calcModifierIncrease(purchaseCount, config) * 100)
+  }
+
+  return pendingInc.toFixed(2)
 }
 
 export const getNextCritPosition = (

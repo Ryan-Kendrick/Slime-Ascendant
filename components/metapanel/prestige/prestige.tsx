@@ -42,7 +42,7 @@ export default function Prestige() {
   const [prestigeIntent, setPrestigeIntent] = useState(false)
   const [toucherCounter, setTouchCounter] = useState(0)
   const [resetCounter, setResetCounter] = useState(0)
-  const [mounted, setMounted] = useState(false)
+  const [animateMount, setAnimateMount] = useState(false)
   const [hoveredUpgrade, setHoveredUpdate] = useState<PrestigeUpgradeId | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
@@ -75,7 +75,7 @@ export default function Prestige() {
   }, [pendingUpgrades])
 
   useEffect(() => {
-    setTimeout(() => setMounted(true), 200)
+    setTimeout(() => setAnimateMount(true), 200)
   }, [])
 
   const onReset = () => {
@@ -109,7 +109,7 @@ export default function Prestige() {
           "before:pointer-events-none before:absolute before:rounded-lg before:transition-all before:duration-500 before:ease-out before:content-['']",
           "before:border-2 before:border-cyan-500/50 before:shadow-panel-prestige-inner",
 
-          mounted || animationPref < 1 ? "before:inset-0" : "before:-inset-2 md:before:-inset-4",
+          animateMount || animationPref < 1 ? "before:inset-0" : "before:-inset-2 md:before:-inset-4",
         )}>
         <Currency
           key={resetCounter}
@@ -117,7 +117,7 @@ export default function Prestige() {
           fontStyle="text-cyan-300 font-paytone"
           currencySelector={plasmaSelector}
           suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
-          animateOnMount={mounted}
+          animateOnMount={animateMount}
         />
         <div className="mx-2 flex flex-wrap items-start justify-center gap-2 font-sans">
           {Object.values(UPGRADE_CONFIG.prestigeUpgrades).map((prestigeUpgrade) => {

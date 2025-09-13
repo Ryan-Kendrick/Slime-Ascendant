@@ -182,7 +182,6 @@ export const prestigeUpgradeMap: PrestigeUpgradeMap = {
     cost: UPGRADE_CONFIG.calcMultiplicativePrice,
     calcModifier: UPGRADE_CONFIG.calcAdditiveMod,
     calcModifierIncrease: UPGRADE_CONFIG.calcAdditiveModIncrease,
-
     pendingPurchases: (state) => selectPendingPCritChance(state),
   },
   multistrike: {

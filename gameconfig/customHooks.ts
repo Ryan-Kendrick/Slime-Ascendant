@@ -508,13 +508,15 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
 
       const offset = { x: 40, y: -28 }
       const margin = 4
+      const tooltipHeight = 96
 
       let left = clientX + offset.x
-      let top = clientY - containerRect.top - tooltipRect.height + offset.y
+      let top = clientY - containerRect.top - tooltipHeight + offset.y
 
       left = Math.min(left, window.innerWidth - tooltipRect.width - containerRect.left - margin)
       top = Math.max(top, -containerRect.top + margin)
 
+      console.log(left, top)
       return { x: left, y: top }
     },
     [containerRef, tooltipRef],
