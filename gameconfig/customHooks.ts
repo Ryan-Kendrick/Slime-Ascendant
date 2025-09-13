@@ -6,7 +6,9 @@ import {
   selectBreakpoint,
   selectOTPPos,
   setBreakpoint,
+  setFullScreenCatchup,
   setLoading,
+  setLongCatchupDelta,
   setOTPPos,
 } from "../redux/metaSlice"
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
@@ -95,9 +97,9 @@ export function useGameEngine(props: EngineProps) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  const runTasks = (catchup?: boolean) => {
+  const runTasks = (noSaving?: boolean) => {
     // 30 seconds
-    if (!catchup && tickCount.current % 600 === 0) {
+    if (!noSaving && tickCount.current % 600 === 0) {
       dispatch(saveGame())
     }
   }
@@ -113,7 +115,7 @@ export function useGameEngine(props: EngineProps) {
     dispatch(updateBeatDamageDealt(beatDamage))
   }
 
-  const handleProgress = (delta: number, beatDelta: number): number[] => {
+  const handleProgress = (delta: number, beatDelta: number, noSaving?: true): number[] => {
     let processedDelta = 0
     let processedBeats = 0
 
@@ -123,7 +125,7 @@ export function useGameEngine(props: EngineProps) {
 
       dealDamageOverTime()
       // More than 30 seconds behind, use catchup flag to prevent save spam
-      if (delta >= 30000) {
+      if (noSaving) {
         runTasks(true)
       } else {
         runTasks()
@@ -152,30 +154,32 @@ export function useGameEngine(props: EngineProps) {
     beatDelta: number
     longCatchup: boolean
   }): Promise<number[]> => {
-    dispatch(setLoading(true))
-    await new Promise((resolve) => setTimeout(resolve, 0))
-
     let { delta, beatDelta } = props
     const longCatchup = props.longCatchup
 
-    try {
-      if (longCatchup) {
-        // TODO: Fullscreen catchup with asynchronous break
-        // Split into chunks, await new Promise(resolve => setTimeout(resolve, 0))
-        console.warn("Reduced offline progression to 1 hour because long catchup is yet to be implemented")
-        delta = 3600000
-        beatDelta = 3600000
-        ;[delta, beatDelta] = handleProgress(delta, beatDelta)
-      } else {
-        // console.log("Processing offline ticks:", delta / TICK_RATE)
-        ;[delta, beatDelta] = handleProgress(delta, beatDelta)
+    if (longCatchup) {
+      dispatch(setFullScreenCatchup(delta))
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
+      const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
+
+      while (delta > TICK_TIME) {
+        let chunk = Math.min(delta, MAX_CHUNK_SIZE)
+        ;[chunk] = handleProgress(chunk, chunk)
+        delta -= chunk
+        dispatch(setLongCatchupDelta(delta))
+        await new Promise((resolve) => setTimeout(resolve, 0))
       }
-    } catch (err) {
-      console.error("Offline progress failed:", err)
-    } finally {
+
+      dispatch(setFullScreenCatchup(0))
+    } else {
+      dispatch(setLoading(true))
+      await new Promise((resolve) => setTimeout(resolve, 0))
+      ;[delta, beatDelta] = handleProgress(delta, beatDelta)
       dispatch(setLoading(false))
-      dispatch(clearCatchUpTime())
     }
+
+    dispatch(clearCatchUpTime())
     return [delta, beatDelta]
   }
 
@@ -183,23 +187,27 @@ export function useGameEngine(props: EngineProps) {
     let delta: number
     let beatDelta = 0
     if (lastSaveCatchUpRef.current) {
-      delta = Date.now() - lastSaveCatchUpRef.current // Use unix time
+      delta = Date.now() - lastSaveCatchUpRef.current // Use unix time for catchup
       beatDelta = delta
     } else {
-      delta = currentTime - lastLoopTime.current // Use application time
+      delta = currentTime - lastLoopTime.current // Use application time for RAF loop
       if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
     }
-    const longCatchup = delta > 3600000 // 1 hour
+    const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
     const handleCatchUp = async () => {
+      const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
+
       ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
       if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
       frameRef.current = requestAnimationFrame(gameLoop)
     }
 
-    if (delta <= 600000) {
-      if (beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2) {
+    if (onRegularTime) {
+      const shouldBeatNow = beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2
+
+      if (shouldBeatNow) {
         dealDamageOnBeat()
         beatDelta -= BEAT_TIME
       }
@@ -209,8 +217,9 @@ export function useGameEngine(props: EngineProps) {
       frameRef.current = requestAnimationFrame(gameLoop)
       if (loading) dispatch(setLoading(false))
       return
+    } else {
+      handleCatchUp()
     }
-    handleCatchUp()
   }
 
   useEffect(() => {
@@ -464,7 +473,6 @@ export const useKeypressEasterEgg = () => {
 
       if (keys.length === phrase.length) {
         for (let i = 0; i < keys.length; i++) {
-          console.log(shouldConfetti, keys[i], phrase[i])
           if (keys[i] !== phrase[i]) return false
           if (i === 7 && keys[i] === phrase[i]) {
             setShouldConfetti(true)
@@ -508,7 +516,7 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
 
       const offset = { x: 40, y: -28 }
       const margin = 4
-      const tooltipHeight = 96
+      const tooltipHeight = 96 // Greater than expected height to ensure visual stability
 
       let left = clientX + offset.x
       let top = clientY - containerRect.top - tooltipHeight + offset.y
@@ -516,7 +524,6 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
       left = Math.min(left, window.innerWidth - tooltipRect.width - containerRect.left - margin)
       top = Math.max(top, -containerRect.top + margin)
 
-      console.log(left, top)
       return { x: left, y: top }
     },
     [containerRef, tooltipRef],

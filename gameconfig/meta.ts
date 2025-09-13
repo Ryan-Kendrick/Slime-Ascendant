@@ -5,7 +5,13 @@ export const METADATA_CONFIG = {
 } as const
 
 export const PERFORMANCE_CONFIG = {
+  catchup: {
+    shortBreakpoint: 600000, // 10 minutes
+    longBreakpoint: 3600000, // 60 minutes
+    chunkSize: 600000, // 10 minutes
+  },
+
   critDisplayLimit: 10,
-  fadeoutDuration: 2500, // Duration in milliseconds for fade out effect
+  fadeoutDuration: 2500, // Crit fadeout effect duration in milliseconds
   bpm: 89,
 } as const

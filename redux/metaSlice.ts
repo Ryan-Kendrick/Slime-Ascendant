@@ -11,6 +11,8 @@ export const initialState = {
   lastPlayed: Date.now(),
   lastSaveCatchUp: null as number | null,
   loading: false,
+  fullscreenCatchup: 0,
+  longCatchupDelta: 0,
   fading: false,
   OTPPos: constructOTPPosArr(),
   animationPref: 2, // Low: 0, Medium: 1, High: 2
@@ -35,6 +37,12 @@ export const metaSlice = createSlice({
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
+    },
+    setFullScreenCatchup: (state, action: PayloadAction<number>) => {
+      state.fullscreenCatchup = action.payload
+    },
+    setLongCatchupDelta: (state, action: PayloadAction<number>) => {
+      state.longCatchupDelta = action.payload
     },
     setFading: (state, action: PayloadAction<boolean>) => {
       state.fading = action.payload
@@ -71,11 +79,26 @@ export const metaSlice = createSlice({
   },
 })
 
-export const { saveGame, clearCatchUpTime, setLoading, setFading, setOTPPos, setBreakpoint, toggleAnimationPref } =
-  metaSlice.actions
+export const {
+  saveGame,
+  clearCatchUpTime,
+  setLoading,
+  setFullScreenCatchup,
+  setLongCatchupDelta,
+  setFading,
+  setOTPPos,
+  setBreakpoint,
+  toggleAnimationPref,
+} = metaSlice.actions
 
 export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCatchUp
 export const selectLoading = (state: RootState) => state.meta.loading
+export const selectFullscreenCatchup = (state: RootState) => state.meta.fullscreenCatchup
+// export const selectLongCatchupDelta = createSelector(
+//   [(state: RootState) => state.meta.longCatchupDelta],
+//   (deltaArr) => deltaArr,
+// )
+export const selectLongCatchupDelta = (state: RootState) => state.meta.longCatchupDelta
 export const selectFading = (state: RootState) => state.meta.fading
 export const selectBreakpoint = (state: RootState) => state.meta.breakpoint
 export const selectOTPPos = (hero: HeroName) =>
@@ -83,7 +106,6 @@ export const selectOTPPos = (hero: HeroName) =>
     return otpPos[heroIndex]
   })
 export const selectAnimationPref = (state: RootState) => state.meta.animationPref
-// export const selectOTPPos = (hero: HeroName) => (state: RootState) => state.meta.OTPPos[heroIndexMap[hero]]
 
 export default metaSlice.reducer
 
