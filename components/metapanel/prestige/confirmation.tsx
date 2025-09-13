@@ -123,7 +123,7 @@ export default function Confirmation({ initiatePrestige }: Props) {
           </ul>
         </div>
       </div>
-      <div className="mt-auto min-h-[120px]">
+      <div className="mt-auto min-h-[120px] pt-7">
         <button
           onClick={() => initiatePrestige()}
           className="confirm-btn cursor-active self-start disabled:cursor-inactive">
