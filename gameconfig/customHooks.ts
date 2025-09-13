@@ -6,7 +6,7 @@ import {
   selectBreakpoint,
   selectOTPPos,
   setBreakpoint,
-  setFullScreenCatchup,
+  setLongCatchupProcessed,
   setLoading,
   setLongCatchupDelta,
   setOTPPos,
@@ -97,9 +97,10 @@ export function useGameEngine(props: EngineProps) {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
 
-  const runTasks = (noSaving?: boolean) => {
+  const runTasks = (saving: boolean) => {
     // 30 seconds
-    if (!noSaving && tickCount.current % 600 === 0) {
+
+    if (saving && tickCount.current % 600 === 0) {
       dispatch(saveGame())
     }
   }
@@ -115,7 +116,7 @@ export function useGameEngine(props: EngineProps) {
     dispatch(updateBeatDamageDealt(beatDamage))
   }
 
-  const handleProgress = (delta: number, beatDelta: number, noSaving?: true): number[] => {
+  const handleProgress = (delta: number, beatDelta: number, saving: boolean): number[] => {
     let processedDelta = 0
     let processedBeats = 0
 
@@ -125,11 +126,7 @@ export function useGameEngine(props: EngineProps) {
 
       dealDamageOverTime()
       // More than 30 seconds behind, use catchup flag to prevent save spam
-      if (noSaving) {
-        runTasks(true)
-      } else {
-        runTasks()
-      }
+      runTasks(saving)
 
       // Process beats in catchup mode;
       if (useBeatCatchup) {
@@ -140,9 +137,6 @@ export function useGameEngine(props: EngineProps) {
         }
       }
 
-      if (lastSaveCatchUpRef.current && delta <= 100) {
-        dispatch(clearCatchUpTime())
-      }
       delta -= TICK_TIME
       processedDelta += TICK_TIME
     }
@@ -158,24 +152,27 @@ export function useGameEngine(props: EngineProps) {
     const longCatchup = props.longCatchup
 
     if (longCatchup) {
-      dispatch(setFullScreenCatchup(delta))
+      const totalDelta = delta
+      dispatch(setLongCatchupDelta(delta))
       await new Promise((resolve) => setTimeout(resolve, 0))
 
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
+      console.log(delta)
 
       while (delta > TICK_TIME) {
-        let chunk = Math.min(delta, MAX_CHUNK_SIZE)
-        ;[chunk] = handleProgress(chunk, chunk)
-        delta -= chunk
-        dispatch(setLongCatchupDelta(delta))
+        const chunk = Math.min(delta, MAX_CHUNK_SIZE)
+        const [chunkDelta] = handleProgress(chunk, chunk, false)
+        delta -= chunk - chunkDelta
+        dispatch(setLongCatchupProcessed(delta))
         await new Promise((resolve) => setTimeout(resolve, 0))
       }
 
-      dispatch(setFullScreenCatchup(0))
+      dispatch(setLongCatchupProcessed(totalDelta))
+      dispatch(setLongCatchupDelta(0))
     } else {
       dispatch(setLoading(true))
       await new Promise((resolve) => setTimeout(resolve, 0))
-      ;[delta, beatDelta] = handleProgress(delta, beatDelta)
+      ;[delta, beatDelta] = handleProgress(delta, beatDelta, false)
       dispatch(setLoading(false))
     }
 
@@ -193,11 +190,12 @@ export function useGameEngine(props: EngineProps) {
       delta = currentTime - lastLoopTime.current // Use application time for RAF loop
       if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
     }
+
     const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
     const handleCatchUp = async () => {
       const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
-
+      console.log("long catchup", longCatchup)
       ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
       if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
@@ -211,7 +209,7 @@ export function useGameEngine(props: EngineProps) {
         dealDamageOnBeat()
         beatDelta -= BEAT_TIME
       }
-      ;[delta, beatDelta] = handleProgress(delta, beatDelta)
+      ;[delta, beatDelta] = handleProgress(delta, beatDelta, true)
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
       if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
       frameRef.current = requestAnimationFrame(gameLoop)

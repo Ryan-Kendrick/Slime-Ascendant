@@ -11,8 +11,8 @@ export const initialState = {
   lastPlayed: Date.now(),
   lastSaveCatchUp: null as number | null,
   loading: false,
-  fullscreenCatchup: 0,
   longCatchupDelta: 0,
+  longCatchupProcessed: 0,
   fading: false,
   OTPPos: constructOTPPosArr(),
   animationPref: 2, // Low: 0, Medium: 1, High: 2
@@ -38,11 +38,11 @@ export const metaSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
-    setFullScreenCatchup: (state, action: PayloadAction<number>) => {
-      state.fullscreenCatchup = action.payload
-    },
     setLongCatchupDelta: (state, action: PayloadAction<number>) => {
       state.longCatchupDelta = action.payload
+    },
+    setLongCatchupProcessed: (state, action: PayloadAction<number>) => {
+      state.longCatchupProcessed = action.payload
     },
     setFading: (state, action: PayloadAction<boolean>) => {
       state.fading = action.payload
@@ -83,8 +83,8 @@ export const {
   saveGame,
   clearCatchUpTime,
   setLoading,
-  setFullScreenCatchup,
   setLongCatchupDelta,
+  setLongCatchupProcessed,
   setFading,
   setOTPPos,
   setBreakpoint,
@@ -93,12 +93,8 @@ export const {
 
 export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCatchUp
 export const selectLoading = (state: RootState) => state.meta.loading
-export const selectFullscreenCatchup = (state: RootState) => state.meta.fullscreenCatchup
-// export const selectLongCatchupDelta = createSelector(
-//   [(state: RootState) => state.meta.longCatchupDelta],
-//   (deltaArr) => deltaArr,
-// )
 export const selectLongCatchupDelta = (state: RootState) => state.meta.longCatchupDelta
+export const selectLongCatchupProcessed = (state: RootState) => state.meta.longCatchupProcessed
 export const selectFading = (state: RootState) => state.meta.fading
 export const selectBreakpoint = (state: RootState) => state.meta.breakpoint
 export const selectOTPPos = (hero: HeroName) =>

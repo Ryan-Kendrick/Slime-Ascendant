@@ -1,21 +1,43 @@
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { selectFullscreenCatchup, selectLongCatchupDelta, setFullScreenCatchup } from "../../redux/metaSlice"
+import {
+  selectLongCatchupProcessed,
+  selectLastSaveCatchUp,
+  selectLoading,
+  selectLongCatchupDelta,
+  setLongCatchupProcessed,
+  setLongCatchupDelta,
+} from "../../redux/metaSlice"
 import CombatIndex from "../combat/combatIndex"
 import PanelIndex from "../metapanel/panelIndex"
 import FullscreenCatchup from "./FullscreenCatchup"
 import Navigation from "../nav/navigation"
+import { selectBeatDamage, selectDotDamage } from "../../redux/playerSlice"
+import { useEffect, useRef } from "react"
+import { useGameEngine } from "../../gameconfig/customHooks"
 
 export default function Main() {
-  // Run game engine from here
   const dispatch = useAppDispatch()
-  dispatch(setFullScreenCatchup(3600000 + 3600000))
-  const doFullscreenCatchup = useAppSelector(selectFullscreenCatchup)
+
   const delta = useAppSelector(selectLongCatchupDelta)
-  console.log(doFullscreenCatchup, delta)
+  const longCatchupProcessed = useAppSelector(selectLongCatchupProcessed)
+  const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
+  const dotDamage = useAppSelector(selectDotDamage)
+  const beatDamage = useAppSelector(selectBeatDamage)
+  const loading = useAppSelector(selectLoading)
+
+  const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
+
+  // Interface between requestAnimationFrame and React to prevent infinite catchup loops
+  useEffect(() => {
+    lastSaveCatchUpRef.current = lastSaveCatchUp
+  }, [lastSaveCatchUp])
+  console.log(delta)
+
+  useGameEngine({ dotDamage, beatDamage, loading, lastSaveCatchUp })
 
   return (
     <>
-      {doFullscreenCatchup ? (
+      {delta ? (
         <FullscreenCatchup />
       ) : (
         <main className="flex flex-1 overflow-visible md:min-h-0">

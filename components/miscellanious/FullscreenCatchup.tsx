@@ -1,7 +1,7 @@
 export default function FullscreenCatchup() {
   return (
     <div>
-      <p>A VERY LONG LOAD</p>
+      <p className="text-9xl text-red-600">A VERY LONG LOAD</p>
     </div>
   )
 }

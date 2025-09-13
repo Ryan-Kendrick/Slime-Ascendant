@@ -19,8 +19,8 @@ import {
   selectMultistrikeState,
   toggleDisplayMultistrike,
 } from "../../redux/statsSlice"
-import { selectAnimationPref, selectLastSaveCatchUp, selectLoading } from "../../redux/metaSlice"
-import { useCritCleanup, useGameEngine } from "../../gameconfig/customHooks"
+import { selectAnimationPref } from "../../redux/metaSlice"
+import { useCritCleanup } from "../../gameconfig/customHooks"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { formatSmallNumber } from "../../gameconfig/utils"
 
@@ -28,11 +28,7 @@ export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
 
   const clickDamage = useAppSelector(selectClickDamage)
-  const dotDamage = useAppSelector(selectDotDamage)
   const critChance = useAppSelector(selectCritChance)
-  const beatDamage = useAppSelector(selectBeatDamage)
-  const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
-  const loading = useAppSelector(selectLoading)
 
   const animationPref = useAppSelector(selectAnimationPref)
   const usingHighQualityAnimations = animationPref > 1
@@ -41,12 +37,6 @@ export default function Monster({ children }: PropsWithChildren) {
   const multistrikeCooldown = useAppSelector(selectMultistrikeCooldown) * 1000
   const { lastMultistrikeTime, displayMultistrike } = useAppSelector(selectMultistrikeState)
   const [multistrikePos, setMultistrikePos] = useState({ x: 0, y: 0 })
-  const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
-
-  // Interface between requestAnimationFrame and React to prevent infinite catchup loops
-  useEffect(() => {
-    lastSaveCatchUpRef.current = lastSaveCatchUp
-  }, [lastSaveCatchUp])
 
   useCritCleanup({ animationPref, recentCrits, displayCrit })
 
@@ -61,11 +51,10 @@ export default function Monster({ children }: PropsWithChildren) {
   }, [animationPref])
 
   const { monsterName, monsterImage } = useAppSelector(selectMonsterState)
-  useGameEngine({ dotDamage, beatDamage, loading, lastSaveCatchUp })
 
   useEffect(() => {
     if (displayMultistrike) {
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         dispatch(toggleDisplayMultistrike())
       }, 2000)
     }
