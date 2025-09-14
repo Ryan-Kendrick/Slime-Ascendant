@@ -16,7 +16,7 @@ export const PERFORMANCE_CONFIG = {
   catchup: {
     shortBreakpoint: 600000, // 10 minutes
     longBreakpoint: 3600000, // 60 minutes
-    chunkSize: 900000, // 15 minutes
+    chunkSize: 10000, // 10 minutes
   },
 
   critDisplayLimit: 10,

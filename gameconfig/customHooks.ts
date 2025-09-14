@@ -10,6 +10,7 @@ import {
   setLoading,
   setLongCatchupDelta,
   setOTPPos,
+  addLongCatchupProcessed,
 } from "../redux/metaSlice"
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
@@ -154,16 +155,14 @@ export function useGameEngine(props: EngineProps) {
 
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
 
-      let i = 0
-
       while (delta > TICK_TIME) {
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
         console.log("Processing chunk", chunk, "of", delta)
         const [chunkDelta] = handleProgress(chunk, chunk, false)
-        delta -= chunk - chunkDelta
-        dispatch(setLongCatchupProcessed(delta))
-        i++
-        console.log("processed chunk, delta now", delta, "iteration", i)
+        const processed = chunk - chunkDelta
+        delta -= processed
+        dispatch(addLongCatchupProcessed(processed))
+        console.log("processed chunk, delta now", delta)
         await new Promise((resolve) => setTimeout(resolve, 0))
       }
 
@@ -182,7 +181,6 @@ export function useGameEngine(props: EngineProps) {
   // Added useCallback to stabilise the game loop. This probably makes a stale closure for
   const gameLoop = useCallback(
     (currentTime: number) => {
-      console.log(beatDamage)
       let delta: number
       let beatDelta = 0
       if (lastSaveCatchUpRef.current) {

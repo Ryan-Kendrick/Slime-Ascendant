@@ -40,6 +40,9 @@ export const metaSlice = createSlice({
     setLongCatchupDelta: (state, action: PayloadAction<number>) => {
       state.longCatchupDelta = action.payload
     },
+    addLongCatchupProcessed: (state, action: PayloadAction<number>) => {
+      state.longCatchupProcessed += action.payload
+    },
     setLongCatchupProcessed: (state, action: PayloadAction<number>) => {
       state.longCatchupProcessed = action.payload
     },
@@ -83,6 +86,7 @@ export const {
   clearCatchUpTime,
   setLoading,
   setLongCatchupDelta,
+  addLongCatchupProcessed,
   setLongCatchupProcessed,
   setFading,
   setOTPPos,
