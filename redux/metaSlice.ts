@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store"
-import { METADATA_CONFIG } from "../gameconfig/meta"
+import { AnimationPreference, METADATA_CONFIG } from "../gameconfig/meta"
 import { HeroName } from "../models/upgrades"
 import { heroIndexMap, heroNames } from "./shared/helpers"
 import { prestigeReset } from "./shared/actions"
@@ -15,7 +15,7 @@ export const initialState = {
   longCatchupProcessed: 0,
   fading: false,
   OTPPos: constructOTPPosArr(),
-  animationPref: 2, // Low: 0, Medium: 1, High: 2
+  animationPref: 2 as AnimationPreference, // Low: 0, Medium: 1, High: 2
 
   breakpoint: 0 as Breakpoint, // Tailwind breakpoints - sm: 768px, md: 1024px, lg: 1280px, xl: 1536px
 }
@@ -27,12 +27,11 @@ export const metaSlice = createSlice({
     saveGame: (state) => {
       const now = Date.now()
       state.lastPlayed = now
-      state.lastSaveCatchUp = now
     },
     clearCatchUpTime: (state) => {
       state.lastSaveCatchUp = null
     },
-    setAnimationPref: (state, action: PayloadAction<number>) => {
+    setAnimationPref: (state, action: PayloadAction<AnimationPreference>) => {
       state.animationPref = action.payload
     },
     setLoading: (state, action: PayloadAction<boolean>) => {

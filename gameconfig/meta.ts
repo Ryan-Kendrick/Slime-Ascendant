@@ -4,7 +4,15 @@ export const METADATA_CONFIG = {
   softcap: "Zone 40",
 } as const
 
+export type AnimationPreference = 0 | 1 | 2
+
 export const PERFORMANCE_CONFIG = {
+  // Engine config
+  animPrefGameSpeedMod: {
+    0: 4,
+    1: 2,
+    2: 1,
+  } as Record<0 | 1 | 2, number>,
   catchup: {
     shortBreakpoint: 600000, // 10 minutes
     longBreakpoint: 3600000, // 60 minutes

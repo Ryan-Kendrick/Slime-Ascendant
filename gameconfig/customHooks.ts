@@ -13,7 +13,7 @@ import {
 } from "../redux/metaSlice"
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
-import { PERFORMANCE_CONFIG } from "./meta"
+import { AnimationPreference, PERFORMANCE_CONFIG } from "./meta"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -67,11 +67,12 @@ interface EngineProps {
   beatDamage: number
   loading: boolean
   lastSaveCatchUp: number | null
+  animationPref: AnimationPreference
 }
 
 export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
-  const { dotDamage, beatDamage, loading, lastSaveCatchUp } = props
+  const { dotDamage, beatDamage, loading, lastSaveCatchUp, animationPref } = props
 
   const dotDamageRef = useRef(dotDamage)
   const beatDamageRef = useRef(beatDamage)
@@ -80,7 +81,7 @@ export function useGameEngine(props: EngineProps) {
   const tickCount = useRef(0)
   const lastLoopTime = useRef(Date.now())
   const frameRef = useRef<number>()
-  const TICK_RATE = 20
+  const TICK_RATE = 20 / PERFORMANCE_CONFIG.animPrefGameSpeedMod[animationPref]
   const TICK_TIME = 1000 / TICK_RATE
 
   const lastBeatTime = useRef<number | null>(beatDamage ? performance.now() : null)
@@ -99,7 +100,7 @@ export function useGameEngine(props: EngineProps) {
 
   const dealDamageOverTime = () => {
     if (dotDamageRef.current > 0) {
-      const damageThisTick = dotDamageRef.current / 20
+      const damageThisTick = dotDamageRef.current / TICK_RATE
       dispatch(updateDotDamageDealt(damageThisTick))
     }
   }
@@ -119,7 +120,7 @@ export function useGameEngine(props: EngineProps) {
 
       dealDamageOverTime()
 
-      // Save every 30s during normal gameplay
+      // Save every 30s during realtime gameplay
       if (saving && tickCount.current % 600 === 0) dispatch(saveGame())
 
       // Process beats in catchup mode;
@@ -134,7 +135,6 @@ export function useGameEngine(props: EngineProps) {
       delta -= TICK_TIME
       processedDelta += TICK_TIME
     }
-    if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
 
     return [delta, beatDelta]
   }
@@ -153,6 +153,7 @@ export function useGameEngine(props: EngineProps) {
       await new Promise((resolve) => setTimeout(resolve, 0))
 
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
+      console.log(delta)
 
       while (delta > TICK_TIME) {
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
@@ -171,7 +172,6 @@ export function useGameEngine(props: EngineProps) {
       dispatch(setLoading(false))
     }
 
-    dispatch(clearCatchUpTime())
     return [delta, beatDelta]
   }
 
@@ -185,14 +185,16 @@ export function useGameEngine(props: EngineProps) {
       delta = currentTime - lastLoopTime.current // Use application time for RAF loop
       if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
     }
-
+    console.log(delta)
     const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
     const handleCatchUp = async () => {
       const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
+      console.log("long catchup", longCatchup)
       ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
       if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+      dispatch(clearCatchUpTime())
       frameRef.current = requestAnimationFrame(gameLoop)
     }
 
@@ -206,6 +208,7 @@ export function useGameEngine(props: EngineProps) {
       ;[delta, beatDelta] = handleProgress(delta, beatDelta, true)
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
       if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+      if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
       frameRef.current = requestAnimationFrame(gameLoop)
       if (loading) dispatch(setLoading(false))
       return
