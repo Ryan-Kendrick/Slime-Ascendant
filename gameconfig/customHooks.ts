@@ -106,7 +106,7 @@ export function useGameEngine(props: EngineProps) {
   }
 
   const dealDamageOnBeat = () => {
-    dispatch(updateBeatDamageDealt(beatDamage))
+    dispatch(updateBeatDamageDealt(beatDamageRef.current))
   }
 
   const handleProgress = (delta: number, beatDelta: number, saving: boolean): number[] => {
@@ -179,8 +179,10 @@ export function useGameEngine(props: EngineProps) {
     return [delta, beatDelta]
   }
 
+  // Added useCallback to stabilise the game loop. This probably makes a stale closure for
   const gameLoop = useCallback(
     (currentTime: number) => {
+      console.log(beatDamage)
       let delta: number
       let beatDelta = 0
       if (lastSaveCatchUpRef.current) {
@@ -190,7 +192,6 @@ export function useGameEngine(props: EngineProps) {
         delta = currentTime - lastLoopTime.current
         if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
       }
-      console.log(delta)
       const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
       const handleCatchUp = async () => {
