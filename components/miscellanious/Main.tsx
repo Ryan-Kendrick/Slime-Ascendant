@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../redux/hooks"
-import { selectLongCatchupDelta } from "../../redux/metaSlice"
+import { selectLongCatchupDelta, selectLongCatchupProcessed } from "../../redux/metaSlice"
 import CombatIndex from "../combat/combatIndex"
 import PanelIndex from "../metapanel/panelIndex"
 import FullscreenCatchup from "./FullscreenCatchup"
@@ -8,6 +8,7 @@ import { GameEngineProvider } from "./Engine"
 
 export default function Main() {
   const delta = useAppSelector(selectLongCatchupDelta)
+  const deltaProcessed = useAppSelector(selectLongCatchupProcessed)
 
   return (
     <>

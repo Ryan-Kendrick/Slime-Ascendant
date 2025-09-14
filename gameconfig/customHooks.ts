@@ -153,13 +153,17 @@ export function useGameEngine(props: EngineProps) {
       await new Promise((resolve) => setTimeout(resolve, 0))
 
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
-      console.log(delta)
+
+      let i = 0
 
       while (delta > TICK_TIME) {
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
+        console.log("Processing chunk", chunk, "of", delta)
         const [chunkDelta] = handleProgress(chunk, chunk, false)
         delta -= chunk - chunkDelta
         dispatch(setLongCatchupProcessed(delta))
+        i++
+        console.log("processed chunk, delta now", delta, "iteration", i)
         await new Promise((resolve) => setTimeout(resolve, 0))
       }
 
@@ -175,54 +179,56 @@ export function useGameEngine(props: EngineProps) {
     return [delta, beatDelta]
   }
 
-  const gameLoop = (currentTime: number) => {
-    let delta: number
-    let beatDelta = 0
-    if (lastSaveCatchUpRef.current) {
-      delta = Date.now() - lastSaveCatchUpRef.current // Use unix time for catchup
-      beatDelta = delta
-    } else {
-      delta = currentTime - lastLoopTime.current // Use application time for RAF loop
-      if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
-    }
-    console.log(delta)
-    const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
-
-    const handleCatchUp = async () => {
-      const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
-      console.log("long catchup", longCatchup)
-      ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
-      lastLoopTime.current = currentTime - (delta % TICK_TIME)
-      if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
-      dispatch(clearCatchUpTime())
-      frameRef.current = requestAnimationFrame(gameLoop)
-    }
-
-    if (onRegularTime) {
-      const shouldBeatNow = beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2
-
-      if (shouldBeatNow) {
-        dealDamageOnBeat()
-        beatDelta -= BEAT_TIME
+  const gameLoop = useCallback(
+    (currentTime: number) => {
+      let delta: number
+      let beatDelta = 0
+      if (lastSaveCatchUpRef.current) {
+        delta = Date.now() - lastSaveCatchUpRef.current
+        beatDelta = delta
+      } else {
+        delta = currentTime - lastLoopTime.current
+        if (lastBeatTime.current) beatDelta = currentTime - lastBeatTime.current
       }
-      ;[delta, beatDelta] = handleProgress(delta, beatDelta, true)
-      lastLoopTime.current = currentTime - (delta % TICK_TIME)
-      if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
-      if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
-      frameRef.current = requestAnimationFrame(gameLoop)
-      if (loading) dispatch(setLoading(false))
-      return
-    } else {
-      handleCatchUp()
-    }
-  }
+      console.log(delta)
+      const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
+
+      const handleCatchUp = async () => {
+        const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
+        ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
+        lastLoopTime.current = currentTime - (delta % TICK_TIME)
+        if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+        dispatch(clearCatchUpTime())
+        frameRef.current = requestAnimationFrame(gameLoop)
+      }
+
+      if (onRegularTime) {
+        const shouldBeatNow = beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2
+
+        if (shouldBeatNow) {
+          dealDamageOnBeat()
+          beatDelta -= BEAT_TIME
+        }
+        ;[delta, beatDelta] = handleProgress(delta, beatDelta, true)
+        lastLoopTime.current = currentTime - (delta % TICK_TIME)
+        if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+        if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
+        frameRef.current = requestAnimationFrame(gameLoop)
+        if (loading) dispatch(setLoading(false))
+        return
+      } else {
+        handleCatchUp()
+      }
+    },
+    [TICK_TIME, BEAT_TIME],
+  )
 
   useEffect(() => {
     frameRef.current = requestAnimationFrame(gameLoop)
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current)
     }
-  })
+  }, [gameLoop])
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -241,7 +247,7 @@ export function useGameEngine(props: EngineProps) {
     }
     document.addEventListener("visibilitychange", handleVisibilityChange)
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange)
-  })
+  }, [gameLoop])
 }
 
 export function useTouchObserver() {
