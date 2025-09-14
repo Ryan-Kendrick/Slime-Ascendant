@@ -113,7 +113,7 @@ export function useGameEngine(props: EngineProps) {
     let processedBeats = 0
 
     const useBeatCatchup = beatDamage > 0 && beatDelta >= BEAT_TIME * 2
-    console.log(delta)
+
     while (delta >= TICK_TIME) {
       tickCount.current++
 
@@ -134,6 +134,8 @@ export function useGameEngine(props: EngineProps) {
       delta -= TICK_TIME
       processedDelta += TICK_TIME
     }
+    if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
+
     return [delta, beatDelta]
   }
 
@@ -151,7 +153,6 @@ export function useGameEngine(props: EngineProps) {
       await new Promise((resolve) => setTimeout(resolve, 0))
 
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
-      console.log(delta)
 
       while (delta > TICK_TIME) {
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
@@ -189,7 +190,6 @@ export function useGameEngine(props: EngineProps) {
 
     const handleCatchUp = async () => {
       const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
-      console.log("long catchup", longCatchup)
       ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
       lastLoopTime.current = currentTime - (delta % TICK_TIME)
       if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
