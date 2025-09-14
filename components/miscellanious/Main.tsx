@@ -1,33 +1,29 @@
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import {
-  selectLongCatchupProcessed,
-  selectLastSaveCatchUp,
-  selectLoading,
-  selectLongCatchupDelta,
-  setLongCatchupProcessed,
-  setLongCatchupDelta,
-} from "../../redux/metaSlice"
+import { selectLastSaveCatchUp, selectLoading, selectLongCatchupDelta } from "../../redux/metaSlice"
 import CombatIndex from "../combat/combatIndex"
 import PanelIndex from "../metapanel/panelIndex"
 import FullscreenCatchup from "./FullscreenCatchup"
 import Navigation from "../nav/navigation"
 import { selectBeatDamage, selectDotDamage } from "../../redux/playerSlice"
-import { useEffect, useRef } from "react"
 import { useGameEngine } from "../../gameconfig/customHooks"
 
-export default function Main() {
-  const dispatch = useAppDispatch()
-
-  const delta = useAppSelector(selectLongCatchupDelta)
-  const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
+const GameEngineProvider = () => {
   const dotDamage = useAppSelector(selectDotDamage)
   const beatDamage = useAppSelector(selectBeatDamage)
   const loading = useAppSelector(selectLoading)
+  const lastSaveCatchUp = useAppSelector(selectLastSaveCatchUp)
 
   useGameEngine({ dotDamage, beatDamage, loading, lastSaveCatchUp })
 
+  return null
+}
+
+export default function Main() {
+  const delta = useAppSelector(selectLongCatchupDelta)
+
   return (
     <>
+      <GameEngineProvider />
       {delta ? (
         <FullscreenCatchup />
       ) : (
