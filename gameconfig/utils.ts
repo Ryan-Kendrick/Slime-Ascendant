@@ -190,6 +190,8 @@ We managed to salvage your achievements, but the time has come to start a new ad
         gameVersion: METADATA_CONFIG.version,
         fading: false,
         lastSaveCatchUp: gameState.meta.lastPlayed,
+        longCatchupDelta: 0,
+        longCatchupProcessed: 0,
       },
     }
   } catch (err) {
