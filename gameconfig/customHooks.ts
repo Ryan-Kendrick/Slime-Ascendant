@@ -68,16 +68,18 @@ interface EngineProps {
   beatDamage: number
   loading: boolean
   lastSaveCatchUp: number | null
+  abortCatchup: boolean
   animationPref: AnimationPreference
 }
 
 export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
-  const { dotDamage, beatDamage, loading, lastSaveCatchUp, animationPref } = props
+  const { dotDamage, beatDamage, loading, lastSaveCatchUp, abortCatchup, animationPref } = props
 
   const dotDamageRef = useRef(dotDamage)
   const beatDamageRef = useRef(beatDamage)
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
+  const abortCatchupRef = useRef(abortCatchup)
 
   const tickCount = useRef(0)
   const lastLoopTime = useRef(Date.now())
@@ -89,6 +91,9 @@ export function useGameEngine(props: EngineProps) {
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
 
+  useEffect(() => {
+    abortCatchupRef.current = abortCatchup
+  }, [abortCatchup])
   useEffect(() => {
     dotDamageRef.current = dotDamage
   }, [dotDamage])
@@ -114,7 +119,7 @@ export function useGameEngine(props: EngineProps) {
     let processedDelta = 0
     let processedBeats = 0
 
-    const useBeatCatchup = beatDamage > 0 && beatDelta >= BEAT_TIME * 2
+    const useBeatCatchup = beatDamageRef.current > 0 && beatDelta >= BEAT_TIME * 2
 
     while (delta >= TICK_TIME) {
       tickCount.current++
@@ -150,24 +155,36 @@ export function useGameEngine(props: EngineProps) {
 
     if (longCatchup) {
       const totalDelta = delta
+      const startTime = performance.now() // ← record start
       dispatch(setLongCatchupDelta(delta))
       await new Promise((resolve) => setTimeout(resolve, 0))
 
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
 
       while (delta > TICK_TIME) {
+        if (abortCatchupRef.current) return [0]
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
         console.log("Processing chunk", chunk, "of", delta)
         const [chunkDelta] = handleProgress(chunk, chunk, false)
         const processed = chunk - chunkDelta
         delta -= processed
         dispatch(addLongCatchupProcessed(processed))
-        console.log("processed chunk, delta now", delta)
-        await new Promise((resolve) => setTimeout(resolve, 0))
+        // ─── new logging block ──────────────────────────────────────────
+        const elapsed = performance.now() - startTime
+        const processedTotal = totalDelta - delta
+        const progress = processedTotal / totalDelta
+        const estTotalTime = elapsed / progress
+        const remainingTime = estTotalTime - elapsed
+
+        console.log(
+          `[Catchup] processedTotal=${processedTotal}ms (${(progress * 100).toFixed(
+            1,
+          )}%), elapsed=${elapsed.toFixed(0)}ms, ETA=${remainingTime.toFixed(0)}ms`,
+        )
+        // ─────────────────────────────────────────────────────────────────        await new Promise((resolve) => setTimeout(resolve, 0))
       }
 
-      dispatch(setLongCatchupProcessed(totalDelta))
-      dispatch(setLongCatchupDelta(0))
+      dispatch(setLongCatchupProcessed(true))
     } else {
       dispatch(setLoading(true))
       await new Promise((resolve) => setTimeout(resolve, 0))

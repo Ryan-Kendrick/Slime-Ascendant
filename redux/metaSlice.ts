@@ -12,7 +12,8 @@ export const initialState = {
   lastSaveCatchUp: null as number | null,
   loading: false,
   longCatchupDelta: 0,
-  longCatchupProcessed: 0,
+  longCatchupProcessed: 0 as number | boolean,
+  longCatchupAbort: false,
   fading: false,
   OTPPos: constructOTPPosArr(),
   animationPref: 2 as AnimationPreference, // Low: 0, Medium: 1, High: 2
@@ -41,10 +42,15 @@ export const metaSlice = createSlice({
       state.longCatchupDelta = action.payload
     },
     addLongCatchupProcessed: (state, action: PayloadAction<number>) => {
-      state.longCatchupProcessed += action.payload
+      if (typeof state.longCatchupProcessed === "number") state.longCatchupProcessed += action.payload
     },
-    setLongCatchupProcessed: (state, action: PayloadAction<number>) => {
+    setLongCatchupProcessed: (state, action: PayloadAction<boolean>) => {
       state.longCatchupProcessed = action.payload
+    },
+    abortCatchup: (state) => {
+      state.longCatchupDelta = 0
+      state.longCatchupProcessed = 0
+      state.longCatchupAbort = true
     },
     setFading: (state, action: PayloadAction<boolean>) => {
       state.fading = action.payload
@@ -88,6 +94,7 @@ export const {
   setLongCatchupDelta,
   addLongCatchupProcessed,
   setLongCatchupProcessed,
+  abortCatchup,
   setFading,
   setOTPPos,
   setBreakpoint,
@@ -98,6 +105,7 @@ export const selectLastSaveCatchUp = (state: RootState) => state.meta.lastSaveCa
 export const selectLoading = (state: RootState) => state.meta.loading
 export const selectLongCatchupDelta = (state: RootState) => state.meta.longCatchupDelta
 export const selectLongCatchupProcessed = (state: RootState) => state.meta.longCatchupProcessed
+export const selectAbortCatchup = (state: RootState) => state.meta.longCatchupAbort
 export const selectFading = (state: RootState) => state.meta.fading
 export const selectBreakpoint = (state: RootState) => state.meta.breakpoint
 export const selectOTPPos = (hero: HeroName) =>

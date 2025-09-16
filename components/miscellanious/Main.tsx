@@ -8,7 +8,6 @@ import { GameEngineProvider } from "./Engine"
 
 export default function Main() {
   const delta = useAppSelector(selectLongCatchupDelta)
-  const deltaProcessed = useAppSelector(selectLongCatchupProcessed)
 
   return (
     <>
