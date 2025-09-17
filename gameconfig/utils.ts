@@ -192,6 +192,7 @@ We managed to salvage your achievements, but the time has come to start a new ad
         lastSaveCatchUp: gameState.meta.lastPlayed,
         longCatchupDelta: 0,
         longCatchupProcessed: 0,
+        longCatchupAbort: false,
       },
     }
   } catch (err) {
