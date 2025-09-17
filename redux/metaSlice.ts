@@ -52,6 +52,9 @@ export const metaSlice = createSlice({
       state.longCatchupProcessed = 0
       state.longCatchupAbort = true
     },
+    catchupAborted: (state) => {
+      state.longCatchupAbort = false
+    },
     setFading: (state, action: PayloadAction<boolean>) => {
       state.fading = action.payload
     },
@@ -95,6 +98,7 @@ export const {
   addLongCatchupProcessed,
   setLongCatchupProcessed,
   abortCatchup,
+  catchupAborted,
   setFading,
   setOTPPos,
   setBreakpoint,

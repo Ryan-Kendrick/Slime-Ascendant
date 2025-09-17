@@ -11,6 +11,7 @@ import {
   setLongCatchupDelta,
   setOTPPos,
   addLongCatchupProcessed,
+  catchupAborted,
 } from "../redux/metaSlice"
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
@@ -162,7 +163,11 @@ export function useGameEngine(props: EngineProps) {
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
 
       while (delta > TICK_TIME) {
-        if (abortCatchupRef.current) return [0]
+        if (abortCatchupRef.current) {
+          dispatch(catchupAborted())
+          return [0]
+        }
+
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
         console.log("Processing chunk", chunk, "of", delta)
         const [chunkDelta] = handleProgress(chunk, chunk, false)
@@ -170,18 +175,18 @@ export function useGameEngine(props: EngineProps) {
         delta -= processed
         dispatch(addLongCatchupProcessed(processed))
         // ─── new logging block ──────────────────────────────────────────
-        const elapsed = performance.now() - startTime
-        const processedTotal = totalDelta - delta
-        const progress = processedTotal / totalDelta
-        const estTotalTime = elapsed / progress
-        const remainingTime = estTotalTime - elapsed
+        // const elapsed = performance.now() - startTime
+        // const processedTotal = totalDelta - delta
+        // const progress = processedTotal / totalDelta
+        // const estTotalTime = elapsed / progress
+        // const remainingTime = estTotalTime - elapsed
 
-        console.log(
-          `[Catchup] processedTotal=${processedTotal}ms (${(progress * 100).toFixed(
-            1,
-          )}%), elapsed=${elapsed.toFixed(0)}ms, ETA=${remainingTime.toFixed(0)}ms`,
-        )
-        // ─────────────────────────────────────────────────────────────────        await new Promise((resolve) => setTimeout(resolve, 0))
+        // console.log(
+        //   `[Catchup] processedTotal=${processedTotal}ms (${(progress * 100).toFixed(
+        //     1,
+        //   )}%), elapsed=${elapsed.toFixed(0)}ms, ETA=${remainingTime.toFixed(0)}ms`,
+        // )
+        // // ─────────────────────────────────────────────────────────────────        await new Promise((resolve) => setTimeout(resolve, 0))
       }
 
       dispatch(setLongCatchupProcessed(true))
@@ -195,7 +200,6 @@ export function useGameEngine(props: EngineProps) {
     return [delta, beatDelta]
   }
 
-  // Added useCallback to stabilise the game loop. This probably makes a stale closure for
   const gameLoop = useCallback(
     (currentTime: number) => {
       let delta: number
