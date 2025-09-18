@@ -166,7 +166,6 @@ export function useGameEngine(props: EngineProps) {
       while (delta > TICK_TIME) {
         if (abortCatchupRef.current) return [0]
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
-        console.log("Processing chunk", chunk, "of", delta)
         const [chunkDelta] = handleProgress(chunk, chunk, false)
         const processed = chunk - chunkDelta
         delta -= processed
