@@ -14,7 +14,7 @@ export const PERFORMANCE_CONFIG = {
     2: 1,
   } as Record<0 | 1 | 2, number>,
   catchup: {
-    shortBreakpoint: 600000, // 10 minutes
+    shortBreakpoint: 300000, // 5 minutes
     longBreakpoint: 3600000, // 60 minutes
     chunkSize: 120000, // 120 seconds
   },
