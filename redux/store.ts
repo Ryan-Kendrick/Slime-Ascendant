@@ -1,4 +1,4 @@
-import { configureStore, Middleware } from "@reduxjs/toolkit"
+import { configureStore } from "@reduxjs/toolkit"
 import statsReducer from "./statsSlice"
 import monsterReducer from "./monsterSlice"
 import { spawnMiddleware } from "./middleware/spawnMiddleware"
@@ -25,7 +25,12 @@ export const store = configureStore({
     meta: metaReducer,
   },
   preloadedState: loadFromLocalStorage(),
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(saveMiddleware, spawnMiddleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+      actionCreatorCheck: false,
+    }).concat(saveMiddleware, spawnMiddleware),
 })
 
 export type RootState = StoreState
