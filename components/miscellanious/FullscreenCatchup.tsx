@@ -53,8 +53,8 @@ export default function FullscreenCatchup() {
         <div className="flex flex-col items-center gap-4 text-frost">
           <div className="text-3xl font-bold text-green-400">{Math.round(progressPercentage)}%</div>
           <div className="flex flex-col items-center rounded rounded-lg border-2 border-gray-200 bg-black/30 px-3 py-2 outline-offset-8 outline-gray-200">
-            <h2 className="text-gray-300">Catching up on {minutesRemaining} minutes</h2>
-            <div className="flex w-64 justify-between text-sm text-gray-400">
+            <h2 className="text-lg text-gray-300">Catching up with {minutesRemaining} minutes passed</h2>
+            <div className="flex w-64 justify-around text-gray-400">
               <span>{minutesProcessed}</span>
               <span>/</span>
               <span>{minutesRemaining}</span>
@@ -65,7 +65,7 @@ export default function FullscreenCatchup() {
         {/* Loading dots animation */}
         <div className="flex flex-col items-center gap-4 text-frost">
           <h3 className="font-passion">
-            Fighting{" "}
+            Currently fighting{" "}
             <span
               className={clsx(
                 "font-sigmar",
