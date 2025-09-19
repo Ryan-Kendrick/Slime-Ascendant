@@ -87,15 +87,14 @@ export default function FullscreenCatchup() {
               />
             ))}
           </div>
-          <div>
-            <button
-              className="h-16 w-40 rounded-lg border-2 border-frost bg-blue-800 p-4 font-passion text-xl text-frost hover:cursor-active"
-              onClick={() => {
-                dispatch(abortCatchup())
-              }}>
-              Continue here
-            </button>
-          </div>
+
+          <button
+            className="h-16 w-40 rounded-lg border-2 border-frost bg-blue-800 p-4 font-passion text-xl text-frost hover:cursor-active"
+            onClick={() => {
+              dispatch(abortCatchup())
+            }}>
+            Continue here
+          </button>
         </div>
       </div>
     </div>
