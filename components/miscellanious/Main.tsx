@@ -7,7 +7,7 @@ import Navigation from "../nav/navigation"
 import { GameEngineProvider } from "./Engine"
 
 export default function Main() {
-  const delta = true //useAppSelector(selectLongCatchupDelta)
+  const delta = useAppSelector(selectLongCatchupDelta)
 
   return (
     <>
