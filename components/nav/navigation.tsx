@@ -22,8 +22,11 @@ export const Navigation = memo(function Navigation() {
       <ReactModal
         isOpen={viewAchievements}
         onRequestClose={() => setViewAchievements(false)}
-        contentLabel="Prestige confirmation prompt"
-        style={achievementsStyle}>
+        contentLabel="Achievement list"
+        style={achievementsStyle}
+        overlayClassName="modal-overlay-mount overlay-white"
+        className="modal-content-mount"
+        closeTimeoutMS={200}>
         <Achievements />
         <button
           className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800"
@@ -104,7 +107,6 @@ const achievementsStyle: ModalStylesheet = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(255, 255, 255, 0.50)",
     cursor: `url(${handURL}) 0 0, pointer`,
     zIndex: 1000,
   },

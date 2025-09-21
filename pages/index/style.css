@@ -1120,6 +1120,41 @@ body {
   pointer-events: none;
 }
 
+.modal-content-mount {
+  opacity: 1;
+  transition:
+    opacity 0.3s linear,
+    transform 0.3s linear;
+  transform: scale(1);
+}
+
+@starting-style {
+  .modal-content-mount {
+    opacity: 0.75;
+    transform: scale(0.95);
+  }
+}
+
+.modal-overlay-mount {
+  opacity: 1;
+  transition:
+    background-color 0.6s ease-out,
+    opacity 0.2s;
+}
+
+.modal-overlay-mount.ReactModal__Overlay--after-open {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.overlay-white.ReactModal__Overlay--after-open {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.modal-overlay-mount.ReactModal__Overlay--before-close {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Upgrade panel mask */
 #panel-content {
   --mask-line1-start: 403px;

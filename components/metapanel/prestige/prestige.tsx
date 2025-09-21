@@ -199,7 +199,10 @@ function PrestigeModal({ prestigeDialogue, prestigeIntent, setPrestigeDialogue, 
       isOpen={prestigeDialogue && !prestigeIntent}
       onRequestClose={() => setPrestigeDialogue(false)}
       contentLabel="Prestige confirmation prompt"
-      style={confirmPrestigeStyle}>
+      style={confirmPrestigeStyle}
+      overlayClassName="modal-overlay-mount"
+      className="modal-content-mount"
+      closeTimeoutMS={200}>
       <Confirmation initiatePrestige={initiatePrestige} />
       <button
         className="absolute -right-3 -top-3 z-[1000000] h-9 w-9 cursor-active rounded-full bg-white stroke-white shadow-[0_3px_5px_-2px_rgb(0_0_0_/_0.8),_0_3px_5px_-2px_rgb(0_0_0_/_0.6)] ring-2 ring-inset ring-amber-800 disabled:cursor-inactive"
@@ -234,7 +237,7 @@ const confirmPrestigeStyle: ModalStylesheet = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
+    // backgroundColor: "rgba(0, 0, 0, 0.75)",
     cursor: `url(${handURL}) 0 0, pointer`,
     zIndex: 1000,
   },
