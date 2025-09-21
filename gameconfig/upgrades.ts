@@ -118,7 +118,20 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 0.05,
       modifier: 0.05,
       visibleAtZone: 10,
-      tooltip: "Increases damage by 5% per level",
+      tooltip: "Increases Damage by 5% per level",
+    },
+    health: {
+      id: "health",
+      displayName: "Health",
+      modDescription: "Increase",
+      modSuffix: "%",
+      changePrefix: "+",
+      priceBase: 5,
+      priceIncrease: 3,
+      baseValue: 0.05,
+      modifier: 0.05,
+      visibleAtZone: 10,
+      tooltip: "Increases Health by 5% per level",
     },
     "crit-chance": {
       id: "crit-chance",
@@ -131,7 +144,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 0.05,
       modifier: 0.01,
       visibleAtZone: 20,
-      tooltip: "Increases critical hit chance by 1% per level",
+      tooltip: "Increases Critical Hit chance by 1% per level",
     },
     multistrike: {
       id: "multistrike",
@@ -144,7 +157,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 40,
       modifier: 0.02,
       visibleAtZone: 25,
-      tooltip: "Reduces multistrike cooldown by 2% per level",
+      tooltip: "Reduces Multistrike cooldown by 2% per level",
     },
     beat: {
       id: "beat",
@@ -161,7 +174,6 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     },
   },
 
-  // { id: "health", title: "Health", basePrice: 2, additiveInc: 1, modifier: 0.05, unlocked: true, tooltip: "" },
   calcAdditivePrice(atLevel, upgrade): number {
     return atLevel !== 0 ? upgrade.priceBase + (atLevel - 1) * upgrade.priceIncrease : 0
   },

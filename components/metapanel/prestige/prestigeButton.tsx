@@ -34,7 +34,9 @@ export default function PrestigeButton({ config, hidden, updateCart, showToolTip
   const [purchasePrice, setPurchasePrice] = useState(calcPurchasePrice)
   const isAffordable = useAppSelector(selectPCanAfford(purchasePrice))
   const canPurchase = isAffordable && !hidden
-
+  if (thisUpgradeName === "health") {
+    console.log(thisUpgrade)
+  }
   const currentValue = useMemo(
     () => formatCurrPValue(thisUpgradeName, upgradeCount, config, thisUpgrade.calcModifier),
     [thisUpgradeName, upgradeCount, config, thisUpgrade],

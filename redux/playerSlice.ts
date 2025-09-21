@@ -40,7 +40,7 @@ const debugState = {
   pCritUpgradeCount: 300,
   pMultistrikeUpgradeCount: 300,
   pBeatUpgradeCount: 300,
-  // pHealthUpgradeCount: 300,
+  pHealthUpgradeCount: 300,
   plasma: 1000000,
   plasmaSpent: 50000,
 
@@ -78,7 +78,7 @@ export const initialState = {
   pCritUpgradeCount: 0,
   pMultistrikeUpgradeCount: 0,
   pBeatUpgradeCount: 0,
-  // pHealthUpgradeCount: 0,
+  pHealthUpgradeCount: 0,
   plasma: 0,
   plasmaSpent: 0,
 
@@ -144,7 +144,7 @@ export const playerSlice = createSlice({
       state.pDamageUpgradeCount++
     },
     incrementPHealthUpgradeCount: (state) => {
-      //   state.pHealthUpgradeCount++
+      state.pHealthUpgradeCount++
     },
     prestigeRespec: (state) => {
       // Not implemented yet
@@ -156,7 +156,7 @@ export const playerSlice = createSlice({
       state.pCritUpgradeCount = 0
       state.pMultistrikeUpgradeCount = 0
       state.pBeatUpgradeCount = 0
-      // state.pHealthUpgradeCount = 0
+      state.pHealthUpgradeCount = 0
     },
     increaseAchievementModifier(state, action: PayloadAction<number>) {
       // Integer conversion to avoid floating-point imprecision
@@ -225,7 +225,7 @@ export const playerSlice = createSlice({
       if (action.payload["crit-chance"]) state.pCritUpgradeCount += action.payload["crit-chance"].purchaseCount
       if (action.payload.multistrike) state.pMultistrikeUpgradeCount += action.payload.multistrike.purchaseCount
       if (action.payload.beat) state.pBeatUpgradeCount += action.payload.beat.purchaseCount
-      // if (action.payload.health) state.pHealthUpgradeCount += action.payload.health.purchaseCount
+      if (action.payload.health) state.pHealthUpgradeCount += action.payload.health.purchaseCount
     })
   },
 })
@@ -265,7 +265,7 @@ export const selectPrestigeState = createSelector([(state: RootState) => state.p
   pCritChanceUpgradeCount: player.pCritUpgradeCount,
   pMultistrikeUpgradeCount: player.pMultistrikeUpgradeCount,
   pBeatUpgradeCount: player.pBeatUpgradeCount,
-  // pHealthUpgradeCount: player.pHealthUpgradeCount,
+  pHealthUpgradeCount: player.pHealthUpgradeCount,
 }))
 export const selectCritChance = (state: RootState) =>
   UPGRADE_CONFIG.calcAdditiveMod(state.player.pCritUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades["crit-chance"])
@@ -280,6 +280,7 @@ export const createPendingPPurchaseSelector = (upgradeId: PrestigeUpgradeId) =>
   })
 
 export const selectPendingPDamage = createPendingPPurchaseSelector("damage")
+export const selectingPendingPHealth = createPendingPPurchaseSelector("health")
 export const selectPendingPCritChance = createPendingPPurchaseSelector("crit-chance")
 export const selectPendingPMultistrike = createPendingPPurchaseSelector("multistrike")
 export const selectPendingPBeat = createPendingPPurchaseSelector("beat")

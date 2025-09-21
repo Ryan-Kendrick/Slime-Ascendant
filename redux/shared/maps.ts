@@ -3,6 +3,7 @@ import { HeroName, PrestigeUpgrade, PrestigeUpgradeId, UpgradeId, UpgradeProps }
 import {
   selectClickDamage,
   selectDotDamage,
+  selectingPendingPHealth,
   selectInitState,
   selectPendingPBeat,
   selectPendingPCritChance,
@@ -176,6 +177,13 @@ export const prestigeUpgradeMap: PrestigeUpgradeMap = {
     calcModifier: UPGRADE_CONFIG.calcAdditiveMod,
     calcModifierIncrease: UPGRADE_CONFIG.calcAdditiveModIncrease,
     pendingPurchases: (state: RootState) => selectPendingPDamage(state),
+  },
+  health: {
+    selector: (state: RootState) => selectPrestigeState(state).pHealthUpgradeCount,
+    cost: UPGRADE_CONFIG.calcAdditivePrice,
+    calcModifier: UPGRADE_CONFIG.calcAdditiveMod,
+    calcModifierIncrease: UPGRADE_CONFIG.calcAdditiveModIncrease,
+    pendingPurchases: (state: RootState) => selectingPendingPHealth(state),
   },
   "crit-chance": {
     selector: (state) => selectPrestigeState(state).pCritChanceUpgradeCount,

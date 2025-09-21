@@ -176,7 +176,7 @@ We managed to salvage your achievements, but the time has come to start a new ad
       }
     }
 
-    return {
+    const loadedState = {
       ...gameState,
       player: { ...gameState.player, tabInView: "upgrade" },
       stats: {
@@ -195,6 +195,8 @@ We managed to salvage your achievements, but the time has come to start a new ad
         longCatchupAbort: false,
       },
     }
+    if (!loadedState.player.pHealthUpgradeCount) loadedState.player.pHealthUpgradeCount = 0
+    return loadedState
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)
 
