@@ -1,12 +1,16 @@
 export interface BaseEnemy {
   level: number
   baseHealth: number
+  baseDamage: number
+  baseAttackRate: number
 }
 
 export interface Enemy {
   name: string
-  maxHealth: number
   health: number
+  maxHealth: number
+  damage: number
+  attackRate: number
   goldValue: number
   image: string
   plasma?: number
@@ -18,6 +22,8 @@ export interface MonsterType {
   name: string
   kind: MonsterKind
   healthMulti: number
+  damageMulti: number
+  attackRateMulti: number
   goldMulti?: number
   imagePath: string
 }
@@ -26,6 +32,12 @@ interface HealthConfig {
   base: number
   growth: number
   smoothing: number
+}
+
+interface AttackConfig {
+  baseDamage: number
+  growth: number
+  baseAttackRate: number
 }
 
 interface GoldConfig {
@@ -42,6 +54,7 @@ interface BossConfig {
 
 export interface BaseMonsterConfig {
   health: HealthConfig
+  attack: AttackConfig
   gold: GoldConfig
   boss: BossConfig
   regularSpawnChance: number

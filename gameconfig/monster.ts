@@ -24,6 +24,11 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
     growth: 1.1,
     smoothing: 6,
   },
+  attack: {
+    baseDamage: 1,
+    growth: 1.02,
+    baseAttackRate: 2.4,
+  },
   gold: {
     healthDivisor: 4,
     healthMultiBonus: 1.5,
@@ -42,24 +47,101 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
 }
 
 const MONSTER_VARIATIONS: MonsterType[] = [
-  { name: "Cave Troll", kind: "regular", healthMulti: 2.5, imagePath: `${caveTrollURL}` },
-  { name: "Dagonmire Spawn", kind: "regular", healthMulti: 1.3, imagePath: `${dagonmireURL}` },
-  { name: "Forest Guard", kind: "regular", healthMulti: 1.75, imagePath: `${forestGuardURL}` },
-  { name: "Ochre Jelly", kind: "regular", healthMulti: 1.1, imagePath: `${ohcreJellyURL}` },
-  { name: "Pollen Runt", kind: "regular", healthMulti: 1.2, imagePath: `${pollenRuntURL}` },
-  { name: "Wail Shroom", kind: "regular", healthMulti: 1, imagePath: `${wailShroomURL}` },
-  { name: "Slime", kind: "regular", healthMulti: 1, imagePath: `${slimeURL}` },
-  { name: "Jungle Prowler", kind: "regular", healthMulti: 1.4, imagePath: `${jungleProwlerURL}` },
+  {
+    name: "Cave Troll",
+    kind: "regular",
+    healthMulti: 2.5,
+    damageMulti: 2.5,
+    attackRateMulti: 1,
+    imagePath: `${caveTrollURL}`,
+  },
+  {
+    name: "Dagonmire Spawn",
+    kind: "regular",
+    healthMulti: 1.3,
+    damageMulti: 1.3,
+    attackRateMulti: 1,
+    imagePath: `${dagonmireURL}`,
+  },
+  {
+    name: "Forest Guard",
+    kind: "regular",
+    healthMulti: 1.75,
+    damageMulti: 1.75,
+    attackRateMulti: 1,
+    imagePath: `${forestGuardURL}`,
+  },
+  {
+    name: "Ochre Jelly",
+    kind: "regular",
+    healthMulti: 1.1,
+    damageMulti: 1.1,
+    attackRateMulti: 1,
+    imagePath: `${ohcreJellyURL}`,
+  },
+  {
+    name: "Pollen Runt",
+    kind: "regular",
+    healthMulti: 1.2,
+    damageMulti: 1.2,
+    attackRateMulti: 1,
+    imagePath: `${pollenRuntURL}`,
+  },
+  {
+    name: "Wail Shroom",
+    kind: "regular",
+    healthMulti: 1,
+    damageMulti: 1,
+    attackRateMulti: 1,
+    imagePath: `${wailShroomURL}`,
+  },
+  { name: "Slime", kind: "regular", healthMulti: 1, damageMulti: 1, attackRateMulti: 1, imagePath: `${slimeURL}` },
+  {
+    name: "Jungle Prowler",
+    kind: "regular",
+    healthMulti: 1.4,
+    damageMulti: 1.4,
+    attackRateMulti: 1,
+    imagePath: `${jungleProwlerURL}`,
+  },
 ]
 
 const BOSS_VARIATIONS: MonsterType[] = [
-  { name: "Tooth", kind: "boss", healthMulti: 2, imagePath: `${toothURL}` },
-  { name: "Drip Shroom", kind: "boss", healthMulti: 2, imagePath: `${dripShroomURL}` },
-  { name: "Everhaunch", kind: "boss", healthMulti: 2, imagePath: `${everhaunchURL}` },
-  { name: "Ribeye", kind: "boss", healthMulti: 1.5, imagePath: `${ribeyeURL}` },
-  { name: "Tank", kind: "boss", healthMulti: 3, imagePath: `${tankURL}` },
-  { name: "Unity of the Shore", kind: "boss", healthMulti: 1.75, imagePath: `${unityOfTheShoreURL}` },
-  { name: "Ward Squid", kind: "boss", healthMulti: 2.25, imagePath: `${wardSquidURL}` },
+  { name: "Tooth", kind: "boss", healthMulti: 2, damageMulti: 2, attackRateMulti: 1, imagePath: `${toothURL}` },
+  {
+    name: "Drip Shroom",
+    kind: "boss",
+    healthMulti: 2,
+    damageMulti: 2,
+    attackRateMulti: 1,
+    imagePath: `${dripShroomURL}`,
+  },
+  {
+    name: "Everhaunch",
+    kind: "boss",
+    healthMulti: 2,
+    damageMulti: 2,
+    attackRateMulti: 1,
+    imagePath: `${everhaunchURL}`,
+  },
+  { name: "Ribeye", kind: "boss", healthMulti: 1.5, damageMulti: 1.5, attackRateMulti: 1, imagePath: `${ribeyeURL}` },
+  { name: "Tank", kind: "boss", healthMulti: 3, damageMulti: 3, attackRateMulti: 1, imagePath: `${tankURL}` },
+  {
+    name: "Unity of the Shore",
+    kind: "boss",
+    healthMulti: 1.75,
+    damageMulti: 1.75,
+    attackRateMulti: 1,
+    imagePath: `${unityOfTheShoreURL}`,
+  },
+  {
+    name: "Ward Squid",
+    kind: "boss",
+    healthMulti: 2.25,
+    damageMulti: 2.25,
+    attackRateMulti: 1,
+    imagePath: `${wardSquidURL}`,
+  },
 ]
 
 const RARE_VARIATIONS: MonsterType[] = [
@@ -67,20 +149,36 @@ const RARE_VARIATIONS: MonsterType[] = [
     name: "Gem Crab",
     kind: "rare",
     healthMulti: 0.5,
+    damageMulti: 0,
+    attackRateMulti: 0,
     goldMulti: 20,
     imagePath: `${gemCrabURL}`,
   },
 ]
 const SPECIAL_VARIATIONS: MonsterType[] = [
-  { name: "Errant Plasma", kind: "special", healthMulti: 1, goldMulti: 0, imagePath: `${errantPlasmaURL}` },
+  {
+    name: "Errant Plasma",
+    kind: "special",
+    healthMulti: 1,
+    damageMulti: 0,
+    attackRateMulti: 0,
+    goldMulti: 0,
+    imagePath: `${errantPlasmaURL}`,
+  },
 ]
 
 class BaseMonster implements BaseEnemy {
-  level = 0
-  basehealth = 0
+  level
+  baseAttackRate = MONSTER_CONFIG.attack.baseAttackRate
+
   get baseHealth(): number {
     const { base, growth, smoothing } = MONSTER_CONFIG.health
     return base * Math.sqrt(this.level) * Math.pow(growth, this.level / smoothing)
+  }
+
+  get baseDamage(): number {
+    const { baseDamage, growth } = MONSTER_CONFIG.attack
+    return this.level < 30 ? baseDamage : baseDamage * growth * (this.level / 30)
   }
 
   constructor(zoneNumber: number, stageNumber: number, isBoss: boolean) {
@@ -94,6 +192,8 @@ class Monster extends BaseMonster implements Enemy {
   kind
   health
   maxHealth
+  damage
+  attackRate
   image
   goldValue
   plasma?: number
@@ -102,13 +202,14 @@ class Monster extends BaseMonster implements Enemy {
     super(zoneNumber, stageNumber, isBoss)
     this.name = config.name
     this.kind = config.kind
-    const healthMulti = config.healthMulti
-    this.health = Math.floor(this.baseHealth * healthMulti)
+    this.health = Math.floor(this.baseHealth * config.healthMulti)
+    this.damage = Math.floor(this.baseDamage * config.damageMulti)
+    this.attackRate = this.baseAttackRate * config.attackRateMulti
     this.maxHealth = this.health
     this.image = config.imagePath
     const goldMulti = config.goldMulti ?? 1
     const { healthDivisor, healthMultiBonus } = MONSTER_CONFIG.gold
-    this.goldValue = Math.floor((this.baseHealth / healthDivisor) * (healthMulti * healthMultiBonus) * goldMulti)
+    this.goldValue = Math.floor((this.baseHealth / healthDivisor) * (config.healthMulti * healthMultiBonus) * goldMulti)
     if (isBoss) this.plasma = MONSTER_CONFIG.boss.plasmaValue(zoneNumber)
   }
 }
@@ -154,6 +255,8 @@ function serializableMonster(monster: Monster): EnemyState {
     kind: monster.kind,
     level: monster.level,
     health: monster.health,
+    damage: monster.damage,
+    attackRate: monster.attackRate,
     maxHealth: monster.maxHealth,
     goldValue: monster.goldValue,
     image: monster.image,
