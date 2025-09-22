@@ -15,6 +15,7 @@ import {
 import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDealt } from "../redux/statsSlice"
 import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
 import { AnimationPreference, PERFORMANCE_CONFIG } from "./meta"
+import { EnemyState } from "../models/monsters"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -37,7 +38,7 @@ export function useForcedDPI(): number {
   return dpiScale
 }
 
-export function useBreakpointTracker(storedBreakpoint: number) {
+export function useBreakpointObserver(storedBreakpoint: number) {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export function useBreakpointTracker(storedBreakpoint: number) {
 }
 
 interface EngineProps {
+  monsterState: Partial<EnemyState>
   dotDamage: number
   beatDamage: number
   loading: boolean
@@ -74,8 +76,9 @@ interface EngineProps {
 
 export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
-  const { dotDamage, beatDamage, loading, lastSaveCatchUp, abortCatchup, animationPref } = props
+  const { monsterState, dotDamage, beatDamage, loading, lastSaveCatchUp, abortCatchup, animationPref } = props
 
+  // const monsterRef = useRef(monsterState)
   const dotDamageRef = useRef(dotDamage)
   const beatDamageRef = useRef(beatDamage)
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
@@ -92,9 +95,9 @@ export function useGameEngine(props: EngineProps) {
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
 
-  useEffect(() => {
-    abortCatchupRef.current = abortCatchup
-  }, [abortCatchup])
+  // useEffect(() => {
+  //   monsterRef.current = monsterState
+  // }, [monsterState])
   useEffect(() => {
     dotDamageRef.current = dotDamage
   }, [dotDamage])
@@ -104,6 +107,9 @@ export function useGameEngine(props: EngineProps) {
   useEffect(() => {
     lastSaveCatchUpRef.current = lastSaveCatchUp
   }, [lastSaveCatchUp])
+  useEffect(() => {
+    abortCatchupRef.current = abortCatchup
+  }, [abortCatchup])
 
   const dealDamageOverTime = () => {
     if (dotDamageRef.current > 0) {

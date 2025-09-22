@@ -17,6 +17,7 @@ import { selectAnimationPref } from "../../redux/metaSlice"
 import { useCritCleanup } from "../../gameconfig/customHooks"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { formatSmallNumber } from "../../gameconfig/utils"
+import { shallowEqual } from "react-redux"
 
 export default function Monster({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch()
@@ -44,7 +45,7 @@ export default function Monster({ children }: PropsWithChildren) {
     return () => clearInterval(interval)
   }, [animationPref])
 
-  const { monsterName, monsterImage } = useAppSelector(selectMonsterState)
+  const { name, image } = useAppSelector(selectMonsterState, shallowEqual)
 
   useEffect(() => {
     if (displayMultistrike) {
@@ -108,7 +109,7 @@ export default function Monster({ children }: PropsWithChildren) {
     <>
       <div className="flex w-full flex-col items-center">
         <div className="relative flex w-full justify-center text-2xl">
-          <div className="text-center">{monsterName}</div>
+          <div className="text-center">{name}</div>
         </div>
         <div className="">{children}</div>
       </div>
@@ -118,8 +119,8 @@ export default function Monster({ children }: PropsWithChildren) {
         onClick={(e) => handleClick(e)}>
         <img
           className="pointer-events-none h-full max-h-full w-full object-cover lg:object-contain"
-          src={monsterImage}
-          alt={monsterName}
+          src={image}
+          alt={name}
         />
         {usingHighQualityAnimations &&
           recentCrits.map((crit) => {

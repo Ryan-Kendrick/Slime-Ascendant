@@ -29,12 +29,12 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
 
   const state: RootState = store.getState()
   const dispatch = store.dispatch
-  const { monsterAlive, monsterGoldValue, monsterPlasmaValue } = selectMonsterState(state)
+  const { alive, goldValue, plasma: plasmaValue } = selectMonsterState(state)
 
   if (isAllOf(zoneSelected)(action)) {
     zoneTransition(state, dispatch, false, action.payload.prevZone)
   }
-  if (monsterAlive) return nextAction
+  if (alive) return nextAction
 
   const {
     currentZoneNumber,
@@ -52,7 +52,7 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
 
   if (killedMonster.name === "Errant Plasma") dispatch(incrementPDamageUpgradeCount())
   dispatch(incrementKillCount())
-  dispatch(increaseGold(monsterGoldValue))
+  if (goldValue) dispatch(increaseGold(goldValue))
   let nextMonster: undefined | EnemyState
 
   const isProgressing = zoneInView === currentZoneNumber
@@ -63,7 +63,7 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
     // When highest zone
     if (isProgressing) {
       updateZonesCompleted(dispatch)
-      if (currentZoneNumber > 9 && monsterPlasmaValue) dispatch(increasePlasma(monsterPlasmaValue))
+      if (currentZoneNumber > 9 && plasmaValue) dispatch(increasePlasma(plasmaValue))
 
       // Highest zone & farming toggled; zone transition in place
       if (isFarming) {

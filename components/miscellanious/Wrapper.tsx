@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react"
-import { useBreakpointTracker, useForcedDPI } from "../../gameconfig/customHooks"
+import { useBreakpointObserver, useForcedDPI } from "../../gameconfig/customHooks"
 import { useAppSelector } from "../../redux/hooks"
 import { selectBreakpoint } from "../../redux/metaSlice"
 import { selectPrestigeCount } from "../../redux/statsSlice"
@@ -27,7 +27,7 @@ export default function Wrapper({ children }: PropsWithChildren) {
 
   // Track screen width globally
   const breakpoint = useAppSelector(selectBreakpoint)
-  useBreakpointTracker(breakpoint)
+  useBreakpointObserver(breakpoint)
 
   // Force component remount on prestige
   const prestigeCount = useAppSelector(selectPrestigeCount)

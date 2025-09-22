@@ -6,11 +6,7 @@ import { EnemyState } from "../models/monsters"
 import { monsterClicked, increaseTotalDotDamageDealt, monsterBeaten } from "./statsSlice"
 import { prestigeReset } from "./shared/actions"
 
-interface EnemyThatDies extends EnemyState {
-  alive: boolean
-}
-
-const initialState = { ...getMonster("Slime"), alive: true } as EnemyThatDies
+const initialState = { ...getMonster("Slime"), alive: true } as EnemyState
 
 export const monsterSlice = createSlice({
   name: "monster",
@@ -47,18 +43,23 @@ export const monsterSlice = createSlice({
 
 export const { spawnMonster, monsterDied } = monsterSlice.actions
 
-export const selectMonsterState = createSelector([(state: RootState) => state.monster], (monster) => ({
-  monsterName: monster.name,
-  monsterLevel: monster.level,
-  monsterGoldValue: monster.goldValue,
-  monsterPlasmaValue: monster?.plasma,
-  monsterImage: monster.image,
-  monsterAlive: monster.alive,
-}))
+export const selectMonsterState = createSelector(
+  [(state: RootState) => state.monster],
+  (monster) =>
+    ({
+      name: monster.name,
+      level: monster.level,
+      damage: monster.damage,
+      attackRate: monster.attackRate,
+      alive: monster.alive,
+      goldValue: monster.goldValue,
+      plasmaValue: monster?.plasma,
+      image: monster.image,
+    }) as Partial<EnemyState>,
+)
 
 export const selectMonsterHealth = (state: RootState) => state.monster.health
 export const selectMonsterMaxHealth = (state: RootState) => state.monster.maxHealth
 export const selectMonsterKind = (state: RootState) => state.monster.kind
-export const selectMonsterAlive = (state: RootState) => state.monster.alive
 
 export default monsterSlice.reducer

@@ -64,4 +64,5 @@ export interface BaseMonsterConfig {
 export interface EnemyState extends Enemy {
   level: number
   kind: MonsterKind
+  alive: boolean
 }
