@@ -46,6 +46,7 @@ export const metaSlice = createSlice({
     },
     setLongCatchupProcessed: (state, action: PayloadAction<boolean>) => {
       state.longCatchupProcessed = action.payload
+      state.longCatchupDelta = 0
     },
     abortCatchup: (state) => {
       state.longCatchupDelta = 0
