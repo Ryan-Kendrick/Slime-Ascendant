@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import { RootState } from "../redux/store"
-import { initialState as initPlayerState } from "../redux/playerSlice"
+import { initialState, initialState as initPlayerState } from "../redux/playerSlice"
 import { initialState as initStatsState } from "../redux/statsSlice"
 import { initialState as initialMetaState } from "../redux/metaSlice"
 import * as LZString from "lz-string"
@@ -195,7 +195,10 @@ We managed to salvage your achievements, but the time has come to start a new ad
         longCatchupAbort: false,
       },
     }
+    // 0.7.0 checks
     if (!loadedState.player.pHealthUpgradeCount) loadedState.player.pHealthUpgradeCount = 0
+    if (!loadedState.player.maxHealth) loadedState.player.maxHealth = initialState.maxHealth
+    if (!loadedState.player.currentHealth) loadedState.player.currentHealth = initialState.currentHealth
     return loadedState
   } catch (err) {
     console.error(`Error loading from local storage: ${err}`)

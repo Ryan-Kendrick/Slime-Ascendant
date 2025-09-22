@@ -60,13 +60,14 @@ export default function PlayerHealth() {
       if (frameRef.current) cancelAnimationFrame(frameRef.current)
     }
   }, [currentHealth, maxHealth, animationPref])
-
+  console.log(currentHealth)
   const formattedHealth = formatSmallNumber(currentHealth)
+  console.log(formattedHealth)
 
   return (
-    <>
+    <div className="flex w-full flex-col items-center text-lg text-white">
       <div className="text-center">{formattedHealth}</div>
-      <div className="relative h-8 w-48 border border-black">
+      <div className="relative mb-1 h-full w-[calc(100%-8px)] border border-black">
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
           <div
             ref={healthRef}
@@ -75,6 +76,6 @@ export default function PlayerHealth() {
           <div className="absolute bottom-0 z-10 h-3/4 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20" />
         </div>
       </div>
-    </>
+    </div>
   )
 }

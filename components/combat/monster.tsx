@@ -1,12 +1,6 @@
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import {
-  selectBeatDamage,
-  selectClickDamage,
-  selectCritChance,
-  selectDotDamage,
-  selectMultistrikeCooldown,
-} from "../../redux/playerSlice"
+import { selectClickDamage, selectCritChance, selectMultistrikeCooldown } from "../../redux/playerSlice"
 import { selectMonsterState } from "../../redux/monsterSlice"
 import {
   selectCritState,

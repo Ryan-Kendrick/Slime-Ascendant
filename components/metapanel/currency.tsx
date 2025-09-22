@@ -28,14 +28,14 @@ export default function Currency({
 
   return (
     <div className={`relative flex h-[5.5rem] flex-none flex-col items-center ${containerStyle}`}>
-      <div className="absolute left-[60%] top-1/2 flex -translate-x-[60%] -translate-y-1/2 items-center gap-3 md:left-[72%] md:-translate-x-[72%]">
+      <div className="absolute left-4 flex h-full w-full items-center justify-start gap-3 lg:left-8 xl:left-12 2xl:left-1/2 2xl:-translate-x-1/4">
         <div className={`h-20 w-20 ${flashAnimation && flashAnimation}`}>{image}</div>
-        <span className={`min-w-[10ch] text-left text-4xl md:w-[15ch] ${fontStyle}`}>
+        <span className={`w-full text-left text-4xl ${fontStyle}`}>
           {currency}
           {suffix}
         </span>
       </div>
-      <div className={`${innerStyle}`}></div>
+      <div className={`${innerStyle}`} />
     </div>
   )
 }
