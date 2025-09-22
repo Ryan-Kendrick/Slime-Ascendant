@@ -82,11 +82,12 @@ export function useGameEngine(props: EngineProps) {
   const abortCatchupRef = useRef(abortCatchup)
 
   const tickCount = useRef(0)
-  const lastLoopTime = useRef(Date.now())
+  const lastLoopTime = useRef(0)
   const frameRef = useRef<number>()
   const TICK_RATE = 20 / PERFORMANCE_CONFIG.animPrefGameSpeedMod[animationPref]
   const TICK_TIME = 1000 / TICK_RATE
 
+  const lastSaveTime = useRef<number | null>(null)
   const lastBeatTime = useRef<number | null>(beatDamage ? performance.now() : null)
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
@@ -115,7 +116,7 @@ export function useGameEngine(props: EngineProps) {
     dispatch(updateBeatDamageDealt(beatDamageRef.current))
   }
 
-  const handleProgress = (delta: number, beatDelta: number, saving: boolean): number[] => {
+  const handleProgress = (delta: number, beatDelta: number): number[] => {
     let processedDelta = 0
     let processedBeats = 0
 
@@ -126,10 +127,6 @@ export function useGameEngine(props: EngineProps) {
 
       dealDamageOverTime()
 
-      // Save every 30s during realtime gameplay
-      if (saving && tickCount.current % 600 === 0) dispatch(saveGame())
-
-      // Process beats in catchup mode;
       if (useBeatCatchup) {
         const beatToProcess = (processedDelta + TICK_TIME) / BEAT_TIME > processedBeats
         if (beatToProcess) {
@@ -156,8 +153,8 @@ export function useGameEngine(props: EngineProps) {
     if (longCatchup) {
       // Performance logging ──────────────────────────────────────────────
       // const totalDelta = delta
-      // const startTime = performance.now() // ← record start
-      // ─────────────────────────────────────────────────────────────────
+      // const startTime = performance.now()
+      // ──────────────────────────────────────────────────────────────────
       dispatch(setLongCatchupDelta(delta))
       await new Promise((resolve) => setTimeout(resolve, 0))
 
@@ -166,7 +163,7 @@ export function useGameEngine(props: EngineProps) {
       while (delta > TICK_TIME) {
         if (abortCatchupRef.current) return [0]
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
-        const [chunkDelta] = handleProgress(chunk, chunk, false)
+        const [chunkDelta] = handleProgress(chunk, chunk)
         const processed = chunk - chunkDelta
         delta -= processed
         dispatch(addLongCatchupProcessed(processed))
@@ -192,7 +189,7 @@ export function useGameEngine(props: EngineProps) {
     } else {
       dispatch(setLoading(true))
       await new Promise((resolve) => setTimeout(resolve, 0))
-      ;[delta, beatDelta] = handleProgress(delta, beatDelta, false)
+      ;[delta, beatDelta] = handleProgress(delta, beatDelta)
       dispatch(setLoading(false))
     }
 
@@ -229,12 +226,20 @@ export function useGameEngine(props: EngineProps) {
           dealDamageOnBeat()
           beatDelta -= BEAT_TIME
         }
-        ;[delta, beatDelta] = handleProgress(delta, beatDelta, true)
+        ;[delta, beatDelta] = handleProgress(delta, beatDelta)
         lastLoopTime.current = currentTime - (delta % TICK_TIME)
         if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
         if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
         frameRef.current = requestAnimationFrame(gameLoop)
         if (loading) dispatch(setLoading(false))
+
+        if (tickCount.current % 600 === 0) {
+          const shouldAutosave = !lastSaveTime.current || lastSaveTime.current - currentTime > 30000
+          if (shouldAutosave) {
+            lastSaveTime.current = currentTime
+            dispatch(saveGame())
+          }
+        }
         return
       } else {
         handleCatchUp()
