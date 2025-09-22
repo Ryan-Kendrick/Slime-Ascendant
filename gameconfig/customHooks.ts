@@ -215,6 +215,10 @@ export function useGameEngine(props: EngineProps) {
         ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
         lastLoopTime.current = currentTime - (delta % TICK_TIME)
         if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
+        if (longCatchup) {
+          dispatch(saveGame())
+          lastSaveTime.current = currentTime
+        }
         dispatch(clearCatchUpTime())
         frameRef.current = requestAnimationFrame(gameLoop)
       }
@@ -230,7 +234,6 @@ export function useGameEngine(props: EngineProps) {
         lastLoopTime.current = currentTime - (delta % TICK_TIME)
         if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
         if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
-        frameRef.current = requestAnimationFrame(gameLoop)
         if (loading) dispatch(setLoading(false))
 
         if (tickCount.current % 600 === 0) {
@@ -240,6 +243,7 @@ export function useGameEngine(props: EngineProps) {
             dispatch(saveGame())
           }
         }
+        frameRef.current = requestAnimationFrame(gameLoop)
         return
       } else {
         handleCatchUp()
