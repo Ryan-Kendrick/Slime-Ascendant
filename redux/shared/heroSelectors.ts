@@ -3,7 +3,6 @@ import { playerCalc, UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { HeroName } from "../../models/upgrades"
 import type { RootState } from "../store"
 import { heroStateMap } from "./maps"
-import { prestigeDamageMod } from "../playerSlice"
 
 export const createHeroSelector = (heroName: HeroName) =>
   createSelector([(state: RootState) => state.player], (player) => ({
@@ -65,7 +64,7 @@ export const selectMageDamage = createSelector([selectMageState], (mageState) =>
 export const selectPDamageUpgradeCount = (state: RootState) => state.player.pDamageUpgradeCount
 export const selectPMod = createSelector(
   [selectPDamageUpgradeCount],
-  (pDamageUpgradeCount) => 1 + pDamageUpgradeCount * prestigeDamageMod,
+  (pDamageUpgradeCount) => 1 + pDamageUpgradeCount * UPGRADE_CONFIG.prestigeUpgrades.damage.modifier,
 )
 export const selectAchievementModifier = (state: RootState) => state.player.achievementModifier
 export const selectAchievementDamage = createSelector(

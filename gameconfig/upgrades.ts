@@ -1,5 +1,9 @@
 import { HeroName, HeroState, PlayerCalc, UpgradeConfig } from "../models/upgrades"
 
+export const PLAYER_CONFIG = {
+  baseHealth: 10,
+} as const
+
 export const UPGRADE_CONFIG: UpgradeConfig = {
   adventurer: {
     visibleAtZone: 1,

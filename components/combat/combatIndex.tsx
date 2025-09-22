@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useState } from "react"
 import clsx from "clsx/lite"
 import { useAppSelector } from "../../redux/hooks"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
-import Healthbar from "./healthbar"
+import MonsterHealth from "./monsterHealth"
 import Monster from "./monster"
 import ZoneMap from "./zoneMap"
 import ZoneSelector from "./zoneSelector"
@@ -70,7 +70,7 @@ export default function CombatIndex({ children }: PropsWithChildren) {
               </div>
             )}
             <Monster>
-              <Healthbar />
+              <MonsterHealth />
             </Monster>
             <ZoneMap />
           </div>

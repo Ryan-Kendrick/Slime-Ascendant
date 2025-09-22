@@ -20,6 +20,8 @@ export interface PlayerState {
   mageLevel: number
   mageOTPUpgradeCount: number
 
+  currentHealth: number
+  maxHealth: number
   gold: number
   plasma: number
   plasmaReserved: number
@@ -42,7 +44,7 @@ export interface PlayerState {
   pCritUpgradeCount: number
   pMultistrikeUpgradeCount: number
   pBeatUpgradeCount: number
-  // pHealthUpgradeCount: number]
+  pHealthUpgradeCount: number
 
   pendingPPurchases: Record<PrestigeUpgradeId, { cost: number; purchaseCount: number }>
 }

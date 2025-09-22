@@ -1,27 +1,24 @@
 import clsx from "clsx/lite"
 import { useEffect, useRef, useState } from "react"
 import { useAppSelector } from "../../redux/hooks"
-import { selectMonsterHealth, selectMonsterMaxHealth } from "../../redux/monsterSlice"
 import { formatSmallNumber } from "../../gameconfig/utils"
 import { PERFORMANCE_CONFIG } from "../../gameconfig/meta"
-import { selectBeatCount } from "../../redux/statsSlice"
 import { selectAnimationPref } from "../../redux/metaSlice"
+import { selectHealth } from "../../redux/playerSlice"
 
-export default function Healthbar() {
-  const monsterHealth = useAppSelector(selectMonsterHealth)
-  const monsterMaxHealth = useAppSelector(selectMonsterMaxHealth)
+export default function PlayerHealth() {
+  const { currentHealth, maxHealth } = useAppSelector(selectHealth)
 
   const healthRef = useRef<HTMLDivElement>(null)
-  const beatCount = useAppSelector(selectBeatCount)
   const animationPref = useAppSelector(selectAnimationPref)
 
-  const targetHealth = useRef((monsterHealth / monsterMaxHealth) * 100)
+  const targetHealth = useRef((currentHealth / maxHealth) * 100)
   const interpRate = 5
   const [width, setWidth] = useState(100)
   const frameRef = useRef<number>()
 
   useEffect(() => {
-    targetHealth.current = (monsterHealth / monsterMaxHealth) * 100
+    targetHealth.current = (currentHealth / maxHealth) * 100
 
     const animateHealth = () => {
       setWidth((currentWidth) => {
@@ -30,6 +27,27 @@ export default function Healthbar() {
         if (Math.abs(diff) < 0.8) {
           return targetHealth.current
         }
+
+        if (healthRef.current && animationPref > 0) {
+          setTimeout(() => {
+            healthRef.current?.classList.add("animate-shadow-inset")
+          }, 60000 / PERFORMANCE_CONFIG.bpm)
+          setTimeout(
+            () => {
+              healthRef.current?.classList.remove("animate-shadow-inset")
+            },
+            (60000 / PERFORMANCE_CONFIG.bpm) * 0.85,
+          )
+        } else if (healthRef.current && animationPref === 0) {
+          healthRef.current.classList.add("border-r-2", "border-yellow-300")
+          setTimeout(
+            () => {
+              healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
+            },
+            (60000 / PERFORMANCE_CONFIG.bpm) * 0.6,
+          )
+        }
+
         return currentWidth + diff / interpRate
       })
       frameRef.current = requestAnimationFrame(animateHealth)
@@ -41,33 +59,9 @@ export default function Healthbar() {
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current)
     }
-  }, [monsterHealth, monsterMaxHealth])
+  }, [currentHealth, maxHealth, animationPref])
 
-  useEffect(() => {
-    if (beatCount === 0) return
-
-    if (healthRef.current && animationPref > 0) {
-      setTimeout(() => {
-        healthRef.current?.classList.add("animate-shadow-inset")
-      }, 60000 / PERFORMANCE_CONFIG.bpm)
-      setTimeout(
-        () => {
-          healthRef.current?.classList.remove("animate-shadow-inset")
-        },
-        (60000 / PERFORMANCE_CONFIG.bpm) * 0.85,
-      )
-    } else if (healthRef.current && animationPref === 0) {
-      healthRef.current.classList.add("border-r-2", "border-yellow-300")
-      setTimeout(
-        () => {
-          healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
-        },
-        (60000 / PERFORMANCE_CONFIG.bpm) * 0.6,
-      )
-    }
-  }, [beatCount, animationPref])
-
-  const formattedHealth = formatSmallNumber(monsterHealth)
+  const formattedHealth = formatSmallNumber(currentHealth)
 
   return (
     <>

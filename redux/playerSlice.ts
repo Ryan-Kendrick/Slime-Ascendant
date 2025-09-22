@@ -2,8 +2,8 @@ import { createSelector, createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { AppDispatch, type RootState } from "./store"
 import { Tab } from "../models/player"
-import { playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
-import { prestigeUpgradeMap, setInitElementMap } from "./shared/maps"
+import { PLAYER_CONFIG, playerCalc, UPGRADE_CONFIG } from "../gameconfig/upgrades"
+import { setInitElementMap } from "./shared/maps"
 import { PrestigeState, PrestigeUpgradeId, HeroName, UpgradeId } from "../models/upgrades"
 import { prestigeReset } from "./shared/actions"
 import { ACHIEVEMENT_CONFIG, AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
@@ -20,6 +20,8 @@ const debugState = {
   mageLevel: 500,
   mageOTPUpgradeCount: 3,
 
+  currentHealth: 1000000,
+  maxHealth: 1000000,
   gold: 1000000,
   achievementModifier: 0,
 
@@ -57,6 +59,8 @@ export const initialState = {
   mageLevel: 0,
   mageOTPUpgradeCount: 0,
 
+  currentHealth: PLAYER_CONFIG.baseHealth,
+  maxHealth: PLAYER_CONFIG.baseHealth,
   gold: 0,
   achievementModifier: 0,
 
@@ -112,6 +116,13 @@ export const playerSlice = createSlice({
     },
     incrementMageOTPUpgradeCount: (state) => {
       state.mageOTPUpgradeCount++
+    },
+    increaseHealth(state, action: PayloadAction<number>) {
+      state.maxHealth += action.payload
+      state.currentHealth += action.payload
+    },
+    setFullHealth: (state) => {
+      state.currentHealth = state.maxHealth
     },
     increaseGold(state, action: PayloadAction<number>) {
       state.gold += action.payload
@@ -183,7 +194,7 @@ export const playerSlice = createSlice({
     },
     toggleDebugState: (state) => {
       if (state.adventurerLevel < 500) {
-        return (state = debugState)
+        return (state = debugState as typeof initialState)
       } else {
         return (state = {
           ...initialState,
@@ -241,6 +252,8 @@ export const {
   incrementMageOTPUpgradeCount,
   increaseGold,
   decreaseGold,
+  increaseHealth,
+  setFullHealth,
   increasePlasma,
   reservePlasma,
   setPrestigeUpgradesPending,
@@ -257,7 +270,6 @@ export const {
   toggleDebugState,
 } = playerSlice.actions
 
-export const prestigeDamageMod = UPGRADE_CONFIG.prestigeUpgrades.damage.modifier
 export const selectPrestigeState = createSelector([(state: RootState) => state.player], (player) => ({
   plasma: player.plasma,
   plasmaSpent: player.plasmaSpent,
@@ -284,6 +296,15 @@ export const selectingPendingPHealth = createPendingPPurchaseSelector("health")
 export const selectPendingPCritChance = createPendingPPurchaseSelector("crit-chance")
 export const selectPendingPMultistrike = createPendingPPurchaseSelector("multistrike")
 export const selectPendingPBeat = createPendingPPurchaseSelector("beat")
+
+export const selectCurrentHealth = (state: RootState) => state.player.currentHealth
+export const selectMaxHealth = (state: RootState) =>
+  UPGRADE_CONFIG.calcAdditiveMod(state.player.currentHealth, UPGRADE_CONFIG.prestigeUpgrades.health)
+
+export const selectHealth = createSelector([selectCurrentHealth, selectMaxHealth], (currentHealth, maxHealth) => ({
+  currentHealth,
+  maxHealth,
+}))
 
 export const selectPendingPPurchases = (state: RootState) => state.player.pendingPPurchases
 
