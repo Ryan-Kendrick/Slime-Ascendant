@@ -2,7 +2,6 @@ import clsx from "clsx/lite"
 import { useEffect, useRef, useState } from "react"
 import { useAppSelector } from "../../redux/hooks"
 import { formatSmallNumber } from "../../gameconfig/utils"
-import { PERFORMANCE_CONFIG } from "../../gameconfig/meta"
 import { selectAnimationPref } from "../../redux/metaSlice"
 import { selectHealth } from "../../redux/playerSlice"
 
@@ -28,24 +27,17 @@ export default function PlayerHealth() {
           return targetHealth.current
         }
 
+        // This needs limiting
         if (healthRef.current && animationPref > 0) {
+          healthRef.current?.classList.add("animate-shadow-inset")
           setTimeout(() => {
-            healthRef.current?.classList.add("animate-shadow-inset")
-          }, 60000 / PERFORMANCE_CONFIG.bpm)
-          setTimeout(
-            () => {
-              healthRef.current?.classList.remove("animate-shadow-inset")
-            },
-            (60000 / PERFORMANCE_CONFIG.bpm) * 0.85,
-          )
+            healthRef.current?.classList.remove("animate-shadow-inset")
+          }, 300)
         } else if (healthRef.current && animationPref === 0) {
           healthRef.current.classList.add("border-r-2", "border-yellow-300")
-          setTimeout(
-            () => {
-              healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
-            },
-            (60000 / PERFORMANCE_CONFIG.bpm) * 0.6,
-          )
+          setTimeout(() => {
+            healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
+          }, 300)
         }
 
         return currentWidth + diff / interpRate
@@ -66,7 +58,7 @@ export default function PlayerHealth() {
   return (
     <div className="flex w-full flex-col items-center text-lg text-white">
       <div className="text-center">{formattedHealth}</div>
-      <div className="relative mb-1 h-full w-[calc(100%-8px)] border border-frost">
+      <div className="relative mb-1 h-full w-[calc(100%-8px)] border border-frost shadow-md shadow-slate-800">
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
           <div
             ref={healthRef}

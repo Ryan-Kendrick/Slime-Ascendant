@@ -124,6 +124,9 @@ export const playerSlice = createSlice({
     setFullHealth: (state) => {
       state.currentHealth = state.maxHealth
     },
+    enemyAttack: (state, action: PayloadAction<number>) => {
+      state.currentHealth -= Math.floor(action.payload)
+    },
     increaseGold(state, action: PayloadAction<number>) {
       state.gold += action.payload
     },
@@ -254,6 +257,7 @@ export const {
   decreaseGold,
   increaseHealth,
   setFullHealth,
+  enemyAttack,
   increasePlasma,
   reservePlasma,
   setPrestigeUpgradesPending,
@@ -299,7 +303,7 @@ export const selectPendingPBeat = createPendingPPurchaseSelector("beat")
 
 export const selectCurrentHealth = (state: RootState) => state.player.currentHealth
 export const selectMaxHealth = (state: RootState) =>
-  UPGRADE_CONFIG.calcAdditiveMod(state.player.currentHealth, UPGRADE_CONFIG.prestigeUpgrades.health)
+  UPGRADE_CONFIG.calcAdditiveMod(state.player.maxHealth, UPGRADE_CONFIG.prestigeUpgrades.health)
 
 export const selectHealth = createSelector([selectCurrentHealth, selectMaxHealth], (currentHealth, maxHealth) => ({
   currentHealth,

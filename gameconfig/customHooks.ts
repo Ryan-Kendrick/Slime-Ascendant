@@ -16,6 +16,7 @@ import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDe
 import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
 import { AnimationPreference, PERFORMANCE_CONFIG } from "./meta"
 import { EnemyState } from "../models/monsters"
+import { enemyAttack } from "../redux/playerSlice"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -78,7 +79,7 @@ export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
   const { monsterState, dotDamage, beatDamage, loading, lastSaveCatchUp, abortCatchup, animationPref } = props
 
-  // const monsterRef = useRef(monsterState)
+  const monsterRef = useRef(monsterState)
   const dotDamageRef = useRef(dotDamage)
   const beatDamageRef = useRef(beatDamage)
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
@@ -90,14 +91,17 @@ export function useGameEngine(props: EngineProps) {
   const TICK_RATE = 20 / PERFORMANCE_CONFIG.animPrefGameSpeedMod[animationPref]
   const TICK_TIME = 1000 / TICK_RATE
 
+  const nextAttackTickRef = useRef<number>(0)
   const lastSaveTime = useRef<number | null>(null)
   const lastBeatTime = useRef<number | null>(beatDamage ? performance.now() : null)
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
 
-  // useEffect(() => {
-  //   monsterRef.current = monsterState
-  // }, [monsterState])
+  useEffect(() => {
+    monsterRef.current = monsterState
+    nextAttackTickRef.current = monsterState.attackRate!
+    nextAttackTickRef.current = tickCount.current + Math.ceil((monsterState.attackRate! * 1000) / TICK_TIME)
+  }, [monsterState, TICK_TIME])
   useEffect(() => {
     dotDamageRef.current = dotDamage
   }, [dotDamage])
@@ -110,6 +114,18 @@ export function useGameEngine(props: EngineProps) {
   useEffect(() => {
     abortCatchupRef.current = abortCatchup
   }, [abortCatchup])
+
+  const checkEnemyAttacks = useCallback(() => {
+    if (!monsterRef.current || !monsterRef.current.alive || !nextAttackTickRef.current) {
+      console.error("No monster attack scheduled")
+    }
+
+    if (tickCount.current > nextAttackTickRef.current) {
+      dispatch(enemyAttack(monsterRef.current.damage!))
+      console.log("Enemy attacks!")
+      nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
+    }
+  }, [TICK_TIME])
 
   const dealDamageOverTime = () => {
     if (dotDamageRef.current > 0) {
@@ -132,6 +148,7 @@ export function useGameEngine(props: EngineProps) {
       tickCount.current++
 
       dealDamageOverTime()
+      checkEnemyAttacks()
 
       if (useBeatCatchup) {
         const beatToProcess = (processedDelta + TICK_TIME) / BEAT_TIME > processedBeats

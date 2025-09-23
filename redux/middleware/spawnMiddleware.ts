@@ -10,7 +10,7 @@ import {
 } from "../zoneSlice"
 import { ZONE_CONFIG } from "../../gameconfig/zone"
 import { EnemyState } from "../../models/monsters"
-import { increaseGold, increasePlasma, incrementPDamageUpgradeCount } from "../playerSlice"
+import { increaseGold, increasePlasma, incrementPDamageUpgradeCount, setFullHealth } from "../playerSlice"
 import {
   incrementFarmZonesCompleted,
   incrementKillCount,
@@ -97,6 +97,7 @@ export const spawnMiddleware: Middleware = (store) => (next) => (action) => {
   }
   // Spawn the next monster when we didn't jump to zoneTransition
   if (nextMonster) {
+    dispatch(setFullHealth())
     dispatch(spawnMonster(nextMonster))
   }
 
@@ -124,6 +125,7 @@ function zoneTransition(state: RootState, dispatch: Dispatch, returnToProgressio
     nextMonster = state.zone.farmZoneMonsters?.[0]
   }
   if (nextMonster) {
+    dispatch(setFullHealth())
     dispatch(spawnMonster(nextMonster))
   } else throw new Error("Monster undefined during zone transition")
 }
