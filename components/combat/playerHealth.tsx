@@ -37,7 +37,6 @@ export default function PlayerHealth() {
     frameRef.current = requestAnimationFrame(animateHealth)
 
     if (currentHealth < maxHealth && healthRef.current && animationPref > 0) {
-      console.log("animate")
       healthRef.current?.classList.add("animate-shadow-inset")
       setTimeout(() => {
         healthRef.current?.classList.remove("animate-shadow-inset")

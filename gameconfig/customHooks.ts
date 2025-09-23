@@ -122,7 +122,6 @@ export function useGameEngine(props: EngineProps) {
 
     if (tickCount.current > nextAttackTickRef.current) {
       dispatch(enemyAttack(monsterRef.current.damage!))
-      console.log("Enemy attacks!")
       nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
     }
   }, [TICK_TIME])
