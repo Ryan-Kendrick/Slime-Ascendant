@@ -27,19 +27,6 @@ export default function PlayerHealth() {
           return targetHealth.current
         }
 
-        // This needs limiting
-        if (healthRef.current && animationPref > 0) {
-          healthRef.current?.classList.add("animate-shadow-inset")
-          setTimeout(() => {
-            healthRef.current?.classList.remove("animate-shadow-inset")
-          }, 300)
-        } else if (healthRef.current && animationPref === 0) {
-          healthRef.current.classList.add("border-r-2", "border-yellow-300")
-          setTimeout(() => {
-            healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
-          }, 300)
-        }
-
         return currentWidth + diff / interpRate
       })
       frameRef.current = requestAnimationFrame(animateHealth)
@@ -48,6 +35,20 @@ export default function PlayerHealth() {
     if (frameRef.current) cancelAnimationFrame(frameRef.current)
 
     frameRef.current = requestAnimationFrame(animateHealth)
+
+    if (currentHealth < maxHealth && healthRef.current && animationPref > 0) {
+      console.log("animate")
+      healthRef.current?.classList.add("animate-shadow-inset")
+      setTimeout(() => {
+        healthRef.current?.classList.remove("animate-shadow-inset")
+      }, 300)
+    } else if (currentHealth < maxHealth && healthRef.current && animationPref === 0) {
+      healthRef.current.classList.add("border-r-2", "border-yellow-300")
+      setTimeout(() => {
+        healthRef.current?.classList.remove("border-r-2", "border-yellow-300")
+      }, 300)
+    }
+
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current)
     }
