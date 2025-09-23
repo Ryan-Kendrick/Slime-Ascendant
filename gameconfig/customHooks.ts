@@ -218,7 +218,6 @@ export function useGameEngine(props: EngineProps) {
     return [delta, beatDelta]
   }
 
-  // Added useCallback to stabilise the game loop. This probably makes a stale closure for
   const gameLoop = useCallback(
     (currentTime: number) => {
       let delta: number
@@ -232,14 +231,17 @@ export function useGameEngine(props: EngineProps) {
       }
       const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
+      // Long catchup handling, essentially the same as the regular catchup but in chunks
       const handleCatchUp = async () => {
         const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
+        // Await the return of any leftover delta
         ;[delta, beatDelta] = await handleOfflineProgress({ delta, beatDelta, longCatchup })
         lastLoopTime.current = currentTime - (delta % TICK_TIME)
         if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
-        if (longCatchup) {
-          dispatch(saveGame())
+        // Autosave after long catchup if > autosave time has passed
+        if (longCatchup && lastSaveTime.current && currentTime - lastSaveTime.current > PERFORMANCE_CONFIG.autoSave) {
           lastSaveTime.current = currentTime
+          dispatch(saveGame())
         }
         dispatch(clearCatchUpTime())
         frameRef.current = requestAnimationFrame(gameLoop)
@@ -257,9 +259,9 @@ export function useGameEngine(props: EngineProps) {
         if (lastBeatTime.current) lastBeatTime.current = currentTime - (beatDelta % BEAT_TIME)
         if (lastSaveCatchUpRef.current) dispatch(clearCatchUpTime())
         if (loading) dispatch(setLoading(false))
-
         if (tickCount.current % 600 === 0) {
-          const shouldAutosave = !lastSaveTime.current || lastSaveTime.current - currentTime > 30000
+          const shouldAutosave =
+            !lastSaveTime.current || currentTime - lastSaveTime.current > PERFORMANCE_CONFIG.autoSave
           if (shouldAutosave) {
             lastSaveTime.current = currentTime
             dispatch(saveGame())

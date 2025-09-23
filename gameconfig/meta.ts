@@ -18,6 +18,7 @@ export const PERFORMANCE_CONFIG = {
     longBreakpoint: 3600000, // 60 minutes
     chunkSize: 120000, // 120 seconds
   },
+  autoSave: 30000, // Autosave every 30 seconds
 
   critDisplayLimit: 10,
   fadeoutDuration: 2500, // Crit fadeout effect duration in milliseconds
