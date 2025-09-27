@@ -119,10 +119,7 @@ export const playerSlice = createSlice({
     incrementMageOTPUpgradeCount: (state) => {
       state.mageOTPUpgradeCount++
     },
-    increaseHealth(state, action: PayloadAction<number>) {
-      state.maxHealth += action.payload
-      state.currentHealth += action.payload
-    },
+
     setFullHealth: (state) => {
       state.currentHealth = state.maxHealth
       state.respawnTime = 0
@@ -254,6 +251,10 @@ export const playerSlice = createSlice({
       if (action.payload.multistrike) state.pMultistrikeUpgradeCount += action.payload.multistrike.purchaseCount
       if (action.payload.beat) state.pBeatUpgradeCount += action.payload.beat.purchaseCount
       if (action.payload.health) state.pHealthUpgradeCount += action.payload.health.purchaseCount
+      state.maxHealth =
+        PLAYER_CONFIG.baseHealth *
+        (1 + UPGRADE_CONFIG.calcAdditiveMod(state.pHealthUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades.health))
+      state.currentHealth = state.maxHealth
     })
   },
 })
@@ -269,7 +270,6 @@ export const {
   incrementMageOTPUpgradeCount,
   increaseGold,
   decreaseGold,
-  increaseHealth,
   setFullHealth,
   enemyAttack,
   setRespawnTime,
@@ -318,7 +318,8 @@ export const selectPendingPBeat = createPendingPPurchaseSelector("beat")
 
 export const selectCurrentHealth = (state: RootState) => state.player.currentHealth
 export const selectMaxHealth = (state: RootState) =>
-  UPGRADE_CONFIG.calcAdditiveMod(state.player.maxHealth, UPGRADE_CONFIG.prestigeUpgrades.health)
+  PLAYER_CONFIG.baseHealth *
+  (1 + UPGRADE_CONFIG.calcAdditiveMod(state.player.pHealthUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades.health))
 
 export const selectHealth = createSelector([selectCurrentHealth, selectMaxHealth], (currentHealth, maxHealth) => ({
   currentHealth,

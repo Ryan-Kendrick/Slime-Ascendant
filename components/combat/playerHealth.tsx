@@ -3,18 +3,32 @@ import { useEffect, useRef, useState } from "react"
 import { useAppSelector } from "../../redux/hooks"
 import { formatSmallNumber } from "../../gameconfig/utils"
 import { selectAnimationPref } from "../../redux/metaSlice"
-import { selectHealth } from "../../redux/playerSlice"
+import { selectHealth, selectRespawnTime } from "../../redux/playerSlice"
 
 export default function PlayerHealth() {
   const { currentHealth, maxHealth } = useAppSelector(selectHealth)
 
   const healthRef = useRef<HTMLDivElement>(null)
   const animationPref = useAppSelector(selectAnimationPref)
+  const respawnTime = useAppSelector(selectRespawnTime)
+  const [currentRespawnTime, setCurrentRespawnTime] = useState(0)
 
   const targetHealth = useRef((currentHealth / maxHealth) * 100)
   const interpRate = 5
   const [width, setWidth] = useState(100)
   const frameRef = useRef<number>()
+
+  useEffect(() => {
+    // If there is respawn time, and no timer is running, start one
+    if (respawnTime > 0) {
+      if (currentRespawnTime === 0) setCurrentRespawnTime(respawnTime / 1000)
+      setTimeout(() => {
+        setCurrentRespawnTime(currentRespawnTime - 1)
+      }, 1000)
+    } else if (!respawnTime || targetHealth.current >= 0) {
+      setCurrentRespawnTime(0)
+    }
+  }, [respawnTime, currentRespawnTime])
 
   useEffect(() => {
     targetHealth.current = (currentHealth / maxHealth) * 100
@@ -62,10 +76,14 @@ export default function PlayerHealth() {
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
           <div
             ref={healthRef}
-            className={clsx("h-full transform-gpu rounded-sm bg-gradient-to-b from-hpgreen to-darkgreen")}
-          />
+            className={clsx(
+              "relative h-full transform-gpu rounded-sm bg-gradient-to-b from-hpgreen to-darkgreen transition-[width,background-color] duration-300 ease-out",
+            )}></div>
           <div className="absolute bottom-0 z-10 h-3/4 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20" />
         </div>
+        <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 font-passion text-6xl text-red-800">
+          {currentRespawnTime > 0 && currentRespawnTime}
+        </span>
       </div>
     </div>
   )
