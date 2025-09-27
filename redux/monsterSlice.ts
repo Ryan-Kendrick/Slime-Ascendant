@@ -5,6 +5,7 @@ import { getMonster } from "../gameconfig/monster"
 import { EnemyState } from "../models/monsters"
 import { monsterClicked, increaseTotalDotDamageDealt, monsterBeaten } from "./statsSlice"
 import { prestigeReset } from "./shared/actions"
+import { setRespawnTime } from "./playerSlice"
 
 const initialState = { ...getMonster("Slime"), alive: true } as EnemyState
 
@@ -23,20 +24,26 @@ export const monsterSlice = createSlice({
     builder.addCase(prestigeReset, () => {
       return initialState
     })
-    builder.addMatcher(isAllOf(monsterClicked), (state, action) => {
+    builder.addCase(monsterClicked, (state, action) => {
       const newHealth = state.health - action.payload.damage
       state.health = newHealth
       state.alive = newHealth >= 1
     })
-    builder.addMatcher(isAllOf(increaseTotalDotDamageDealt), (state, action) => {
+    builder.addCase(increaseTotalDotDamageDealt, (state, action) => {
       const newHealth = state.health - action.payload
       state.health = newHealth
       state.alive = newHealth >= 1
     })
-    builder.addMatcher(isAllOf(monsterBeaten), (state, action) => {
+    builder.addCase(monsterBeaten, (state, action) => {
       const newHealth = state.health - action.payload
       state.health = newHealth
       state.alive = newHealth >= 1
+    })
+    builder.addCase(setRespawnTime, (state, action) => {
+      if (action.payload === 0) {
+        state.health = state.maxHealth
+        state.alive = true
+      }
     })
   },
 })

@@ -16,7 +16,9 @@ import { removeCrit, toggleDisplayCrit, updateBeatDamageDealt, updateDotDamageDe
 import { HeroName, PrestigeUpgradeId } from "../models/upgrades"
 import { AnimationPreference, PERFORMANCE_CONFIG } from "./meta"
 import { EnemyState } from "../models/monsters"
-import { enemyAttack } from "../redux/playerSlice"
+import { enemyAttack, selectBeatDamage, selectDotDamage, selectRespawnTime, setRespawnTime } from "../redux/playerSlice"
+import { store } from "../redux/store"
+import { selectMonsterState } from "../redux/monsterSlice"
 
 export function useForcedDPI(): number {
   const getDPIScale = () => (window.matchMedia("(min-width: 1024px)").matches ? window.devicePixelRatio : 1)
@@ -67,6 +69,7 @@ export function useBreakpointObserver(storedBreakpoint: number) {
 
 interface EngineProps {
   monsterState: Partial<EnemyState>
+  respawnTime: number
   dotDamage: number
   beatDamage: number
   loading: boolean
@@ -77,9 +80,11 @@ interface EngineProps {
 
 export function useGameEngine(props: EngineProps) {
   const dispatch = useAppDispatch()
-  const { monsterState, dotDamage, beatDamage, loading, lastSaveCatchUp, abortCatchup, animationPref } = props
+  const { monsterState, respawnTime, dotDamage, beatDamage, loading, lastSaveCatchUp, abortCatchup, animationPref } =
+    props
 
   const monsterRef = useRef(monsterState)
+  const respawnTimeRef = useRef(respawnTime)
   const dotDamageRef = useRef(dotDamage)
   const beatDamageRef = useRef(beatDamage)
   const lastSaveCatchUpRef = useRef(lastSaveCatchUp)
@@ -97,11 +102,32 @@ export function useGameEngine(props: EngineProps) {
   const bpm = PERFORMANCE_CONFIG.bpm
   const BEAT_TIME = 60000 / bpm
 
+  const forceStateSync = useCallback(() => {
+    const state = store.getState()
+
+    monsterRef.current = selectMonsterState(state)
+    respawnTimeRef.current = selectRespawnTime(state)
+    dotDamageRef.current = selectDotDamage(state)
+    beatDamageRef.current = selectBeatDamage(state)
+  }, [])
+
+  const setEnemyAttack = useCallback(() => {
+    if (monsterRef.current && monsterRef.current.alive) {
+      nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
+    }
+  }, [TICK_TIME])
+
   useEffect(() => {
+    respawnTimeRef.current = respawnTime
+    if (respawnTime > 0) {
+      nextAttackTickRef.current = 0
+    }
+  }, [respawnTime, setEnemyAttack, TICK_TIME])
+  useEffect(() => {
+    console.log("Monster state updated:", monsterState, "setting attack", respawnTimeRef.current)
     monsterRef.current = monsterState
-    nextAttackTickRef.current = monsterState.attackRate!
-    nextAttackTickRef.current = tickCount.current + Math.ceil((monsterState.attackRate! * 1000) / TICK_TIME)
-  }, [monsterState, TICK_TIME])
+    setEnemyAttack()
+  }, [monsterState, setEnemyAttack, TICK_TIME])
   useEffect(() => {
     dotDamageRef.current = dotDamage
   }, [dotDamage])
@@ -117,12 +143,13 @@ export function useGameEngine(props: EngineProps) {
 
   const checkEnemyAttacks = useCallback(() => {
     if (!monsterRef.current || !monsterRef.current.alive || !nextAttackTickRef.current) {
-      console.error("No monster attack scheduled")
-    }
-
-    if (tickCount.current > nextAttackTickRef.current) {
+      console.error("No monster attack scheduled", respawnTimeRef.current, monsterRef.current)
+      if (respawnTimeRef.current <= 0) setEnemyAttack()
+    } else if (tickCount.current >= nextAttackTickRef.current) {
+      console.log("Enemy attacks for", monsterRef.current.damage)
       dispatch(enemyAttack(monsterRef.current.damage!))
       nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
+      forceStateSync()
     }
   }, [TICK_TIME])
 
@@ -146,19 +173,30 @@ export function useGameEngine(props: EngineProps) {
     while (delta >= TICK_TIME) {
       tickCount.current++
 
-      dealDamageOverTime()
-      checkEnemyAttacks()
+      const beatToProcess = (processedDelta + TICK_TIME) / BEAT_TIME > processedBeats
 
-      if (useBeatCatchup) {
-        const beatToProcess = (processedDelta + TICK_TIME) / BEAT_TIME > processedBeats
-        if (beatToProcess) {
+      if (respawnTimeRef.current > 0) {
+        respawnTimeRef.current -= TICK_TIME
+        delta -= TICK_TIME
+        processedDelta += TICK_TIME
+        if (useBeatCatchup && beatToProcess) processedBeats++
+        if (respawnTimeRef.current <= 0) dispatch(setRespawnTime(0))
+      } else {
+        if (!nextAttackTickRef.current && !respawnTimeRef.current) setEnemyAttack()
+
+        if (useBeatCatchup && beatToProcess) {
           dealDamageOnBeat()
           processedBeats++
         }
-      }
+        dealDamageOverTime()
 
-      delta -= TICK_TIME
-      processedDelta += TICK_TIME
+        checkEnemyAttacks()
+
+        delta -= TICK_TIME
+        processedDelta += TICK_TIME
+      }
+      console.log(tickCount.current, nextAttackTickRef.current, respawnTimeRef.current)
+      // if (delta > TICK_TIME * 20 && tickCount.current === nextAttackTickRef.current)
     }
 
     return [delta, beatDelta]
@@ -231,7 +269,7 @@ export function useGameEngine(props: EngineProps) {
       }
       const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
-      // Long catchup handling, essentially the same as the regular catchup but in chunks
+      // Long catchup handling, essentially the same as the regular catchup but chunked
       const handleCatchUp = async () => {
         const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
         // Await the return of any leftover delta
@@ -250,8 +288,10 @@ export function useGameEngine(props: EngineProps) {
       if (onRegularTime) {
         const shouldBeatNow = beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2
 
-        if (shouldBeatNow) {
+        if (shouldBeatNow && respawnTimeRef.current === 0) {
           dealDamageOnBeat()
+          beatDelta -= BEAT_TIME
+        } else if (shouldBeatNow) {
           beatDelta -= BEAT_TIME
         }
         ;[delta, beatDelta] = handleProgress(delta, beatDelta)

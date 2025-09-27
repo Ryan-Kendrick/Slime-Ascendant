@@ -22,6 +22,7 @@ const debugState = {
 
   currentHealth: 1000000,
   maxHealth: 1000000,
+  respawnTime: 0,
   gold: 1000000,
   achievementModifier: 0,
 
@@ -61,6 +62,7 @@ export const initialState = {
 
   currentHealth: PLAYER_CONFIG.baseHealth,
   maxHealth: PLAYER_CONFIG.baseHealth,
+  respawnTime: 0,
   gold: 0,
   achievementModifier: 0,
 
@@ -123,9 +125,21 @@ export const playerSlice = createSlice({
     },
     setFullHealth: (state) => {
       state.currentHealth = state.maxHealth
+      state.respawnTime = 0
+    },
+    setRespawnTime(state, action: PayloadAction<number>) {
+      state.respawnTime = action.payload
+      if (action.payload === 0) {
+        state.currentHealth = state.maxHealth
+      }
     },
     enemyAttack: (state, action: PayloadAction<number>) => {
+      console.log("Damage taken:", state.currentHealth, "-", Math.floor(action.payload))
       state.currentHealth -= Math.floor(action.payload)
+      if (state.currentHealth <= 0) {
+        state.currentHealth = 0
+        state.respawnTime = PLAYER_CONFIG.respawnTime
+      }
     },
     increaseGold(state, action: PayloadAction<number>) {
       state.gold += action.payload
@@ -258,6 +272,7 @@ export const {
   increaseHealth,
   setFullHealth,
   enemyAttack,
+  setRespawnTime,
   increasePlasma,
   reservePlasma,
   setPrestigeUpgradesPending,
@@ -309,6 +324,7 @@ export const selectHealth = createSelector([selectCurrentHealth, selectMaxHealth
   currentHealth,
   maxHealth,
 }))
+export const selectRespawnTime = (state: RootState) => state.player.respawnTime
 
 export const selectPendingPPurchases = (state: RootState) => state.player.pendingPPurchases
 
