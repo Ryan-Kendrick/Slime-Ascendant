@@ -11,6 +11,7 @@ export default function PlayerHealth() {
   const healthRef = useRef<HTMLDivElement>(null)
   const animationPref = useAppSelector(selectAnimationPref)
   const respawnTime = useAppSelector(selectRespawnTime)
+  const timerRef = useRef<NodeJS.Timeout | null | undefined>(null)
   const [currentRespawnTime, setCurrentRespawnTime] = useState(0)
 
   const targetHealth = useRef((currentHealth / maxHealth) * 100)
@@ -21,12 +22,22 @@ export default function PlayerHealth() {
   useEffect(() => {
     // If there is respawn time, and no timer is running, start one
     if (respawnTime > 0) {
-      if (currentRespawnTime === 0) setCurrentRespawnTime(respawnTime / 1000)
-      setTimeout(() => {
-        setCurrentRespawnTime(currentRespawnTime - 1)
-      }, 1000)
+      if (currentRespawnTime === 0 && timerRef.current === null) {
+        setCurrentRespawnTime(respawnTime / 1000)
+      } else {
+        if ((timerRef.current === null || timerRef.current === undefined) && currentRespawnTime > 0) {
+          console.log("Starting timer", currentRespawnTime)
+          const time = currentRespawnTime === respawnTime / 1000 ? 970 : 1000
+          timerRef.current = setTimeout(() => {
+            console.log(currentRespawnTime)
+            setCurrentRespawnTime(currentRespawnTime - 1)
+            timerRef.current = undefined
+          }, time)
+        }
+      }
     } else if (!respawnTime || targetHealth.current >= 0) {
       setCurrentRespawnTime(0)
+      timerRef.current = null
     }
   }, [respawnTime, currentRespawnTime])
 
@@ -81,8 +92,8 @@ export default function PlayerHealth() {
             )}></div>
           <div className="absolute bottom-0 z-10 h-3/4 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20" />
         </div>
-        <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 font-passion text-6xl text-red-800">
-          {currentRespawnTime > 0 && currentRespawnTime}
+        <span className="absolute -top-0.5 left-1/2 -z-10 -translate-x-1/2 font-passion text-6xl text-red-800">
+          {respawnTime !== 0 && Math.round(currentRespawnTime)}
         </span>
       </div>
     </div>
