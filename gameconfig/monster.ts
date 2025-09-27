@@ -47,36 +47,38 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
 }
 
 const MONSTER_VARIATIONS: MonsterType[] = [
+  // dps = damageMulti / (MONSTER_CONFIG.baseAttackRate * attackRateMulti)
+  // difficult = (dps * healthMulti)
   {
     name: "Cave Troll",
     kind: "regular",
-    healthMulti: 2.5,
-    damageMulti: 2.5,
-    attackRateMulti: 1,
+    healthMulti: 2.3,
+    damageMulti: 1.6,
+    attackRateMulti: 1.2, // dps: 0.56; difficulty: 1.29
     imagePath: `${caveTrollURL}`,
   },
   {
     name: "Dagonmire Spawn",
     kind: "regular",
     healthMulti: 1.3,
-    damageMulti: 1.3,
-    attackRateMulti: 1,
+    damageMulti: 0.8,
+    attackRateMulti: 0.6, // dps: 0.56; difficulty: 0.73
     imagePath: `${dagonmireURL}`,
   },
   {
     name: "Forest Guard",
     kind: "regular",
     healthMulti: 1.75,
-    damageMulti: 1.75,
-    attackRateMulti: 1,
+    damageMulti: 1.3,
+    attackRateMulti: 1.15, // dps: 0.47; difficulty: 0.82
     imagePath: `${forestGuardURL}`,
   },
   {
     name: "Ochre Jelly",
     kind: "regular",
     healthMulti: 1.1,
-    damageMulti: 1.1,
-    attackRateMulti: 1,
+    damageMulti: 1.2,
+    attackRateMulti: 1, // dps: 0.50; difficulty: 0.55
     imagePath: `${ohcreJellyURL}`,
   },
   {
@@ -84,62 +86,90 @@ const MONSTER_VARIATIONS: MonsterType[] = [
     kind: "regular",
     healthMulti: 1.2,
     damageMulti: 1.2,
-    attackRateMulti: 1,
+    attackRateMulti: 1, // dps: 0.50; difficulty: 0.60
     imagePath: `${pollenRuntURL}`,
   },
   {
     name: "Wail Shroom",
     kind: "regular",
     healthMulti: 1,
-    damageMulti: 1,
-    attackRateMulti: 1,
+    damageMulti: 1.3,
+    attackRateMulti: 1, // dps: 0.54; difficulty: 0.54
     imagePath: `${wailShroomURL}`,
   },
-  { name: "Slime", kind: "regular", healthMulti: 1, damageMulti: 1, attackRateMulti: 1, imagePath: `${slimeURL}` },
+  {
+    name: "Slime",
+    kind: "regular",
+    healthMulti: 1,
+    damageMulti: 1.3,
+    attackRateMulti: 1, // dps: 0.54; difficulty: 0.54
+    imagePath: `${slimeURL}`,
+  },
   {
     name: "Jungle Prowler",
     kind: "regular",
-    healthMulti: 1.4,
+    healthMulti: 1.2,
     damageMulti: 1.4,
-    attackRateMulti: 1,
+    attackRateMulti: 0.8, // dps: 0.73; difficulty: 0.88
     imagePath: `${jungleProwlerURL}`,
   },
 ]
 
 const BOSS_VARIATIONS: MonsterType[] = [
-  { name: "Tooth", kind: "boss", healthMulti: 2, damageMulti: 2, attackRateMulti: 1, imagePath: `${toothURL}` },
+  {
+    name: "Tooth",
+    kind: "boss",
+    healthMulti: 2,
+    damageMulti: 1.1,
+    attackRateMulti: 1, // dps: 0.46; difficulty: 0.92
+    imagePath: `${toothURL}`,
+  },
   {
     name: "Drip Shroom",
     kind: "boss",
     healthMulti: 2,
-    damageMulti: 2,
-    attackRateMulti: 1,
+    damageMulti: 1.1,
+    attackRateMulti: 1, // dps: 0.46; difficulty: 0.92
     imagePath: `${dripShroomURL}`,
   },
   {
     name: "Everhaunch",
     kind: "boss",
     healthMulti: 2,
-    damageMulti: 2,
-    attackRateMulti: 1,
+    damageMulti: 1.2,
+    attackRateMulti: 1.2, // dps: 0.42; difficulty: 0.84
     imagePath: `${everhaunchURL}`,
   },
-  { name: "Ribeye", kind: "boss", healthMulti: 1.5, damageMulti: 1.5, attackRateMulti: 1, imagePath: `${ribeyeURL}` },
-  { name: "Tank", kind: "boss", healthMulti: 3, damageMulti: 3, attackRateMulti: 1, imagePath: `${tankURL}` },
+  {
+    name: "Ribeye",
+    kind: "boss",
+    healthMulti: 1.7,
+    damageMulti: 0.8,
+    attackRateMulti: 0.5, // dps: 0.67; difficulty: 1.14
+    imagePath: `${ribeyeURL}`,
+  },
+  {
+    name: "Tank",
+    kind: "boss",
+    healthMulti: 2.8,
+    damageMulti: 1.7,
+    attackRateMulti: 1.4, // dps: 0.51; difficulty: 1.43
+    imagePath: `${tankURL}`,
+  },
   {
     name: "Unity of the Shore",
     kind: "boss",
-    healthMulti: 1.75,
-    damageMulti: 1.75,
-    attackRateMulti: 1,
+    healthMulti: 2.5,
+    damageMulti: 1.3,
+    attackRateMulti: 1.1, // dps: 0.49; difficulty: 1.23
     imagePath: `${unityOfTheShoreURL}`,
   },
   {
     name: "Ward Squid",
     kind: "boss",
     healthMulti: 2.25,
-    damageMulti: 2.25,
-    attackRateMulti: 1,
+    damageMulti: 1.15,
+    attackRateMulti: 1, // dps: 0.48; difficulty: 1.08
     imagePath: `${wardSquidURL}`,
   },
 ]

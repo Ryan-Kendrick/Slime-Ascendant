@@ -83,7 +83,11 @@ export default function PlayerHealth() {
   return (
     <div className="flex w-full flex-col items-center text-lg text-white">
       <div className="text-center">{formattedHealth}</div>
-      <div className="relative mb-1 h-full w-[calc(100%-8px)] border border-frost shadow-md shadow-slate-800">
+      <div
+        className={clsx(
+          "relative -z-10 mb-1 h-full w-[calc(100%-8px)] border border-frost shadow-md shadow-slate-800 transition-colors",
+          respawnTime > 0 ? "bg-black/50" : "bg-black/20",
+        )}>
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
           <div
             ref={healthRef}
@@ -92,7 +96,7 @@ export default function PlayerHealth() {
             )}></div>
           <div className="absolute bottom-0 z-10 h-3/4 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20" />
         </div>
-        <span className="absolute -top-0.5 left-1/2 -z-10 -translate-x-1/2 font-passion text-6xl text-red-800">
+        <span className="absolute -top-0.5 left-1/2 -z-10 -translate-x-1/2 font-passion text-6xl text-red-500">
           {respawnTime !== 0 && Math.round(currentRespawnTime)}
         </span>
       </div>
