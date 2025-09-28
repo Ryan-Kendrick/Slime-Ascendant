@@ -80,6 +80,9 @@ export default function PlayerHealth() {
 
   const formattedHealth = formatSmallNumber(currentHealth)
 
+  const topColorAngle = 127 * (width / 100)
+  const bottomColorAngle = 136 * (width / 100)
+
   return (
     <div className="flex w-full flex-col items-center text-lg text-white">
       <div className="text-center">{formattedHealth}</div>
@@ -92,8 +95,11 @@ export default function PlayerHealth() {
           <div
             ref={healthRef}
             className={clsx(
-              "relative h-full transform-gpu rounded-sm bg-gradient-to-b from-hpgreen to-darkgreen transition-[width,background-color] duration-300 ease-out",
-            )}></div>
+              "relative h-full transform-gpu rounded-sm transition-[width,background-color] duration-300 ease-out",
+            )}
+            style={{
+              background: `linear-gradient(180deg, HSL(${topColorAngle}, 100%, 37%) 40%, hsl(${bottomColorAngle}, 75%, 27%) 100%)`,
+            }}></div>
           <div className="absolute bottom-0 z-10 h-3/4 w-full bg-gradient-to-b from-white/0 via-white/80 to-white/20" />
         </div>
         <span className="absolute -top-0.5 left-1/2 -z-10 -translate-x-1/2 font-passion text-6xl text-red-500">

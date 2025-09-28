@@ -124,7 +124,7 @@ export function useGameEngine(props: EngineProps) {
     }
   }, [respawnTime, setEnemyAttack, TICK_TIME])
   useEffect(() => {
-    console.log("Monster state updated:", monsterState, "setting attack", respawnTimeRef.current)
+    // console.log("Monster state updated:", monsterState, "setting attack", respawnTimeRef.current)
     monsterRef.current = monsterState
     setEnemyAttack()
   }, [monsterState, setEnemyAttack, TICK_TIME])
@@ -195,7 +195,7 @@ export function useGameEngine(props: EngineProps) {
         delta -= TICK_TIME
         processedDelta += TICK_TIME
       }
-      console.log(tickCount.current, nextAttackTickRef.current, respawnTimeRef.current)
+      // console.log(tickCount.current, nextAttackTickRef.current, respawnTimeRef.current)
       // if (delta > TICK_TIME * 20 && tickCount.current === nextAttackTickRef.current)
     }
 
