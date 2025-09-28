@@ -7,6 +7,7 @@ import {
   setActiveHero,
   incrementUIProgression,
   selectOneLineMaskVisible,
+  selectRespawnTime,
 } from "../../../redux/playerSlice"
 import { selectAchievementModifier } from "../../../redux/shared/heroSelectors"
 import { selectPMod } from "../../../redux/shared/heroSelectors"
@@ -61,6 +62,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const isMobile = breakpoint === 768
   const animationPref = useAppSelector(selectAnimationPref)
   const animationsEnabled = animationPref > 0
+  const respawnTime = useAppSelector(selectRespawnTime)
 
   const OTPContainerRef = useOTPPositions({
     heroName: thisHeroName,
@@ -222,6 +224,16 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
             )}
           />
         </>
+      )}
+      {/* Death overlay */}
+      {isNotAdventurer && (
+        <div
+          className={clsx(
+            "pointer-events-none absolute inset-0 z-40",
+            animationPref > 0 ? "transition-colors duration-300" : "transition-none",
+            respawnTime > 0 ? "bg-black/60" : "bg-black/0",
+          )}
+        />
       )}
       <div
         id={`${thisHeroName}-card`}

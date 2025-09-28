@@ -40,6 +40,7 @@ import { useTouchObserver } from "../../../gameconfig/customHooks"
 import DamageTotals from "./damageTotals"
 import { cardProps } from "../../../redux/shared/maps"
 import PlayerHealth from "../playerHealth"
+import { useMemo } from "react"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
@@ -124,6 +125,8 @@ export default function UpgradeIndex() {
 
   const touchedHero = useTouchObserver()
 
+  const PlayerHealthMemo = useMemo(() => <PlayerHealth />, [])
+
   return (
     <div className="flex flex-col">
       <div className="flex w-full flex-col-reverse flex-wrap md:h-auto md:flex-row md:flex-nowrap">
@@ -136,7 +139,7 @@ export default function UpgradeIndex() {
           innerStyle="currency-gold-inner"
           currencySelector={selectGold}
         />
-        <PlayerHealth />
+        {PlayerHealthMemo}
       </div>
       <div className="flex flex-1 flex-col">
         <div
@@ -192,3 +195,48 @@ export default function UpgradeIndex() {
     </div>
   )
 }
+
+// const adventurerHeroCard = useMemo(() => {
+//   return (
+//     <HeroCard
+//       config={UPGRADE_CONFIG.adventurer}
+//       touchedHero={touchedHero}
+//       OTPIcons={[ClickOTPIcon1(), ClickOTPIcon2(), ClickOTPIcon3()]}
+//       onUpgrade={onUpgrade}
+//       onLevelUp={onLevelup}
+//     />
+//   )
+// }, [touchedHero])
+// const warriorHeroCard = useMemo(() => {
+//   return (
+//     <HeroCard
+//       config={UPGRADE_CONFIG.warrior}
+//       touchedHero={touchedHero}
+//       OTPIcons={[WarriorOTPIcon1(), WarriorOTPIcon2(), WarriorOTPIcon3()]}
+//       onUpgrade={onUpgrade}
+//       onLevelUp={onLevelup}
+//     />
+//   )
+// }, [touchedHero])
+// const healerHeroCard = useMemo(() => {
+//   return (
+//     <HeroCard
+//       config={UPGRADE_CONFIG.healer}
+//       touchedHero={touchedHero}
+//       OTPIcons={[HealerOTPIcon1(), HealerOTPIcon2(), HealerOTPIcon3()]}
+//       onUpgrade={onUpgrade}
+//       onLevelUp={onLevelup}
+//     />
+//   )
+// }, [touchedHero])
+// const mageHeroCard = useMemo(() => {
+//   return (
+//     <HeroCard
+//       config={UPGRADE_CONFIG.mage}
+//       touchedHero={touchedHero}
+//       OTPIcons={[MageOTPIcon1(), MageOTPIcon2(), MageOTPIcon3()]}
+//       onUpgrade={onUpgrade}
+//       onLevelUp={onLevelup}
+//     />
+//   )
+// }, [touchedHero])

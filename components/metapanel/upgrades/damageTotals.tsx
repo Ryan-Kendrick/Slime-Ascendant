@@ -1,12 +1,19 @@
+import clsx from "clsx"
 import { formatSmallNumber } from "../../../gameconfig/utils"
 import { useAppSelector } from "../../../redux/hooks"
-import { selectClickDamage, selectDotDamage, selectPrestigeTabVisible } from "../../../redux/playerSlice"
+import {
+  selectClickDamage,
+  selectDotDamage,
+  selectPrestigeTabVisible,
+  selectRespawnTime,
+} from "../../../redux/playerSlice"
 
 export default function DamageTotals() {
   const clickDamage = useAppSelector(selectClickDamage)
   const dotDamage = useAppSelector(selectDotDamage)
   const displayClickDamage = formatSmallNumber(clickDamage)
   const displayDotDamage = formatSmallNumber(dotDamage)
+  const respawnTime = useAppSelector(selectRespawnTime)
 
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
 
@@ -20,7 +27,12 @@ export default function DamageTotals() {
           <div className="z-10 flex w-full justify-center gap-6 text-lg font-extrabold">
             <h3>Click: {displayClickDamage}</h3>
             <span className="mt-0.5 text-base opacity-80">|</span>
-            <h3>Passive: {displayDotDamage}</h3>
+            <h3>
+              Passive:{" "}
+              <span className={clsx("transition-opacity", respawnTime > 0 ? "opacity-0" : "opacity-100")}>
+                {displayDotDamage}
+              </span>
+            </h3>
           </div>
         </div>
       </div>

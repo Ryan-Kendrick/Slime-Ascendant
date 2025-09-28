@@ -1,5 +1,5 @@
 import clsx from "clsx/lite"
-import { MouseEvent, useEffect, useRef, useState } from "react"
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react"
 import PrestigeButton from "./prestigeButton"
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
@@ -47,6 +47,7 @@ export default function Prestige() {
   const [hoveredUpgrade, setHoveredUpdate] = useState<PrestigeUpgradeId | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
+  const PlayerHealthMemo = useMemo(() => <PlayerHealth />, [])
 
   const { position, setIsVisible, isPositionReady } = useToolTip({
     containerRef,
@@ -121,7 +122,7 @@ export default function Prestige() {
             suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
             animateOnMount={animateMount}
           />
-          <PlayerHealth />
+          {PlayerHealthMemo}
         </div>
         <div className="mx-2 mt-2 flex flex-wrap items-start justify-center gap-2 font-sans">
           {Object.values(UPGRADE_CONFIG.prestigeUpgrades).map((prestigeUpgrade) => {
