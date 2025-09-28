@@ -26,6 +26,7 @@ import Confirmation from "./confirmation"
 import topologyURL from "../../../assets/icons/topologyBg.svg"
 import PrestigeTooltip from "./prestigeTooltip"
 import { useToolTip } from "../../../gameconfig/customHooks"
+import PlayerHealth from "../playerHealth"
 
 export default function Prestige() {
   const dispatch = useAppDispatch()
@@ -111,15 +112,18 @@ export default function Prestige() {
 
           animateMount || animationPref < 1 ? "before:inset-0" : "before:-inset-2 md:before:-inset-4",
         )}>
-        <Currency
-          key={resetCounter}
-          image={PlasmaIcon()}
-          fontStyle="text-cyan-300 font-paytone"
-          currencySelector={plasmaSelector}
-          suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
-          animateOnMount={animateMount}
-        />
-        <div className="mx-2 flex flex-wrap items-start justify-center gap-2 font-sans">
+        <div className="flex w-full flex-col-reverse flex-wrap md:h-auto md:flex-row md:flex-nowrap">
+          <Currency
+            key={resetCounter}
+            image={PlasmaIcon()}
+            fontStyle="text-cyan-300 font-paytone"
+            currencySelector={plasmaSelector}
+            suffix={plasmaReserved > 0 ? `  (-${plasmaReserved})` : undefined}
+            animateOnMount={animateMount}
+          />
+          <PlayerHealth />
+        </div>
+        <div className="mx-2 mt-2 flex flex-wrap items-start justify-center gap-2 font-sans">
           {Object.values(UPGRADE_CONFIG.prestigeUpgrades).map((prestigeUpgrade) => {
             if (prestigeUpgrade.visibleAtZone > highZoneEver) return null
 

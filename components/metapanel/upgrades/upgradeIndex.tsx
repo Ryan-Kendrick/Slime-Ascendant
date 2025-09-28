@@ -39,7 +39,7 @@ import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { useTouchObserver } from "../../../gameconfig/customHooks"
 import DamageTotals from "./damageTotals"
 import { cardProps } from "../../../redux/shared/maps"
-import PlayerHealth from "../../combat/playerHealth"
+import PlayerHealth from "../playerHealth"
 
 export default function UpgradeIndex() {
   const dispatch = useAppDispatch()
@@ -126,12 +126,12 @@ export default function UpgradeIndex() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex w-full">
+      <div className="flex w-full flex-col-reverse flex-wrap md:h-auto md:flex-row md:flex-nowrap">
         <Currency
           image={GoldIcon()}
           fontStyle="text-white font-paytone font-outline"
           containerStyle="[border-image:linear-gradient(40deg,#C0C0C0,#868686,#E7E7E7,#868686,#868686)_20] border-2 border-solid border-transparent rounded-t bg-slate-300/20
-        after:content-[''] after:w-full after:h-full w-1/2 after:[background:radial-gradient(circle_80px_at_15%_-30%,#E2DFD2,transparent),radial-gradient(circle_80px_at_100%_80%,#36454F80,transparent)]
+        after:content-[''] after:w-full after:h-full after:[background:radial-gradient(circle_80px_at_15%_-30%,#E2DFD2,transparent),radial-gradient(circle_80px_at_100%_80%,#36454F80,transparent)]
         "
           innerStyle="currency-gold-inner"
           currencySelector={selectGold}

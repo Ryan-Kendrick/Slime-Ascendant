@@ -26,10 +26,8 @@ export default function PlayerHealth() {
         setCurrentRespawnTime(respawnTime / 1000)
       } else {
         if ((timerRef.current === null || timerRef.current === undefined) && currentRespawnTime > 0) {
-          console.log("Starting timer", currentRespawnTime)
           const time = currentRespawnTime === respawnTime / 1000 ? 970 : 1000
           timerRef.current = setTimeout(() => {
-            console.log(currentRespawnTime)
             setCurrentRespawnTime(currentRespawnTime - 1)
             timerRef.current = undefined
           }, time)
@@ -84,11 +82,11 @@ export default function PlayerHealth() {
   const bottomColorAngle = 136 * (width / 100)
 
   return (
-    <div className="flex w-full flex-col items-center text-lg text-white">
+    <div className="z-10 flex h-[5.5rem] w-full flex-col items-center text-lg text-white">
       <div className="text-center">{formattedHealth}</div>
       <div
         className={clsx(
-          "relative -z-10 mb-1 h-full w-[calc(100%-8px)] border border-frost shadow-md shadow-slate-800 transition-colors",
+          "relative -z-10 mb-1 h-full w-[calc(100%-8px)] border border-frost shadow-sm shadow-slate-800 transition-colors md:shadow-md",
           respawnTime > 0 ? "bg-black/50" : "bg-black/20",
         )}>
         <div className="relative h-full" style={{ width: `${Math.max(0, Math.min(100, width))}%` }}>
