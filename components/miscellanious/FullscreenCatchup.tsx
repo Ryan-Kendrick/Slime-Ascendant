@@ -35,10 +35,10 @@ export default function FullscreenCatchup() {
   const flavourTextOptions = [
     "Slime never sleeps",
     "Idle time is not possible",
-    "The best achievement have no witnesses",
+    "The best achievements have no witnesses",
     "Progress, off the record",
     "Small hours, big gains",
-    "Leave has been approved",
+    "Leave was approved",
   ]
   const [flavourText, setFlavourText] = useState(
     flavourTextOptions[Math.floor(Math.random() * flavourTextOptions.length)],
