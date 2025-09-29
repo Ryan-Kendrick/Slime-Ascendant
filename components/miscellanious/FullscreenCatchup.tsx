@@ -1,12 +1,6 @@
 import { useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import {
-  abortCatchup,
-  clearCatchUpTime,
-  selectLongCatchupDelta,
-  selectLongCatchupProcessed,
-  setLongCatchupDelta,
-} from "../../redux/metaSlice"
+import { abortCatchup, selectLongCatchupDelta, selectLongCatchupProcessed } from "../../redux/metaSlice"
 import { selectZoneState } from "../../redux/zoneSlice"
 import clsx from "clsx/lite"
 
@@ -14,8 +8,21 @@ export default function FullscreenCatchup() {
   const dispatch = useAppDispatch()
   const delta = useAppSelector(selectLongCatchupDelta)
   const deltaProcessed = useAppSelector(selectLongCatchupProcessed) as number
-  const zoneState = useAppSelector(selectZoneState)
-  const monster = zoneState.zoneMonsters[zoneState.stageNumber - 1]
+  const {
+    zoneMonsters,
+    farmZoneMonsters,
+    zoneInView,
+    currentZoneNumber,
+    farmZoneNumber,
+    stageNumber,
+    farmStageNumber,
+  } = useAppSelector(selectZoneState)
+  const isFarmZone = farmZoneNumber === zoneInView
+  const zone = isFarmZone ? farmZoneNumber : currentZoneNumber
+  const zoneLength = isFarmZone ? farmZoneMonsters?.length : zoneMonsters?.length
+  const stage = isFarmZone ? farmStageNumber : stageNumber
+  const monsters = isFarmZone ? farmZoneMonsters : zoneMonsters
+  const monster = monsters![stage - 1]
 
   const minutesRemaining = Math.floor(delta / 60000)
   const minutesProcessed = Math.floor(deltaProcessed / 60000)
@@ -27,7 +34,7 @@ export default function FullscreenCatchup() {
 
   const flavourTextOptions = [
     "Slime never sleeps",
-    "Idle time is impossible",
+    "Idle time is not possible",
     "The best achievement have no witnesses",
     "Progress, off the record",
     "Small hours, big gains",
@@ -80,14 +87,10 @@ export default function FullscreenCatchup() {
         <div className="flex flex-col items-center gap-4 text-frost">
           <h3 className="font-passion">
             Currently fighting{" "}
-            <span
-              className={clsx(
-                "font-sigmar",
-                zoneState.stageNumber === zoneState.currentZoneLength ? "text-red-400" : "text-white",
-              )}>
+            <span className={clsx("font-sigmar", stage === zoneLength ? "text-red-400" : "text-white")}>
               {monster.name}
             </span>{" "}
-            at Stage {zoneState.stageNumber} of Zone {zoneState.currentZoneNumber}
+            at Stage {stage} of Zone {zone}
           </h3>
           <div className="flex -translate-y-1/2 space-x-1">
             {[...Array(3)].map((_, i) => (
