@@ -114,6 +114,8 @@ export function useGameEngine(props: EngineProps) {
   const setEnemyAttack = useCallback(() => {
     if (monsterRef.current && monsterRef.current.alive) {
       nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
+    } else {
+      console.error("No living monster to set attack for", monsterRef.current)
     }
   }, [TICK_TIME])
 
@@ -146,10 +148,16 @@ export function useGameEngine(props: EngineProps) {
       console.error("No monster attack scheduled", respawnTimeRef.current, monsterRef.current)
       if (respawnTimeRef.current <= 0) setEnemyAttack()
     } else if (tickCount.current >= nextAttackTickRef.current) {
-      console.log("Enemy attacks for", monsterRef.current.damage)
+      // console.log("Enemy attacks for", monsterRef.current.damage)
+      // Ensure monster and respawntime are up to date during long catchup
       dispatch(enemyAttack(monsterRef.current.damage!))
-      nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
       forceStateSync()
+
+      if (respawnTimeRef.current > 0) {
+        nextAttackTickRef.current = 0
+      } else {
+        nextAttackTickRef.current = tickCount.current + Math.ceil((monsterRef.current.attackRate! * 1000) / TICK_TIME)
+      }
     }
   }, [TICK_TIME])
 
@@ -180,9 +188,15 @@ export function useGameEngine(props: EngineProps) {
         delta -= TICK_TIME
         processedDelta += TICK_TIME
         if (useBeatCatchup && beatToProcess) processedBeats++
-        if (respawnTimeRef.current <= 0) dispatch(setRespawnTime(0))
+        if (respawnTimeRef.current <= 0) {
+          respawnTimeRef.current = 0
+          nextAttackTickRef.current = 0
+          dispatch(setRespawnTime(0))
+          // Is this needed?
+          setEnemyAttack()
+        }
       } else {
-        if (!nextAttackTickRef.current && !respawnTimeRef.current) setEnemyAttack()
+        if (!nextAttackTickRef.current) setEnemyAttack()
 
         if (useBeatCatchup && beatToProcess) {
           dealDamageOnBeat()
@@ -196,7 +210,6 @@ export function useGameEngine(props: EngineProps) {
         processedDelta += TICK_TIME
       }
       // console.log(tickCount.current, nextAttackTickRef.current, respawnTimeRef.current)
-      // if (delta > TICK_TIME * 20 && tickCount.current === nextAttackTickRef.current)
     }
 
     return [delta, beatDelta]
@@ -269,7 +282,7 @@ export function useGameEngine(props: EngineProps) {
       }
       const onRegularTime = delta <= PERFORMANCE_CONFIG.catchup.shortBreakpoint
 
-      // Long catchup handling, essentially the same as the regular catchup but chunked
+      // Long catchup handling, essentially the same as the regular catchup except chunked
       const handleCatchUp = async () => {
         const longCatchup = delta > PERFORMANCE_CONFIG.catchup.longBreakpoint
         // Await the return of any leftover delta

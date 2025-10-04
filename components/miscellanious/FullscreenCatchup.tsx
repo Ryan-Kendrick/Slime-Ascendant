@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { abortCatchup, selectLongCatchupDelta, selectLongCatchupProcessed } from "../../redux/metaSlice"
 import { selectZoneState } from "../../redux/zoneSlice"
 import clsx from "clsx/lite"
+import ZoneSelector from "../combat/zoneSelector"
 
 export default function FullscreenCatchup() {
   const dispatch = useAppDispatch()
@@ -80,6 +81,7 @@ export default function FullscreenCatchup() {
               <span>/</span>
               <span>{minutesRemaining}</span>
             </div>
+            <ZoneSelector />
           </div>
         </div>
 
