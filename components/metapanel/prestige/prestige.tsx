@@ -28,7 +28,7 @@ import PrestigeTooltip from "./prestigeTooltip"
 import { useToolTip } from "../../../gameconfig/customHooks"
 import PlayerHealth from "../playerHealth"
 
-export default function Prestige() {
+export default function Prestige({ PlayerHealthMemo }: { PlayerHealthMemo: JSX.Element }) {
   const dispatch = useAppDispatch()
   const plasmaSelector = selectPlasma
   const plasmaReserved = useAppSelector(selectPlasmaReserved)
@@ -47,7 +47,6 @@ export default function Prestige() {
   const [hoveredUpgrade, setHoveredUpdate] = useState<PrestigeUpgradeId | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
-  const PlayerHealthMemo = useMemo(() => <PlayerHealth />, [])
 
   const { position, setIsVisible, isPositionReady } = useToolTip({
     containerRef,

@@ -39,10 +39,8 @@ import { selectCurrentZoneNumber } from "../../../redux/zoneSlice"
 import { useTouchObserver } from "../../../gameconfig/customHooks"
 import DamageTotals from "./damageTotals"
 import { cardProps } from "../../../redux/shared/maps"
-import PlayerHealth from "../playerHealth"
-import { useMemo } from "react"
 
-export default function UpgradeIndex() {
+export default function UpgradeIndex({ PlayerHealthMemo }: { PlayerHealthMemo: JSX.Element }) {
   const dispatch = useAppDispatch()
 
   const currentZone = useAppSelector(selectCurrentZoneNumber)
@@ -124,8 +122,6 @@ export default function UpgradeIndex() {
   }
 
   const touchedHero = useTouchObserver()
-
-  const PlayerHealthMemo = useMemo(() => <PlayerHealth />, [])
 
   return (
     <div className="flex flex-col">

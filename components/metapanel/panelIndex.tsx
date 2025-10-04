@@ -12,10 +12,12 @@ import {
   incrementUIProgression,
   selectOneLineMaskVisible,
   selectDotDamage,
+  selectRespawnTime,
 } from "../../redux/playerSlice"
 import { selectCurrentZoneNumber } from "../../redux/zoneSlice"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { selectAnimationPref, selectBreakpoint } from "../../redux/metaSlice"
+import PlayerHealth from "./playerHealth"
 
 export default function PanelIndex() {
   const dispatch = useAppDispatch()
@@ -36,6 +38,94 @@ export default function PanelIndex() {
   const oneLineMaskVisible = useAppSelector(selectOneLineMaskVisible)
   const dotDamage = useAppSelector(selectDotDamage)
   const animationPref = useAppSelector(selectAnimationPref)
+
+  const respawnTime = useAppSelector(selectRespawnTime)
+  const timerRef = useRef<NodeJS.Timeout | null | undefined>(null)
+  const respawnSessionRef = useRef<number>(0)
+  const [currentRespawnTime, setCurrentRespawnTime] = useState(0)
+
+  useEffect(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+
+    if (respawnTime > 0) {
+      if (respawnTime !== respawnSessionRef.current) {
+        respawnSessionRef.current = respawnTime
+        setCurrentRespawnTime(respawnTime / 1000)
+        return
+      }
+
+      if (currentRespawnTime > 0) {
+        const time = currentRespawnTime === respawnTime / 1000 ? 970 : 1000
+        timerRef.current = setTimeout(() => {
+          setCurrentRespawnTime((prev) => Math.max(0, prev - 1))
+        }, time)
+      }
+    } else {
+      respawnSessionRef.current = 0
+      setCurrentRespawnTime(0)
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+    }
+  }, [respawnTime, currentRespawnTime])
+
+  const PlayerHealthMemo = useMemo(
+    () => <PlayerHealth respawnTime={respawnTime} currentRespawnTime={currentRespawnTime} />,
+    [respawnTime, currentRespawnTime],
+  )
+
+  const tabs = useMemo(() => {
+    const tabsToRender: TabData[] = [
+      {
+        id: "upgrade",
+        title: "Upgrade",
+        component: <UpgradeIndex PlayerHealthMemo={PlayerHealthMemo} />,
+        activeStyle: "text-white",
+        inactiveStyle: "",
+      },
+    ]
+
+    if (prestigeTabVisible) {
+      tabsToRender.push({
+        id: "prestige",
+        title: "Prestige",
+        component: <Prestige PlayerHealthMemo={PlayerHealthMemo} />,
+        activeStyle: "text-frost font-outline-electricBlue",
+        inactiveStyle: "",
+      })
+    }
+
+    return tabsToRender
+  }, [prestigeTabVisible, PlayerHealthMemo])
+
+  useEffect(() => {
+    if (tabRef.current) {
+      setTabHeight(prestigeTabVisible ? tabRef.current.scrollHeight : 0)
+      if (oneLineMaskVisible && !tabAnimationComplete) {
+        const timeout = setTimeout(() => dispatch(incrementUIProgression()), 1100)
+        return () => clearTimeout(timeout)
+      }
+    }
+  }, [prestigeTabVisible])
+
+  const handleTabChange = (tabId: Tab) => {
+    if (tabId !== activeTab) {
+      if (!document.startViewTransition) {
+        dispatch(setTabInView(tabId))
+      } else {
+        document.startViewTransition(() => {
+          dispatch(setTabInView(tabId))
+        })
+      }
+    }
+  }
 
   interface MaskConfig {
     top: number
@@ -209,52 +299,6 @@ export default function PanelIndex() {
 
     return elements
   }
-
-  const tabs = useMemo(() => {
-    const tabsToRender: TabData[] = [
-      {
-        id: "upgrade",
-        title: "Upgrade",
-        component: <UpgradeIndex />,
-        activeStyle: "text-white",
-        inactiveStyle: "",
-      },
-    ]
-
-    if (prestigeTabVisible) {
-      tabsToRender.push({
-        id: "prestige",
-        title: "Prestige",
-        component: <Prestige />,
-        activeStyle: "text-frost font-outline-electricBlue",
-        inactiveStyle: "",
-      })
-    }
-
-    return tabsToRender
-  }, [prestigeTabVisible])
-
-  const handleTabChange = (tabId: Tab) => {
-    if (tabId !== activeTab) {
-      if (!document.startViewTransition) {
-        dispatch(setTabInView(tabId))
-      } else {
-        document.startViewTransition(() => {
-          dispatch(setTabInView(tabId))
-        })
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (tabRef.current) {
-      setTabHeight(prestigeTabVisible ? tabRef.current.scrollHeight : 0)
-      if (oneLineMaskVisible && !tabAnimationComplete) {
-        const timeout = setTimeout(() => dispatch(incrementUIProgression()), 1100)
-        return () => clearTimeout(timeout)
-      }
-    }
-  }, [prestigeTabVisible])
 
   return (
     <div className="relative mx-2 duration-300 md:mb-3 lg:mx-3 lg:my-0 lg:max-w-[59%] lg:basis-3/5">

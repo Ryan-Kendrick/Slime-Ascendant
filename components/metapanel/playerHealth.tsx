@@ -5,39 +5,21 @@ import { formatSmallNumber } from "../../gameconfig/utils"
 import { selectAnimationPref } from "../../redux/metaSlice"
 import { selectHealth, selectRespawnTime } from "../../redux/playerSlice"
 
-export default function PlayerHealth() {
+export default function PlayerHealth({
+  respawnTime,
+  currentRespawnTime,
+}: {
+  respawnTime: number
+  currentRespawnTime: number
+}) {
   const { currentHealth, maxHealth } = useAppSelector(selectHealth)
-
   const healthRef = useRef<HTMLDivElement>(null)
   const animationPref = useAppSelector(selectAnimationPref)
-  const respawnTime = useAppSelector(selectRespawnTime)
-  const timerRef = useRef<NodeJS.Timeout | null | undefined>(null)
-  const [currentRespawnTime, setCurrentRespawnTime] = useState(0)
 
   const targetHealth = useRef((currentHealth / maxHealth) * 100)
   const interpRate = 5
   const [width, setWidth] = useState(100)
   const frameRef = useRef<number>()
-
-  useEffect(() => {
-    // If there is respawn time, and no timer is running, start one
-    if (respawnTime > 0) {
-      if (currentRespawnTime === 0 && timerRef.current === null) {
-        setCurrentRespawnTime(respawnTime / 1000)
-      } else {
-        if ((timerRef.current === null || timerRef.current === undefined) && currentRespawnTime > 0) {
-          const time = currentRespawnTime === respawnTime / 1000 ? 970 : 1000
-          timerRef.current = setTimeout(() => {
-            setCurrentRespawnTime(currentRespawnTime - 1)
-            timerRef.current = undefined
-          }, time)
-        }
-      }
-    } else if (!respawnTime || targetHealth.current >= 0) {
-      setCurrentRespawnTime(0)
-      timerRef.current = null
-    }
-  }, [respawnTime, currentRespawnTime])
 
   useEffect(() => {
     targetHealth.current = (currentHealth / maxHealth) * 100
