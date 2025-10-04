@@ -26,6 +26,39 @@ body {
   --line-delay-base: 250ms;
   --line-color: #fff;
   --line-color-prestige: #ec4899;
+  cursor:
+    url("/assets/icons/hand-dark.webp") 0 0,
+    pointer;
+}
+
+/* Prestige */
+
+/* Prestive view transition */
+:root {
+  view-transition-name: none;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+.panel-content {
+  view-transition-name: panel-content;
+}
+
+.view-transition-currency {
+  view-transition-name: view-transition-currency;
+}
+
+.player-health {
+  view-transition-name: player-health;
+}
+
+::view-transition-old(view-transition-currency),
+::view-transition-new(view-transition-currency),
+::view-transition-old(player-health),
+::view-transition-new(player-health) {
+  animation-duration: 0.3s !important;
 }
 
 /* Portal prestige button */

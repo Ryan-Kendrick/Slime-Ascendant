@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import UpgradeIndex from "./upgrades/upgradeIndex"
 import clsx from "clsx/lite"
 import Prestige from "./prestige/prestige"
-import { TabData } from "../../models/player"
+import { Tab, TabData } from "../../models/player"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import {
   selectPrestigeTabVisible,
@@ -234,6 +234,18 @@ export default function PanelIndex() {
     return tabsToRender
   }, [prestigeTabVisible])
 
+  const handleTabChange = (tabId: Tab) => {
+    if (tabId !== activeTab) {
+      if (!document.startViewTransition) {
+        dispatch(setTabInView(tabId))
+      } else {
+        document.startViewTransition(() => {
+          dispatch(setTabInView(tabId))
+        })
+      }
+    }
+  }
+
   useEffect(() => {
     if (tabRef.current) {
       setTabHeight(prestigeTabVisible ? tabRef.current.scrollHeight : 0)
@@ -283,7 +295,7 @@ export default function PanelIndex() {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => dispatch(setTabInView(tab.id))}
+                  onClick={() => handleTabChange(tab.id)}
                   className={clsx(
                     "relative flex w-full items-center overflow-hidden rounded-t-lg px-4 py-1.5 shadow-panel-t-1",
                     animationPref > 0 && "before:transition-all",
@@ -305,7 +317,7 @@ export default function PanelIndex() {
         <div
           id="panel-content"
           className={clsx(
-            "relative z-20 flex flex-col rounded-b-xl rounded-t lg:min-w-[627px]",
+            "panel-content relative z-20 flex flex-col rounded-b-xl rounded-t lg:min-w-[627px]",
             "bg-gradient-to-tr from-amber-400 via-orange-500 to-purpleOrange",
             "lg:bg-gradient-to-br lg:from-amber-400 lg:via-orange-500 lg:to-purpleOrange",
             activeTab === "upgrade" && "shadow-panel-main",

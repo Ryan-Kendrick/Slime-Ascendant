@@ -82,7 +82,7 @@ export default function PlayerHealth() {
   const bottomColorAngle = 136 * (width / 100)
 
   return (
-    <div className="z-10 flex h-[5.5rem] w-full flex-col items-center text-lg text-white">
+    <div className="player-health z-10 flex h-[5.5rem] w-full flex-col items-center text-lg text-white">
       <div className="text-center">{formattedHealth}</div>
       <div
         className={clsx(

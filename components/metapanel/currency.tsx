@@ -28,7 +28,7 @@ export default function Currency({
 
   return (
     <div className={`relative flex h-[5.5rem] w-full flex-none flex-col items-center md:w-1/2 ${containerStyle}`}>
-      <div className="absolute left-1/2 flex h-full w-full -translate-x-1/4 items-center justify-start gap-3 md:left-4 md:translate-x-0 lg:left-8 xl:left-12 2xl:left-1/2 2xl:-translate-x-1/4">
+      <div className="view-transition-currency absolute left-1/2 flex h-full w-full -translate-x-1/4 items-center justify-start gap-3 md:left-4 md:translate-x-0 lg:left-8 xl:left-12 2xl:left-1/2 2xl:-translate-x-1/4">
         <div className={`h-20 w-20 ${flashAnimation && flashAnimation}`}>{image}</div>
         <span className={`w-full text-left text-4xl ${fontStyle}`}>
           {currency}
