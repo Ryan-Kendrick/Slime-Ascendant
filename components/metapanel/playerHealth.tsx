@@ -60,6 +60,7 @@ export default function PlayerHealth({
 
   const formattedHealth = formatSmallNumber(currentHealth)
 
+  // Colour wheel angle
   const topColorAngle = 127 * (width / 100)
   const bottomColorAngle = 136 * (width / 100)
 

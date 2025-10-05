@@ -234,7 +234,7 @@ export function useGameEngine(props: EngineProps) {
       const MAX_CHUNK_SIZE = PERFORMANCE_CONFIG.catchup.chunkSize
 
       while (delta > TICK_TIME) {
-        if (abortCatchupRef.current) return [0]
+        if (abortCatchupRef.current) return [0, 0]
         const chunk = Math.min(delta, MAX_CHUNK_SIZE)
         const [chunkDelta] = handleProgress(chunk, chunk)
         const processed = chunk - chunkDelta
@@ -300,7 +300,6 @@ export function useGameEngine(props: EngineProps) {
 
       if (onRegularTime) {
         const shouldBeatNow = beatDelta >= BEAT_TIME && beatDelta < BEAT_TIME * 2
-
         if (shouldBeatNow && respawnTimeRef.current === 0) {
           dealDamageOnBeat()
           beatDelta -= BEAT_TIME
