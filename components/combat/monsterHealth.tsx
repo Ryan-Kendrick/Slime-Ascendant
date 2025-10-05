@@ -47,9 +47,7 @@ export default function MonsterHealth() {
     if (beatCount === 0) return
 
     if (healthRef.current && animationPref > 0) {
-      setTimeout(() => {
-        healthRef.current?.classList.add("animate-shadow-inset")
-      }, 60000 / PERFORMANCE_CONFIG.bpm)
+      healthRef.current?.classList.add("animate-shadow-inset")
       setTimeout(
         () => {
           healthRef.current?.classList.remove("animate-shadow-inset")
