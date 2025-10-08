@@ -26,7 +26,6 @@ import Confirmation from "./confirmation"
 import topologyURL from "../../../assets/icons/topologyBg.svg"
 import PrestigeTooltip from "./prestigeTooltip"
 import { useToolTip } from "../../../gameconfig/customHooks"
-import PlayerHealth from "../playerHealth"
 
 export default function Prestige({ PlayerHealthMemo }: { PlayerHealthMemo: JSX.Element }) {
   const dispatch = useAppDispatch()

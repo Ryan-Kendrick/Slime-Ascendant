@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import {
   initialiseElement,
-  selectGCanAfford,
   setActiveHero,
   incrementUIProgression,
   selectOneLineMaskVisible,
@@ -46,7 +45,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
 
   const canAffordLevelUp = gold >= levelUpCost
   const nextOTPCost = UPGRADE_CONFIG.calcOTPPrice(config.elementId, OTPUpgradeCount)
-  const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
+  const canAffordNextOTPUpgrade = gold >= nextOTPCost
 
   const currentZoneNumber = useAppSelector(selectCurrentZoneNumber)
   const upgradeMod = config.OneTimePurchases.OTPModifiers.reduce((acc, cur, i) => {

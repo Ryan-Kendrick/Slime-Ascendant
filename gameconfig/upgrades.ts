@@ -149,7 +149,8 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 0.05,
       modifier: 0.01,
       visibleAtZone: 20,
-      tooltip: "Increases Critical Hit chance by 1% per level",
+      tooltip:
+        "Each click has a 5% chance to hit for 250% of Click Damage.\n Increases Critical Hit chance by 1% per level",
     },
     multistrike: {
       id: "multistrike",
@@ -162,7 +163,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 40,
       modifier: 0.02,
       visibleAtZone: 25,
-      tooltip: "Reduces Multistrike cooldown by 2% per level",
+      tooltip: "Click 3 extra times.\n Reduces Multistrike cooldown by 2% per level",
     },
     beat: {
       id: "beat",
@@ -175,7 +176,8 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
       baseValue: 3,
       modifier: 0.2,
       visibleAtZone: 30,
-      tooltip: "Increase Stalactide damage by 20% per level",
+      tooltip:
+        "An unidentified mineral begins dripping from the ceiling. With each drip, your foes are devastated by its concussive force. \n Increase Stalactide damage by 20% per level",
     },
   },
 

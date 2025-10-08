@@ -1,4 +1,4 @@
-// Version number based on semantic versioning, see https://semver.org/
+// Version number based on semantic versioning https://semver.org/
 export const METADATA_CONFIG = {
   version: "v0.7.0",
   softcap: "Zone 40",
@@ -7,7 +7,6 @@ export const METADATA_CONFIG = {
 export type AnimationPreference = 0 | 1 | 2
 
 export const PERFORMANCE_CONFIG = {
-  // Engine config
   animPrefGameSpeedMod: {
     0: 4,
     1: 2,
@@ -20,7 +19,8 @@ export const PERFORMANCE_CONFIG = {
   },
   autoSave: 30000, // Autosave every 30 seconds
 
-  critDisplayLimit: 10,
-  fadeoutDuration: 2500, // Crit fadeout effect duration in milliseconds
   bpm: 89,
+
+  critDisplayLimit: 10,
+  fadeoutDuration: 2500, // Crit fadeout effect duration
 } as const
