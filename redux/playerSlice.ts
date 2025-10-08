@@ -330,7 +330,6 @@ export const selectRespawnTime = (state: RootState) => state.player.respawnTime
 export const selectPendingPPurchases = (state: RootState) => state.player.pendingPPurchases
 
 export const selectGold = (state: RootState) => state.player.gold
-export const selectGCanAfford = (cost: number) => createSelector([selectGold], (gold) => gold >= cost)
 export const selectPlasma = (state: RootState) => state.player.plasma
 export const selectPCanAfford = (cost: number) => createSelector([selectPlasma], (plasma) => plasma >= cost)
 export const selectPlasmaReserved = (state: RootState) => state.player.plasmaReserved

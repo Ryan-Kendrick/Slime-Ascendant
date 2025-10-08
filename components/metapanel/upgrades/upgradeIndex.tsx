@@ -1,9 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks"
 import {
   decreaseGold,
-  selectGCanAfford,
-  selectClickDamage,
-  selectDotDamage,
   selectGold,
   updateDotDamage,
   updateClickDamage,
@@ -45,6 +42,7 @@ export default function UpgradeIndex({ PlayerHealthMemo }: { PlayerHealthMemo: J
 
   const currentZone = useAppSelector(selectCurrentZoneNumber)
 
+  const gold = useAppSelector(selectGold)
   const { adventurerLevelUpCost, warriorLevelUpCost, healerLevelUpCost, mageLevelUpCost } =
     useAppSelector(selectLevelUpCosts)
   const hasPrestiged = useAppSelector(selectPrestigeTabVisible)
@@ -57,25 +55,25 @@ export default function UpgradeIndex({ PlayerHealthMemo }: { PlayerHealthMemo: J
     adventurer: {
       OTPCount: useAppSelector(cardProps["adventurer"].upgradeCount),
       cost: adventurerLevelUpCost,
-      canAfford: useAppSelector(selectGCanAfford(adventurerLevelUpCost)),
+      canAfford: gold >= adventurerLevelUpCost,
       action: updateClickDamage("adventurer-levelup"),
     },
     warrior: {
       OTPCount: useAppSelector(cardProps["warrior"].upgradeCount),
       cost: warriorLevelUpCost,
-      canAfford: useAppSelector(selectGCanAfford(warriorLevelUpCost)),
+      canAfford: gold >= warriorLevelUpCost,
       action: updateDotDamage("warrior-levelup"),
     },
     healer: {
       OTPCount: useAppSelector(cardProps["healer"].upgradeCount),
       cost: healerLevelUpCost,
-      canAfford: useAppSelector(selectGCanAfford(healerLevelUpCost)),
+      canAfford: gold >= healerLevelUpCost,
       action: updateDotDamage("healer-levelup"),
     },
     mage: {
       OTPCount: useAppSelector(cardProps["mage"].upgradeCount),
       cost: mageLevelUpCost,
-      canAfford: useAppSelector(selectGCanAfford(mageLevelUpCost)),
+      canAfford: gold >= mageLevelUpCost,
       action: updateDotDamage("mage-levelup"),
     },
   }

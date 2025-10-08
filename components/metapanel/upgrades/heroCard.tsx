@@ -8,6 +8,7 @@ import {
   incrementUIProgression,
   selectOneLineMaskVisible,
   selectRespawnTime,
+  selectGold,
 } from "../../../redux/playerSlice"
 import { selectAchievementModifier } from "../../../redux/shared/heroSelectors"
 import { selectPMod } from "../../../redux/shared/heroSelectors"
@@ -39,10 +40,11 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
   const OTPUpgradeCount = useAppSelector(thisHero.upgradeCount)
   const damageAtLevel = useAppSelector(thisHero.damageAtLevel)
   const damage = useAppSelector(thisHero.damage)
+  const gold = useAppSelector(selectGold)
   const levelUpCost = useAppSelector(thisHero.levelUpCost)
   const totalDamageContribution = useAppSelector(thisHero.totalDamageContribution)
 
-  const canAffordLevelUp = useAppSelector(selectGCanAfford(levelUpCost))
+  const canAffordLevelUp = gold >= levelUpCost
   const nextOTPCost = UPGRADE_CONFIG.calcOTPPrice(config.elementId, OTPUpgradeCount)
   const canAffordNextOTPUpgrade = useAppSelector(selectGCanAfford(nextOTPCost))
 
