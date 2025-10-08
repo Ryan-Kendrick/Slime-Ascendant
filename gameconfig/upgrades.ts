@@ -13,6 +13,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayStat: "Click Damage",
     baseDamage: 1,
     levelUpDamageMod: 1,
+    levelUpHealthDivisor: 8,
     OneTimePurchases: {
       OTPCosts: [100, 400, 1000],
       OTPModifiers: [2, 2, 2],
@@ -37,6 +38,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayStat: "Passive Damage",
     baseDamage: 5,
     levelUpDamageMod: 4,
+    levelUpHealthDivisor: 6,
     OneTimePurchases: {
       OTPCosts: [8000, 15000, 25000],
       OTPModifiers: [2, 2, 2],
@@ -61,6 +63,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayStat: "Passive Damage",
     baseDamage: 70,
     levelUpDamageMod: 50,
+    levelUpHealthDivisor: 2,
     OneTimePurchases: {
       OTPCosts: [150000, 250000, 400000],
       OTPModifiers: [2, 2, 2],
@@ -85,6 +88,7 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     displayStat: "Passive Damage",
     baseDamage: 300,
     levelUpDamageMod: 100,
+    levelUpHealthDivisor: 4,
     OneTimePurchases: {
       OTPCosts: [1000000, 2500000, 5000000],
       OTPModifiers: [2, 2, 2],

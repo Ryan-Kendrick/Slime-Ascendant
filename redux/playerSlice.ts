@@ -95,31 +95,42 @@ export const playerSlice = createSlice({
   name: "player",
   initialState,
   reducers: {
-    incrementAdventurerLevel: (state) => {
-      state.adventurerLevel++
+    incrementHeroLevel: (state, action: PayloadAction<HeroName>) => {
+      switch (action.payload) {
+        case "adventurer":
+          state.adventurerLevel++
+          break
+        case "warrior":
+          state.warriorLevel++
+          break
+        case "healer":
+          state.healerLevel++
+          break
+        case "mage":
+          state.mageLevel++
+          break
+        default:
+          throw new Error("Unexpected hero name: " + action.payload)
+      }
     },
-    incrementAdventurerOTPUpgradeCount: (state) => {
-      state.adventurerOTPUpgradeCount++
+    incrementOTPUpgradeCount: (state, action: PayloadAction<HeroName>) => {
+      switch (action.payload) {
+        case "adventurer":
+          state.adventurerOTPUpgradeCount++
+          break
+        case "warrior":
+          state.warriorOTPUpgradeCount++
+          break
+        case "healer":
+          state.healerOTPUpgradeCount++
+          break
+        case "mage":
+          state.mageOTPUpgradeCount++
+          break
+        default:
+          throw new Error("Unexpected hero name: " + action.payload)
+      }
     },
-    incrementWarriorLevel: (state) => {
-      state.warriorLevel++
-    },
-    incrementWarriorOTPUpgradeCount: (state) => {
-      state.warriorOTPUpgradeCount++
-    },
-    incrementHealerLevel: (state) => {
-      state.healerLevel++
-    },
-    incrementHealerOTPUpgradeCount: (state) => {
-      state.healerOTPUpgradeCount++
-    },
-    incrementMageLevel: (state) => {
-      state.mageLevel++
-    },
-    incrementMageOTPUpgradeCount: (state) => {
-      state.mageOTPUpgradeCount++
-    },
-
     setFullHealth: (state) => {
       state.currentHealth = state.maxHealth
       state.respawnTime = 0
@@ -260,14 +271,8 @@ export const playerSlice = createSlice({
 })
 
 export const {
-  incrementAdventurerLevel,
-  incrementAdventurerOTPUpgradeCount,
-  incrementWarriorLevel,
-  incrementWarriorOTPUpgradeCount,
-  incrementHealerLevel,
-  incrementHealerOTPUpgradeCount,
-  incrementMageLevel,
-  incrementMageOTPUpgradeCount,
+  incrementHeroLevel,
+  incrementOTPUpgradeCount,
   increaseGold,
   decreaseGold,
   setFullHealth,
@@ -350,7 +355,7 @@ export const selectBeatDamage = createSelector(
 )
 export const selectDotDamage = createSelector(
   [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],
-  (activeHeroes, heroState, pDamage, achievementDamage) => {
+  (activeHeroes: HeroName[], heroState, pDamage, achievementDamage) => {
     if (activeHeroes.length < 2) return 0
     const dotHeroes = activeHeroes.slice(1)
     const heroStats = dotHeroes.map((hero) => heroState[hero])
@@ -364,15 +369,15 @@ export const selectDotDamage = createSelector(
 export const updateClickDamage = (whatChanged: string) => (dispatch: AppDispatch, getState: () => RootState) => {
   switch (whatChanged) {
     case "adventurer-levelup":
-      dispatch(incrementAdventurerLevel())
+      dispatch(incrementHeroLevel("adventurer"))
       break
     case "adventurer-otp":
-      dispatch(incrementAdventurerOTPUpgradeCount())
+      dispatch(incrementOTPUpgradeCount("adventurer"))
       break
     case "pDamage":
       break
     default:
-      throw new Error("Unexpected updateDotDamage argument: " + whatChanged)
+      throw new Error("Unexpected updateClickDamagee argument: " + whatChanged)
   }
 
   const achievementData = ACHIEVEMENTS.click.value as AchievementCategory
@@ -388,29 +393,18 @@ export const updateClickDamage = (whatChanged: string) => (dispatch: AppDispatch
 }
 
 export const updateDotDamage = (whatChanged: string) => (dispatch: AppDispatch, getState: () => RootState) => {
-  switch (whatChanged) {
-    case "warrior-levelup":
-      dispatch(incrementWarriorLevel())
-      break
-    case "warrior-otp":
-      dispatch(incrementWarriorOTPUpgradeCount())
-      break
-    case "healer-levelup":
-      dispatch(incrementHealerLevel())
-      break
-    case "healer-otp":
-      dispatch(incrementHealerOTPUpgradeCount())
-      break
-    case "mage-levelup":
-      dispatch(incrementMageLevel())
-      break
-    case "mage-otp":
-      dispatch(incrementMageOTPUpgradeCount())
-      break
-    case "pDamage":
-      break
-    default:
-      throw new Error("Unexpected updateDotDamage argument: " + whatChanged)
+  const [heroName, change] = whatChanged.split("-") as [HeroName, "levelup" | "otp" | undefined]
+
+  if (change) {
+    if (change === "levelup") {
+      dispatch(incrementHeroLevel(heroName))
+    } else if (change === "otp") {
+      dispatch(incrementOTPUpgradeCount(heroName))
+    }
+  } else if (whatChanged === "pDamage") {
+    // Do nothing
+  } else {
+    throw new Error("Unexpected updateDotDamage argument: " + whatChanged)
   }
 
   const achievementData = ACHIEVEMENTS.dot.value as AchievementCategory

@@ -53,6 +53,7 @@ export interface HeroConfig {
   displayStat: string
   baseDamage: number
   levelUpDamageMod: number
+  levelUpHealthDivisor: number
   OneTimePurchases: OTPConfig
   levelUpCost: (currentLevel: number) => number
 }

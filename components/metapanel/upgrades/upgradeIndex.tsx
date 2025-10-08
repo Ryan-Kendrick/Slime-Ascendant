@@ -56,38 +56,34 @@ export default function UpgradeIndex({ PlayerHealthMemo }: { PlayerHealthMemo: J
       OTPCount: useAppSelector(cardProps["adventurer"].upgradeCount),
       cost: adventurerLevelUpCost,
       canAfford: gold >= adventurerLevelUpCost,
-      action: updateClickDamage("adventurer-levelup"),
     },
     warrior: {
       OTPCount: useAppSelector(cardProps["warrior"].upgradeCount),
       cost: warriorLevelUpCost,
       canAfford: gold >= warriorLevelUpCost,
-      action: updateDotDamage("warrior-levelup"),
     },
     healer: {
       OTPCount: useAppSelector(cardProps["healer"].upgradeCount),
       cost: healerLevelUpCost,
       canAfford: gold >= healerLevelUpCost,
-      action: updateDotDamage("healer-levelup"),
     },
     mage: {
       OTPCount: useAppSelector(cardProps["mage"].upgradeCount),
       cost: mageLevelUpCost,
       canAfford: gold >= mageLevelUpCost,
-      action: updateDotDamage("mage-levelup"),
     },
   }
 
   function onLevelup(e: React.MouseEvent<HTMLButtonElement>) {
-    const levelUpId = e.currentTarget.id as HeroName
+    const heroName = e.currentTarget.id as HeroName
 
-    const { cost, canAfford, action } = LevelUp[levelUpId]
+    const { cost, canAfford } = LevelUp[heroName]
 
     if (canAfford) {
-      dispatch(action)
+      dispatch(updateDotDamage(heroName + "-levelup"))
       dispatch(decreaseGold(cost))
     } else if (!cost) {
-      throw new Error(`Unexpected levelup target ${levelUpId}`)
+      throw new Error(`Unexpected levelup target ${heroName}`)
     }
   }
 
