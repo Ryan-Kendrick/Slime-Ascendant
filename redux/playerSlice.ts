@@ -348,9 +348,7 @@ export const selectPendingPMultistrike = createPendingPPurchaseSelector("multist
 export const selectPendingPBeat = createPendingPPurchaseSelector("beat")
 
 export const selectCurrentHealth = (state: RootState) => state.player.currentHealth
-export const selectMaxHealth = (state: RootState) =>
-  PLAYER_CONFIG.baseHealth *
-  (1 + UPGRADE_CONFIG.calcAdditiveMod(state.player.pHealthUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades.health))
+export const selectMaxHealth = (state: RootState) => state.player.maxHealth
 
 export const selectHealth = createSelector([selectCurrentHealth, selectMaxHealth], (currentHealth, maxHealth) => ({
   currentHealth,
