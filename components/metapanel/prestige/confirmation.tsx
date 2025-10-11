@@ -112,12 +112,14 @@ export default function Confirmation({ initiatePrestige }: Props) {
               </h4>
               {actuallyPendingUpgrades &&
                 Object.entries(pendingUpgrades).map(([upgradeName, upgrade]) => (
-                  <li key={upgradeName} className="line-x-bottom mx-4 mt-2 flex justify-between text-lg">
-                    <span className="font-outline-electricBlue mb-1 font-sans text-2xl font-extrabold tracking-wide text-white">
-                      {UPGRADE_CONFIG.prestigeUpgrades[upgradeName as PrestigeUpgradeId].displayName}
-                    </span>
-                    <span className="self-end text-xl text-frost">x{upgrade.purchaseCount}</span>
-                  </li>
+                  <ul key={upgradeName}>
+                    <li key={upgradeName} className="line-x-bottom mx-4 mt-2 flex justify-between text-lg">
+                      <span className="font-outline-electricBlue mb-1 font-sans text-2xl font-extrabold tracking-wide text-white">
+                        {UPGRADE_CONFIG.prestigeUpgrades[upgradeName as PrestigeUpgradeId].displayName}
+                      </span>
+                      <span className="self-end text-xl text-frost">x{upgrade.purchaseCount}</span>
+                    </li>
+                  </ul>
                 ))}
             </li>
           </ul>
