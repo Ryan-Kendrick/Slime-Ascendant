@@ -62,7 +62,7 @@ export const selectMageDamage = createSelector([selectMageState], (mageState) =>
 )
 
 export const selectPDamageUpgradeCount = (state: RootState) => state.player.pDamageUpgradeCount
-export const selectPMod = createSelector(
+export const selectPDmgMod = createSelector(
   [selectPDamageUpgradeCount],
   (pDamageUpgradeCount) => 1 + pDamageUpgradeCount * UPGRADE_CONFIG.prestigeUpgrades.damage.modifier,
 )
@@ -73,22 +73,22 @@ export const selectAchievementDamage = createSelector(
 )
 
 export const selectAdventurerContribution = createSelector(
-  [selectAdventurerState, selectPMod, selectAchievementDamage],
+  [selectAdventurerState, selectPDmgMod, selectAchievementDamage],
   (adventurerState, pDamage, achievementDamage) =>
     playerCalc.heroDamage("adventurer", adventurerState, pDamage, achievementDamage, true),
 )
 export const selectWarriorContribution = createSelector(
-  [selectWarriorState, selectPMod, selectAchievementDamage],
+  [selectWarriorState, selectPDmgMod, selectAchievementDamage],
   (warriorState, pDamage, achievementDamage) =>
     playerCalc.heroDamage("warrior", warriorState, pDamage, achievementDamage, true),
 )
 export const selectHealerContribution = createSelector(
-  [selectHealerState, selectPMod, selectAchievementDamage],
+  [selectHealerState, selectPDmgMod, selectAchievementDamage],
   (healerState, pDamage, achievementDamage) =>
     playerCalc.heroDamage("healer", healerState, pDamage, achievementDamage, true),
 )
 export const selectMageContribution = createSelector(
-  [selectMageState, selectPMod, selectAchievementDamage],
+  [selectMageState, selectPDmgMod, selectAchievementDamage],
   (mageState, pDamage, achievementDamage) => playerCalc.heroDamage("mage", mageState, pDamage, achievementDamage, true),
 )
 

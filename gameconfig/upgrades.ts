@@ -1,4 +1,5 @@
 import { HeroName, HeroState, PlayerCalc, UpgradeConfig } from "../models/upgrades"
+import { heroNames } from "../redux/shared/helpers"
 
 export const PLAYER_CONFIG = {
   baseHealth: 10 as number,
@@ -216,11 +217,11 @@ export const playerCalc: PlayerCalc = {
   clickDamage: (clickLevel, clickOTPUpgradeCount, pDamage, achievementModifier): number =>
     UPGRADE_CONFIG.adventurer.baseDamage +
     (clickLevel - 1) * Math.pow(2, clickOTPUpgradeCount) * pDamage * achievementModifier,
-  heroDamage: (heroName, heroState, pDamage?, achievementModifier?, displayHeroContribution?): number => {
+  heroDamage: (heroName, heroState, pDamageMod?, achievementMod?, displayHeroContribution?): number => {
     let damage = 0
 
     // If damage for all heroes is being added, return total effective dot damage
-    if (Array.isArray(heroName) && Array.isArray(heroState) && pDamage && achievementModifier) {
+    if (Array.isArray(heroName) && Array.isArray(heroState) && pDamageMod && achievementMod) {
       for (let i = 0; i < heroName.length; i++) {
         const { baseDamage, levelUpDamageMod: levelUpMod, OneTimePurchases } = UPGRADE_CONFIG[heroName[i]]
         const { level, upgradeCount } = heroState[i]
@@ -235,7 +236,7 @@ export const playerCalc: PlayerCalc = {
         }
         damage += damageInc
       }
-      damage *= pDamage * achievementModifier
+      damage *= pDamageMod * achievementMod
 
       // Else if damage is being calculated for a single hero
     } else if (typeof heroName === "string") {
@@ -251,19 +252,19 @@ export const playerCalc: PlayerCalc = {
 
       // When total damage contribution is being calculated for display on a hero card
       if (displayHeroContribution) {
-        if (pDamage && achievementModifier) {
-          damage *= pDamage * achievementModifier
-        } else if (achievementModifier) {
-          damage *= achievementModifier
+        if (pDamageMod && achievementMod) {
+          damage *= pDamageMod * achievementMod
+        } else if (achievementMod) {
+          damage *= achievementMod
         } else {
           throw new Error(
-            `Unexpected values in display hero contribution calculation: ${heroName} ${heroState} ${pDamage} ${achievementModifier}`,
+            `Unexpected values in display hero contribution calculation. Name: ${heroName} State: ${heroState} Prestige damage: ${pDamageMod} Achievement damage: ${achievementMod}`,
           )
         }
       }
     } else {
       throw new Error(
-        `Unexpected values in hero damage calculation: ${heroName} ${heroState} ${pDamage} ${achievementModifier}`,
+        `Unexpected values in hero damage calculation. Name: ${heroName} State: ${heroState} Prestige damage: ${pDamageMod} Achievement damage: ${achievementMod}`,
       )
     }
     return damage
@@ -271,5 +272,17 @@ export const playerCalc: PlayerCalc = {
   damageAtLevel: (heroName, heroState): number => {
     const { baseDamage, levelUpDamageMod } = UPGRADE_CONFIG[heroName]
     return baseDamage + (heroState.level - 1) * levelUpDamageMod
+  },
+  playerHealth: (heroState, pHealthMod): number => {
+    let health = PLAYER_CONFIG.baseHealth
+
+    Object.entries(heroState).map(([heroName, heroState]) => {
+      const divisor = UPGRADE_CONFIG[heroName as HeroName].levelUpHealthDivisor
+      health += heroState.level / divisor
+    })
+
+    if (pHealthMod) health *= pHealthMod
+
+    return health
   },
 } as const

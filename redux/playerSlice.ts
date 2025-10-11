@@ -8,7 +8,7 @@ import { PrestigeState, PrestigeUpgradeId, HeroName, UpgradeId } from "../models
 import { prestigeReset } from "./shared/actions"
 import { ACHIEVEMENT_CONFIG, AchievementCategory, ACHIEVEMENTS } from "../gameconfig/achievements"
 import { checkAchievementUnlock } from "./shared/helpers"
-import { selectAchievementDamage, selectAdventurerLevel, selectHeroState, selectPMod } from "./shared/heroSelectors"
+import { selectAchievementDamage, selectAdventurerLevel, selectHeroState, selectPDmgMod } from "./shared/heroSelectors"
 
 const debugState = {
   adventurerLevel: 500,
@@ -112,6 +112,32 @@ export const playerSlice = createSlice({
         default:
           throw new Error("Unexpected hero name: " + action.payload)
       }
+      const heroState = {
+        adventurer: {
+          level: state.adventurerLevel,
+          upgradeCount: state.adventurerOTPUpgradeCount,
+        },
+        warrior: {
+          level: state.warriorLevel,
+          upgradeCount: state.warriorOTPUpgradeCount,
+        },
+        healer: {
+          level: state.healerLevel,
+          upgradeCount: state.healerOTPUpgradeCount,
+        },
+        mage: {
+          level: state.mageLevel,
+          upgradeCount: state.mageOTPUpgradeCount,
+        },
+      }
+      const pHealthMod = 1 + state.pHealthUpgradeCount * UPGRADE_CONFIG.prestigeUpgrades.health.modifier
+
+      const oldPlayerHealth = state.maxHealth
+      const newPlayerHealth = Math.floor(playerCalc.playerHealth(heroState, pHealthMod))
+      const diff = newPlayerHealth - oldPlayerHealth
+
+      state.maxHealth = newPlayerHealth
+      state.currentHealth += diff
     },
     incrementOTPUpgradeCount: (state, action: PayloadAction<HeroName>) => {
       switch (action.payload) {
@@ -342,7 +368,7 @@ export const selectClickDamage = createSelector(
   [
     selectAdventurerLevel,
     (state: RootState) => state.player.adventurerOTPUpgradeCount,
-    selectPMod,
+    selectPDmgMod,
     selectAchievementDamage,
   ],
   (adventurerLevel, adventurerOTPUpgradeCount, pDamage, achievementDamage) =>
@@ -354,7 +380,7 @@ export const selectBeatDamage = createSelector(
     UPGRADE_CONFIG.calcAdditiveMod(pBeatUpgradeCount, UPGRADE_CONFIG.prestigeUpgrades.beat) * clickDamage,
 )
 export const selectDotDamage = createSelector(
-  [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPMod, selectAchievementDamage],
+  [(state: RootState) => state.player.activeHeroes, selectHeroState, selectPDmgMod, selectAchievementDamage],
   (activeHeroes: HeroName[], heroState, pDamage, achievementDamage) => {
     if (activeHeroes.length < 2) return 0
     const dotHeroes = activeHeroes.slice(1)

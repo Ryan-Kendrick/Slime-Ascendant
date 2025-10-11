@@ -10,7 +10,7 @@ import {
   selectGold,
 } from "../../../redux/playerSlice"
 import { selectAchievementModifier } from "../../../redux/shared/heroSelectors"
-import { selectPMod } from "../../../redux/shared/heroSelectors"
+import { selectPDmgMod } from "../../../redux/shared/heroSelectors"
 import OneTimePurchaseUpgrade from "./oneTimePurchase"
 import { UPGRADE_CONFIG } from "../../../gameconfig/upgrades"
 import { HeroConfig, UpgradeIdWithLevel, HeroName } from "../../../models/upgrades"
@@ -53,7 +53,7 @@ export default function HeroCard({ config, touchedHero, OTPIcons: OTPIcons, onUp
     return acc
   }, 0)
 
-  const prestigeMod = useAppSelector(selectPMod)
+  const prestigeMod = useAppSelector(selectPDmgMod)
   const achievementMod = useAppSelector(selectAchievementModifier)
 
   const [shouldMount, setShouldMount] = useState(false)

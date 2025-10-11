@@ -87,6 +87,7 @@ export interface PlayerCalc {
     displayHeroContribution?: boolean,
   ) => number
   damageAtLevel: (heroName: HeroName, heroState: HeroState) => number
+  playerHealth: (heroState: Record<HeroName, HeroState>, pHealth: number) => number
 }
 
 export type HeroName = "adventurer" | "warrior" | "healer" | "mage"
