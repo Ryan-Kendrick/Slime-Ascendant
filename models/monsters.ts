@@ -30,8 +30,13 @@ export interface MonsterType {
 
 interface HealthConfig {
   base: number
-  growth: number
-  smoothing: number
+  zonePower: number
+  zoneCoeff: number
+  levelCoeff: number
+  expoStart: number
+  expoGrowthRate: number
+  stageMin: number
+  stageMax: number
 }
 
 interface AttackConfig {
@@ -46,9 +51,10 @@ interface GoldConfig {
 }
 
 interface BossConfig {
-  extraLevels: 20
-  plasmaExpoGrowth: number
+  extraLevels: number
+  plasmaBase: number
   plasmaLinGrowth: number
+  plasmaExpoGrowth: number
   plasmaValue: (zoneNumber: number) => number
 }
 

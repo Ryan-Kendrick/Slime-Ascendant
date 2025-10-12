@@ -141,7 +141,7 @@ export default function UpgradeIndex({ PlayerHealthMemo }: { PlayerHealthMemo: J
                   ? "mb-0 mt-0 grid-cols-1 md:mt-0 md:grid-cols-2"
                   : "mb-0 mt-0 grid-cols-1 md:mt-0 md:grid-cols-2"
                 : "-mt-1 mb-0 grid-cols-1 md:mt-0 md:grid-cols-2"
-              : "-mt-3 mb-8 grid-cols-1 md:mt-0",
+              : "-mt-3 mb-8 grid-cols-1 md:mt-2",
           )}>
           <HeroCard
             config={UPGRADE_CONFIG.adventurer}

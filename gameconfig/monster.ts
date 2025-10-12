@@ -20,9 +20,19 @@ import wardSquidURL from "../assets/monsters/boss-ward-squid.webp"
 
 const MONSTER_CONFIG: BaseMonsterConfig = {
   health: {
-    base: 10,
-    growth: 1.1,
-    smoothing: 6,
+    // Scaling parameters
+    base: 5,
+    zonePower: 2.2,
+    zoneCoeff: 0.8,
+    levelCoeff: 0.15,
+
+    // Exponential scaling
+    expoStart: 40,
+    expoGrowthRate: 1.06,
+
+    // Stage scaling within zones
+    stageMin: 0.7,
+    stageMax: 1,
   },
   attack: {
     baseDamage: 1,
@@ -35,20 +45,22 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
   },
   boss: {
     extraLevels: 20,
-    plasmaExpoGrowth: 1.2,
-    plasmaLinGrowth: 1.3,
+    plasmaBase: 5,
+    plasmaLinGrowth: 3,
+    plasmaExpoGrowth: 1.05,
     plasmaValue: function (zoneNumber) {
-      return Math.round(Math.pow(this.plasmaExpoGrowth, zoneNumber - 1 * this.plasmaLinGrowth))
+      const linear = this.plasmaBase + (zoneNumber - 10) * this.plasmaLinGrowth
+      const expoMulti = Math.pow(this.plasmaExpoGrowth, zoneNumber - 1)
+      return Math.round(linear * expoMulti)
     },
   },
   regularSpawnChance: 0.97,
   specialSpawnChance: 0.005,
-  // attack etc.
 }
 
 const MONSTER_VARIATIONS: MonsterType[] = [
   // dps = damageMulti / (MONSTER_CONFIG.baseAttackRate * attackRateMulti)
-  // difficult = (dps * healthMulti)
+  // difficulty = (dps * healthMulti)
   {
     name: "Cave Troll",
     kind: "regular",
@@ -202,17 +214,40 @@ class BaseMonster implements BaseEnemy {
   baseAttackRate = MONSTER_CONFIG.attack.baseAttackRate
 
   get baseHealth(): number {
-    const { base, growth, smoothing } = MONSTER_CONFIG.health
-    return base * Math.sqrt(this.level) * Math.pow(growth, this.level / smoothing)
-  }
+    const {
+      base,
+      zonePower,
+      zoneCoeff,
+      levelCoeff,
+      expoStart,
+      expoGrowthRate: expoGrowth,
+      stageMin,
+      stageMax,
+    } = MONSTER_CONFIG.health
 
+    const zone = Math.floor((this.level - 1) / 30) + 1
+    const stageInZone = ((this.level - 1) % 30) + 1
+    const stageProgress = (stageInZone - 1) / 29
+
+    const zoneScaling = zoneCoeff * Math.pow(zone, zonePower)
+
+    const levelScaling = 1 + this.level * levelCoeff
+
+    const lateGameBoost = zone > expoStart ? Math.pow(expoGrowth, zone - expoStart) : 1
+
+    const stageMulti = stageMin + (stageMax - stageMin) * stageProgress
+
+    const health = base * zoneScaling * levelScaling * lateGameBoost * stageMulti
+
+    return Math.floor(health)
+  }
   get baseDamage(): number {
     const { baseDamage, growth } = MONSTER_CONFIG.attack
     return this.level < 30 ? baseDamage : baseDamage * growth * (this.level / 30)
   }
 
   constructor(zoneNumber: number, stageNumber: number, isBoss: boolean) {
-    this.level = (zoneNumber - 1) * ZONE_CONFIG.length + stageNumber
+    this.level = (zoneNumber - 1) * 30 + stageNumber
     if (isBoss) this.level += MONSTER_CONFIG.boss.extraLevels
   }
 }

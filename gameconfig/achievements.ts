@@ -1,4 +1,4 @@
-type Difficulty = "beginner" | "novice" | "intermediate"
+type Difficulty = "beginner" | "novice" | "intermediate" | "special"
 
 interface AchievementTier {
   difficulty: Difficulty
@@ -17,6 +17,10 @@ const ACHIEVEMENT_TIER_CONFIG: Record<Difficulty, AchievementTier> = {
   intermediate: {
     difficulty: "intermediate",
     modifier: 0.2,
+  },
+  special: {
+    difficulty: "special",
+    modifier: 0,
   },
 }
 
@@ -477,6 +481,21 @@ export const ACHIEVEMENT_CONFIG: Record<string, AchievementFeature> = {
           description: "Spend 1000000 Plasma",
           condition: 1000000,
           ...ACHIEVEMENT_TIER_CONFIG.intermediate,
+        },
+      ],
+    },
+  },
+  special: {
+    displayName: "Special",
+    achievements: {
+      displayName: "",
+      achievements: [
+        {
+          id: "special-veteran",
+          title: "Veteran",
+          description: "From a time before monsters could even attack",
+          condition: 0,
+          ...ACHIEVEMENT_TIER_CONFIG.special,
         },
       ],
     },

@@ -154,7 +154,7 @@ Your save from ${saveVersion} doesn't quite fit into the ${currentVersion} world
 The time has come to start a brand new adventure.`)
       }, 100)
       return undefined
-    } else if (Number(saveMinorVersion) === 5) {
+    } else if (Number(saveMinorVersion) < 6) {
       setTimeout(() => {
         alert(`
 Attention Slime Slayer!
@@ -195,6 +195,7 @@ We managed to salvage your achievements, but the time has come to start a new ad
         longCatchupAbort: false,
       },
     }
+    if (Number(saveMinorVersion) < 7) loadedState.stats.achievementsUnlocked += "special-veteran"
     // 0.7.0 checks
     if (!loadedState.player.pHealthUpgradeCount) loadedState.player.pHealthUpgradeCount = 0
     if (!loadedState.player.maxHealth) loadedState.player.maxHealth = initialState.maxHealth

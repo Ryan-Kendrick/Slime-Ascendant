@@ -37,17 +37,17 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "warrior-otp",
     displayName: "Warrior",
     displayStat: "Passive Damage",
-    baseDamage: 5,
-    levelUpDamageMod: 4,
+    baseDamage: 5, // Damage at level 20: 62 (5 + 19 * 3)
+    levelUpDamageMod: 3,
     levelUpHealthDivisor: 6,
     OneTimePurchases: {
       OTPCosts: [8000, 15000, 25000],
-      OTPModifiers: [2, 2, 2],
+      OTPModifiers: [1.5, 1.5, 1.75],
       OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
-        "Increase Passive Damage by 100%",
-        "Increase Passive Damage by 100%",
-        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 50%",
+        "Increase Passive Damage by 50%",
+        "Increase Passive Damage by 75%",
       ],
     },
     levelUpCost: (currentLevel) => {
@@ -62,17 +62,17 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "healer-otp",
     displayName: "Healer",
     displayStat: "Passive Damage",
-    baseDamage: 70,
-    levelUpDamageMod: 50,
+    baseDamage: 50, // Damage at level 20: 715 (50 + 19 * 35)
+    levelUpDamageMod: 35,
     levelUpHealthDivisor: 2,
     OneTimePurchases: {
       OTPCosts: [150000, 250000, 400000],
-      OTPModifiers: [2, 2, 2],
+      OTPModifiers: [1.5, 1.5, 1.75],
       OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
-        "Increase Passive Damage by 100%",
-        "Increase Passive Damage by 100%",
-        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 50%",
+        "Increase Passive Damage by 50%",
+        "Increase Passive Damage by 75%",
       ],
     },
     levelUpCost: (currentLevel) => {
@@ -87,21 +87,21 @@ export const UPGRADE_CONFIG: UpgradeConfig = {
     elementId: "mage-otp",
     displayName: "Mage",
     displayStat: "Passive Damage",
-    baseDamage: 300,
-    levelUpDamageMod: 100,
+    baseDamage: 200, // Damage at level 20: 1720 (200 + 19 * 80)
+    levelUpDamageMod: 80,
     levelUpHealthDivisor: 4,
     OneTimePurchases: {
       OTPCosts: [1000000, 2500000, 5000000],
-      OTPModifiers: [2, 2, 2],
+      OTPModifiers: [1.5, 1.5, 1.75],
       OTPTitles: ["Upgrade 1", "Upgrade 2", "Upgrade 3"],
       OTPDescriptions: [
-        "Increase Passive Damage by 100%",
-        "Increase Passive Damage by 100%",
-        "Increase Passive Damage by 100%",
+        "Increase Passive Damage by 50%",
+        "Increase Passive Damage by 50%",
+        "Increase Passive Damage by 75%",
       ],
     },
     levelUpCost: (currentLevel) => {
-      const base = 8000
+      const base = 10000
       const growthRate = 1.09
 
       return Math.floor(base * (1 + Math.log10(currentLevel + 1)) * Math.pow(growthRate, currentLevel))

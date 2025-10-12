@@ -36,6 +36,7 @@ export const achievementSelectorMap: Record<string, (state: RootState) => number
   "click-value": (state) => selectClickDamage(state),
   "dot-value": (state) => selectDotDamage(state),
   "prestige-plasmaspent": (state) => selectPrestigeState(state).plasmaSpent,
+  "special-veteran": (state) => 1,
 }
 
 export type HeroStateFunctions = {
