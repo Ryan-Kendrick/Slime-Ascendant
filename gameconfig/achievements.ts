@@ -493,7 +493,7 @@ export const ACHIEVEMENT_CONFIG: Record<string, AchievementFeature> = {
         {
           id: "special-veteran",
           title: "Veteran",
-          description: "From a time before monsters could even attack",
+          description: "From a time before monsters could attack",
           condition: 0,
           ...ACHIEVEMENT_TIER_CONFIG.special,
         },

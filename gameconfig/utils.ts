@@ -195,7 +195,8 @@ We managed to salvage your achievements, but the time has come to start a new ad
         longCatchupAbort: false,
       },
     }
-    if (Number(saveMinorVersion) < 7) loadedState.stats.achievementsUnlocked += "special-veteran"
+    if (Number(saveMinorVersion) < 7 && !loadedState.stats.achievementsUnlocked.includes("special-veteran"))
+      loadedState.stats.achievementsUnlocked += "special-veteran"
     // 0.7.0 checks
     if (!loadedState.player.pHealthUpgradeCount) loadedState.player.pHealthUpgradeCount = 0
     if (!loadedState.player.maxHealth) loadedState.player.maxHealth = initialState.maxHealth
