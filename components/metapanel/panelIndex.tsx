@@ -142,8 +142,8 @@ export default function PanelIndex() {
       if (prestigeTabVisible) {
         chainImg.push("bg-chainsLeftBottom", "bg-chainsRightBottom")
         top -= 285
+        mask = "mask-postPrestige"
       }
-      mask = "mask-postPrestige"
     } else if (!isMobile) {
       if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible || (!dotDamage && !prestigeTabVisible)) {
