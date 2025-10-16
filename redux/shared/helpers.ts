@@ -1,9 +1,9 @@
 import { type AppDispatch } from "../store"
-import { unlockAchievement } from "../statsSlice"
 import { increaseAchievementModifier } from "../playerSlice"
 import { type Achievement } from "../../gameconfig/achievements"
 import { UPGRADE_CONFIG } from "../../gameconfig/upgrades"
 import { HeroName } from "../../models/upgrades"
+import { unlockAchievement } from "../statsSlice"
 
 interface AchievementCheck {
   unlockedAchievements: string[]
@@ -15,7 +15,7 @@ export const checkAchievementUnlock = (dispatch: AppDispatch, check: Achievement
   check.forEach(({ unlockedAchievements, achievements, value }) => {
     while (achievements.length > 0 && value >= achievements[0].condition) {
       const nextAchievement = achievements[0]
-      console.log(check)
+      if (!Array.isArray(unlockedAchievements)) throw new Error("Unlocked achievements is not an array")
       const isUnlocked = unlockedAchievements.find((achievementId) => achievementId === nextAchievement.id)
       if (isUnlocked) {
         achievements.shift()
