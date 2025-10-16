@@ -104,3 +104,8 @@
     text-shadow: none;
   }
 }
+.box-shadow-electricBlue {
+  box-shadow:
+    0 0 10px #7df9ff,
+    0 0 20px #7df9ff;
+}

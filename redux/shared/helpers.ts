@@ -15,6 +15,7 @@ export const checkAchievementUnlock = (dispatch: AppDispatch, check: Achievement
   check.forEach(({ unlockedAchievements, achievements, value }) => {
     while (achievements.length > 0 && value >= achievements[0].condition) {
       const nextAchievement = achievements[0]
+      console.log(check)
       const isUnlocked = unlockedAchievements.find((achievementId) => achievementId === nextAchievement.id)
       if (isUnlocked) {
         achievements.shift()
