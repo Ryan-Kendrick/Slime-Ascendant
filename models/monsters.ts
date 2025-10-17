@@ -41,7 +41,7 @@ interface HealthConfig {
 
 interface AttackConfig {
   baseDamage: number
-  growth: number
+  exp: number
   baseAttackRate: number
 }
 

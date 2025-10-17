@@ -22,7 +22,7 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
   health: {
     // Scaling parameters
     base: 5,
-    zonePower: 2.2,
+    zonePower: 1.8,
     zoneCoeff: 0.8,
     levelCoeff: 0.15,
 
@@ -31,16 +31,16 @@ const MONSTER_CONFIG: BaseMonsterConfig = {
     expoGrowthRate: 1.06,
 
     // Stage scaling within zones
-    stageMin: 0.7,
+    stageMin: 0.8,
     stageMax: 1,
   },
   attack: {
     baseDamage: 1,
-    growth: 1.02,
+    exp: 0.75,
     baseAttackRate: 2.4,
   },
   gold: {
-    healthDivisor: 4,
+    healthDivisor: 5,
     healthMultiBonus: 1.5,
   },
   boss: {
@@ -242,8 +242,8 @@ class BaseMonster implements BaseEnemy {
     return Math.floor(health)
   }
   get baseDamage(): number {
-    const { baseDamage, growth } = MONSTER_CONFIG.attack
-    return this.level < 30 ? baseDamage : baseDamage * growth * (this.level / 30)
+    const { baseDamage, exp } = MONSTER_CONFIG.attack
+    return this.level < 30 ? baseDamage : baseDamage + Math.pow(this.level / 30, exp)
   }
 
   constructor(zoneNumber: number, stageNumber: number, isBoss: boolean) {
