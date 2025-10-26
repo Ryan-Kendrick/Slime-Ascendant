@@ -6,7 +6,6 @@ import { initialState as initStatsState } from "../redux/statsSlice"
 import { initialState as initialMetaState } from "../redux/metaSlice"
 import * as LZString from "lz-string"
 import { METADATA_CONFIG, PERFORMANCE_CONFIG } from "./meta"
-import { UPGRADE_CONFIG } from "./upgrades"
 import { PrestigeUpgrade, PrestigeUpgradeId } from "../models/upgrades"
 
 export function serialize(classInstance) {

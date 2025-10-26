@@ -1,6 +1,6 @@
 // Version number based on semantic versioning https://semver.org/
 export const METADATA_CONFIG = {
-  version: "v0.7.0",
+  version: "v0.7.1",
   softcap: "Zone 40",
 } as const
 

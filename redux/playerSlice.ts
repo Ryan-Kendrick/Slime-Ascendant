@@ -168,7 +168,6 @@ export const playerSlice = createSlice({
       }
     },
     enemyAttack: (state, action: PayloadAction<number>) => {
-      console.log("Damage taken:", state.currentHealth, "-", Math.floor(action.payload))
       state.currentHealth -= Math.floor(action.payload)
       if (state.currentHealth <= 0) {
         state.currentHealth = 0
