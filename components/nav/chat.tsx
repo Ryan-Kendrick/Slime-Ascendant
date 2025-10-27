@@ -15,11 +15,6 @@ export default function Chat() {
   const connectionRef = useRef<HubConnection | null>(null)
   const reconnectRef = useRef<NodeJS.Timeout | null>(null)
 
-  const connection = new HubConnectionBuilder()
-    .withUrl(METADATA_CONFIG.chatServerUrl)
-    .configureLogging(LogLevel.Information)
-    .build()
-
   const connectChat = useCallback(async () => {
     if (!mountedRef.current) return
     if (!connectionRef.current || connectionRef.current.state !== "Disconnected") return
@@ -47,7 +42,7 @@ export default function Chat() {
 
   const sendMessage = () => {
     if (chatInputRef.current) {
-      if (!chatConnected) return
+      if (!chatConnected || !connectionRef.current) return
 
       const newMessage = chatInputRef.current.value.trim()
       if (newMessage) {
@@ -91,7 +86,7 @@ export default function Chat() {
         ])
         chatInputRef.current.value = ""
         chatInputRef.current.focus()
-        connection.send("NewMessage", user, newMessage).catch((error) => {
+        connectionRef.current.send("BroadcastMessage", user, newMessage).catch((error) => {
           console.error("Error sending message:", error)
         })
       }
@@ -121,10 +116,10 @@ export default function Chat() {
   }, [])
 
   useEffect(() => {
-    // Initial connection
-    if (mountedRef.current && connection.state === "Disconnected") {
-      connectChat()
-    }
+    const connection = new HubConnectionBuilder()
+      .withUrl(METADATA_CONFIG.chatServerUrl)
+      .configureLogging(LogLevel.Information)
+      .build()
 
     connection.onclose(async () => {
       if (mountedRef.current) {
@@ -136,10 +131,19 @@ export default function Chat() {
       setMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
     })
 
+    connection.on("MessageReceived", (incomingMessage: Message) => {
+      setMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
+    })
+
     connectionRef.current = connection
 
+    // Initial connection
+    if (mountedRef.current && connectionRef.current?.state === "Disconnected") {
+      connectChat()
+    }
+
     return () => {
-      connection.stop()
+      connectionRef.current?.stop()
       mountedRef.current = false
       if (reconnectRef.current) {
         clearTimeout(reconnectRef.current)
