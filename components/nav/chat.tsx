@@ -124,7 +124,7 @@ export default function Chat() {
             return updatedMessages
           }
         }
-        return prevMessages // No match found, return unchanged
+        return [...prevMessages, incomingMessage]
       })
     })
 
