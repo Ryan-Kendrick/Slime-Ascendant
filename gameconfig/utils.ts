@@ -90,6 +90,41 @@ export const formatPendingPIncrease = (
   return pendingInc.toFixed(2)
 }
 
+export const getRandomColor = (): Color => {
+  const colors: Color[] = [
+    "#ef4444", // red
+    "#f97316", // orange
+    "#f59e0b", // amber
+    "#eab308", // yellow
+    "#84cc16", // lime
+    "#22c55e", // green
+    "#10b981", // emerald
+    "#14b8a6", // teal
+    "#06b6d4", // cyan
+    "#0ea5e9", // sky
+    "#3b82f6", // blue
+    "#6366f1", // indigo
+    "#8b5cf6", // violet
+    "#a855f7", // purple
+    "#d946ef", // fuchsia
+    "#ec4899", // pink
+    "#f43f5e", // rose
+    "#64748b", // slate
+    "#78716c", // stone
+  ]
+  return colors[Math.floor(Math.random() * colors.length)]
+}
+
+export const formatTime = (unixTime: number): string => {
+  return new Date(unixTime).toLocaleString("en-NZ", {
+    timeZone: "Pacific/Auckland",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  })
+}
+
 export const getNextCritPosition = (
   existingCrits: Array<{ id: string; damage: number; timestamp: number; position: { x: number; y: number } }> | [],
 ): { x: number; y: number } => {

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 import clsx from "clsx/lite"
-import { ChatUser, Message, type Color } from "../../models/slimechat"
+import { ChatUser, ConfirmedMessage, MessageData } from "../../models/slimechat"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
+import { formatTime, getRandomColor } from "../../gameconfig/utils"
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([])
+  const [currentMessages, setMessages] = useState<(MessageData | ConfirmedMessage)[]>([])
   const [chatFocused, setChatFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
   const [user, setUser] = useState<ChatUser | null>(null)
@@ -48,45 +49,24 @@ export default function Chat() {
       if (newMessage) {
         let fallbackUser
         if (user === null) {
-          const colors: Color[] = [
-            "#ef4444", // red
-            "#f97316", // orange
-            "#f59e0b", // amber
-            "#eab308", // yellow
-            "#84cc16", // lime
-            "#22c55e", // green
-            "#10b981", // emerald
-            "#14b8a6", // teal
-            "#06b6d4", // cyan
-            "#0ea5e9", // sky
-            "#3b82f6", // blue
-            "#6366f1", // indigo
-            "#8b5cf6", // violet
-            "#a855f7", // purple
-            "#d946ef", // fuchsia
-            "#ec4899", // pink
-            "#f43f5e", // rose
-            "#64748b", // slate
-            "#78716c", // stone
-          ]
-          const randomColor = colors[Math.floor(Math.random() * colors.length)]
+          const randomColor = getRandomColor()
           fallbackUser = { name: `Slime-${Math.floor(Math.random() * 1000)}`, color: randomColor } as ChatUser
           setUser(fallbackUser)
         }
         const username = user?.name ?? fallbackUser!.name
         const userColor = user?.color ?? fallbackUser!.color
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            name: username,
-            content: newMessage,
-            unixTime: Date.now(),
-            color: userColor,
-          },
-        ])
+
+        const messageData = {
+          name: username,
+          color: userColor,
+          content: newMessage,
+          unixTime: Date.now(),
+        }
+
+        setMessages((prevMessages) => [...prevMessages, messageData])
         chatInputRef.current.value = ""
         chatInputRef.current.focus()
-        connectionRef.current.send("BroadcastMessage", user, newMessage).catch((error) => {
+        connectionRef.current.invoke("BroadcastMessage", messageData).catch((error) => {
           console.error("Error sending message:", error)
         })
       }
@@ -106,11 +86,13 @@ export default function Chat() {
       chatInputRef.current?.setSelectionRange(0, 0)
     }
     mountedRef.current = true
+    const now = Date.now()
     setMessages([
       {
         name: "🖥️ System",
         content: "Welcome to Slime Chat!",
-        unixTime: Date.now(),
+        unixTime: now,
+        id: "system." + now,
       },
     ])
   }, [])
@@ -127,12 +109,23 @@ export default function Chat() {
       }
     })
 
-    connection.on("ServerMessage", (incomingMessage: Message) => {
+    connection.on("ServerMessage", (incomingMessage: MessageData) => {
       setMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
     })
 
-    connection.on("MessageReceived", (incomingMessage: Message) => {
-      setMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
+    // Handle message confirmation
+    connection.on("MessageReceived", (incomingMessage: ConfirmedMessage) => {
+      setMessages((prevMessages) => {
+        for (let i = prevMessages.length - 1; i >= 0; i--) {
+          const msg = prevMessages[i]
+          if (incomingMessage.unixTime === msg.unixTime && incomingMessage.name === msg.name) {
+            const updatedMessages = [...prevMessages]
+            updatedMessages[i] = { ...incomingMessage }
+            return updatedMessages
+          }
+        }
+        return prevMessages // No match found, return unchanged
+      })
     })
 
     connectionRef.current = connection
@@ -162,13 +155,13 @@ export default function Chat() {
 
         {/* Chat history */}
         <div className="flex h-full w-full flex-col items-start overflow-auto px-4">
-          {messages.map((message, i) => (
-            <div key={i} className="flex flex-col">
+          {currentMessages.map((message, i) => (
+            <div key={i} className="flex flex-col" style={{ opacity: "id" in message ? 1 : 0.3 }}>
               <div className="flex items-center gap-1">
                 <p className="text-lg font-bold" style={{ color: message.color }}>
                   {message.name}
                 </p>
-                <p className="text-end text-sm text-gray-500">at {message.unixTime}</p>
+                <p className="text-end text-sm text-gray-500">at {formatTime(message.unixTime)}</p>
               </div>
               <p className="ml-4">{message.content}</p>
             </div>
