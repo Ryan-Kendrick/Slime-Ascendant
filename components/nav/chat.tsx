@@ -13,7 +13,7 @@ export default function Chat() {
   const reconnectRef = useRef<NodeJS.Timeout | null>(null)
 
   const connection = new HubConnectionBuilder()
-    .withUrl("http://localhost:5000/chat")
+    .withUrl("http://localhost:5000/chathub")
     .configureLogging(LogLevel.Information)
     .build()
 
