@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 import clsx from "clsx/lite"
+import { ChatUser, Message, type Color } from "../../models/slimechat"
+import { METADATA_CONFIG } from "../../gameconfig/meta"
 
 export default function Chat() {
-  const [messages, setMessages] = useState<string[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [chatFocused, setChatFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
+  const [user, setUser] = useState<ChatUser | null>(null)
 
   const mountedRef = useRef(false)
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
@@ -13,7 +16,7 @@ export default function Chat() {
   const reconnectRef = useRef<NodeJS.Timeout | null>(null)
 
   const connection = new HubConnectionBuilder()
-    .withUrl("http://localhost:5000/chathub")
+    .withUrl(METADATA_CONFIG.chatServerUrl)
     .configureLogging(LogLevel.Information)
     .build()
 
@@ -42,15 +45,55 @@ export default function Chat() {
     }
   }, [])
 
-  const handleSendMessage = () => {
+  const sendMessage = () => {
     if (chatInputRef.current) {
       if (!chatConnected) return
 
       const newMessage = chatInputRef.current.value.trim()
       if (newMessage) {
-        setMessages((prevMessages) => [...prevMessages, newMessage])
+        let fallbackUser
+        if (user === null) {
+          const colors: Color[] = [
+            "#ef4444", // red
+            "#f97316", // orange
+            "#f59e0b", // amber
+            "#eab308", // yellow
+            "#84cc16", // lime
+            "#22c55e", // green
+            "#10b981", // emerald
+            "#14b8a6", // teal
+            "#06b6d4", // cyan
+            "#0ea5e9", // sky
+            "#3b82f6", // blue
+            "#6366f1", // indigo
+            "#8b5cf6", // violet
+            "#a855f7", // purple
+            "#d946ef", // fuchsia
+            "#ec4899", // pink
+            "#f43f5e", // rose
+            "#64748b", // slate
+            "#78716c", // stone
+          ]
+          const randomColor = colors[Math.floor(Math.random() * colors.length)]
+          fallbackUser = { name: `Slime-${Math.floor(Math.random() * 1000)}`, color: randomColor } as ChatUser
+          setUser(fallbackUser)
+        }
+        const username = user?.name ?? fallbackUser!.name
+        const userColor = user?.color ?? fallbackUser!.color
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            name: username,
+            content: newMessage,
+            unixTime: Date.now(),
+            color: userColor,
+          },
+        ])
         chatInputRef.current.value = ""
         chatInputRef.current.focus()
+        connection.send("NewMessage", user, newMessage).catch((error) => {
+          console.error("Error sending message:", error)
+        })
       }
     }
   }
@@ -58,7 +101,7 @@ export default function Chat() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      handleSendMessage()
+      sendMessage()
     }
   }
 
@@ -68,7 +111,13 @@ export default function Chat() {
       chatInputRef.current?.setSelectionRange(0, 0)
     }
     mountedRef.current = true
-    setMessages(["Welcome to Slime Chat!", "Feel free to send a message."])
+    setMessages([
+      {
+        name: "🖥️ System",
+        content: "Welcome to Slime Chat!",
+        unixTime: Date.now(),
+      },
+    ])
   }, [])
 
   useEffect(() => {
@@ -81,6 +130,10 @@ export default function Chat() {
       if (mountedRef.current) {
         await connectChat()
       }
+    })
+
+    connection.on("ServerMessage", (incomingMessage: Message) => {
+      setMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
     })
 
     connectionRef.current = connection
@@ -99,14 +152,22 @@ export default function Chat() {
 
   return (
     <div className="flex h-full gap-0.5">
-      <div className="to-neutrla-500 h-full w-1/3 rounded border-2 border-slate-500 bg-gradient-to-tl from-neutral-200 via-neutral-300 to-neutral-400"></div>
+      <div className="h-full w-1/3 rounded border-2 border-slate-500 bg-gradient-to-tl from-neutral-200 via-neutral-300 to-neutral-400"></div>
       <div className="flex h-full w-full flex-col justify-around">
         <h2 className="w-full text-center font-sigmar text-4xl text-green-600">Slime Chat</h2>
 
         {/* Chat history */}
         <div className="flex h-full w-full flex-col items-start overflow-auto px-4">
-          {messages.map((msg, index) => (
-            <p key={index}>{msg}</p>
+          {messages.map((message, i) => (
+            <div key={i} className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <p className="text-lg font-bold" style={{ color: message.color }}>
+                  {message.name}
+                </p>
+                <p className="text-end text-sm text-gray-500">at {message.unixTime}</p>
+              </div>
+              <p className="ml-4">{message.content}</p>
+            </div>
           ))}
         </div>
 
@@ -138,14 +199,14 @@ export default function Chat() {
             onFocus={() => setChatFocused(true)}
             onBlur={() => setChatFocused(false)}
             name="chat"
-            className="h-full w-full grow resize-none overflow-auto focus:outline-none"
+            className="h-full w-full grow resize-none overflow-auto p-1 focus:outline-none"
             onKeyDown={handleKeyDown}></textarea>
           <button
             className={clsx(
               "font-ui m-2 mr-4 flex h-12 cursor-active items-center justify-center rounded border border-slate-600 bg-slate-200 px-6 py-4 text-center font-bold text-slate-600 shadow-md",
               chatConnected ? "hover:bg-green-300" : "hover:bg-red-300",
             )}
-            onClick={handleSendMessage}>
+            onClick={sendMessage}>
             Send
           </button>
         </div>

@@ -2,6 +2,7 @@
 export const METADATA_CONFIG = {
   version: "v0.7.1",
   softcap: "Zone 40",
+  chatServerUrl: "http://localhost:5000/chathub",
 } as const
 
 export type AnimationPreference = 0 | 1 | 2
