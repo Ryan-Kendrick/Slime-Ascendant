@@ -12,6 +12,7 @@ export default function Chat() {
   const [user, setUser] = useState<ChatUser | null>(null)
 
   const mountedRef = useRef(false)
+  const chatHistoryRef = useRef<HTMLDivElement>(null)
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
   const connectionRef = useRef<HubConnection | null>(null)
   const reconnectRef = useRef<NodeJS.Timeout | null>(null)
@@ -126,6 +127,7 @@ export default function Chat() {
         }
         return [...prevMessages, incomingMessage]
       })
+      if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
     })
 
     connectionRef.current = connection
@@ -154,7 +156,7 @@ export default function Chat() {
         <h2 className="w-full text-center font-sigmar text-4xl text-green-600">Slime Chat</h2>
 
         {/* Chat history */}
-        <div className="flex h-full w-full flex-col items-start overflow-auto px-4">
+        <div ref={chatHistoryRef} className="flex h-full w-full flex-col items-start overflow-auto px-4">
           {currentMessages.map((message, i) => (
             <div key={i} className="flex flex-col" style={{ opacity: "id" in message ? 1 : 0.3 }}>
               <div className="flex items-center gap-1">
