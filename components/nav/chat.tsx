@@ -15,7 +15,24 @@ export default function Chat() {
   const chatHistoryRef = useRef<HTMLDivElement>(null)
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
   const connectionRef = useRef<HubConnection | null>(null)
-  const reconnectRef = useRef<NodeJS.Timeout | null>(null)
+  const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const slowConnectTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const messageQueueRef = useRef<Array<{ message: MessageData; createdAt: number }>>([])
+
+  const flushMessageQueue = useCallback(() => {
+    if (!connectionRef.current || connectionRef.current.state !== "Connected") return
+
+    const now = Date.now()
+    const messagesToSend = messageQueueRef.current.filter((item) => now - item.createdAt <= 30000)
+
+    messagesToSend.forEach((item) => {
+      connectionRef.current?.invoke("BroadcastMessage", item.message).catch((error) => {
+        console.error("Error sending queued message:", error)
+      })
+    })
+
+    messageQueueRef.current = []
+  }, [])
 
   const connectChat = useCallback(async () => {
     if (!mountedRef.current) return
@@ -23,53 +40,68 @@ export default function Chat() {
 
     try {
       console.log("Connecting to chat...")
+
+      slowConnectTimerRef.current = setTimeout(() => {
+        console.warn(
+          "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
+        )
+        setChatConnected(false)
+      }, 2000)
+
       await connectionRef.current.start()
       setChatConnected(true)
-      if (reconnectRef.current) {
-        clearTimeout(reconnectRef.current)
-      }
+
+      if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
+      if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
+
+      flushMessageQueue()
     } catch (error) {
       console.error("Failed to connect to chat:", error)
       setChatConnected(false)
 
-      if (reconnectRef.current) {
-        clearTimeout(reconnectRef.current)
-      }
+      if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
+      if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
 
-      if (mountedRef.current) {
-        reconnectRef.current = setTimeout(connectChat, 5000)
-      }
+      if (mountedRef.current) reconnectTimerRef.current = setTimeout(connectChat, 5000)
     }
-  }, [])
+  }, [flushMessageQueue])
 
   const sendMessage = () => {
     if (chatInputRef.current) {
       if (!chatConnected || !connectionRef.current) return
 
       const newMessage = chatInputRef.current.value.trim()
-      if (newMessage) {
-        let fallbackUser
-        if (userInfo === null) {
-          const randomColor = getRandomColor()
-          fallbackUser = { name: `Slime-${Math.floor(Math.random() * 1000)}`, color: randomColor } as ChatUser
-          setUserInfo(fallbackUser)
-        }
-        const username = userInfo?.name ?? fallbackUser!.name
-        const userColor = userInfo?.color ?? fallbackUser!.color
+      if (!newMessage) return
 
-        const messageData = {
-          name: username,
-          color: userColor,
-          content: newMessage,
-          unixTime: Date.now(),
-        }
+      let fallbackUser
+      if (userInfo === null) {
+        const randomColor = getRandomColor()
+        fallbackUser = { name: `Slime-${Math.floor(Math.random() * 1000)}`, color: randomColor } as ChatUser
+        setUserInfo(fallbackUser)
+      }
+      const username = userInfo?.name ?? fallbackUser!.name
+      const userColor = userInfo?.color ?? fallbackUser!.color
 
-        setDisplayedMessages((prevMessages) => [...prevMessages, messageData])
-        chatInputRef.current.value = ""
-        chatInputRef.current.focus()
+      const messageData = {
+        name: username,
+        color: userColor,
+        content: newMessage,
+        unixTime: Date.now(),
+      }
+
+      // Optimistically display the message
+      setDisplayedMessages((prevMessages) => [...prevMessages, messageData])
+      if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
+      chatInputRef.current.value = ""
+      chatInputRef.current.focus()
+
+      // Send the message if connected, otherwise add to message queue
+      if (chatConnected && connectionRef.current.state === "Connected") {
         connectionRef.current.invoke("BroadcastMessage", messageData).catch((error) => {
           console.error("Error sending message:", error)
         })
+      } else {
+        messageQueueRef.current.push({ message: messageData, createdAt: Date.now() })
       }
     }
   }
@@ -114,13 +146,15 @@ export default function Chat() {
       setDisplayedMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
     })
 
-    // Handle message confirmation
+    // Server confirmed that the message was broadcast
     connection.on("MessageReceived", (incomingMessage: ConfirmedMessage) => {
       setDisplayedMessages((prevMessages) => {
         for (let i = prevMessages.length - 1; i >= 0; i--) {
           const msg = prevMessages[i]
+          // Loop through messages in reverse to find the uncomfirmed message
           if (incomingMessage.unixTime === msg.unixTime && incomingMessage.name === msg.name) {
             const updatedMessages = [...prevMessages]
+            // Replace unconfirmed message with confirmed one
             updatedMessages[i] = { ...incomingMessage }
             return updatedMessages
           }
@@ -140,8 +174,8 @@ export default function Chat() {
     return () => {
       connectionRef.current?.stop()
       mountedRef.current = false
-      if (reconnectRef.current) {
-        clearTimeout(reconnectRef.current)
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current)
       }
       if (connectionRef.current) {
         connectionRef.current.stop()
