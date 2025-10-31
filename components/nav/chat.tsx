@@ -232,6 +232,8 @@ export default function Chat() {
           {/* Chat input */}
           <textarea
             ref={chatInputRef}
+            maxLength={5000} // Limit from server appsettings.json
+            placeholder="Message Slime Chat"
             onFocus={() => setChatInputFocused(true)}
             onBlur={() => setChatInputFocused(false)}
             name="chat"
