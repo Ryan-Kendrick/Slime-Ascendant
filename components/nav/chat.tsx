@@ -6,10 +6,10 @@ import { METADATA_CONFIG } from "../../gameconfig/meta"
 import { formatTime, getRandomColor } from "../../gameconfig/utils"
 
 export default function Chat() {
-  const [currentMessages, setMessages] = useState<(MessageData | ConfirmedMessage)[]>([])
-  const [chatFocused, setChatFocused] = useState(false)
+  const [displayedMessages, setDisplayedMessages] = useState<(MessageData | ConfirmedMessage)[]>([])
+  const [ChatInputFocused, setChatInputFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
-  const [user, setUser] = useState<ChatUser | null>(null)
+  const [userInfo, setUserInfo] = useState<ChatUser | null>(null)
 
   const mountedRef = useRef(false)
   const chatHistoryRef = useRef<HTMLDivElement>(null)
@@ -49,13 +49,13 @@ export default function Chat() {
       const newMessage = chatInputRef.current.value.trim()
       if (newMessage) {
         let fallbackUser
-        if (user === null) {
+        if (userInfo === null) {
           const randomColor = getRandomColor()
           fallbackUser = { name: `Slime-${Math.floor(Math.random() * 1000)}`, color: randomColor } as ChatUser
-          setUser(fallbackUser)
+          setUserInfo(fallbackUser)
         }
-        const username = user?.name ?? fallbackUser!.name
-        const userColor = user?.color ?? fallbackUser!.color
+        const username = userInfo?.name ?? fallbackUser!.name
+        const userColor = userInfo?.color ?? fallbackUser!.color
 
         const messageData = {
           name: username,
@@ -64,7 +64,7 @@ export default function Chat() {
           unixTime: Date.now(),
         }
 
-        setMessages((prevMessages) => [...prevMessages, messageData])
+        setDisplayedMessages((prevMessages) => [...prevMessages, messageData])
         chatInputRef.current.value = ""
         chatInputRef.current.focus()
         connectionRef.current.invoke("BroadcastMessage", messageData).catch((error) => {
@@ -88,7 +88,7 @@ export default function Chat() {
     }
     mountedRef.current = true
     const now = Date.now()
-    setMessages([
+    setDisplayedMessages([
       {
         name: "🖥️ System",
         content: "Welcome to Slime Chat!",
@@ -111,12 +111,12 @@ export default function Chat() {
     })
 
     connection.on("ServerMessage", (incomingMessage: MessageData) => {
-      setMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
+      setDisplayedMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
     })
 
     // Handle message confirmation
     connection.on("MessageReceived", (incomingMessage: ConfirmedMessage) => {
-      setMessages((prevMessages) => {
+      setDisplayedMessages((prevMessages) => {
         for (let i = prevMessages.length - 1; i >= 0; i--) {
           const msg = prevMessages[i]
           if (incomingMessage.unixTime === msg.unixTime && incomingMessage.name === msg.name) {
@@ -157,7 +157,7 @@ export default function Chat() {
 
         {/* Chat history */}
         <div ref={chatHistoryRef} className="flex h-full w-full flex-col items-start overflow-auto px-4">
-          {currentMessages.map((message, i) => (
+          {displayedMessages.map((message, i) => (
             <div key={i} className="flex flex-col" style={{ opacity: "id" in message ? 1 : 0.3 }}>
               <div className="flex items-center gap-1">
                 <p className="text-lg font-bold" style={{ color: message.color }}>
@@ -173,7 +173,7 @@ export default function Chat() {
         <div
           className={clsx(
             "relative flex h-24 w-full items-center border-2",
-            chatFocused ? "border-slate-400" : "border-slate-500",
+            ChatInputFocused ? "border-slate-400" : "border-slate-500",
           )}>
           {/* Error message */}
           {!chatConnected && (
@@ -195,8 +195,8 @@ export default function Chat() {
           {/* Chat input */}
           <textarea
             ref={chatInputRef}
-            onFocus={() => setChatFocused(true)}
-            onBlur={() => setChatFocused(false)}
+            onFocus={() => setChatInputFocused(true)}
+            onBlur={() => setChatInputFocused(false)}
             name="chat"
             className="h-full w-full grow resize-none overflow-auto p-1 focus:outline-none"
             onKeyDown={handleKeyDown}></textarea>
