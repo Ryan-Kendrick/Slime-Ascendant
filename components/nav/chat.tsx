@@ -6,6 +6,9 @@ import { METADATA_CONFIG } from "../../gameconfig/meta"
 import { formatTime, getRandomColor } from "../../gameconfig/utils"
 
 export default function Chat() {
+  const messageRetryTime = 60000
+  const optimismTime = 6000
+
   const [displayedMessages, setDisplayedMessages] = useState<(MessageData | ConfirmedMessage)[]>([])
   const [ChatInputFocused, setChatInputFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
@@ -23,7 +26,7 @@ export default function Chat() {
     if (!connectionRef.current || connectionRef.current.state !== "Connected") return
 
     const now = Date.now()
-    const messagesToSend = messageQueueRef.current.filter((item) => now - item.createdAt <= 30000)
+    const messagesToSend = messageQueueRef.current.filter((item) => now - item.createdAt <= messageRetryTime)
 
     messagesToSend.forEach((item) => {
       connectionRef.current?.invoke("BroadcastMessage", item.message).catch((error) => {
@@ -46,7 +49,7 @@ export default function Chat() {
           "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
         )
         setChatConnected(false)
-      }, 2000)
+      }, optimismTime)
 
       await connectionRef.current.start()
       setChatConnected(true)
