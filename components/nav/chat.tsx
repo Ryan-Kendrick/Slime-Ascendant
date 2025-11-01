@@ -45,10 +45,12 @@ export default function Chat() {
       console.log("Connecting to chat...")
 
       slowConnectTimerRef.current = setTimeout(() => {
-        console.warn(
-          "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
-        )
-        setChatConnected(false)
+        if (connectionRef.current && connectionRef.current.state !== "Connected") {
+          console.warn(
+            "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
+          )
+          setChatConnected(false)
+        }
       }, optimismTime)
 
       await connectionRef.current.start()
