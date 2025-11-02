@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 import clsx from "clsx/lite"
-import { ChatUser, ConfirmedMessage, MessageData } from "../../models/slimechat"
+import { ChatUser, ConfirmedMessage, SystemMessage, UserMessage } from "../../models/slimechat"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
 import { formatTime, getRandomColor } from "../../gameconfig/utils"
 
@@ -9,18 +9,17 @@ export default function Chat() {
   const messageRetryTime = 60000
   const optimismTime = 6000
 
-  const [displayedMessages, setDisplayedMessages] = useState<(MessageData | ConfirmedMessage)[]>([])
+  const [displayedMessages, setDisplayedMessages] = useState<(UserMessage | ConfirmedMessage | SystemMessage)[]>([])
   const [ChatInputFocused, setChatInputFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
-  const [userInfo, setUserInfo] = useState<ChatUser | null>(null)
-
+  const userInfoRef = useRef<ChatUser | null>(null)
   const mountedRef = useRef(false)
   const chatHistoryRef = useRef<HTMLDivElement>(null)
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
   const connectionRef = useRef<HubConnection | null>(null)
   const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null)
   const slowConnectTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const messageQueueRef = useRef<Array<{ message: MessageData; createdAt: number }>>([])
+  const messageQueueRef = useRef<Array<{ message: UserMessage; createdAt: number }>>([])
 
   const flushMessageQueue = useCallback(() => {
     if (!connectionRef.current || connectionRef.current.state !== "Connected") return
@@ -60,6 +59,9 @@ export default function Chat() {
       if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
 
       flushMessageQueue()
+      connectionRef.current?.invoke("JoinChat", userInfoRef.current).catch((err) => {
+        console.error("Error notifying server of user joined:", err)
+      })
     } catch (error) {
       console.error("Failed to connect to chat:", error)
       setChatConnected(false)
@@ -71,6 +73,17 @@ export default function Chat() {
     }
   }, [flushMessageQueue])
 
+  const initialiseUser = (): ChatUser => {
+    const user = {
+      name: `Slime-${Math.floor(Math.random() * 1000)}`,
+      color: getRandomColor(),
+    } as ChatUser
+
+    userInfoRef.current = user
+
+    return user
+  }
+
   const sendMessage = () => {
     if (chatInputRef.current) {
       if (!chatConnected || !connectionRef.current) return
@@ -78,21 +91,15 @@ export default function Chat() {
       const newMessage = chatInputRef.current.value.trim()
       if (!newMessage) return
 
-      let fallbackUser
-      if (userInfo === null) {
-        const randomColor = getRandomColor()
-        fallbackUser = { name: `Slime-${Math.floor(Math.random() * 1000)}`, color: randomColor } as ChatUser
-        setUserInfo(fallbackUser)
-      }
-      const username = userInfo?.name ?? fallbackUser!.name
-      const userColor = userInfo?.color ?? fallbackUser!.color
+      const user = userInfoRef.current ?? initialiseUser()
 
       const messageData = {
-        name: username,
-        color: userColor,
+        name: user.name,
         content: newMessage,
+        type: "user",
         unixTime: Date.now(),
-      }
+        color: user.color,
+      } as UserMessage
 
       // Optimistically display the message
       setDisplayedMessages((prevMessages) => [...prevMessages, messageData])
@@ -129,9 +136,10 @@ export default function Chat() {
       {
         name: "🖥️ System",
         content: "Welcome to Slime Chat!",
+        type: "user",
         unixTime: now,
         id: "system." + now,
-      },
+      } as UserMessage, // Not actually a system notification
     ])
   }, [])
 
@@ -147,8 +155,14 @@ export default function Chat() {
       }
     })
 
-    connection.on("ServerMessage", (incomingMessage: MessageData) => {
-      setDisplayedMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
+    connection.on("GetMessageHistory", (messageHistory: ConfirmedMessage[]) => {
+      setDisplayedMessages((prev) => [...prev, ...messageHistory])
+      if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
+    })
+
+    connection.on("UserJoined", (user: ChatUser) => {
+      const newSystemMessage = { content: `${user.name} has joined the chat.`, type: "system" } as SystemMessage
+      setDisplayedMessages((prevMessages) => [...prevMessages, newSystemMessage])
     })
 
     // Server confirmed that the message was broadcast
@@ -156,6 +170,8 @@ export default function Chat() {
       setDisplayedMessages((prevMessages) => {
         for (let i = prevMessages.length - 1; i >= 0; i--) {
           const msg = prevMessages[i]
+          if (msg.type !== "user") continue
+
           // Loop through messages in reverse to find the uncomfirmed message
           if (incomingMessage.unixTime === msg.unixTime && incomingMessage.name === msg.name) {
             const updatedMessages = [...prevMessages]
@@ -169,7 +185,12 @@ export default function Chat() {
       if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
     })
 
+    connection.on("ServerMessage", (incomingMessage: UserMessage) => {
+      setDisplayedMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
+    })
+
     connectionRef.current = connection
+    initialiseUser()
 
     // Initial connection
     if (mountedRef.current && connectionRef.current?.state === "Disconnected") {
@@ -197,14 +218,24 @@ export default function Chat() {
         {/* Chat history */}
         <div ref={chatHistoryRef} className="flex h-full w-full flex-col items-start overflow-auto px-4">
           {displayedMessages.map((message, i) => (
-            <div key={i} className="flex flex-col" style={{ opacity: "id" in message ? 1 : 0.3 }}>
+            <div
+              key={i}
+              className="flex flex-col"
+              // Transparency for unconfirmed user messages
+              style={{ opacity: (message.type === "user" && "id" in message) || message.type === "system" ? 1 : 0.3 }}>
               <div className="flex items-center gap-1">
-                <p className="text-lg font-bold" style={{ color: message.color }}>
-                  {message.name}
-                </p>
-                <p className="text-end text-sm text-gray-500">at {formatTime(message.unixTime)}</p>
+                {message.type === "user" && (
+                  <>
+                    <p className="text-lg font-bold" style={{ color: message.color }}>
+                      {message.name}
+                    </p>
+                    <p className="text-end text-sm text-gray-500">at {formatTime(message.unixTime)}</p>
+                  </>
+                )}
               </div>
-              <p className="ml-4">{message.content}</p>
+              <p className={clsx(message.type === "system" ? "ml-2 text-sm text-slate-600" : "ml-4")}>
+                {message.content}
+              </p>
             </div>
           ))}
         </div>

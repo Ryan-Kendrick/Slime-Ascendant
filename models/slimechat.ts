@@ -25,13 +25,25 @@ export interface ChatUser {
   color: Color
 }
 
-export interface MessageData {
+export interface Message {
+  content: string
+  type: "system" | "user"
+}
+
+export interface UserMessage extends Message {
   name: Username
   content: string
+  type: "user"
   unixTime: number
   color?: Color
 }
 
-export interface ConfirmedMessage extends MessageData {
+export interface ConfirmedMessage extends UserMessage {
   id: string
+}
+
+export interface SystemMessage extends Message {
+  content: string
+  type: "system"
+  color?: Color
 }
