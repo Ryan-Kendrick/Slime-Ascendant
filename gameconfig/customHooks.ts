@@ -680,3 +680,16 @@ export const useToolTip = ({ containerRef, tooltipRef }: ToolTipProps) => {
 
   return { position, setIsVisible: setVisibility, isPositionReady }
 }
+
+const useAutoScroll = (ref: React.RefObject<HTMLElement>, dependencyArr: unknown[] = []) => {
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTo({
+        top: ref.current.scrollHeight,
+        behavior: "instant",
+      })
+    }
+  }, dependencyArr)
+}
+
+export default useAutoScroll

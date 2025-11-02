@@ -4,6 +4,7 @@ import clsx from "clsx/lite"
 import { ChatUser, ConfirmedMessage, SystemMessage, UserMessage } from "../../models/slimechat"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
 import { formatTime, getRandomColor } from "../../gameconfig/utils"
+import useAutoScroll from "../../gameconfig/customHooks"
 
 export default function Chat() {
   const messageRetryTime = 60000
@@ -103,7 +104,6 @@ export default function Chat() {
 
       // Optimistically display the message
       setDisplayedMessages((prevMessages) => [...prevMessages, messageData])
-      if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
       chatInputRef.current.value = ""
       chatInputRef.current.focus()
 
@@ -157,7 +157,6 @@ export default function Chat() {
 
     connection.on("GetMessageHistory", (messageHistory: ConfirmedMessage[]) => {
       setDisplayedMessages((prev) => [...prev, ...messageHistory])
-      if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
     })
 
     connection.on("UserJoined", (user: ChatUser) => {
@@ -182,7 +181,6 @@ export default function Chat() {
         }
         return [...prevMessages, incomingMessage]
       })
-      if (chatHistoryRef.current) chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight
     })
 
     connection.on("ServerMessage", (incomingMessage: UserMessage) => {
@@ -208,6 +206,8 @@ export default function Chat() {
       }
     }
   }, [])
+
+  useAutoScroll(chatHistoryRef, [displayedMessages])
 
   return (
     <div className="flex h-full gap-0.5">
