@@ -10,6 +10,7 @@ export default function Chat() {
   const messageRetryTime = 60000
   const optimismTime = 6000
 
+  const [activeUsers, setActiveUsers] = useState<ChatUser[]>([])
   const [displayedMessages, setDisplayedMessages] = useState<(UserMessage | ConfirmedMessage | SystemMessage)[]>([])
   const [ChatInputFocused, setChatInputFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
@@ -149,19 +150,21 @@ export default function Chat() {
       .configureLogging(LogLevel.Information)
       .build()
 
-    connection.onclose(async () => {
-      if (mountedRef.current) {
-        await connectChat()
-      }
+    connection.on("GetActiveUsers", (activeUsers: ChatUser[]) => {
+      setActiveUsers(activeUsers)
     })
-
     connection.on("GetMessageHistory", (messageHistory: ConfirmedMessage[]) => {
       setDisplayedMessages((prev) => [...prev, ...messageHistory])
     })
-
     connection.on("UserJoined", (user: ChatUser) => {
       const newSystemMessage = { content: `${user.name} has joined the chat.`, type: "system" } as SystemMessage
       setDisplayedMessages((prevMessages) => [...prevMessages, newSystemMessage])
+      setActiveUsers((prevUsers) => [...prevUsers, user])
+    })
+    connection.on("UserLeft", (user: ChatUser) => {
+      const newSystemMessage = { content: `${user.name} has left the chat.`, type: "system" } as SystemMessage
+      setDisplayedMessages((prevMessages) => [...prevMessages, newSystemMessage])
+      // Server will now invoke GetActiveUsers
     })
 
     // Server confirmed that the message was broadcast
@@ -187,6 +190,12 @@ export default function Chat() {
       setDisplayedMessages((prevMessages) => [...prevMessages, { ...incomingMessage, unixTime: Date.now() }])
     })
 
+    connection.onclose(async () => {
+      if (mountedRef.current) {
+        await connectChat()
+      }
+    })
+
     connectionRef.current = connection
     initialiseUser()
 
@@ -195,23 +204,36 @@ export default function Chat() {
       connectChat()
     }
 
-    return () => {
+    const handleBeforeUnload = () => {
       connectionRef.current?.stop()
-      mountedRef.current = false
-      if (reconnectTimerRef.current) {
-        clearTimeout(reconnectTimerRef.current)
-      }
-      if (connectionRef.current) {
-        connectionRef.current.stop()
-      }
     }
-  }, [])
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+      mountedRef.current = false
+      if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
+      if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
+      connectionRef.current?.stop()
+    }
+  }, [connectChat])
 
   useAutoScroll(chatHistoryRef, [displayedMessages])
 
   return (
     <div className="flex h-full gap-0.5">
-      <div className="h-full w-1/3 rounded border-2 border-slate-500 bg-gradient-to-tl from-neutral-200 via-neutral-300 to-neutral-400"></div>
+      <div className="h-full w-1/3 rounded border-2 border-slate-500 bg-gradient-to-br from-neutral-200 via-neutral-300 to-neutral-400">
+        <ul className="flex h-full flex-col overflow-auto">
+          {activeUsers.map((user) => (
+            <li
+              key={user.name}
+              className="flex items-center gap-2 rounded border-2 border-white/20 px-2 py-1 shadow-md">
+              {user.name}
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="flex h-full w-full flex-col justify-around">
         <h2 className="w-full text-center font-sigmar text-4xl text-green-600">Slime Chat</h2>
 
