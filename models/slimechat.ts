@@ -21,6 +21,7 @@ export type Color =
   | "#78716c" // stone
 
 export interface ChatUser {
+  id: string
   name: Username
   color: Color
 }
@@ -31,6 +32,7 @@ export interface Message {
 }
 
 export interface UserMessage extends Message {
+  userId: string
   name: Username
   content: string
   type: "user"

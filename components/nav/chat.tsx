@@ -14,7 +14,7 @@ export default function Chat() {
   const [displayedMessages, setDisplayedMessages] = useState<(UserMessage | ConfirmedMessage | SystemMessage)[]>([])
   const [ChatInputFocused, setChatInputFocused] = useState(false)
   const [chatConnected, setChatConnected] = useState(true)
-  const userInfoRef = useRef<ChatUser | null>(null)
+  const [userInfo, setUserInfo] = useState<ChatUser | null>(null)
   const mountedRef = useRef(false)
   const chatHistoryRef = useRef<HTMLDivElement>(null)
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
@@ -38,50 +38,58 @@ export default function Chat() {
     messageQueueRef.current = []
   }, [])
 
-  const connectChat = useCallback(async () => {
-    if (!mountedRef.current) return
-    if (!connectionRef.current || connectionRef.current.state !== "Disconnected") return
+  const connectChat = useCallback(
+    async (user: ChatUser) => {
+      if (!mountedRef.current) return
+      if (!connectionRef.current || connectionRef.current.state !== "Disconnected") return
 
-    try {
-      console.log("Connecting to chat...")
+      try {
+        console.log("Connecting to chat...")
 
-      slowConnectTimerRef.current = setTimeout(() => {
-        if (connectionRef.current && connectionRef.current.state !== "Connected") {
-          console.warn(
-            "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
-          )
-          setChatConnected(false)
-        }
-      }, optimismTime)
+        slowConnectTimerRef.current = setTimeout(() => {
+          if (connectionRef.current && connectionRef.current.state !== "Connected") {
+            console.warn(
+              "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
+            )
+            setChatConnected(false)
+          }
+        }, optimismTime)
 
-      await connectionRef.current.start()
-      setChatConnected(true)
+        await connectionRef.current.start()
+        setChatConnected(true)
 
-      if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
-      if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
+        if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
+        if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
 
-      flushMessageQueue()
-      connectionRef.current?.invoke("JoinChat", userInfoRef.current).catch((err) => {
-        console.error("Error notifying server of user joined:", err)
-      })
-    } catch (error) {
-      console.error("Failed to connect to chat:", error)
-      setChatConnected(false)
+        flushMessageQueue()
+        connectionRef.current?.invoke("JoinChat", user).catch((err) => {
+          console.error("Error notifying server of user joined:", err)
+        })
+      } catch (error) {
+        console.error("Failed to connect to chat:", error)
+        setChatConnected(false)
 
-      if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
-      if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
+        if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
+        if (slowConnectTimerRef.current) clearTimeout(slowConnectTimerRef.current)
 
-      if (mountedRef.current) reconnectTimerRef.current = setTimeout(connectChat, 5000)
-    }
-  }, [flushMessageQueue])
+        if (mountedRef.current) reconnectTimerRef.current = setTimeout(() => connectChat(user), 5000)
+      }
+    },
+    [flushMessageQueue],
+  )
 
   const initialiseUser = (): ChatUser => {
+    const name = `Slime-${Math.floor(Math.random() * 1000)}`
+    const color = getRandomColor()
+    const id = `${name}.${Date.now()}`
+
     const user = {
-      name: `Slime-${Math.floor(Math.random() * 1000)}`,
-      color: getRandomColor(),
+      name,
+      color,
+      id,
     } as ChatUser
 
-    userInfoRef.current = user
+    setUserInfo(user)
 
     return user
   }
@@ -93,7 +101,7 @@ export default function Chat() {
       const newMessage = chatInputRef.current.value.trim()
       if (!newMessage) return
 
-      const user = userInfoRef.current ?? initialiseUser()
+      const user = userInfo ?? initialiseUser()
 
       const messageData = {
         name: user.name,
@@ -135,6 +143,7 @@ export default function Chat() {
     const now = Date.now()
     setDisplayedMessages([
       {
+        userId: "System-32." + now,
         name: "🖥️ System",
         content: "Welcome to Slime Chat!",
         type: "user",
@@ -192,16 +201,16 @@ export default function Chat() {
 
     connection.onclose(async () => {
       if (mountedRef.current) {
-        await connectChat()
+        await connectChat(userInfo ?? initialiseUser())
       }
     })
 
     connectionRef.current = connection
-    initialiseUser()
+    const user = initialiseUser()
 
     // Initial connection
     if (mountedRef.current && connectionRef.current?.state === "Disconnected") {
-      connectChat()
+      connectChat(user)
     }
 
     const handleBeforeUnload = () => {
@@ -225,13 +234,19 @@ export default function Chat() {
     <div className="flex h-full gap-0.5">
       <div className="h-full w-1/3 rounded border-2 border-slate-500 bg-gradient-to-br from-neutral-200 via-neutral-300 to-neutral-400">
         <ul className="flex h-full flex-col overflow-auto">
-          {activeUsers.map((user) => (
-            <li
-              key={user.name}
-              className="flex items-center gap-2 rounded border-2 border-white/20 px-2 py-1 shadow-md">
-              {user.name}
-            </li>
-          ))}
+          {activeUsers.map((user) => {
+            const isMe = userInfo?.name === user.name
+            return (
+              <li
+                key={user.name}
+                className={clsx(
+                  "flex items-center gap-2 rounded border-2 border-white/20 px-2 py-1 shadow-md",
+                  isMe && "font-bold",
+                )}>
+                {user.name} {isMe && "(You)"}
+              </li>
+            )
+          })}
         </ul>
       </div>
       <div className="flex h-full w-full flex-col justify-around">
