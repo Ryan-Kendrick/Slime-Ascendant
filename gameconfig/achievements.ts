@@ -475,7 +475,7 @@ export const ACHIEVEMENT_CONFIG: Record<string, AchievementFeature> = {
           id: "prestige-plasmaspent.5",
           title: "Gelling Agent Gorging",
           description: "Spend 350000 Plasma",
-          condition: 350000,
+          condition: 35000,
           ...ACHIEVEMENT_TIER_CONFIG.intermediate,
         },
       ],
