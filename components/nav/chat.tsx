@@ -171,7 +171,8 @@ export default function Chat() {
       setActiveUsers((prevUsers) => [...prevUsers, user])
     })
     connection.on("UserLeft", (user: ChatUser) => {
-      const newSystemMessage = { content: `${user.name} has left the chat.`, type: "system" } as SystemMessage
+      console.log("User left:", user)
+      const newSystemMessage = { content: `${user.name} left the chat.`, type: "system" } as SystemMessage
       setDisplayedMessages((prevMessages) => [...prevMessages, newSystemMessage])
       // Server will now invoke GetActiveUsers
     })

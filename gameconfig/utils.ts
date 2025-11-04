@@ -117,7 +117,6 @@ export const getRandomColor = (): Color => {
 
 export const formatTime = (unixTime: number): string => {
   return new Date(unixTime).toLocaleString("en-NZ", {
-    timeZone: "Pacific/Auckland",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
