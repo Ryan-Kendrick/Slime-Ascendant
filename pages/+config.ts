@@ -7,7 +7,8 @@ export default {
   description: "The Incremental Adventure",
   image: logoURL,
   favicon: logoURL,
-  ssr: false,
   passToClient: ["user"],
-  extends: vikeReact,
+  ssr: false,
+  prerender: true,
+  extends: [vikeReact],
 } satisfies Config
