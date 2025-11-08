@@ -1,17 +1,31 @@
-/// <reference lib="webworker" />
 import { renderPage } from "vike/server"
-// TODO: stop using universal-middleware and directly integrate server middlewares instead. (Bati generates boilerplates that use universal-middleware https://github.com/magne4000/universal-middleware to make Bati's internal logic easier. This is temporary and will be removed soon.)
 import type { Get, UniversalHandler } from "@universal-middleware/core"
 
 export const vikeHandler: Get<[], UniversalHandler> = () => async (request, context, runtime) => {
-  const pageContextInit = { ...context, ...runtime, urlOriginal: request.url, headersOriginal: request.headers }
+  console.log("Vike handler called for:", request.url)
+
+  const pageContextInit = {
+    ...context,
+    ...runtime,
+    urlOriginal: request.url,
+    headersOriginal: request.headers,
+  }
+
   const pageContext = await renderPage(pageContextInit)
+  console.log("Page context:", {
+    url: pageContext.urlOriginal,
+    hasResponse: !!pageContext.httpResponse,
+    errorWhileRendering: pageContext.errorWhileRendering,
+  })
+
   const response = pageContext.httpResponse
 
-  const { readable, writable } = new TransformStream()
-  response.pipe(writable)
+  if (!response) {
+    console.log("No response from Vike")
+    return new Response(null, { status: 404 })
+  }
 
-  return new Response(readable, {
+  return new Response(response.body, {
     status: response.statusCode,
     headers: response.headers,
   })
