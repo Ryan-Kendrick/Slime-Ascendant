@@ -1,5 +1,5 @@
-import "./index/style.css"
-import "./index/tailwind.css"
+import "./style.css"
+import "./tailwind.css"
 import React from "react"
 import { store } from "../../redux/store"
 import { Provider } from "react-redux"
