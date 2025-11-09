@@ -162,6 +162,7 @@ export default function PanelIndex() {
     } else {
       if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible || (!dotDamage && !prestigeTabVisible)) {
+          // Add a single line
           return null
         } else {
           chainImg.push("bg-chainsLeft", "bg-chainsRight")
@@ -216,7 +217,7 @@ export default function PanelIndex() {
       )
     } else {
       for (let i = 0; i < j || j === 0; i++) {
-        let top = 246 + i * 365 // px to gap plus card height
+        let top = 336 + i * 365 // px to gap plus card height
         if (!prestigeTabVisible) top -= 48
 
         if (j === 0) {

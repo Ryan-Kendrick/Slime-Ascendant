@@ -291,7 +291,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(2px 2px at 15% 25%, var(--portal-cyan), transparent),
+  background:
+    radial-gradient(2px 2px at 15% 25%, var(--portal-cyan), transparent),
     radial-gradient(1px 1px at 35% 65%, var(--portal-red), transparent),
     radial-gradient(2px 2px at 55% 15%, var(--portal-teal), transparent),
     radial-gradient(1px 1px at 75% 75%, var(--portal-cyan), transparent),
@@ -1201,20 +1202,20 @@ body {
 
 @media (max-width: 767px) {
   #panel-content {
-    --mask-line1-start: 453px;
+    --mask-line1-start: 535px;
     /* --mask-line1-startPostPrestige: 493px; */
     --mask-line1-startPostPrestige: 485px;
-    --mask-line1-end: 457px;
+    --mask-line1-end: 539px;
     /* --mask-line1-endPostPrestige: 543px; */
     --mask-line1-endPostPrestige: 535px;
-    --mask-line2-start: 822px;
-    --mask-line2-end: 826px;
-    --mask-line2-endThick: 872px;
-    --mask-line3-start: 1191px;
-    --mask-line3-end: 1195px;
-    --mask-line3-endThick: 1241px;
-    --mask-line4-start: 1560px;
-    --mask-line4-end: 1610px;
+    --mask-line2-start: 910px;
+    --mask-line2-end: 914px;
+    --mask-line2-endThick: 960px;
+    --mask-line3-start: 1279px;
+    --mask-line3-end: 1283px;
+    --mask-line3-endThick: 1329px;
+    --mask-line4-start: 1648px;
+    --mask-line4-end: 1698px;
   }
 }
 /* Mask once Warrior is visible */
