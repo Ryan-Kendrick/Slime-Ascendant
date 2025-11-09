@@ -1202,10 +1202,10 @@ body {
 
 @media (max-width: 767px) {
   #panel-content {
-    --mask-line1-start: 535px;
+    --mask-line1-start: 541px;
     /* --mask-line1-startPostPrestige: 493px; */
     --mask-line1-startPostPrestige: 485px;
-    --mask-line1-end: 539px;
+    --mask-line1-end: 545px;
     /* --mask-line1-endPostPrestige: 543px; */
     --mask-line1-endPostPrestige: 535px;
     --mask-line2-start: 910px;
@@ -1236,6 +1236,31 @@ body {
     transparent var(--mask-line1-start),
     transparent var(--mask-line1-endThick),
     black var(--mask-line1-endThick),
+    black 100%
+  );
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in, xor;
+}
+
+#panel-content.mask-mobile-single {
+  mask-image: linear-gradient(
+    to bottom,
+    black 0px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
+    black 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0px,
+    black var(--mask-line1-start),
+    transparent var(--mask-line1-start),
+    transparent var(--mask-line1-end),
+    black var(--mask-line1-end),
     black 100%
   );
   mask-repeat: no-repeat;

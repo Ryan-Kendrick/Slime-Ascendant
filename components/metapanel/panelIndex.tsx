@@ -162,8 +162,8 @@ export default function PanelIndex() {
     } else {
       if (!isMageVisible && !isHealerVisible) {
         if (!oneLineMaskVisible || (!dotDamage && !prestigeTabVisible)) {
-          // Add a single line
-          return null
+          // Warrior unlocked, zone selector not visible
+          mask = "mask-mobile-single"
         } else {
           chainImg.push("bg-chainsLeft", "bg-chainsRight")
           mask = "mask-mobile-double"
