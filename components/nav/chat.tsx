@@ -4,7 +4,7 @@ import clsx from "clsx/lite"
 import { ChatUser, ConfirmedMessage, SystemMessage, UserMessage } from "../../models/slimechat"
 import { METADATA_CONFIG } from "../../gameconfig/meta"
 import { formatTime, getRandomColor } from "../../gameconfig/utils"
-import useAutoScroll from "../../gameconfig/customHooks"
+import { useAutoScroll } from "../../gameconfig/customHooks"
 
 export default function Chat() {
   const messageRetryTime = 60000

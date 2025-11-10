@@ -10,20 +10,17 @@ import { selectAnimationPref, toggleAnimationPref } from "../../redux/metaSlice"
 import Chat from "./chat"
 import { usePageContext } from "vike-react/usePageContext"
 import { navigate } from "vike/client/router"
+import { useParams } from "../../gameconfig/customHooks"
 
 export const Navigation = memo(function Navigation() {
   const context = usePageContext()
-  const path = context.urlPathname
-
-  const viewAchievements = path === "/achievements"
-  const viewChat = path === "/chat"
-
+  const params = useParams(context)
   const handleOpenAchievements = () => {
-    navigate("/achievements", { keepScrollPosition: true })
+    navigate("/@achievements", { keepScrollPosition: true })
   }
 
   const handleOpenChat = () => {
-    navigate("/chat", { keepScrollPosition: true })
+    navigate("/@chat", { keepScrollPosition: true })
   }
 
   const handleCloseAchievements = () => {
@@ -40,7 +37,7 @@ export const Navigation = memo(function Navigation() {
       <NavigationLinkButton text="Chat" onClick={handleOpenChat} />
 
       <ReactModal
-        isOpen={viewAchievements}
+        isOpen={false}
         onRequestClose={handleCloseAchievements}
         contentLabel="Achievement list"
         style={achievementsStyle}
@@ -55,7 +52,7 @@ export const Navigation = memo(function Navigation() {
         </button>
       </ReactModal>
       <ReactModal
-        isOpen={viewChat}
+        isOpen={false}
         onRequestClose={handleCloseChat}
         contentLabel="Chat"
         style={chatStyle}
