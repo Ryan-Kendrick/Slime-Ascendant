@@ -41,7 +41,8 @@ export default function Chat() {
   const connectChat = useCallback(
     async (user: ChatUser) => {
       if (!mountedRef.current) return
-      if (!connectionRef.current || connectionRef.current.state !== "Disconnected") return
+      const state = connectionRef.current?.state
+      if (!connectionRef.current || state !== "Disconnected") return
 
       try {
         console.log("Connecting to chat...")

@@ -695,10 +695,9 @@ export const useAutoScroll = (ref: React.RefObject<HTMLElement>, dependencyArr: 
 }
 
 export const useParams = (context: PageContext): Record<string, string> => {
-  const [params, setParams] = useState<Record<string, string>>({})
+  const [qParams, setQParams] = useState<Record<string, string>>({})
   useEffect(() => {
-    setParams(context.routeParams)
-    console.log(params)
+    setQParams(context.urlParsed.search)
   }, [context.routeParams])
-  return params
+  return qParams
 }
