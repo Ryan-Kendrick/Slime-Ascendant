@@ -11,10 +11,6 @@
       "headers": {
         "cache-control": "public, max-age=14500"
       }
-    },
-    {
-      "route": "/*",
-      "rewrite": "/index.html"
     }
   ]
 }
