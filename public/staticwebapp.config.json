@@ -1,7 +1,7 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/**/*.{css,js,jpg,png,gif,svg,webp,woff,woff2}"]
+    "exclude": ["/assets/*"]
   },
   "responseOverrides": {
     "404": {
@@ -17,11 +17,7 @@
       }
     },
     {
-      "route": "/chat",
-      "rewrite": "/index.html"
-    },
-    {
-      "route": "/achievements",
+      "route": "/*",
       "rewrite": "/index.html"
     }
   ]
