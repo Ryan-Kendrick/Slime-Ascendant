@@ -11,7 +11,6 @@ import Chat from "./chat"
 import { usePageContext } from "vike-react/usePageContext"
 import { navigate } from "vike/client/router"
 import { useParams } from "../../gameconfig/customHooks"
-import e from "express"
 
 export const Navigation = memo(function Navigation() {
   const context = usePageContext()
@@ -19,12 +18,12 @@ export const Navigation = memo(function Navigation() {
 
   const achievementParamUsed = params?.view === "achievements"
   const chatParamUsed = params?.view === "chat"
-  console.log(chatParamUsed)
 
   const handleOpenAchievements = () => {
     if (!achievementParamUsed) navigate("/?view=achievements", { keepScrollPosition: true })
   }
 
+  console.log("open chat handler", chatParamUsed)
   const handleOpenChat = () => {
     if (!chatParamUsed) navigate("/?view=chat", { keepScrollPosition: true })
   }
