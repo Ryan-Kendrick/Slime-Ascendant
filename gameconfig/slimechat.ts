@@ -14,6 +14,8 @@ import React from "react"
 type MessageSetter = React.Dispatch<React.SetStateAction<DisplayedMessages>>
 type ChatUserSetter = React.Dispatch<React.SetStateAction<ChatUser | null>>
 type ActiveUsersSetter = React.Dispatch<React.SetStateAction<ChatUser[]>>
+type Setters = MessageSetter | ChatUserSetter | ActiveUsersSetter
+type SetterFunction = Setters | Setters[]
 
 class ChatConnection {
   private _connection: HubConnection
@@ -32,17 +34,21 @@ class ChatConnection {
     serverMessage: (messageSetterFn: MessageSetter) => void
   }
   static ChatInstance: ChatConnection
-
-  constructor(isConnectedSetterFn: (isConnected: boolean) => void, userSetterFn: ChatUserSetter) {
+  constructor(
+    isConnectedSetterFn: (isConnected: boolean) => void,
+    eventHandlers: Record<keyof typeof this.RegisterEvent, SetterFunction>,
+  ) {
     this._connection = new HubConnectionBuilder()
       .withUrl(METADATA_CONFIG.chatServerUrl)
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build()
     this.user = this.createDefaultUser()
-    userSetterFn(this.user)
-    this.connect(isConnectedSetterFn)
 
+    const { getActiveUsers, getMessageHistory, userLeft, messageReceived, serverMessage } = eventHandlers
+    const userJoined = eventHandlers.userJoined as Setters[]
+
+    // Define event handlers
     this.RegisterEvent = {
       getActiveUsers: (userSetterFn) => {
         this._connection.on("GetActiveUsers", (activeUsers: ChatUser[]) => {
@@ -64,7 +70,7 @@ class ChatConnection {
         this._connection.on("UserLeft", (userLeftMessage: SystemMessage) => {
           messageSetterFn((messageHistory) => [...messageHistory, userLeftMessage])
         })
-        // Server will invoke GetActiveUsers
+        // Server now invokes GetActiveUsers
       },
       messageReceived: (messageSetterFn) => {
         this._connection.on("MessageReceived", (incomingMessage: ConfirmedMessage) => {
@@ -77,6 +83,16 @@ class ChatConnection {
         })
       },
     }
+
+    // Register event handlers
+    this.RegisterEvent.getActiveUsers(getActiveUsers as ActiveUsersSetter)
+    this.RegisterEvent.getMessageHistory(getMessageHistory as MessageSetter)
+    this.RegisterEvent.messageReceived(messageReceived as MessageSetter)
+    this.RegisterEvent.serverMessage(serverMessage as MessageSetter)
+    this.RegisterEvent.userJoined(userJoined[0] as MessageSetter, userJoined[1] as ActiveUsersSetter)
+    this.RegisterEvent.userLeft(userLeft as MessageSetter)
+
+    this.connect(isConnectedSetterFn)
   }
 
   private createDefaultUser(): ChatUser {
@@ -212,9 +228,11 @@ class ChatConnection {
 
   public static getInstance(
     isConnectedSetterFn: (isConnected: boolean) => void,
-    setUserInfo: ChatUserSetter,
+    eventHandlers: Record<keyof typeof ChatConnection.ChatInstance.RegisterEvent, SetterFunction>,
   ): ChatConnection {
-    if (!ChatConnection.ChatInstance) ChatConnection.ChatInstance = new ChatConnection(isConnectedSetterFn, setUserInfo)
+    if (!ChatConnection.ChatInstance)
+      ChatConnection.ChatInstance = new ChatConnection(isConnectedSetterFn, eventHandlers)
+
     return ChatConnection.ChatInstance
   }
 }

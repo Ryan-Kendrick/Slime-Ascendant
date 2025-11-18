@@ -17,6 +17,15 @@ export default function Chat() {
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
   const connectionRef = useRef<HubConnection | null>(null)
 
+  const chatEventHandlers = {
+    getActiveUsers: setActiveUsers,
+    getMessageHistory: setDisplayedMessages,
+    userJoined: [setDisplayedMessages, setActiveUsers],
+    userLeft: setDisplayedMessages,
+    messageReceived: setDisplayedMessages,
+    serverMessage: setDisplayedMessages,
+  }
+
   const trySend = () => {
     if (chatInputRef.current && connectionRef.current) {
       if (!chatConnected) return
@@ -58,16 +67,7 @@ export default function Chat() {
   }, [])
 
   useEffect(() => {
-    chatInstanceRef.current = getInstance(setChatConnected, setUserInfo)
-
-    // Register Events
-    chatInstanceRef.current.RegisterEvent.getActiveUsers(setActiveUsers)
-    chatInstanceRef.current.RegisterEvent.getMessageHistory(setDisplayedMessages)
-    chatInstanceRef.current.RegisterEvent.messageReceived(setDisplayedMessages)
-    chatInstanceRef.current.RegisterEvent.serverMessage(setDisplayedMessages)
-    chatInstanceRef.current.RegisterEvent.userJoined(setDisplayedMessages, setActiveUsers)
-    chatInstanceRef.current.RegisterEvent.userLeft(setDisplayedMessages)
-
+    chatInstanceRef.current = getInstance(setChatConnected, chatEventHandlers)
     const handleBeforeUnload = () => {
       ChatConnection.cleanupInstance()
       chatInstanceRef.current = null
