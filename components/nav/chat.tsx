@@ -9,7 +9,7 @@ export default function Chat() {
   const [activeUsers, setActiveUsers] = useState<ChatUser[]>([])
   const [displayedMessages, setDisplayedMessages] = useState<(UserMessage | ConfirmedMessage | SystemMessage)[]>([])
   const [ChatInputFocused, setChatInputFocused] = useState(false)
-  const [chatConnected, setChatConnected] = useState(false)
+  const [chatConnected, setChatConnected] = useState(true)
   const chatInstanceRef = useRef<ChatConnection | null>(null)
   const [userInfo, setUserInfo] = useState<ChatUser | null>(null)
   const mountedRef = useRef(false)
@@ -90,19 +90,21 @@ export default function Chat() {
     <div className="flex h-full gap-0.5">
       <div className="h-full w-1/3 rounded border-2 border-slate-500 bg-gradient-to-br from-neutral-200 via-neutral-300 to-neutral-400">
         <ul className="flex h-full flex-col overflow-auto">
-          {activeUsers.map((user) => {
-            const isMe = userInfo?.name === user.name
-            return (
-              <li
-                key={user.name}
-                className={clsx(
-                  "flex items-center gap-2 rounded border-2 border-white/20 px-2 py-1 shadow-md",
-                  isMe && "font-bold",
-                )}>
-                {user.name} {isMe && "(You)"}
-              </li>
-            )
-          })}
+          {chatConnected &&
+            activeUsers.map((user) => {
+              const isMe = userInfo?.name === user.name
+              console.log(userInfo?.name, user.name)
+              return (
+                <li
+                  key={user.name}
+                  className={clsx(
+                    "flex items-center gap-2 rounded border-2 border-white/20 px-2 py-1 shadow-md",
+                    isMe && "font-bold",
+                  )}>
+                  {user.name} {isMe && "(You)"}
+                </li>
+              )
+            })}
         </ul>
       </div>
       <div className="flex h-full w-full flex-col justify-around">
