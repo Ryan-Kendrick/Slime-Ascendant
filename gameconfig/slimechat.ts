@@ -92,6 +92,11 @@ class ChatConnection {
     this.RegisterEvent.userJoined(userJoined[0] as MessageSetter, userJoined[1] as ActiveUsersSetter)
     this.RegisterEvent.userLeft(userLeft as MessageSetter)
 
+    this._connection.on("GetActiveUsers", (activeUsers: ChatUser[]) => {
+      const thisUserSetter = getActiveUsers as ActiveUsersSetter
+      thisUserSetter(activeUsers)
+    })
+
     this.connect(isConnectedSetterFn)
   }
 

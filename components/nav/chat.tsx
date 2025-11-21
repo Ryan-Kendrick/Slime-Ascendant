@@ -67,6 +67,7 @@ export default function Chat() {
   }, [])
 
   useEffect(() => {
+    console.log("Setting up chat connection in chat.tsx")
     chatInstanceRef.current = getInstance(setChatConnected, chatEventHandlers)
     const handleBeforeUnload = () => {
       ChatConnection.cleanupInstance()
@@ -74,7 +75,8 @@ export default function Chat() {
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload)
-
+    console.log(chatInstanceRef.current.RegisterEvent.getActiveUsers(setActiveUsers))
+    console.log(chatInstanceRef.current.RegisterEvent)
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload)
       if (chatInstanceRef.current) {
