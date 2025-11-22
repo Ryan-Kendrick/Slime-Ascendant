@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react"
-import { HubConnection } from "@microsoft/signalr"
-import clsx from "clsx/lite"
 import { ChatUser, ConfirmedMessage, MessageQueue, SystemMessage, UserMessage } from "../../models/slimechat"
-import getInstance, { ChatConnection } from "../../gameconfig/slimechat"
+import getInstance, { ChatConnection, EventHandlers } from "../../gameconfig/slimechat"
 import { useAutoScroll } from "../../gameconfig/customHooks"
+import clsx from "clsx/lite"
 
 export default function Chat() {
   const [activeUsers, setActiveUsers] = useState<ChatUser[]>([])
@@ -15,7 +14,6 @@ export default function Chat() {
   const mountedRef = useRef(false)
   const chatHistoryRef = useRef<HTMLDivElement>(null)
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
-  const connectionRef = useRef<HubConnection | null>(null)
 
   const chatEventHandlers = {
     getActiveUsers: setActiveUsers,
@@ -24,12 +22,10 @@ export default function Chat() {
     userLeft: setDisplayedMessages,
     messageReceived: setDisplayedMessages,
     serverMessage: setDisplayedMessages,
-  }
+  } as EventHandlers
 
   const trySend = () => {
-    if (chatInputRef.current && connectionRef.current) {
-      if (!chatConnected) return
-
+    if (chatInputRef.current && chatConnected) {
       const newMessage = chatInputRef.current.value
       if (!newMessage) return
 
@@ -67,16 +63,13 @@ export default function Chat() {
   }, [])
 
   useEffect(() => {
-    console.log("Setting up chat connection in chat.tsx")
-    chatInstanceRef.current = getInstance(setChatConnected, chatEventHandlers)
+    chatInstanceRef.current = getInstance(setChatConnected, setUserInfo, chatEventHandlers)
     const handleBeforeUnload = () => {
       ChatConnection.cleanupInstance()
       chatInstanceRef.current = null
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload)
-    console.log(chatInstanceRef.current.RegisterEvent.getActiveUsers(setActiveUsers))
-    console.log(chatInstanceRef.current.RegisterEvent)
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload)
       if (chatInstanceRef.current) {
@@ -95,7 +88,6 @@ export default function Chat() {
           {chatConnected &&
             activeUsers.map((user) => {
               const isMe = userInfo?.name === user.name
-              console.log(userInfo?.name, user.name)
               return (
                 <li
                   key={user.name}
@@ -170,7 +162,8 @@ export default function Chat() {
             onBlur={() => setChatInputFocused(false)}
             name="chat"
             className="h-full w-full grow resize-none overflow-auto p-1 focus:outline-none"
-            onKeyDown={handleKeyDown}></textarea>
+            onKeyDown={handleKeyDown}
+          />
           <button
             className={clsx(
               "font-ui m-2 mr-4 flex h-12 cursor-active items-center justify-center rounded border border-slate-600 bg-slate-200 px-6 py-4 text-center font-bold text-slate-600 shadow-md",

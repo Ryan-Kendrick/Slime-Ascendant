@@ -14,29 +14,40 @@ import React from "react"
 type MessageSetter = React.Dispatch<React.SetStateAction<DisplayedMessages>>
 type ChatUserSetter = React.Dispatch<React.SetStateAction<ChatUser | null>>
 type ActiveUsersSetter = React.Dispatch<React.SetStateAction<ChatUser[]>>
-type Setters = MessageSetter | ChatUserSetter | ActiveUsersSetter
-type SetterFunction = Setters | Setters[]
+
+type GetActiveUsersSetter = React.Dispatch<React.SetStateAction<ChatUser[]>>
+
+export type EventHandlers = {
+  getActiveUsers: GetActiveUsersSetter
+  getMessageHistory: MessageSetter
+  userJoined: [MessageSetter, ActiveUsersSetter]
+  userLeft: MessageSetter
+  messageReceived: MessageSetter
+  serverMessage: MessageSetter
+}
 
 class ChatConnection {
   private _connection: HubConnection
   private _messageRetryTime = 60000
   private _optimismTime = 6000
-  private _slowConnectTimer?: NodeJS.Timeout | null
-  private _reconnectTimer?: NodeJS.Timeout | null
+  private static _slowConnectTimer?: NodeJS.Timeout | null
+  private static _reconnectTimer?: NodeJS.Timeout | null
   private _messageQueue: MessageQueue = []
-  public user: ChatUser
-  public RegisterEvent: {
-    getActiveUsers: (userSetterFn: ActiveUsersSetter) => void
-    getMessageHistory: (messageSetterFn: MessageSetter) => void
-    userJoined: (messageSetterFn: MessageSetter, userSetterFn: ActiveUsersSetter) => void
-    userLeft: (messageSetterFn: MessageSetter) => void
-    messageReceived: (messageSetterFn: MessageSetter) => void
-    serverMessage: (messageSetterFn: MessageSetter) => void
+  private _eventMap: { [key: string]: string } = {
+    getActiveUsers: "GetActiveUsers",
+    getMessageHistory: "GetMessageHistory",
+    userJoined: "UserJoined",
+    userLeft: "UserLeft",
+    messageReceived: "MessageReceived",
+    serverMessage: "ServerMessage",
   }
+  public user: ChatUser
   static ChatInstance: ChatConnection
+
   constructor(
     isConnectedSetterFn: (isConnected: boolean) => void,
-    eventHandlers: Record<keyof typeof this.RegisterEvent, SetterFunction>,
+    userInfoSetterFn: ChatUserSetter,
+    eventHandlers: EventHandlers,
   ) {
     this._connection = new HubConnectionBuilder()
       .withUrl(METADATA_CONFIG.chatServerUrl)
@@ -44,57 +55,46 @@ class ChatConnection {
       .withAutomaticReconnect()
       .build()
     this.user = this.createDefaultUser()
+    userInfoSetterFn(this.user)
 
-    const { getActiveUsers, getMessageHistory, userLeft, messageReceived, serverMessage } = eventHandlers
-    const userJoined = eventHandlers.userJoined as Setters[]
+    const { getActiveUsers, getMessageHistory, userLeft, messageReceived, serverMessage, userJoined } = eventHandlers
 
-    // Define event handlers
-    this.RegisterEvent = {
-      getActiveUsers: (userSetterFn) => {
-        this._connection.on("GetActiveUsers", (activeUsers: ChatUser[]) => {
-          userSetterFn(activeUsers)
-        })
-      },
-      getMessageHistory: (messageSetterFn) => {
-        this._connection.on("GetMessageHistory", (messageHistory: ConfirmedMessage[]) => {
-          messageSetterFn(messageHistory)
-        })
-      },
-      userJoined: (messageSetterFn, userSetterFn) => {
-        this._connection.on("UserJoined", (userJoinedMessage: SystemMessage, joinedUser: ChatUser) => {
-          messageSetterFn((prev) => [...prev, userJoinedMessage])
-          userSetterFn((users) => [...users, joinedUser])
-        })
-      },
-      userLeft: (messageSetterFn) => {
-        this._connection.on("UserLeft", (userLeftMessage: SystemMessage) => {
-          messageSetterFn((messageHistory) => [...messageHistory, userLeftMessage])
-        })
-        // Server now invokes GetActiveUsers
-      },
-      messageReceived: (messageSetterFn) => {
-        this._connection.on("MessageReceived", (incomingMessage: ConfirmedMessage) => {
-          messageSetterFn((messageHistory) => [...messageHistory, incomingMessage])
-        })
-      },
-      serverMessage: (messageSetterFn) => {
-        this._connection.on("ServerMessage", (incomingMessage: ConfirmedMessage) => {
-          messageSetterFn((messageHistory) => [...messageHistory, incomingMessage])
-        })
-      },
-    }
+    this._connection.on("GetActiveUsers", (activeUsers: ChatUser[]) => getActiveUsers(activeUsers))
+    this._connection.on("GetMessageHistory", (messageHistory: ConfirmedMessage[]) => getMessageHistory(messageHistory))
+    this._connection.on("UserJoined", (joinedUser: ChatUser) => {
+      const [messageSetter, userSetter] = userJoined
+      const userJoinedMessage = { content: `${joinedUser.name} has joined the chat.`, type: "system" } as SystemMessage
 
-    // Register event handlers
-    this.RegisterEvent.getActiveUsers(getActiveUsers as ActiveUsersSetter)
-    this.RegisterEvent.getMessageHistory(getMessageHistory as MessageSetter)
-    this.RegisterEvent.messageReceived(messageReceived as MessageSetter)
-    this.RegisterEvent.serverMessage(serverMessage as MessageSetter)
-    this.RegisterEvent.userJoined(userJoined[0] as MessageSetter, userJoined[1] as ActiveUsersSetter)
-    this.RegisterEvent.userLeft(userLeft as MessageSetter)
+      messageSetter((prev) => [...prev, userJoinedMessage])
+      userSetter((users) => [...users, joinedUser])
+      // Server will now invoke GetActiveUsers
+    })
 
-    this._connection.on("GetActiveUsers", (activeUsers: ChatUser[]) => {
-      const thisUserSetter = getActiveUsers as ActiveUsersSetter
-      thisUserSetter(activeUsers)
+    this._connection.on("UserLeft", (disconnectedUser: ChatUser) => {
+      const userLeftMessage = { content: `${disconnectedUser.name} left the chat.`, type: "system" } as SystemMessage
+      userLeft((messageHistory) => [...messageHistory, userLeftMessage])
+    })
+
+    this._connection.on("MessageReceived", (incomingMessage: ConfirmedMessage) => {
+      messageReceived((prevMessages) => {
+        for (let i = prevMessages.length - 1; i >= 0; i--) {
+          const msg = prevMessages[i]
+          if (msg.type !== "user") continue
+
+          // Loop through messages in reverse to find the uncomfirmed message
+          if (incomingMessage.unixTime === msg.unixTime && incomingMessage.name === msg.name) {
+            const updatedMessages = [...prevMessages]
+            // Replace unconfirmed message with confirmed one
+            updatedMessages[i] = { ...incomingMessage }
+            return updatedMessages
+          }
+        }
+        return [...prevMessages, incomingMessage]
+      })
+    })
+
+    this._connection.on("ServerMessage", (incomingMessage: ConfirmedMessage) => {
+      serverMessage((messageHistory) => [...messageHistory, incomingMessage])
     })
 
     this.connect(isConnectedSetterFn)
@@ -106,9 +106,9 @@ class ChatConnection {
     const id = `${name}.${Date.now()}`
 
     this.user = {
+      id,
       name,
       color,
-      id,
     } as ChatUser
 
     return this.user
@@ -120,32 +120,30 @@ class ChatConnection {
       return
     }
 
-    if (this._slowConnectTimer) {
-      clearTimeout(this._slowConnectTimer)
-      this._slowConnectTimer = undefined
+    if (ChatConnection._slowConnectTimer) {
+      clearTimeout(ChatConnection._slowConnectTimer)
+      ChatConnection._slowConnectTimer = undefined
     }
-    if (this._reconnectTimer) {
-      clearTimeout(this._reconnectTimer)
-      this._reconnectTimer = undefined
+    if (ChatConnection._reconnectTimer) {
+      clearTimeout(ChatConnection._reconnectTimer)
+      ChatConnection._reconnectTimer = undefined
     }
 
     try {
       console.log("Connecting to chat...")
-      this._slowConnectTimer = setTimeout(() => {
-        if (this._connection && this._connection.state !== "Connected") {
-          console.warn(
-            "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
-          )
-          isConnectedSetterFn(false)
-        }
+
+      ChatConnection._slowConnectTimer = setTimeout(() => {
+        console.warn(
+          "Server response taking longer than expected, might be a cold start. Displaying reconnecting message",
+        )
+        isConnectedSetterFn(false)
       }, this._optimismTime)
 
-      console.log("Starting connection at", new Date().toISOString(), "state:", this._connection?.state)
       await this._connection.start()
 
-      if (this._slowConnectTimer) {
-        clearTimeout(this._slowConnectTimer)
-        this._slowConnectTimer = null
+      if (ChatConnection._slowConnectTimer) {
+        clearTimeout(ChatConnection._slowConnectTimer)
+        ChatConnection._slowConnectTimer = null
       }
 
       isConnectedSetterFn(true)
@@ -153,16 +151,21 @@ class ChatConnection {
         console.error("Error notifying server of user joined chat:", err)
       })
       this.onConnectTasks()
-    } catch (err) {
-      console.error("Failted to connect to chat:", err)
-      isConnectedSetterFn(false)
+    } catch (err: any) {
+      console.error("Failed to connect to chat:", err)
 
-      if (this._slowConnectTimer) {
-        clearTimeout(this._slowConnectTimer)
-        this._slowConnectTimer = undefined
+      if (err.message && err.message.includes("stopped during negotiation")) {
+        return
       }
 
-      this._reconnectTimer = setTimeout(() => {
+      isConnectedSetterFn(false)
+
+      if (ChatConnection._slowConnectTimer) {
+        clearTimeout(ChatConnection._slowConnectTimer)
+        ChatConnection._slowConnectTimer = undefined
+      }
+
+      ChatConnection._reconnectTimer = setTimeout(() => {
         this.connect(isConnectedSetterFn)
       }, 5000)
     }
@@ -177,7 +180,7 @@ class ChatConnection {
     const messagesToSend = this._messageQueue.filter((item) => now - item.createdAt <= this._messageRetryTime)
 
     messagesToSend.forEach((item) => {
-      ChatConnection.ChatInstance._connection.invoke("BroadcastMessage", item.message).catch((error) => {
+      this._connection.invoke("BroadcastMessage", item.message).catch((error) => {
         console.error("Error sending queued message:", error)
       })
     })
@@ -212,31 +215,23 @@ class ChatConnection {
       return
     }
 
-    const eventMap: { [key: string]: string } = {
-      getActiveUsers: "GetActiveUsers",
-      getMessageHistory: "GetMessageHistory",
-      userJoined: "UserJoined",
-      userLeft: "UserLeft",
-      messageReceived: "MessageReceived",
-      serverMessage: "ServerMessage",
-    }
+    // Remove all event handlers - inefficient for a singleton?
+    // const eventNames = Object.values(this.ChatInstance._eventMap)
+    // for (const eventName of eventNames) {
+    //   this.ChatInstance._connection.off(eventName)
+    // }
 
-    const eventHandlers = Object.keys(this.ChatInstance.RegisterEvent)
-    for (const handler of eventHandlers) {
-      const eventName = eventMap[handler]
-      if (eventName) {
-        this.ChatInstance._connection.off(eventName)
-      }
-    }
     this.ChatInstance._connection.stop().catch((err) => console.error(err))
+    this.ChatInstance = null as unknown as ChatConnection
   }
 
   public static getInstance(
     isConnectedSetterFn: (isConnected: boolean) => void,
-    eventHandlers: Record<keyof typeof ChatConnection.ChatInstance.RegisterEvent, SetterFunction>,
+    userInfoSetterFn: ChatUserSetter,
+    eventHandlers: EventHandlers,
   ): ChatConnection {
     if (!ChatConnection.ChatInstance)
-      ChatConnection.ChatInstance = new ChatConnection(isConnectedSetterFn, eventHandlers)
+      ChatConnection.ChatInstance = new ChatConnection(isConnectedSetterFn, userInfoSetterFn, eventHandlers)
 
     return ChatConnection.ChatInstance
   }
